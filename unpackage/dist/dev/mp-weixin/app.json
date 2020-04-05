@@ -1,0 +1,42 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/action/action",
+    "pages/selfCenter/selfCenter"
+  ],
+  "subPackages": [],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "行动打卡",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "color": "#b8b9bb",
+    "selectedColor": "#28333d",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/index/index",
+        "iconPath": "static/images/icon/tabbar/tabbar1.png",
+        "selectedIconPath": "static/images/icon/tabbar/tabbar1-on.png",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/action/action",
+        "iconPath": "static/images/icon/tabbar/tabbar2.png",
+        "selectedIconPath": "static/images/icon/tabbar/tabbar2-on.png",
+        "text": "行动"
+      },
+      {
+        "pagePath": "pages/selfCenter/selfCenter",
+        "iconPath": "static/images/icon/tabbar/tabbar3.png",
+        "selectedIconPath": "static/images/icon/tabbar/tabbar3-on.png",
+        "text": "我的"
+      }
+    ]
+  },
+  "usingComponents": {},
+  "sitemapLocation": "sitemap15.json"
+}
