@@ -1,23 +1,38 @@
 <template>
 	<view class="formAction">
-		<form>
+		<form @submit="formSubmit">
 			<view class="uni-form-item uni-column">
 				<view class="title">打卡总天数</view>
-				<view class="form-item"><input class="uni-input" type="number" name="input" placeholder="请输入打卡总天数" maxlength="50" step="1" min="1" /></view>
+				<view class="form-item"><input class="uni-input" type="number" name="targetDay" placeholder="请输入打卡总天数" maxlength="50" step="1" min="1" /></view>
 			</view>
-			<view class="uni-form-item uni-column">
+			<!-- <view class="uni-form-item uni-column">
 				<view class="title">每周打卡天数</view>
-				<view class="form-item"><input class="uni-input" type="number" name="input" placeholder="请输入每周打卡天数" maxlength="50" step="1" min="1" /></view>
-			</view>
+				<view class="form-item"><input class="uni-input" type="number" name="holidayDay" placeholder="请输入每周打卡天数" maxlength="50" step="1" min="1" /></view>
+			</view> -->
 			<view class="uni-form-item uni-column">
 				<view class="title">可休假天数</view>
-				<view class="form-item"><input class="uni-input" type="number" name="input" placeholder="请输入可休假天数" maxlength="150" step="1" min="0" /></view>
+				<view class="form-item"><input class="uni-input" type="number" name="holidayDay" placeholder="请输入可休假天数" maxlength="150" step="1" min="0" /></view>
+			</view>
+			<view class="uni-form-item uni-column">
+				<view class="title">是否公开</view>
+				<view class="form-item nobtm">
+					<radio-group name="status">
+					<label class="radio">
+						<radio value="0" checked="true" color="#ffa700" />
+						是
+					</label>
+					<label class="radio">
+						<radio value="1" color="#ffa700" />
+						否
+					</label>
+					</radio-group>
+				</view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">首次打卡时间</view>
 				<view class="sb-box">
 					<view class="select">
-						<picker @change="bindPickerChange" :value="dateList[index]['showStr']" :range="dateList"  :range-key="'showStr'">
+						<picker @change="bindPickerChange" :value="indexs" :range="dateList"  :range-key="'showStr'">
 							<view class="uni-input">{{ dateList[index]["showStr"] }}</view>
 						</picker>
 					</view>
@@ -25,13 +40,24 @@
 				</view>
 			</view>
 			<view class="uni-form-item uni-column">
+				<view class="title">所属分类</view>
+				<view class="sb-box">
+					<view class="select">
+						<picker @change="bindLabel" :value="labelList[indexs].id" :range="labelList" :range-key="'labelName'" name="label">
+							<view class="uni-input">{{labelList[indexs].labelName}}</view>
+						</picker>
+					</view>
+					<view class="sb-icon"><view class="triangle"></view></view>
+				</view>
+			</view>
+			<!-- <view class="uni-form-item uni-column">
 				<view class="title">阶段期限</view>
 				<view></view>
+			</view> -->
+			<view class="btn_bar">
+				<view class="btns"><button class="btn" form-type="submit">下一步</button></view>
 			</view>
 		</form>
-		<view class="btn_bar">
-			<view class="btns"><button class="btn" @click="goStep">下一步</button></view>
-		</view>
 	</view>
 </template>
 
@@ -40,16 +66,56 @@ export default {
 	data() {
 		return {
 			index: 0,
-			dateList: []
+			indexs:0,
+			dateList: [],
+			formData:{},
+			img:{
+				pictures:''
+			},
+			
+			labelList:[],
 		};
 	},
-	onLoad() {
+	onLoad(option) {
+		console.log(option);
+		this.formData= JSON.parse(decodeURIComponent(option.formData));
+		this.img.pictures=option.pictures;
 		this.initDateList();
+		this.tabs();
 	},
 	methods: {
-		goStep() {
+		formSubmit(e) {
+			if(e.detail.value.targetDay==''){
+				uni.showToast({
+				    title: '请出入打卡总天数',
+					mask:true,
+				    duration: 1000,
+					image:'/static/images/icon/clock.png'
+				});
+				return false
+			};
+			if(e.detail.value.holidayDay==''){
+				uni.showToast({
+				    title: '请出入休假天数',
+					mask:true,
+				    duration: 1000,
+					image:'/static/images/icon/clock.png'
+				});
+				return false
+			};
+			let data=Object.assign(this.formData,e.detail.value,this.img);
 			uni.navigateTo({
-				url: `/pages/action/finish`
+				url: '/pages/action/finish?data='+encodeURIComponent(JSON.stringify(data))
+			});
+		},
+		tabs(){
+			this.xd_request_post(this.xdServerUrls.xd_label,{},false
+				   ).then((res) => {
+					   console.log(res)
+				       this.labelList=res.obj
+				       
+				   }).catch(err => {
+				
 			});
 		},
 		initDateList() {
@@ -76,6 +142,9 @@ export default {
 		},
 		bindPickerChange(e){
 			this.index = e.target.value;
+		},
+		bindLabel(e){
+			this.indexs= e.target.value;
 		}
 	}
 };
@@ -156,6 +225,9 @@ export default {
 			border-right: 10rpx solid transparent;
 			border-top: 10rpx solid #fff;
 		}
+	}
+	.uni-input{
+		padding-left: 10upx;
 	}
 }
 </style>

@@ -11,8 +11,8 @@ const appConfig = {
 	enableDebug: true, // 设置是否打开调试开关。此开关对正式版也能生效。
 	// server 配置
 	serverProtocal: 'https', // server 协议
-	serverIp: 'www.xxxxx.com', // server IP
-	serverPort: '8080', // server 端口
+	serverIp: 'xingdongdaka.zhidashixun.com', // server IP
+	serverPort: '10060', // server 端口
 	serverName: 'xingdongdaka' // server项目名称
 }
 export default {

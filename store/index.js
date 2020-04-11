@@ -22,7 +22,11 @@ try {
 }
 const store = new Vuex.Store({
     state: {
-        lang: lang
+        lang: lang,
+		hasLogin:false,
+		infoRes:{},
+		
+		
     },
     mutations: {
         changeLang: function(state) {
@@ -37,7 +41,27 @@ const store = new Vuex.Store({
                     state.lang = lang;
                 }
             })
-        }
+        },
+		logIn(state,provider){
+			state.hasLogin=true;
+			state.userInfo=provider;
+			
+			uni.setStorage({
+				key:'userInfo',
+				data:provider
+			})
+			
+		},
+		logOut(state){
+			state.hasLogin=false;
+			state.userInfo={};
+			uni.setStorage({
+				key:'userInfo',
+			})
+			uni.setStorage({
+				key:'token',
+			})
+		}
     }
 })
 export default store;

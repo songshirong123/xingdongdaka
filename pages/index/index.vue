@@ -22,13 +22,10 @@
 			<!-- 推荐 -->
 			<view class="xd-list-info" :hidden="active == 0||active==2">
 				<view class="swiper-banner">
-					<swiper class="swiper" indicator-dots="true" autoplay="true" circular="true" indicator-color="#aeaeae" indicator-active-color="#ffffff">
-						<swiper-item>
-							<navigator url=""><image src="../../static/images/pic/banner1.jpg"></image></navigator>
-						</swiper-item>
-						<swiper-item>
-							 <navigator url=""><image src="../../static/images/pic/banner2.jpg"></image></navigator>
-						</swiper-item>
+				  <swiper class="swiper" indicator-dots="true" autoplay="true" circular="true" indicator-color="#aeaeae" indicator-active-color="#ffffff">
+				  	<swiper-item v-for="(item , index) in bannerList" :key="index">
+				  				<navigator :url="item.bannerImage"><image :src="item.bannerImage" ></image></navigator>
+				  			</swiper-item>
 				  </swiper>
 				</view>
 				
@@ -41,10 +38,10 @@
 						:class="['xd-nav-bar', isCenter ? 'xd-nav-center' : '']" scroll-x="true" show-scrollbar="false" >
 							<view :class="['nav-item', currentIndex == index ? 'nav-active' : '']" :id="'tab-'+index" 
 								v-for="(item, index) in tabs" :key="index" :data-index="index"
-								@click="navChange">
+								@tap="navChange">
 								<view class="nav-item-title">
-									{{item.title}}
-									<view class="nav-item-desc">{{item.dsc}}</view>
+									{{item.labelName}}
+									<view class="nav-item-desc">{{item.id}}项</view>
 								</view>
 							</view>
 						</scroll-view>
@@ -52,31 +49,35 @@
 					<view class="xd-line"></view>
 					<!-- 推荐项对应内容 -->
 					<view class="swiper-box">
-						<view :class="['swiper-item', currentIndex == boxIndex ? 'box-active' : '']" v-for="(listsBox, boxIndex) in listsTab" :key="boxIndex">
+						<view :class="['swiper-item', currentIndex == boxIndex ? 'box-active' : '']" v-for="(listsBox, boxIndex) in listsTab" :key="boxIndex">						
 							<view class="infos-box">
-								<block v-for="(list, index) in listsTab[boxIndex].lists" :key="index">
-									
+								<!-- <block v-for="(list, index) in listsTab[boxIndex].lists" :key="index"> -->
+								<block v-for="(list, index) in listsTab" :key="index">
+								
+				
 									<view class="xd-list xd-border-b-color">
-										<view class="xd-list-items">
-											<view class="xd-list-image xd-relative">
-												<image class="xd-list-image xd-box-shadow" :src="list.coverImg"></image>
-												<view class="xd-list-head" @click="goPage('/pages/selfCenter/selfView?view=other')">
-													<image class="xd-list-head-img xd-box-shadow" :src="list.headImg" mode="widthFix"></image>
+										<view class="xd-list-items">											<view class="xd-list-image xd-relative">
+												<image class="xd-list-image xd-box-shadow" :src="list.pictures"></image>
+												
+												<view class="xd-list-head" @tap="goPage('/pages/selfCenter/selfView?view=other')">
+													<image class="xd-list-head-img xd-box-shadow" :src="list.pictures" mode="widthFix"></image>
+													
 												</view>
 											</view>
 											<view class="xd-list-body xd-border-b-black">
 												<view class="xd-list-title">
-													<text class="xd-list-title-text">{{list.name}}</text>
+													<text class="xd-list-title-text">{{list.label}}</text>
 													<!-- <view class="xd-list-title-desc">20190318</view> -->
 												</view>
 												<navigator hover-class="none" url="action/action">
-													<view class="xd-list-body-desc xd-ellipsis-line2">{{list.sgin}}</view>
+													<view class="xd-list-body-desc xd-ellipsis-line2">{{list.content}}</view>
 												</navigator>
 											</view>
 										</view>
-										<view class="xd-list-body-desc xd-list-time">{{list.time}}<text>{{list.chishu}}</text></view>
+										<view class="xd-list-body-desc xd-list-time"><text>({{list.targetDay-list.holidayDay-list.pushCardCount}}/{{list.targetDay}})</text></view>
 										<navigator hover-class="none" url="cardDetails/cardDetails">
-											<view class="xd-list-desc">{{list.desc}}</view>
+											<view class="xd-list-desc">{{list.extendContent}}</view>
+											
 										</navigator>
 										<view class="xd-grids">
 											<view class="xd-grids-items comment-grids">
@@ -88,29 +89,31 @@
 											<view class="xd-grids-items love-grids">
 												<view class="xd-relative">
 													<view v-if="list.islove==0">
-													  <image class="xd-grids-icon-img-love" src="../../static/images/icon/love.png" mode="widthFix"></image>
+													  <image class="xd-grids-icon-img-love" src="../../static/images/icon/love.png" mode="widthFix" @tap="loveClick(list,index,boxIndex)"></image>
 													</view>
 													<view v-else>
-													  <image class="xd-grids-icon-img-love" src="../../static/images/icon/love-on.png" mode="widthFix"></image>
+													  <image class="xd-grids-icon-img-love" src="../../static/images/icon/love-on.png" mode="widthFix" @tap="loveClick(list,index,boxIndex)"></image>
 													</view>
-													<view class="xd-badge">{{list.love}}</view>
+													<view class="xd-badge">{{list.giveLike}}</view>
 												</view>
 											</view>
 											<view class="xd-grids-items sponsor-grids">
 												<view class="xd-relative">
 													<view class="xd-tbr-large">赞助</view>
-													<view class="xd-badge">{{list.sponsor}}</view>
+													<view class="xd-badge">{{list.giveReward}}</view>
 												</view>
 											</view>
 											<view class="xd-grids-items bond-grids">
 												<view class="xd-relative">
-													<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{list.bond}}</text></view>
+													<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{list.challengeRmb}}</text></view>
 												</view>
 											</view>
 											<view class="xd-grids-items supervise-grids">
 												<view class="xd-relative">
-													<view class="xd-tbr-large">邀请围观</view>
-													<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{list.supervise}}</view>
+													<!-- #ifdef MP-WEIXIN -->
+													<button class="buttonShare" open-type="share" >邀请围观</button>
+													<!-- #endif -->
+													<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{list.onlookerCount}}</view>
 												</view>
 											</view>
 										</view>
@@ -129,150 +132,126 @@
 			
 		</view>
 		<!-- 开始行动-加号 -->
-		<view class="start-add" @click="goPage('/pages/action/step1')">
+		<view class="start-add" @tap="goPage('/pages/action/step1')">
 			<image src="../../static/images/icon/add.png" mode="widthFix"></image>
 		</view>
 	</view>
 </template>
 
 <script>
-	
+	import{ mapState,mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
+
 				active:1,
 				currentIndex:0,
-				tabs: [
-					{
-						title: '早睡早起',  dsc: '41项'
-					}, {
-						title: '娱乐放松', dsc: '34项'
-					}, {
-						title: '攒小金库', dsc: '79项'
-					}, {
-						title: '请求帮助', dsc: '21项'
-					}, {
-						title: '热门项', dsc: '33项'
-					}],
+				bannerList:[],
+				tabs: [],
+				listsTab:[],
 				
-				"listsTab":[{
-						"type":"早睡早起",
-						"lists":[{
-								id: "01",
-								name: 'Hakuna matata',
-								sgin:"世上有两个我，一个吃货的我，一个想减肥的我。",
-								headImg:'../../static/images/pic/header.png',
-								coverImg:'../../static/images/pic/list2.jpg',
-								time:"12月25日17:02",
-								chishu:"(20/30)",
-								desc:"通常你希望每个 prop 都有指定的值类型。这时，你可以以对象形式列出 prop，这些属性的名称和值分别是 prop 各自的名称和类型",
-								comment:"234",
-								love:"888",
-								islove:'1',
-								bond:"999",
-								sponsor:"666",
-								supervise:"88k"
-							}, {
-								"id": "02",
-								name: '沙祖',
-								sgin:"你妈妈没有教过你不要玩弄你的食物？",
-								headImg:'../../static/images/pic/Zazu.jpg',
-								coverImg:'../../static/images/pic/list.jpg',
-								time:"12月24日10:00",
-								chishu:"(27/30)",
-								desc:"通常你希望每个 prop 都有指定的值类型。这时，你可以以对象形式列出 prop，这些属性的名称和值分别是 prop 各自的名称和类型",
-								comment:"24",
-								love:'38',
-								islove:'0',
-								bond:"99",
-								sponsor:'636',
-								supervise:'2k'
-							}]
-					  }, {
-					  	"type":"娱乐放松",
-					  	"lists":[{
-								"id": "10",
-								name: '刀疤',
-								sgin:"哦，你害我的午餐跑掉了。",
-								headImg:'../../static/images/pic/Scar.jpg',
-								coverImg:'../../static/images/pic/list.jpg',
-								time:"12月24日10:00",
-								chishu:"(27/30)",
-								desc:"通常你希望每个 prop 都有指定的值类型。这时，你可以以对象形式列出 prop，这些属性的名称和值分别是 prop 各自的名称和类型",
-								comment:"24",
-								love:'38',
-								islove:'1',
-								bond:"0.9",
-								sponsor:'636',
-								supervise:'2k'
-							}]    
-					  }, {
-					  	"type":"攒小金库",
-					  	"lists":[{
-								"id": "20",
-								name: '彭彭',
-								sgin:"世上有两个我，一个吃货的我，一个想减肥的我。",
-								headImg:'../../static/images/pic/Pumbaa.jpg',
-								coverImg:'../../static/images/pic/list2.jpg',
-								time:"12月24日10:00",
-								chishu:"(27/30)",
-								desc:"通常你希望每个 prop 都有指定的值类型。这时，你可以以对象形式列出 prop，这些属性的名称和值分别是 prop 各自的名称和类型",
-								comment:"24",
-								love:'38',
-								islove:'0',
-								bond:"5",
-								sponsor:'636',
-								supervise:'2k'
-							}]    
-					  }, {
-					  	"type":"请求帮助",
-					  	"lists":[{
-								"id": "30",
-								name: 'Hakuna matata',
-								sgin:"世上有两个我，一个吃货的我，一个想减肥的我。",
-								headImg:'../../static/images/pic/header.png',
-								coverImg:'../../static/images/pic/list2.jpg',
-								time:"12月24日10:00",
-								chishu:"(27/30)",
-								desc:"通常你希望每个 prop 都有指定的值类型。这时，你可以以对象形式列出 prop，这些属性的名称和值分别是 prop 各自的名称和类型",
-								comment:"24",
-								love:'38',
-								islove:'1',
-								bond:"20",
-								sponsor:'636',
-								supervise:'2k'
-							}]    
-					  }, {
-					  	"type":"热门项",
-					  	"lists":[{
-								"id": "40",
-								name: '丁满',
-								sgin:"世上有两个我，一个吃货的我，一个想减肥的我。",
-								headImg:'../../static/images/pic/Timon.jpg',
-								coverImg:'../../static/images/pic/list.jpg',
-								time:"12月24日10:00",
-								chishu:"(27/30)",
-								desc:"通常你希望每个 prop 都有指定的值类型。这时，你可以以对象形式列出 prop，这些属性的名称和值分别是 prop 各自的名称和类型",
-								comment:"24",
-								love:'38',
-								islove:'0',
-								bond:"100",
-								sponsor:'636',
-								supervise:'2k'
-							}]    
-					  }
-					]
+				
+				
+				pageNum:1,//当前页数
+				pageSize:10,//每页条数
+					
 			};
 		},
+		onShareAppMessage(res) {
+		      return {
+		        title: '我在行动打卡，快来围观我吧',
+		        path: '/pages/index/index'
+		      }
+		    },
 		
 		onLoad() {
-	
+		   this.indexData()
 		},
+		 computed: {  
+		            ...mapState(['hasLogin'])  
+		        },  
 		methods:{
+			...mapMutations(['logIn','logOut'])  ,
 			goPage(url){
 				uni.navigateTo({
 					url
 				});
+			},
+			//首页获取label和根据时间获取列表
+			indexData:function(){
+				let token='';
+				try{
+				   token=uni.getStorageSync('token');
+												  
+				}catch(e){
+						console.log(Error)
+				};
+				console.log(this.hasLogin)
+				console.log(this.token)
+				
+				if(!this.hasLogin &&token==''){
+					   this.logOut();
+					   uni.navigateTo({
+						url:"../login/login",
+					   });
+					   return false
+								
+				}else{
+					   this.xd_request_post(this.xdServerUrls.xd_bannerList,{},false
+				        ).then((res) => {
+										   this.bannerList=res.obj
+									 
+										  
+									   }).catch(err => {
+							
+									});
+									this.xd_request_post(this.xdServerUrls.xd_label,{},false
+										   ).then((res) => {
+											   console.log(res)
+											   this.tabs=res.obj
+											   
+										   }).catch(err => {
+										
+									});
+									this.xd_request_post(this.xdServerUrls.xd_pushByHighGradeList,
+									{
+										token:token,
+										pageNum:1,
+										pageSize:10,
+									},
+									false
+										   ).then((res) => {
+											   this.listsTab=res.obj.list;
+											   this.pageNum=res.obj.nextPage;
+										   }).catch(err => {
+								
+			                                                   });
+			  }
+				
+			},
+			//点赞
+			loveClick(list,index,boxIndex){
+				let isLove=list.islove;
+				this.xd_request_post(this.xdServerUrls.xd_saveGiveLikeByPush,{
+					pushId:list.id,
+					initiatorUserId:uni.getStorageSync('id'),
+					giveLikeUserId:list.userId,
+				},false
+				   ).then(res => {
+						   console.log(res)
+						   if(isLove==1){								   
+												this.listsTab[boxIndex].lists[index].islove=0;
+												this.listsTab[boxIndex].lists[index].love--;
+						   }else if(isLove==0){
+												  this.listsTab[boxIndex].lists[index].islove=1;
+												  this.listsTab[boxIndex].lists[index].love++;
+						                         						  
+						    }
+					   }).catch(err => {
+					
+				})
+				
+				
 			},
 			// 最新
 			showNew: function () {
@@ -291,7 +270,59 @@
 			navChange: function (e) {
 				this.currentIndex = e.currentTarget.dataset.index;
 			},
+			getNewList(){
+				this.indexData(),
+				this.pageNum=1,
+				uni.stopPullDownRefresh();
+			},
+			 getReachList(){
+				if(this.pageNum==0){
+					uni.showLoading(
+					{
+						title: '没有更多数据了'
+					})
+					setTimeout(function () {
+					    uni.hideLoading();
+					}, 1000);
+					
+					return false
+				}
+				uni.showLoading(
+				{
+					title: '加载中..',
+				})
+				this.xd_request_post(this.xdServerUrls.xd_pushByHighGradeList,
+				{
+					token:uni.getStorageSync('token'),
+					pageNum:this.pageNum,
+					pageSize:this.pageSize,
+				},
+				false
+					   ).then(res=>{
+						   this.pageNum=res.obj.nextPage;
+						
+						this.listsTab = this.listsTab.concat(res.obj.list);					
+						setTimeout(function () {
+						    uni.hideLoading()
+						}, 2000);
+						
+					})
+			}
+			
+		},
+		onShow() {
+			this.indexData()
+		},
+		// 下拉刷新
+		onPullDownRefresh() {
+			this.getNewList()
+		},
+		// 上拉加载
+		onReachBottom() {
+			this.getReachList()
 		}
+		
+		
 	}
 	
 </script>
@@ -383,7 +414,11 @@
 					padding: 18upx 0 12upx 0;
 				}
 				.xd-list-desc{
+					height: 110upx;
+					overflow: hidden;
 					padding-bottom: 20upx;
+					text-indent: 50upx;
+					
 				}
 				
 				.xd-grids{
@@ -409,14 +444,21 @@
 							color: #e17175;
 							.xd-tbr-txt-bold{
 								color: #ea030b;
+								font-size: 19upx;
 							}
 						}
 					}
 					.xd-grids-items.supervise-grids{
 						width: 23%;
-						.xd-tbr-large{
+						.buttonShare{
 							background: #f9ebe5;
 							color: #e17175;
+							height: 40upx;
+							border-radius: 20upx;
+							font-size: 25upx;
+							line-height: 1.7;
+							margin-top: 5upx;
+
 						}
 					}
 				}

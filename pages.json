@@ -6,7 +6,8 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "行动打卡"
+				"navigationBarTitleText": "行动打卡",
+				"enablePullDownRefresh": true
 			}
 		}, 
 		{
@@ -50,7 +51,8 @@
 		{
 			"path": "pages/action/action",
 			"style": {
-				"navigationBarTitleText": "行动"
+				"navigationBarTitleText": "行动",
+				"enablePullDownRefresh": true
 			}
 		}, 
 		{
@@ -85,6 +87,12 @@
 			"path": "pages/selfCenter/editUserInfo",
 			"style": {
 				"navigationBarTitleText": "编辑信息"
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "微信授权登录"
 			}
 		}
 

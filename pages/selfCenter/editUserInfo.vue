@@ -1,80 +1,147 @@
 <template>
 	<view class="editUserInfo">
-		<form>
+		<form @submit="fromSubmit">
 			<view class="f-lists">
 				<view class="f-list f-headInfo">
 					<view class="h-userInfo">
-						<view class="h-headInfo-imgbar"><img class="h-headInfo-img" src="../../static/images/pic/header.png" /></view>
+						<view class="h-headInfo-imgbar"><image class="h-headInfo-img" v-show="img" :src="img" @click="popUpImg"></image></view>				
 						<view class="h-headInfo-imgTxt">
 							<text>点击头像更换</text>
 						</view>
 					</view>
 				</view>
-				<view class="f-list"><input class="uni-input" name="nikename" placeholder="昵称" maxlength="12" /></view>
-				<view class="f-list"><input class="uni-input" name="name" placeholder="签名" maxlength="12" /></view>
+				<view class="f-list"><input class="uni-input" name="userName" placeholder="请输入您的昵称" maxlength="12" v-model="userName"/></view>
+				<!-- <view class="f-list"><input class="uni-input" name="name" placeholder="签名" maxlength="12" /></view> -->
 				<view class="f-list">
-					<input class="uni-input" name="pickerText" placeholder="请选择地区" maxlength="200" @tap="openAddres" v-model="pickerText" disabled />
-					<simple-address ref="simpleAddress" :pickerValueDefault="cityPickerValueDefault" @onConfirm="onConfirm"></simple-address>
+					<input class="uni-input" name="province" placeholder="请输入省份" maxlength="200"  v-model="province" />
+				</view>
+				<view class="f-list">
+					<input class="uni-input" name="city" placeholder="请输入城市" maxlength="200"  v-model="city" />
 				</view>
 				<view class="f-list left">
 					<text class="f-list-lb">性别：</text>
-					<radio-group @change="radioChange">
-						<label class="radio">
-							<radio value="r1" checked="true" color="#ffa700"/>
-							男
-						</label>
-						<label class="radio">
-							<radio value="r2"  color="#ffa700"/>
-							女
-						</label>
-						<label class="radio">
-							<radio value="r2"  color="#ffa700"/>
-							保密
+					<radio-group name='sex'>
+						<label class="radio" v-for="(item, index) in items" :key="item.value" >
+							<radio :value="item.value" :checked="index === current" color="#ffa700">{{item.name}}</radio>
 						</label>
 					</radio-group>
 				</view>
-				<view class="f-list">
+				<!-- <view class="f-list">
 					<picker mode="date" :value="date" @change="bindDateChange" class="pickdate">
 						<view class="uni-input">{{ date }}</view>
 					</picker>
-				</view>
-				<view class="f-list"><input class="uni-input" name="no" placeholder="学校" maxlength="80" /></view>
-				<view class="f-list"><input class="uni-input" name="no" placeholder="行业" maxlength="80" /></view>
-				<view class="f-list"><input class="uni-input" name="no" placeholder="公司" maxlength="80" /></view>
-				<view class="f-list"><input class="uni-input" name="no" placeholder="职业" maxlength="80" /></view>
-				<view class="f-list"><input class="uni-input" name="no" placeholder="职位" maxlength="80" /></view>
-				<view class="f-btns"><button class="f-btn f-btn-b" @click="submit()">保存</button></view>
+				</view> -->
+				<view class="f-list"><input class="uni-input" name="userMobile" placeholder="请输入手机号" maxlength="80" /></view>
+				<view class="f-list"><input class="uni-input" name="schoolName" placeholder="请输入学校名称" maxlength="80" /></view>
+				<view class="f-btns"><button class="f-btn f-btn-b" form-type="submit">保存</button></view>
 			</view>
 		</form>
 	</view>
 </template>
 
 <script>
-import simpleAddress from '@/components/simple-address/simple-address.nvue';
+// import simpleAddress from '@/components/simple-address/simple-address.nvue';
 export default {
 	data() {
 		return {
-			cityPickerValueDefault: [0, 0, 1],
-			pickerText: '',
-			date: '生日',
+			current:0,
+			items:[{
+				value:0,
+				name:'女'
+			},{
+				value:1,
+				name:'男'
+			},{
+				value:2,
+				name:'保密'
+			}
+			],
+			userMobile:'',
+			schoolName:'',
+			userName:'',
+			province:'',
+			city:'',
+			img:'',
 		};
 	},
+	onLoad() {
+		let userInfo=uni.getStorageSync('userInfo');
+		this.userName=userInfo.nickName;
+		this.province=userInfo.province;
+		this.city=userInfo.city;
+		this.current=userInfo.gender;
+		this.img=userInfo.avatarUrl;
+	},
 	methods: {
-		openAddres() {
-			this.$refs.simpleAddress.open();
-		},
+		// openAddres() {
+		// 	this.$refs.simpleAddress.open();
+		// },
 		onConfirm(e) {
 			this.pickerText = e.label; //JSON.stringify(e);
 			console.log(e);
 		},
-		bindDateChange: function(e) {
-			this.date = e.target.value;
-		}
+		// bindDateChange: function(e) {
+		// 	this.date = e.target.value;
+		// },
+		popUpImg(){
+			const that = this;
+			uni.chooseImage({
+			    count: 1, //默认9
+			    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+			    sourceType: ['album'], //从相册选择
+			    success: function (res) {
+					let tempFilePaths = res.tempFilePaths;
+					 uni.uploadFile({
+					            url: that.xdServerUrls.xd_uploadFile, 
+					            filePath: tempFilePaths[0],
+					            name: 'files',
+					            formData: {
+					                'userId': uni.getStorageSync('id'),
+					            },
+					            success: (uploadFileRes) => {
+			
+									that.img=JSON.parse(uploadFileRes.data).obj[0];
+					               
+					            }
+					        });
+			    }
+			});
+		},
+		fromSubmit(e){
+			console.log(e)
+			let userData={
+				token:'',
+				id:'',
+			};
+			try{
+				userData.token=uni.getStorageSync('token');
+				userData.id=uni.getStorageSync('id');
+				
+			}catch(e){
+				//TODO handle the exception
+			}
+			
+			this.xd_request_post(this.xdServerUrls.xd_modifyUserInfo,
+			{
+				userMobile:e.detail.value.userMobile,
+				schoolName:e.detail.value.schoolName,
+				userName:e.detail.value.userName,
+				province:e.detail.value.province,
+				city:e.detail.value.city,
+				// token:userData.token,
+				sex:e.detail.value.sex, 
+				id:userData.id,
+				userHead:this.img,
+			},
+			false).then(res=>{
+				console.log(res)
+			})
+		},
 	},
 
-	components: {
-		simpleAddress
-	}
+	// components: {
+	// 	simpleAddress
+	// }
 };
 </script>
 

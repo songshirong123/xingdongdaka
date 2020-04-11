@@ -1,24 +1,24 @@
 <template>
 	<view class="formAction">
-		<form>
+		<form @submit="formSubmit">
 			<view class="uni-form-item uni-column">
 				<view class="title">行动项</view>
-				<view class="form-item"><input class="uni-input" name="input" placeholder="请输入行动项名称" maxlength="50" /></view>
+				<view class="form-item"><input class="uni-input" name="content" placeholder="请输入行动项名称" maxlength="50" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">动机目标</view>
-				<view class="form-item"><input class="uni-input" name="input" placeholder="请输入动机目标" maxlength="50" /></view>
+				<view class="form-item"><input class="uni-input" name="extendContent" placeholder="请输入动机目标" maxlength="50" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">打卡方式</view>
-				<view class="form-item"><input class="uni-input" name="input" placeholder="请输入打卡方式" maxlength="150" /></view>
+				<view class="form-item"><input class="uni-input" name="punchCardWay" placeholder="请输入打卡方式" maxlength="150" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">封面上传</view>
 				<view class="form-item nobtm">
 					<view class="image-content">
-						<image class="imgShow" v-show="param.img" :src="param.img" @click="popUpImg"></image>
-						<view class="imagetip"  v-show="!param.img" @click="popUpImg">
+						<image class="imgShow" v-show="param.pictures" :src="param.pictures" @click="popUpImg"></image>
+						<view class="imagetip"  v-show="!param.pictures" @click="popUpImg">
 							<view class="imagetipicon">
 								<text>+</text>
 							</view> 
@@ -29,10 +29,13 @@
 					</view>
 				</view>
 			</view>
-		</form>
 		<view class="btn_bar">
-			<view class="btns"><button class="btn" @click="goStep">下一步</button></view>
+			<view class="btns"><button class="btn" form-type="submit">下一步</button></view>
 		</view>
+		</form>
+		<!-- <view class="btn_bar">
+			<view class="btns"><button class="btn" form-type="submit">下一步</button></view>
+		</view> -->
 		
 	</view>
 </template>
@@ -42,14 +45,33 @@ export default {
 	data() {
 		return {
 			param:{
-				img:""
+				pictures:""
 			}
 		};
 	},
 	methods: {
-		goStep(){
+		formSubmit(e){
+			console.log(e.detail.value.content)
+			if(e.detail.value.content==''){
+				uni.showToast({
+				    title: '请出入行动项名称',
+					mask:true,
+				    duration: 1000,
+					image:'/static/images/icon/clock.png'
+				});
+				return false
+			};
+			if(e.detail.value.extendContent==''){
+				uni.showToast({
+				    title: '请出入行动目标',
+					mask:true,
+				    duration: 1000,
+					image:'/static/images/icon/clock.png'
+				});
+				return false
+			}
 			uni.navigateTo({
-				url: `/pages/action/step2`
+				url: '/pages/action/step2?pictures='+this.param.pictures+'&formData='+encodeURIComponent(JSON.stringify(e.detail.value))
 			});
 		},
 		popUpImg(){
@@ -59,11 +81,27 @@ export default {
 			    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 			    sourceType: ['album'], //从相册选择
 			    success: function (res) {
-			        console.log(JSON.stringify(res.tempFilePaths));
-					that.param.img = res.tempFilePaths;
+					let tempFilePaths = res.tempFilePaths;
+					 uni.uploadFile({
+					            url: that.xdServerUrls.xd_uploadFile, 
+					            filePath: tempFilePaths[0],
+					            name: 'files',
+					            formData: {
+					                'userId': uni.getStorageSync('id'),
+					            },
+					            success: (uploadFileRes) => {
+	
+									that.param.pictures=JSON.parse(uploadFileRes.data).obj[0];
+					               
+					            }
+					        });
 			    }
 			});
+		},
+		updataImg(){
+			
 		}
+		
 	}
 };
 </script>

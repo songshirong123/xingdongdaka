@@ -3,30 +3,30 @@
 		<!-- <button @click="clickMe">支付</button> -->
 		<view class="personContent">
 			<view class="personHead" @click="goPage('/pages/selfCenter/editUserInfo')">
-				<img src="../../static/images/pic/header.png" alt="" class="imgHead">
+				<img :src="userInfo.avatarUrl" alt="" class="imgHead">
 			</view>
 			<view class="personInfo"  @click="goPage('/pages/selfCenter/editUserInfo')">
 				<view class="xd-list-title-text name ">
-					<text>暖暖</text>
+					<text>{{userInfo.nickName}}</text>
 				</view>
 				<view class="subInfo">
-					<text>健身狂魔</text>
+					<text></text>
 				</view>
 			</view>
-			<view class="personOpt">
+			<!-- <view class="personOpt">
 				<text class="viewself link"  @click="goPage('/pages/selfCenter/selfView?view=other')">个人主页</text>
 				<button @click="clickMe" class="pay">支付</button>
-			</view>
+			</view> -->
 		</view>
 		<view class="moreInfo">
 			<view class="moreInfoRow">
 				<view class="moreInfoIn">
-					<text>湖南长沙</text>
+					<text>{{userInfo.province}}.{{userInfo.city}}</text>
 				</view>
-				<view class="moreInfoIn">
-					<!-- <text class="gender">♂</text> -->
-					<text class="gender">♀</text>
-					<text>20</text>
+				<view class="moreInfoIn" >
+					<text v-if="userInfo.gender==1" class="boy">♂</text>
+					<text v-else class="gender">♀</text>
+					<!-- <text>20</text> -->
 				</view>
 				<view class="moreInfoIn flex1">
 					<text>学校</text>
@@ -35,7 +35,7 @@
 					<text>  &nbsp;</text>
 				</view> -->
 			</view>
-			<view class="moreInfoRow">
+			<!-- <view class="moreInfoRow">
 				<view class="moreInfoIn">
 					<text>行业</text>
 				</view>
@@ -74,7 +74,7 @@
 					<text>收益：1999</text>
 				</view>
 			</view>
-			
+			 -->
 		</view>
 		
 		<!-- <view class="actionInfo">
@@ -111,7 +111,8 @@
 		data() {
 			return {
 				tab:0,//行动，围观，收藏
-				list:[1,2,3,4,5]
+				list:[1,2,3,4,5],
+				userInfo:uni.getStorageSync('userInfo'),
 			}
 		},
 		methods: {
@@ -326,6 +327,15 @@
 		margin-right: 2rpx;
 		// height: 24rpx;
 		// line-height: 24rpx;
+	}
+	.boy{
+		background:#66CCFF;
+		color:#fff;
+		display: inline-block;
+		padding:0 6rpx;
+		border-radius: 100%;
+		font-size: 22rpx;
+		margin-right: 2rpx;
 	}
 	.moreInfoRow{
 		display: flex;

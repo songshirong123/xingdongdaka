@@ -113,8 +113,21 @@ function xd_request(url, method, params, headers) {
 			dataType: "json",
 			success: function(res) {
 				var d = res.data;
-				if (d.code === 0) {
-					resolve(d); // 自行处理返回结果
+				if (d.resultCode == 0||d.status==1) {
+					if (d.resultCode== 501) {
+					      // 清除登录相关内容
+						try {
+						  uni.removeStorageSync('userInfo');
+						  uni.removeStorageSync('user');
+						} catch (e) {
+						}
+						// 切换到登录页面
+						uni.reLaunch({
+						  url: '/pages/login/login.vue'
+						});
+					  } else {
+						resolve(d);
+					  }
 				} else {
 					reject(d.msg);
 				}
@@ -127,7 +140,7 @@ function xd_request(url, method, params, headers) {
 }
 // 简单request get
 function xd_request_get(url, params, withToken) {
-	var headers = {};
+	var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
 	if (withToken !== false) {
 		var accessToken = xd_getAccessToken(); // token
 		headers = { // application/json

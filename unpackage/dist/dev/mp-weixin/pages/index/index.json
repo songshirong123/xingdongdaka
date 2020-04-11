@@ -1,4 +1,5 @@
 {
   "navigationBarTitleText": "行动打卡",
+  "enablePullDownRefresh": true,
   "usingComponents": {}
 }

@@ -1,7 +1,7 @@
 <template>
 	<view class="formAction">
-		<form>
-			<view class="uni-form-item uni-column">
+		<form @submit="formSubmit">
+			<!-- <view class="uni-form-item uni-column">
 				<view class="title">是否公开</view>
 				<view class="form-item nobtm">
 					<label class="radio">
@@ -24,41 +24,167 @@
 					</view>
 					<view class="sb-icon"><view class="triangle"></view></view>
 				</view>
-			</view>
+			</view> -->
 			<view class="uni-form-item uni-column">
 				<view class="title">设置保障金</view>
-				<view class="form-item"><input type="digit" class="digit" placeholder="请输入保障金数额" /></view>
+				
+				<view class="form-item"><input :value="rmb.challengeRmb" type="digit" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="50" /></view>
 				<view class="pricelis">
-					<view class="priceli"><text>1元</text></view>
-					<view class="priceli"><text>6元</text></view>
-					<view class="priceli"><text>18元</text></view>
-					<view class="priceli"><text>66元</text></view>
-					<view class="priceli"><text>188元</text></view>
-					<view class="priceli"><text>888元</text></view>
+					<view class="priceli" @click="priceRmb(1)"><text>1元</text></view>
+					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
+					<view class="priceli" @click="priceRmb(18)"><text>18元</text></view>
+					<view class="priceli" @click="priceRmb(66)"><text>66元</text></view>
+					<view class="priceli" @click="priceRmb(188)"><text>188元</text></view>
+					<view class="priceli" @click="priceRmb(888)"><text>888元</text></view>
 				</view>
 			</view>
 			<view class="uni-form-item uni-content">
 				<text>说明：目标达成则原额退回。否则将全部扣除，分配30%给平台；剩余的70%平均分配给有效围观者，或在24小时内进行自定义特别感谢。</text>
 			</view>
+			<!--  #ifdef  MP-WEIXIN -->
+			<view class="btn_bar">
+				<view class="btns"><button class="btn" form-type="submit" >微信支付</button></view>
+			</view>
+			<!--  #endif -->
 		</form>
-		<view class="btn_bar">
-			<view class="btns"><button class="btn" @click="finish">提交</button></view>
-		</view>
 	</view>
 </template>
 
 <script>
 export default {
 	data() {
-		return {};
+		return {
+			rmb:{
+				challengeRmb:null,
+			},
+			formData:{},
+			saveData:{}
+		};
+	},
+	onLoad(option) {
+		console.log(option);
+		this.formData= JSON.parse(decodeURIComponent(option.data));
+		
 	},
 	methods: {
-		goStep2() {
-			uni.navigateTo({
-				url: `/pages/action/step2`
-			});
+		formSubmit(e) {
+			var that = this;
+			if(that.rmb.challengeRmb==null){
+				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
+					uni.showToast({
+					    title: '请出入保障金',
+						mask:true,
+					    duration: 1000,
+						image:'/static/images/icon/clock.png'
+					});
+					return false
+				};
+			}
+				
+			let userData={
+				token:'',
+				userId:'',
+			}
+			try{
+				userData.token=uni.getStorageSync('token');
+				userData.userId=uni.getStorageSync('id');
+			}catch(e){
+				//TODO handle the exception
+			}
+			if(that.rmb.challengeRmb!=null){
+				that.saveData=Object.assign(that.formData,that.rmb,userData);	
+			}else{
+				that.saveData=Object.assign(that.formData,e.detail.value,userData);
+				
+			}
+			that.goPay();
+			
+		},
+		priceRmb(e){
+		
+			this.rmb.challengeRmb=e;
+			this.formSubmit();
+		},
+		//#ifdef MP-WEIXIN
+		goPay(){
+			var that = this;
+			var data={
+				id:'',
+				userName:'',
+				// userMobile:''
+				token:'',
+				unionId:'',
+				openid:'',
+				city:'',
+				province:'',
+				status:0,
+			};
+			let userInfo={};
+			try{
+				userInfo=uni.getStorageSync('userInfo');
+				
+			}catch(e){
+				//TODO handle the exception
+			};
+			data.id=that.saveData.userId;
+			data.token=that.saveData.token;
+			data.city=userInfo.city;
+			data.userName=userInfo.nickName;
+			data.province=userInfo.province;
+			data.unionId=userInfo.unionId;
+			data.openid=userInfo.openId;
+			console.log(data)
+			that.xd_request_post(that.xdServerUrls.xd_pay,data,false).then(res=>{
+				console.log(res)
+				uni.requestPayment({
+					 'appId': res.obj.appId,
+					'timeStamp': res.obj.timeStamp,
+					'nonceStr': res.obj.nonceStr,
+					'package': res.obj.packageAlias,
+					'signType': 'MD5',
+					'paySign': res.obj.paySign,
+					success: function (res) {
+						that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
+							console.log(res)
+						}),
+						that.xd_request_post(that.xdServerUrls.xd_resultCallBack,{},false).then( res=>{
+						})
+						uni.showToast({
+							title: '微信支付成功',
+							icon: 'success',
+							duration: 1500
+						});
+						uni.reLaunch({
+							url: '../index/index'
+						})
+					},
+					fail: function (err) {
+						// 支付失败的回调中 用户未付款
+						uni.showModal({
+							content:'支付取消',
+							confirmText:'继续支付',
+							cancelText:'返回首页',
+							image:'/static/images/icon/clock.png',
+							success:function(res) {
+								 if (res.confirm) {
+									return false
+								} else if (res.cancel) {
+									uni.reLaunch({
+										url: '../index/index',
+										})
+									}
+								},
+								
+						});
+					}
+				});
+			})
+			
 		}
-	}
+		//#endif
+		
+	},
+	
 };
 </script>
 

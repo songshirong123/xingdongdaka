@@ -11,12 +11,15 @@ Vue.prototype.xd_request = xdUniUtils.xd_request; // 网络请求
 Vue.prototype.xd_request_get = xdUniUtils.xd_request_get; // 网络请求 GET
 Vue.prototype.xd_request_post = xdUniUtils.xd_request_post; // 网络请求 POST
 
+Vue.prototype.$store=store;
+
 moment.locale('zh-cn');
 Vue.prototype.moment = moment;
 
 App.mpType = 'app'
 
 const app = new Vue({
-    ...App
+    ...App,
+	store
 })
 app.$mount()

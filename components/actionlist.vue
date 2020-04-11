@@ -1,20 +1,20 @@
-<template>
+<template name='actionlist'>
 	<view class="actionLi">
 		<view class="ali-top">
 			<view class="ali-top-in">
-				<text>进度:20/30</text>
+				<text>进度:{{item.targetDay-item.holidayDay-item.pushCardCount}}\{{item.targetDay}}</text>
 			</view>
 			<view class="ali-top-in">
-				<text>剩余休假:6</text>
+				<text>休假:{{item.holidayDay}}</text>
 			</view>
 		</view>
 		<view class="ali-main">
 			<view class="ali-main-img">
-				<img src="../static/images/pic/list2.jpg" alt="" class="xd-list-image">
+				<img :src="item.pictures" alt="" class="xd-list-image">
 			</view>
 			<view class="lli-main-content xd-list-body ">
 				<view class="xd-list-title-text">
-					<text>一周健身3次，一年内减重30KG</text>
+					<text>{{item.content}}</text>
 				</view>
 				
 			</view>
@@ -22,36 +22,40 @@
 		<view class="ali-footer">
 			<view class="actionBar xd-tbr-large">
 				<text>获赞助金</text>
-				<text class="price">￥500</text>
-				<text class="sub xd-badge">19</text>
+				<text class="price">￥{{item.giveReward}}</text>
+				<text class="sub xd-badge">{{item.onlookerCount}}</text>
 			</view>
 			<view class="actionBar xd-tbr-large">
 				<text>我的保证金</text>
-				<text class="price">￥500</text>
+				<text class="price">￥{{item.challengeRmb}}</text>
 			</view>
 			<view class="actionBar xd-tbr-large">
 				<text>邀请围观</text>
-				<text class="sub xd-badge">5.8K</text>
+				<text class="sub xd-badge">{{item.onlookerCount}}</text>
 			</view>
 		</view>
-		<view class="ali-btns" v-if="tab===0&&getRole()">
-			<button class="btn" @click="goPage('/pages/selfCenter/clockIn')">立即打卡</button>
+		<view class="ali-btns" :v-if="tab===0&&getRole()">
+			<button class="btn" @click="goPage(item)">立即打卡</button>
 		</view>
 	</view>
 </template>
 
 <script>
 	export default {
-		props:["tab","view"],
+		name:"actionlist",
+		props:['tab','item','view'],
+		
+		
 		data(){
 			return {
 				
 			}
 		},
 		methods:{
-			goPage(url){
+			goPage(item){
+				console.log(item)
 				uni.navigateTo({
-					url
+					url:'/pages/selfCenter/clockIn?pushId='+item.id
 				});
 			},
 			getRole(){

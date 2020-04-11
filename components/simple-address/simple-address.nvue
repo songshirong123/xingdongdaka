@@ -53,9 +53,9 @@
 </template>
 
 <script>
-	import provinceData from './city-data/province.js';
-	import cityData from './city-data/city.js';
-	import areaData from './city-data/area.js';
+	import provinceData from '../city-data/province.js';
+	import cityData from '../city-data/city.js';
+	import areaData from '../city-data/area.js';
 	export default {
 		name: "simpleAddress",
 		props: {
