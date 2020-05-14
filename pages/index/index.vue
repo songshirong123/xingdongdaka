@@ -11,21 +11,23 @@
 		<view class="xd-body">
 			<view class="pageNav xd-flex-center">
 				<view :class="[active == 0 ? 'active' : '']" @tap="showNew">最新</view>
-				<view :class="[active == 1 ? 'active' : '']" @tap="showRecommend">推荐</view>
+				<view :class="[active == 1 || active ==3 ? 'active' : '']" @tap="showRecommend">推荐</view>
 				<view :class="[active == 2 ? 'active' : '']" @tap="showFollow">关注</view>
 			</view>
 			
 			<!-- 最新 -->
-			<view class="xd-list-info" :hidden="active == 1||active==2">
-				最新
+			<view class="xd-list-info" :hidden="active == 1||active==2|| active ==3">				
+				<block v-for="(list, index) in listsTab" :key="index" >								
+				  <indexList :list="list" :index="index" v-on:loveclick='loveClick' :hasLogin="hasLogin" :userId='userId' v-on:lookerClick="lookerClick"></indexList>
+				</block>
 			</view>
 			<!-- 推荐 -->
 			<view class="xd-list-info" :hidden="active == 0||active==2">
 				<view class="swiper-banner">
 				  <swiper class="swiper" indicator-dots="true" autoplay="true" circular="true" indicator-color="#aeaeae" indicator-active-color="#ffffff">
-				  	<swiper-item v-for="(item , index) in bannerList" :key="index">
-				  				<navigator :url="item.bannerImage"><image :src="item.bannerImage" ></image></navigator>
-				  			</swiper-item>
+					<swiper-item v-for="(item , index) in bannerList" :key="index">
+						<image :src="item.bannerImage" @tap="tonewurl(item.bannerUrl)" ></image>
+					</swiper-item>
 				  </swiper>
 				</view>
 				
@@ -33,11 +35,10 @@
 				<view class="xd-info-main">
 					<!-- 推荐项 -->
 					<view class="main-tabbar">
-						<!-- :scroll-into-view="'tab-'+currentIndex" -->
 						<scroll-view
 						:class="['xd-nav-bar', isCenter ? 'xd-nav-center' : '']" scroll-x="true" show-scrollbar="false" >
 							<view :class="['nav-item', currentIndex == index ? 'nav-active' : '']" :id="'tab-'+index" 
-								v-for="(item, index) in tabs" :key="index" :data-index="index"
+								v-for="(item, index) in tabs" :key="index" :data-index="index" :data-id="item.id"
 								@tap="navChange">
 								<view class="nav-item-title">
 									{{item.labelName}}
@@ -47,87 +48,38 @@
 						</scroll-view>
 					</view>
 					<view class="xd-line"></view>
-					<!-- 推荐项对应内容 -->
-					<view class="swiper-box">
-						<view :class="['swiper-item', currentIndex == boxIndex ? 'box-active' : '']" v-for="(listsBox, boxIndex) in listsTab" :key="boxIndex">						
-							<view class="infos-box">
-								<!-- <block v-for="(list, index) in listsTab[boxIndex].lists" :key="index"> -->
-								<block v-for="(list, index) in listsTab" :key="index">
-								
-				
-									<view class="xd-list xd-border-b-color">
-										<view class="xd-list-items">											<view class="xd-list-image xd-relative">
-												<image class="xd-list-image xd-box-shadow" :src="list.pictures"></image>
-												
-												<view class="xd-list-head" @tap="goPage('/pages/selfCenter/selfView?view=other')">
-													<image class="xd-list-head-img xd-box-shadow" :src="list.pictures" mode="widthFix"></image>
-													
-												</view>
-											</view>
-											<view class="xd-list-body xd-border-b-black">
-												<view class="xd-list-title">
-													<text class="xd-list-title-text">{{list.label}}</text>
-													<!-- <view class="xd-list-title-desc">20190318</view> -->
-												</view>
-												<navigator hover-class="none" url="action/action">
-													<view class="xd-list-body-desc xd-ellipsis-line2">{{list.content}}</view>
-												</navigator>
-											</view>
-										</view>
-										<view class="xd-list-body-desc xd-list-time"><text>({{list.targetDay-list.holidayDay-list.pushCardCount}}/{{list.targetDay}})</text></view>
-										<navigator hover-class="none" url="cardDetails/cardDetails">
-											<view class="xd-list-desc">{{list.extendContent}}</view>
-											
-										</navigator>
-										<view class="xd-grids">
-											<view class="xd-grids-items comment-grids">
-												<view class="xd-relative">
-													<image class="xd-grids-icon-img" src="../../static/images/icon/comment.png" mode="widthFix"></image>
-													<view class="xd-badge">{{list.comment}}</view>
-												</view>
-											</view>
-											<view class="xd-grids-items love-grids">
-												<view class="xd-relative">
-													<view v-if="list.islove==0">
-													  <image class="xd-grids-icon-img-love" src="../../static/images/icon/love.png" mode="widthFix" @tap="loveClick(list,index,boxIndex)"></image>
-													</view>
-													<view v-else>
-													  <image class="xd-grids-icon-img-love" src="../../static/images/icon/love-on.png" mode="widthFix" @tap="loveClick(list,index,boxIndex)"></image>
-													</view>
-													<view class="xd-badge">{{list.giveLike}}</view>
-												</view>
-											</view>
-											<view class="xd-grids-items sponsor-grids">
-												<view class="xd-relative">
-													<view class="xd-tbr-large">赞助</view>
-													<view class="xd-badge">{{list.giveReward}}</view>
-												</view>
-											</view>
-											<view class="xd-grids-items bond-grids">
-												<view class="xd-relative">
-													<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{list.challengeRmb}}</text></view>
-												</view>
-											</view>
-											<view class="xd-grids-items supervise-grids">
-												<view class="xd-relative">
-													<!-- #ifdef MP-WEIXIN -->
-													<button class="buttonShare" open-type="share" >邀请围观</button>
-													<!-- #endif -->
-													<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{list.onlookerCount}}</view>
-												</view>
-											</view>
-										</view>
-									</view>
-								</block>
-							</view>
-						</view>
-					</view>
+					<!-- 推荐项对应内容 -->					
+					<block v-for="(list, index) in listsTab" :key="index" >								
+					  <indexList :list="list" :index="index" v-on:loveclick='loveClick' v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' ></indexList>
+					</block>
 				</view>
 			</view>
 			
 			<!-- 关注 -->
-			<view class="xd-list-info" :hidden="active == 0||active==1">
-				关注
+			<view class="xd-list-info" :hidden="active == 0||active==1 ||active == 3">
+				<block v-for="(attention, index) in attentionList" :key="index" >	
+					<view class="actionLi" @tap="attention(attention.attentionUserId)">
+						<view class="ali-main">
+							<view class="ali-main-img">
+								<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
+							</view>
+							<view class="lli-main-content xd-list-body ">
+								<view class="xd-list-title-text">
+									<text>{{attention.userName}}</text>
+								</view>
+								<view  >
+									<text v-if="attention.sex==1" class="boy">♂</text>
+									<text v-else-if="attention.sex==0" class="gender">♀</text>
+									<text v-else class="boy">密</text>
+									<!-- <text>20</text> -->
+								</view>
+							</view>
+							<view class="lli-main-content">
+								<text>取消关注</text>
+							</view>
+						</view>
+					</view>
+				</block>
 			</view>
 			
 		</view>
@@ -140,20 +92,23 @@
 
 <script>
 	import{ mapState,mapMutations} from 'vuex'
+	import indexList from "@/components/indexList.vue";
+	
 	export default {
 		data() {
 			return {
-
+				// audioPlaySrc:'../static/images/icon/img/title1.png',
 				active:1,
 				currentIndex:0,
+				labelId:1,
 				bannerList:[],
 				tabs: [],
 				listsTab:[],
-				
-				
-				
+				attentionList:[],
+				token:uni.getStorageSync('token'),
 				pageNum:1,//当前页数
 				pageSize:10,//每页条数
+				userId:'',
 					
 			};
 		},
@@ -165,89 +120,114 @@
 		    },
 		
 		onLoad() {
-		   this.indexData()
+		    this.indexData();
 		},
 		 computed: {  
 		            ...mapState(['hasLogin'])  
 		        },  
 		methods:{
-			...mapMutations(['logIn','logOut'])  ,
+			...mapMutations(['logIn','logOut','IndexlogIn'])  ,
 			goPage(url){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
 				uni.navigateTo({
 					url
 				});
 			},
-			//首页获取label和根据时间获取列表
+			//首页信息
 			indexData:function(){
-				let token='';
-				try{
-				   token=uni.getStorageSync('token');
-												  
-				}catch(e){
-						console.log(Error)
-				};
-				console.log(this.hasLogin)
-				console.log(this.token)
-				
-				if(!this.hasLogin &&token==''){
-					   this.logOut();
-					   uni.navigateTo({
-						url:"../login/login",
-					   });
-					   return false
-								
-				}else{
-					   this.xd_request_post(this.xdServerUrls.xd_bannerList,{},false
-				        ).then((res) => {
-										   this.bannerList=res.obj
-									 
-										  
-									   }).catch(err => {
-							
-									});
-									this.xd_request_post(this.xdServerUrls.xd_label,{},false
-										   ).then((res) => {
-											   console.log(res)
-											   this.tabs=res.obj
-											   
-										   }).catch(err => {
-										
-									});
-									this.xd_request_post(this.xdServerUrls.xd_pushByHighGradeList,
-									{
-										token:token,
-										pageNum:1,
-										pageSize:10,
-									},
-									false
-										   ).then((res) => {
-											   this.listsTab=res.obj.list;
-											   this.pageNum=res.obj.nextPage;
-										   }).catch(err => {
-								
-			                                                   });
-			  }
+				var token=uni.getStorageSync('token');
+				console.log(token)
+				if(token!=''){
+					this.IndexlogIn();
+				}
+				this.xd_request_post(this.xdServerUrls.xd_bannerList,{},true
+				 ).then((res) => {
+														   this.bannerList=res.obj
+													   
+													   }).catch(err => {						
+													});
+													this.xd_request_post(this.xdServerUrls.xd_label,{},false
+														   ).then((res) => {
+															   this.tabs=res.obj										   
+														   }).catch(err => {									
+													});
+													this.getShowRecommend();
 				
 			},
+			//围观
+			lookerClick:function(list){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				this.userId=uni.getStorageSync('id');
+				this.xd_request_post(this.xdServerUrls.xd_saveLooker,{
+					
+					pushId:list.id,
+					lookUserId:this.userId,
+				},false
+				   ).then(res => {	
+				
+						   if(res.resultCode==0){
+							   uni.showToast({
+								title:'围观成功',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }else if(res.resultCode==10015){
+							   uni.showToast({
+								title:'您已经围观了',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }
+						   
+					
+				})
+			},
 			//点赞
-			loveClick(list,index,boxIndex){
-				let isLove=list.islove;
+			loveClick:function(e,index){
+				let list=e;
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
 				this.xd_request_post(this.xdServerUrls.xd_saveGiveLikeByPush,{
+					
 					pushId:list.id,
 					initiatorUserId:uni.getStorageSync('id'),
 					giveLikeUserId:list.userId,
-				},false
-				   ).then(res => {
+				},true
+				   ).then(res => {	
 						   console.log(res)
-						   if(isLove==1){								   
-												this.listsTab[boxIndex].lists[index].islove=0;
-												this.listsTab[boxIndex].lists[index].love--;
-						   }else if(isLove==0){
-												  this.listsTab[boxIndex].lists[index].islove=1;
-												  this.listsTab[boxIndex].lists[index].love++;
-						                         						  
-						    }
+						   console.log(index)
+						   if(!this.listsTab[index].currentUserGiveLike){								   
+												this.listsTab[index].currentUserGiveLike=true;
+												this.listsTab[index].giveLike++;
+						   }else{
+						   uni.showToast({
+						   								title:'已经赞过了',
+						   								 duration: 1000,
+						   								 icon:'none',
+						   })}
+						   console.log(this.listsTab)
 					   }).catch(err => {
+						   if(err=='操作失败'){
+							   uni.showToast({
+								title:'已经赞过了',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }
 					
 				})
 				
@@ -255,28 +235,122 @@
 			},
 			// 最新
 			showNew: function () {
-				this.active = 0;
+				this.active = 0;	
+				this.pageNum=1;
+				this.listsTab=[];
+				this.getShowNew();
+			},
+			getShowNew(){
+				this.xd_request_post(this.xdServerUrls.xd_pushByCreateTimeList,
+				{
+					pageNum:1,
+					pageSize:10,
+				},
+				true
+					   ).then((res) => {
+						  
+						   this.listsTab=this.timeStamp(res);
+						    this.pageNum=res.obj.nextPage; 
+					   }).catch(err => {					
+				                           });
+				
 			},
 			// 推荐
 			showRecommend : function(){
 				this.active = 1;
+				this.pageNum=1;
+				this.listsTab=[];
+				this.indexData();
+				
+			},
+			getShowRecommend(){
+				this.xd_request_post(this.xdServerUrls.xd_pushByHighGradeList,
+				{
+					token:uni.getStorageSync('token') ,
+					pageNum:1,
+					pageSize:10,
+				},
+				true
+					   ).then((res) => {
+						   this.listsTab=this.timeStamp(res);
+						   this.pageNum=res.obj.nextPage;
+					   }).catch(err => {											
+				                           });
+				
+			},
+			timeStamp(res){
+				let dataList=res.obj.list;
+				for(var i=0;i <res.obj.list.length;i++){
+				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
+					dataList[i].createTime=time;
+					dataList[i].challengeRmb=Math.trunc(dataList[i].challengeRmb/100);
+					
+				}
+				return dataList;
 			},
 			// 关注
 			showFollow : function(){
 				this.active = 2;
+				this.pageNum=1;
+				this.getShowFollow();
+			},
+			getShowFollow(){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				this.xd_request_post(this.xdServerUrls.xd_getAttentionList,
+				{
+					userId:uni.getStorageSync('id'),
+					pageNum:1,
+					pageSize:10,
+				},
+				true
+					   ).then((res) => {
+						   this.attentionList=res.obj.list;
+						   this.pageNum=res.obj.nextPage;
+					   }).catch(err => {											
+				                           });
+				
+				
+			},
+			//标签获取列表
+			getPushByLabel(){
+				this.xd_request_post(this.xdServerUrls.xd_pushByLabel,
+				{
+					token:uni.getStorageSync('token') ,
+					pageNum:1,
+					pageSize:10,
+					labelId:this.labelId,
+				},
+				true
+					   ).then((res) => {
+						   this.listsTab=this.timeStamp(res);
+						   this.pageNum=res.obj.nextPage==undefined? 1:res.obj.nextPage;
+					   }).catch(err => {											
+				                           });
+				
 			},
 			
 			// 推荐内容切换
 			navChange: function (e) {
+				console.log(e)
+				this.pageNum=1;
+				this.listsTab=[];
+				this.active=3;
 				this.currentIndex = e.currentTarget.dataset.index;
+				this.labelId=e.currentTarget.dataset.id;
+				this.getPushByLabel();
+				
 			},
 			getNewList(){
-				this.indexData(),
-				this.pageNum=1,
-				uni.stopPullDownRefresh();
 			},
 			 getReachList(){
-				if(this.pageNum==0){
+				 var data={};
+				 let that=this;
+				if(that.pageNum==0){
 					uni.showLoading(
 					{
 						title: '没有更多数据了'
@@ -291,35 +365,147 @@
 				{
 					title: '加载中..',
 				})
-				this.xd_request_post(this.xdServerUrls.xd_pushByHighGradeList,
-				{
-					token:uni.getStorageSync('token'),
-					pageNum:this.pageNum,
-					pageSize:this.pageSize,
-				},
-				false
-					   ).then(res=>{
-						   this.pageNum=res.obj.nextPage;
+				switch(that.active){
+					case 0:
+					that.xd_request_post(that.xdServerUrls.xd_pushByCreateTimeList,
+					{
 						
-						this.listsTab = this.listsTab.concat(res.obj.list);					
-						setTimeout(function () {
-						    uni.hideLoading()
-						}, 2000);
-						
-					})
-			}
+						pageNum:that.pageNum,
+						pageSize:that.pageSize,
+					},
+					true
+						   ).then(res=>{
+							 that.pageNum=res.obj.nextPage;
+							 data =that.timeStamp(res);
+							that.listsTab = that.listsTab.concat(data);					
+							setTimeout(function () {
+							    uni.hideLoading()
+							}, 1000);	
+						})
+					
+					break;
+					case 1:
+					that.xd_request_post(that.xdServerUrls.xd_pushByHighGradeList,
+					{
+						pageNum:that.pageNum,
+						pageSize:that.pageSize,
+					},
+					true
+						   ).then(res=>{
+							   that.pageNum=res.obj.nextPage;
+									   
+								  data=that.timeStamp(res);
+							that.listsTab = that.listsTab.concat(data);					
+							setTimeout(function () {
+							    uni.hideLoading()
+							}, 1000);							
+						})
+					break;
+					case 2:
+					if(!that.hasLogin){
+						uni.navigateTo({
+							url: '../login/login' 
+						});
+						return false;
+					}
+					that.xd_request_post(that.xdServerUrls.xd_getAttentionList,
+					{
+						userId:uni.getStorageSync('id'),
+						pageNum:that.pageNum,
+						pageSize:that.pageSize,
+					},
+					true
+						   ).then(res=>{
+							that.pageNum=res.obj.nextPage;						
+							that.attentionList = that.attentionList.concat(res.obj.list);					
+							setTimeout(function () {
+							    uni.hideLoading()
+							}, 1000);
+							
+						})
+					
+					break;
+					case 3:
+					that.xd_request_post(that.xdServerUrls.xd_pushByLabel,
+					{
+						pageNum:that.pageNum,
+						pageSize:that.pageSize,
+						labelId:this.labelId,
+					},
+					true
+						   ).then(res=>{
+							   that.pageNum=res.obj.nextPage;
+									   
+								  data=that.timeStamp(res);
+							that.listsTab = that.listsTab.concat(data);					
+							setTimeout(function () {
+							    uni.hideLoading()
+							}, 1000);							
+						})
+					break;
+				}
+			},
+			// 跳转外部链接
+			tonewurl(e) {
+				let url=e;
+				// 判断链接是否为空
+				if (url == null) {
+					return false;
+				}
+				// 判断链接是否为https
+				let notS = url.split(':')[0];
+				let a = notS.indexOf('s') > -1;
+				if (a == false) {
+					uni.navigateTo({
+						url: url
+					});
+					return false;
+				}		
+				//  链接拼接编码网址（同时用模板字符串放置所需要的数据）
+				// url = encodeURIComponent(url + `?typefrom=${typefrom}&utoken=${utoken}&unionid=${unionid}&shopid=${shopId}`);
+				url = encodeURIComponent(url);
+				uni.navigateTo({
+					url: '../web/webShow?url=' + url
+				});
+			},      
 			
 		},
 		onShow() {
-			this.indexData()
+			this.active=1;
+			this.indexData();
 		},
 		// 下拉刷新
 		onPullDownRefresh() {
-			this.getNewList()
+			switch(this.active){
+				case 0:
+				this.getShowNew(),
+				this.pageNum=1,
+				uni.stopPullDownRefresh();
+				break;
+				case 1:
+				this.indexData(),
+				this.pageNum=1,
+				uni.stopPullDownRefresh();
+				
+				case 2:
+				this.getShowFollow(),
+				this.pageNum=1,
+				uni.stopPullDownRefresh();
+				break;
+				case 3:
+				this.indexData(),
+				this.pageNum=1,
+				uni.stopPullDownRefresh();
+				this.currentIndex=0;
+				break;
+			}
 		},
 		// 上拉加载
 		onReachBottom() {
 			this.getReachList()
+		},
+		components:{
+			indexList
 		}
 		
 		
@@ -401,69 +587,6 @@
 			.infos-box{
 				padding-top: 20upx;
 			}
-			// 列表功能
-			.xd-list{
-				width: 100%;
-				padding-top: 20upx;
-				margin-bottom: 16upx;
-				
-				.xd-list-head{
-					position: absolute; top: -24rpx; right: -28rpx; z-index: 9;
-				}
-				.xd-list-time{
-					padding: 18upx 0 12upx 0;
-				}
-				.xd-list-desc{
-					height: 110upx;
-					overflow: hidden;
-					padding-bottom: 20upx;
-					text-indent: 50upx;
-					
-				}
-				
-				.xd-grids{
-					
-					.xd-grids-items.comment-grids{
-						width: 13%;
-						flex-direction:row
-					}
-					.xd-grids-items.love-grids{
-						width: 14%;
-					}
-					.xd-grids-items.sponsor-grids{
-						width: 20%;
-						.xd-tbr-large{
-							background: #ffe66f;
-							color: #101010;
-						}
-					}
-					.xd-grids-items.bond-grids{
-						width: 26%;
-						.xd-tbr-large{
-							background: #f9ebe5;
-							color: #e17175;
-							.xd-tbr-txt-bold{
-								color: #ea030b;
-								font-size: 19upx;
-							}
-						}
-					}
-					.xd-grids-items.supervise-grids{
-						width: 23%;
-						.buttonShare{
-							background: #f9ebe5;
-							color: #e17175;
-							height: 40upx;
-							border-radius: 20upx;
-							font-size: 25upx;
-							line-height: 1.7;
-							margin-top: 5upx;
-
-						}
-					}
-				}
-			}
-			
 		}
 	}
 	.start-add{
@@ -477,4 +600,36 @@
 	.start-add image{
 		width: 48upx; height:48upx;
 	}
+	.actionLi{
+		padding-top: 20rpx;
+		border-bottom: 1upx solid #ffa700;
+		.ali-main{
+			display: flex;
+			}
+			.xd-mag{
+				height: 125rpx;
+				width: 125rpx;
+			}
+		}
+	.gender{
+		background:#fd5107;
+		color:#fff;
+		display: inline-block;
+		padding:0 6rpx;
+		border-radius: 100%;
+		font-size: 22rpx;
+		margin-right: 2rpx;
+		// height: 24rpx;
+		// line-height: 24rpx;
+	}
+	.boy{
+		background:#66CCFF;
+		color:#fff;
+		display: inline-block;
+		padding:0 6rpx;
+		border-radius: 100%;
+		font-size: 22rpx;
+		margin-right: 2rpx;
+	}
+		
 </style>

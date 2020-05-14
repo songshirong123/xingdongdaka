@@ -62,11 +62,11 @@
 .xd-list-items{display:flex; flex-direction:row; flex-wrap:nowrap; align-items:center; justify-content:center;}
 .xd-list-image{width:236upx; height:150upx; border-radius:20upx; font-size:0; flex-shrink:0;}
 .xd-list-head-img{width:70upx; height:70upx; border-radius:70upx; font-size:0; flex-shrink:0;}
-.xd-list-body{padding:26upx 0; margin-left:48upx; width:100upx; flex:auto;}
+.xd-list-body{padding:26upx 0; margin-left:48upx; width:100upx; flex:auto;height: 130upx; margin-top:-20upx;}
 .xd-list-title{display:flex; flex-direction:row; flex-wrap:nowrap;}
 .xd-list-title-text{display:block; font-size:30upx !important; color:#101010; line-height:40upx; font-weight: bold;}
 .xd-list-title-desc,.list-time{display:block; font-size:22upx; color:#888888; line-height:32upx;flex-shrink:0;}
-.xd-list-body-desc{font-size:24upx; color:#888888; line-height:36upx; padding-top: 8upx;}
+.xd-list-body-desc{font-size:24upx; color:#888888; line-height:36upx; padding-top: 30upx;}
 .xd-list-desc{font-size:28upx !important; color:#101010; line-height:36upx;}
 /* 评论列表 */
 .xd-comments{}

@@ -5,11 +5,11 @@
 				<view class="tab " :class="tab===0?'active':''" @click="tab=0">
 					<text>行动 ({{total}})</text>
 				</view>
-				<view class="tab" :class="tab===1?'active':''" @click="tab=0">
-					<text>围观 (0)</text>
+				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
+					<text>围观 ({{looktotal}})</text>
 				</view>
-				<view class="tab" :class="tab===2?'active':''" @click="tab=0">
-					<text>收藏 (0)</text>
+				<view class="tab" :class="tab===2?'active':''" @click="tab=2">
+					<text>收藏 ({{total}})</text>
 				</view>
 			</view>
 			<view class="actionTabList">
@@ -17,7 +17,7 @@
 					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab" ></actionlist>
 				</view>
 				<view class="actionLook" v-show="tab===1">
-					<actionlist  :tab="tab"></actionlist>
+					<actionlist  v-for="(item,index) in lookerList" :item="item" :key="index" :tab="tab"></actionlist>
 				</view>
 				<view class="actionFavorite" v-show="tab===2">
 					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab"></actionlist>
@@ -33,29 +33,47 @@
 </template>
 
 <script>
+	import{ mapState,mapMutations} from 'vuex'
 import actionlist from "@/components/actionlist.vue";
 export default {
 	data() {
 		return {
+			vi:1,
 			tab:0,//行动，围观，收藏
 			cardList:[],
-			pageNum:1,//当前页数
+			lookerList:[],
+			nextPage:1,//当前页数
 			pageSize:10,//每页条数
+			nextPageTwo:'',
 			total:'',
+			looktotal:'',
 		};
+	},
+	onShow() {	
+		this.inDada();
 	},
 	onLoad() {
 		this.inDada();
 	},
+	computed: {
+	           ...mapState(['hasLogin'])  
+	       },  
 	methods: {
 		goStep(){
 			uni.navigateTo({
 				url: `/pages/action/step1`
 			});
 		},
-		inDada(){
+		inDada(){		
 			let token='';
 			let id='';
+			if(!this.hasLogin){
+				uni.redirectTo
+					({
+					url: '../login/login' 
+				});
+				return false;
+			}
 			try{
 				token=uni.getStorageSync('token');
 				id=uni.getStorageSync('id');
@@ -73,24 +91,38 @@ export default {
 			   
 			       ).then(res=>{
 					   console.log(res)
-						 this.cardList=res.obj.list;
-						 this.pageNum=res.obj.nextPage;
+						 this.cardList=this.dataPaly(res);
+						 this.nextPage=res.obj.nextPage;
 						 this.total=res.obj.total;
 			   	}).catch(Error=>{
 			   		console.log(Error)
 			   	})
-			   
-			    
+				this.xd_request_post(this.xdServerUrls.xd_getLookerByUserId,
+				{
+				token:token,
+				pageNum:1,
+				pageSize:10,
+				},
+				false
+				
+				    ).then(res=>{
+									   console.log(res)
+										 this.lookerList=res.obj.list;
+										 this.nextPageTwo=res.obj.nextPage;
+										 this.looktotal=res.obj.total;
+					}).catch(Error=>{
+						console.log(Error)
+					})
 			},
 			getReachList(){
-					
-					if(this.pageNum==0){
+				if(this.tab==0){
+					if(this.nextPage==0){
 						uni.showLoading(
 						{
 							title: '没有更多数据了'
 						})
 						setTimeout(function () {
-						    uni.hideLoading();
+							uni.hideLoading();
 						}, 1000);
 						return false
 					}
@@ -103,20 +135,75 @@ export default {
 					{
 						token:uni.getStorageSync('token'),
 						userId:uni.getStorageSync('id'),
-						pageNum:this.pageNum,
+						pageNum:this.nextPage,
 						pageSize:this.pageSize,
 					},
 					false
 						   ).then(res=>{
-							   this.pageNum=res.obj.nextPage;
-							console.log(res.obj.list);		
-							this.cardList = this.cardList.concat(res.obj.list);					
+							   this.nextPage=res.obj.nextPage;
+							 var data=this.dataPaly(res);		
+							this.cardList = this.cardList.concat(data);					
 							setTimeout(function () {
-							    uni.hideLoading()
+								uni.hideLoading()
 							}, 1000);
 							// uni.hideNavigationBarLoading();//关闭加载动画
 							
-						})
+						})	
+				 }else if(this.tab==1){
+					 if(this.nextPageTwo==0){
+					 	uni.showLoading(
+					 	{
+					 		title: '没有更多数据了'
+					 	})
+					 	setTimeout(function () {
+					 		uni.hideLoading();
+					 	}, 1000);
+					 	return false
+					 }
+					 uni.showLoading(
+					 {
+					 	title: '加载中..',
+					 	mask:true
+					 })
+					 this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,
+					 {
+					 	token:uni.getStorageSync('token'),
+					 	pageNum:this.nextPageTwo,
+					 	pageSize:10,
+					 },
+					 false
+					 	   ).then(res=>{
+					 		   this.nextPageTwo=res.obj.nextPage;
+					 		this.cardList = this.lookerList.concat(res.obj.list);					
+					 		setTimeout(function () {
+					 			uni.hideLoading()
+					 		}, 1000);	
+					 	})	
+				 }
+				},
+				dataPaly(res){
+					let dataList=res.obj.list;
+					var date=new Date();
+					date=date.getTime();
+					console.log(dataList)
+					for(var i=0;i <dataList.length;i++){
+						var num=dataList[i].targetDay-dataList[i].holidayDay-dataList[i].pushCardCount;
+						var num2=dataList[i].targetDay;
+						var num3=dataList[i].targetDay-dataList[i].holidayDay
+						var num4=dataList[i].holidayDay
+						let d = new Date(dataList[i].createTime);
+						let newD = new Date(d.setDate(d.getDate() + num3));
+						let dd=Math.trunc((date-newD) / (1000 * 60 * 60 * 24));
+						console.log(dd)
+						if(num2>=num && dd<num3){
+							dataList[i].btn=0//立即打卡
+						}else if(num2>num && dd>num3){
+							dataList[i].btn=1}//未达成
+							else if(num2=num &&num4!=0){
+								dataList[i].btn=2}	//已完成    
+					}
+					console.log(dataList)
+					return dataList;
 				}
 				
 	},
@@ -161,12 +248,12 @@ export default {
 	left:0;
 	width: 100%;
 	.btns {
-		height: 120rpx;
+		height: 100rpx;
 		
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: 0 30rpx;
+		padding: 0 200rpx;
 		font-size: 28rpx;
 		.btn {
 			flex: 1;
@@ -175,6 +262,8 @@ export default {
 			background: #ffa700;
 			// color: #fff;
 			font-size: 28rpx;
+			border-radius: 40rpx;
+
 		}
 	}
 }

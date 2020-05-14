@@ -1,5 +1,7 @@
 {
-  "navigationBarTitleText": "行动打卡",
+  "navigationBarTitleText": "圈子",
   "enablePullDownRefresh": true,
-  "usingComponents": {}
+  "usingComponents": {
+    "index-list": "/components/indexList"
+  }
 }

@@ -6,28 +6,29 @@
 			<view class="xd-list">
 				<view class="xd-list-items">
 					<view class="xd-list-image">
-						<image class="xd-list-image" src="../../../static/images/pic/list2.jpg"></image>
+						<image class="xd-list-image" v-if="pusCardLists.pictures!=''" :src="pusCardLists.pictures" mode="aspectFit"></image>
+						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error"></image>
 					</view>
 					<view class="xd-list-body">
-						<view class="xd-list-title-text xd-ellipsis-line2">这个人比较懒，什么都没写！</view>
-					</view>
+						<view class="xd-list-title-text xd-ellipsis-line2">{{pusCardLists.content}}</view>
+					</view>		
 				</view>
 				<view class="xd-grids xd-flex-center">
 					<view class="xd-grids-items sponsor-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">赞助</view>
-							<view class="xd-badge">3</view>
+							<view class="xd-badge">0</view>
 						</view>
 					</view>
 					<view class="xd-grids-items bond-grids">
 						<view class="xd-relative">
-							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥45</text></view>
+							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{pusCardLists.challengeRmb}}</text></view>
 						</view>
 					</view>
 					<view class="xd-grids-items supervise-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">邀请围观</view>
-							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">4</view>
+							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">0</view>
 						</view>
 					</view>
 				</view>
@@ -36,207 +37,307 @@
 			
 			<!-- 打卡列表 -->
 			<view class="card-list xd-comments">
-				
-				<!-- 循环card-list-item 为一条打卡记录 -->
-				<view class="card-list-item xd-border-b-color">
-					<view class="xd-comments-items">
-						<image src="../../../static/images/pic/Simba.jpg" class="xd-comments-face"></image>
-						<view class="xd-comments-body">
-							<view class="xd-comments-header">
-								<text class="xd-comments-header-name">辛巴</text>
-								<text class="xd-comments-header-text">12月31日 15:11 (20/30)</text>
-							</view>
-							<view class="xd-comments-imgs">
-								<view class="xd-comments-image">
-									<image src="../../../static/images/pic/detail1.jpg" class="xd-comments-img" mode="widthFix"></image>
-								</view>
-								<view class="xd-comments-image">
-									<image src="../../../static/images/pic/detail2.jpg" class="xd-comments-img" mode="widthFix"></image>
-								</view>
-							</view>
-							<view class="xd-comments-info-text">我回来了！</view>
-							<view class="xd-comments-key xd-border-b-black">
-								<image src="../../../static/images/icon/address.png"></image>
-								<text class="xd-comments-key-text">#King</text>
-							</view>
-							<!-- 评论 -->
-							<view class="xd-fri-comments">
-								<view class="xd-comments-items">
-									<image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image>
-									<view class="xd-comments-body">
-										<view class="xd-comments-header">
-											<text class="xd-comments-header-name">刀疤</text>
-											<text class="xd-comments-header-text">12月31日 16:00</text>
-										</view>
-										<view class="xd-comments-info-text">辛巴？呵呵。你还活着？！还真是个...惊喜！看到他们了吗？他们认为我才是这里的国王。</view>
-									</view>
-								</view>
-								<view class="xd-comments-items">
-									<image src="../../../static/images/pic/Sarabi.jpg" class="xd-comments-face"></image>
-									<view class="xd-comments-body">
-										<view class="xd-comments-header">
-											<text class="xd-comments-header-name">沙拉碧</text>
-											<text class="xd-comments-header-text">12月31日 16:01</text>
-										</view>
-										<view class="xd-comments-info-text">我们不这么想，辛巴才是这里合法的国王。</view>
-									</view>
-								</view>
+				<block v-for="(item, indexs) in cardList" :key="indexs" >	
+					<view class="xd-comments-cardList">
+						<view class="xd-list-head heradImg">
+							<image class="xd-list-head-img" :src="pusCardLists.userHead" ></image>
+							<view class="xd-list-title heradImgName">
+								<text class="xd-list-title-text">{{pusCardLists.userName}}</text>
 							</view>
 						</view>
+					<view class="cardList-image" >
+							<!-- <block v-for="(pictures, index) in item.pushCard.pictures" :key="index" v-if="item.pushCard.pictures"  >	
+								<image :src="pictures" class="xd-comments-img imgs" mode="widthFix"></image>
+							</block> -->
+							<image :src="item.pushCard.pictures" class="xd-comments-img imgs" mode="widthFix" v-show="item.pushCard.pictures.length!=0" ></image>
+						</view>
+						<view class="cardList-text" >
+							<text class="xd-content">{{item.pushCard.content}}</text>
+						</view>
+						<!-- <view class="cardList-time" >
+							<text>{{pusCardLists.extendContent}}</text>
+						</view> -->
 					</view>
-					<!-- 功能列表 -->
-					<view class="xd-grids xd-space-between xd-flex-v-center">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">34</view>
-							</view>
-						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love-on.png" mode="widthFix"></image>
-								<view class="xd-badge">5</view>
-							</view>
-						</view>
-						<view class="xd-grids-items collect-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img" src="../../../static/images/icon/collect.png" mode="widthFix"></image>
-								<view class="xd-badge">15</view>
-							</view>
-						</view>
-						<view class="xd-grids-items share-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"></image>
-								<view class="xd-badge">34</view>
-							</view>
-						</view>
-						<view class="xd-grids-items reward-grids">
-							<view class="xd-relative">
-								<view class="xd-tbr-large">打赏</view>
-								<view class="xd-badge">6</view>
-							</view>
-						</view>
-						<view class="xd-grids-items action-grids">
-							<view class="xd-relative">
-								<view class="xd-tbr-large">一起行动</view>
-								<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">12</view>
-							</view>
-						</view>
-					</view><!-- 功能列表end -->
-				</view><!-- card-list-item end -->
-								
-				<view class="card-list-item xd-border-b-color">
-					<view class="xd-comments-items">
-						<image src="../../../static/images/pic/Simba.jpg" class="xd-comments-face"></image>
-						<view class="xd-comments-body">
-							<view class="xd-comments-header">
-								<text class="xd-comments-header-name">辛巴</text>
-								<text class="xd-comments-header-text">12月31日 18:55 (30/35)</text>
-							</view>
-							<view class="xd-comments-imgs">
-								<view class="xd-comments-image">
-									<image src="../../../static/images/pic/detail3.jpg" class="xd-comments-img" mode="widthFix"></image>
+					<!-- 循环card-list-item 为一条打卡记录 -->
+					<view class="card-list-item xd-border-b-color">
+						<view class="xd-comments-items" v-for="(list,index) in item.pushCommentList" :key="index" v-show="item.pushCommentList.length>0"> 
+							<image :src="list.userHead" class="xd-comments-face"></image>
+							<view class="xd-comments-body">
+								<view class="xd-comments-header">
+									<text class="xd-comments-header-name">{{list.userName}}</text>
+									<text class="xd-comments-header-text">{{list.createTime}}</text>
 								</view>
-								<view class="xd-comments-image">
-									<image src="../../../static/images/pic/detail4.jpg" class="xd-comments-img" mode="widthFix"></image>
+								<view class="xd-comments-info-text">{{list.content}}</view>
+								<view class="xd-comments-key xd-border-b-black">
+									<image src="../../../static/images/icon/address.png"></image>
+									<text class="xd-comments-key-text comenttext" v-if="id==pusCardLists.pusCardList[index].id" @tap="userRepaly(item.pushCard,indexs)">#回复:</text>
+									<text class="xd-comments-key-text" v-else>#：</text>
 								</view>
-							</view>
-							<view class="xd-comments-info-text">谢谢你们的帮助</view>
-							<view class="xd-comments-key xd-border-b-black">
-								<image src="../../../static/images/icon/address.png"></image>
-								<text class="xd-comments-key-text">#忧伤</text>
-							</view>
-							<!-- 评论 -->
-							<view class="xd-fri-comments">
-								<view class="xd-comments-items">
-									<image src="../../../static/images/pic/Timon.jpg" class="xd-comments-face"></image>
-									<view class="xd-comments-body">
-										<view class="xd-comments-header">
-											<text class="xd-comments-header-name">丁满</text>
-											<text class="xd-comments-header-text">12月31日 18:58</text>
+								<!-- 评论 -->
+								<view class="xd-fri-comments" v-show="list.replayPushCommentList!=undefined">
+									<view class="xd-comments-items" v-for="(lists,index) in list.replayPushCommentList" :key="index">
+										<image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image>
+										<view class="xd-comments-body">
+											<view class="xd-comments-header">
+												<text class="xd-comments-header-name">{{lists.userName}}</text>
+												<text class="xd-comments-header-text">{{lists.createTime}}</text>
+											</view>
+											<view class="xd-comments-info-text">{{lists.content}}</view>
 										</view>
-										<view class="xd-comments-info-text">天啊，他笼罩在蓝色的忧伤里</view>
 									</view>
 								</view>
-								<view class="xd-comments-items">
-									<image src="../../../static/images/pic/Pumbaa.jpg" class="xd-comments-face"></image>
-									<view class="xd-comments-body">
-										<view class="xd-comments-header">
-											<text class="xd-comments-header-name">彭彭</text>
-											<text class="xd-comments-header-text">12月31日 18:59</text>
+								<view class="xd-fri-comments" v-show="list.cardReplayCommentList!=undefined">
+									<view class="xd-comments-items" v-for="(lists,index) in list.cardReplayCommentList" :key="index">
+										<image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image>
+										<view class="xd-comments-body">
+											<view class="xd-comments-header">
+												<text class="xd-comments-header-name">{{lists.userName}}</text>
+												<text class="xd-comments-header-text">{{lists.createTime}}</text>
+											</view>
+											<view class="xd-comments-info-text">{{lists.content}}</view>
 										</view>
-										<view class="xd-comments-info-text">我觉得他是金黄色的</view>
-									</view>
-								</view>
-								<view class="xd-comments-items">
-									<image src="../../../static/images/pic/Timon.jpg" class="xd-comments-face"></image>
-									<view class="xd-comments-body">
-										<view class="xd-comments-header">
-											<text class="xd-comments-header-name">丁满</text>
-											<text class="xd-comments-header-text">12月31日 19:01</text>
-										</view>
-										<view class="xd-comments-info-text">不不不，我是说他很沮丧</view>
 									</view>
 								</view>
 							</view>
 						</view>
-					</view>
-					<!-- 功能列表 -->
-					<view class="xd-grids xd-space-between xd-flex-v-center">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">34</view>
+						<!-- 功能列表 -->
+						<view class="xd-grids xd-space-between xd-flex-v-center">
+							<view class="xd-grids-items comment-grids">
+								<view class="xd-relative">
+									<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix" @tap="showInputComent(item,indexs)"></image>
+									<view class="xd-badge">0</view>
+								</view>
 							</view>
-						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-								<view class="xd-badge">5</view>
+							<view class="xd-grids-items love-grids">
+								<!-- <view class="xd-relative" v-show="!pushList.currentUserGiveLike">
+									  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix" @tap="loveClick" ></image>
+									  <view class="xd-badge">{{pushList.giveLike}}</view>
+								</view> -->
+								<view class="xd-relative" v-show="!pusCardLists.currentUserGiveLike">
+									  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix" @tap="loveClick" ></image>
+									  <view class="xd-badge">{{pusCardLists.giveLike}}</view>
+								</view>
+								<view class="xd-relative" v-show="pusCardLists.currentUserGiveLike">
+									  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love-on.png" mode="widthFix" @tap="loveClick"></image>
+									  <view class="xd-badge">{{pusCardLists.giveLike}}</view>
+								</view>
 							</view>
-						</view>
-						<view class="xd-grids-items collect-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img" src="../../../static/images/icon/collect.png" mode="widthFix"></image>
-								<view class="xd-badge">15</view>
+							<view class="xd-grids-items collect-grids">
+								<view class="xd-relative">
+									<image class="xd-grids-icon-img" src="../../../static/images/icon/collect.png" mode="widthFix"></image>
+									<view class="xd-badge">0</view>
+								</view>
 							</view>
-						</view>
-						<view class="xd-grids-items share-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"></image>
-								<view class="xd-badge">34</view>
+							<view class="xd-grids-items share-grids">
+								<view class="xd-relative">
+									<button  class="butShare" open-type="share" >
+									  <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"  ></image>
+									</button>
+									<!-- <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"></image> -->
+									<view class="xd-badge">0</view>
+								</view>
 							</view>
-						</view>
-						<view class="xd-grids-items reward-grids">
-							<view class="xd-relative">
-								<view class="xd-tbr-large">打赏</view>
-								<view class="xd-badge">6</view>
+							<view class="xd-grids-items reward-grids">
+								<view class="xd-relative">
+									<view class="xd-tbr-large">打赏</view>
+									<view class="xd-badge">0</view>
+								</view>
 							</view>
-						</view>
-						<view class="xd-grids-items action-grids">
-							<view class="xd-relative">
-								<view class="xd-tbr-large">一起行动</view>
-								<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">12</view>
+							<view class="xd-grids-items action-grids">
+								<view class="xd-relative" @tap="goStep">
+									<view class="xd-tbr-large">一起行动</view>
+									<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">0</view>
+								</view>
 							</view>
+						</view><!-- 功能列表end -->
+						<view class="comentInput">
+							<input  v-show="showInput&&indexs==indexId"  placeholder="请输入评论内容"  adjust-position='false' auto-height='true' hold-keyboard='true' @confirm='inputComent' confirm-type="done" :focus="showInput"/>
 						</view>
-					</view><!-- 功能列表end -->
-				</view><!-- card-list-item end -->
-				
-				
-						
+					</view><!-- card-list-item end -->		
+				</block>
 			</view>
 		</view>
 	</view>
 </template>
 
 <script>
+	import{ mapState,mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
-				
+				audioPlaySrc:'../../../static/images/icon/img/ti.png',
+				showInput:false,
+				pusCardLists:undefined,
+				cardList:undefined,
+				pushComentList:[],
+				value:'',
+				id:uni.getStorageSync('id'),
+				userId:'',
+				inputType:1,//2评论，1回复
+				cardId:'',
+				dataCardId:'',
+				indexId:'',
+				pushUserId:''
+			}
+		},
+		computed: {
+		           ...mapState(['hasLogin'])  
+		       },  
+		onLoad(option) {
+			if(option.pushList!=undefined){
+				this.pusCardLists=JSON.parse(decodeURIComponent(option.pushList));
+				this.getPushComenList();
+			}else if(option.pushCard!=undefined){
+				var pusCard=JSON.parse(decodeURIComponent(option.pushCard));
+				this.cardId=pusCard.pusCardList[0].id;
+				this.pushUserId=pusCard.pusCardList[0].
+				this.pusCardLists=pusCard.userId;
+				this.getPushComenList();
 			}
 		},
 		methods: {
+			 scrollTo:function(){     
+			                for(var i=0;i<this.cardList.length;i++){//一个循环查找若是对应区域无点击元素所对应的ID元素，
+			                    if(this.cardList[i].pushCard.id==this.cardId){//进行一个筛选，当点击的元素所对应的id存在时才执行以下语句
+			                        var element=document.getElementById(this.cardId) //利用Id找到对应的需要滚动的区域
+			                        var height1=element.offsetTop-44  //获取滚动区域到页面顶部的距离
+			                        uni.pageScrollTo({//uni-app中页面滚动接口
+			                            scrollTop:height1,//滚动到页面的目标位置（单位px）
+			                            duration:100  //滚动动画的时长，默认300ms，单位 ms
+			                        })
+			                    }
+			                }   
+			}, 
+	
+			error: function() {
+				var num=Math.floor(Math.random()*8+1);
+				console.log(num)
+				this.audioPlaySrc='../../../static/images/icon/img/title'+num+'.png'
+				console.log(this.audioPlaySrc)
+			            }  ,
+			loveClick:function(e,index){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
+				this.xd_request_post(this.xdServerUrls.xd_saveGiveLikeByPush,{
+					
+					cardId:this.pusCardLists.pusCardList.id,
+					initiatorUserId:this.id,
+					giveLikeUserId:this.pusCardList.userId,
+					token:uni.getStorageSync('token'),
+				},true
+				   ).then(res => {		
+						   if(!this.pusCardList.currentUserGiveLike){								   
+												this.pusCardList.currentUserGiveLike=true;
+												this.pusCardList.giveLike++;
+						   }else{
+						   uni.showToast({
+														title:'已经赞过了',
+														 duration: 1000,
+														 icon:'none',
+						   })}
+					  }).catch(err => {
+					  						   if(err=='操作失败'){
+					  							   uni.showToast({
+					  								title:'已经赞过了',
+					  								 duration: 1000,
+					  								 icon:'none',
+					  							   })
+					  						   }				
+				})	
+			},
+			goStep(){
+				uni.navigateTo({
+					url: `/pages/action/step1`
+				});
+			},
+			userRepaly(e){
+				this.showInput=true;
+				this.userId=e.pushCommentList.userId,
+				this.dataCardId=e.pushCard.id;
+				this.inputType=1;
+			},
+			inputComent(e){
+				console.log(e)
+				if(this.inputType==1){
+						console.log('1')
+						this.xd_request_post(this.xdServerUrls.xd_saveReplayComment,{
+							cardId:this.dataCardId,
+							userId:this.userId,
+							content:e.detail.value,
+						},true).then(res=>{
+							console.log(res)
+							this.showInput=false;
+							this.getPushComenList();
+						})
+				}else if(this.inputType==2){	
+						this.xd_request_post(this.xdServerUrls.xd_saveComment,{
+							cardId:this.dataCardId,
+							userId:this.id,
+							content:e.detail.value,
+						},true).then(res=>{
+							console.log(res)
+							this.showInput=false;
+							this.getPushComenList();
+						})
+					
+				}
+	
+				
+			},
+			showInputComent(e,indexs){
+				console.log(e)
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
+				this.dataCardId=e.id;
+				this.indexId=indexs;
+				console.log(indexs)
+				this.showInput=!this.showInput;
+				this.inputType=2;
+			},
+			getPushComenList(){
+				console.log(this.pusCardLists)
+				this.xd_request_post(this.xdServerUrls.xd_showUserCardCommentAndReplayCommtent,{
+					userid:this.pushUserId,
+					// token:uni.getStorageSync('token')
+				},true).then(res=>{	
+					this.cardList=res.obj;
+					if(this.cardId!=''){
+						this.scrollTo();
+					}
+				})
+			},
+			// getPushCardComenList(){
+				
+			// 	this.xd_request_post(this.xdServerUrls.xd_showCardComment,{
+			// 		cardId:this.pusCardLists.pushCardList.id,
+			// 	},true).then(res=>{
+			// 		console.log(res)
+			// 		this.pushComentList=this.timeStampCard(res);
+			// 	})
+			// },
+			timeStampCard(res){
+				let dataList=res.obj;
+				for(var i=0;i <res.obj.length;i++){
+				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj[i].createTime,true);
+					dataList[i].createTime=time;
+					dataList[i].pictures=JSON.parse(dataList[i].pictures)
+					if(dataList[i].cardReplayCommentList!=undefined){
+						for(var j=0;j <dataList[i].cardReplayCommentList.length;j++){
+							var  time2=this.xdUniUtils.xd_timestampToTime(res.obj[i].cardReplayCommentList[j].createTime,true);
+							dataList[i].cardReplayCommentList[j].createTime=time2;
+						}
+					}
+				}
+				return dataList;
+			},
 			
 		}
 	}
@@ -299,8 +400,12 @@
 					}
 					.xd-comments-img{
 						width:285upx; height:207upx;
+
 					}
-					
+					.comenttext{
+						color: #55aaff;
+						text-decoration:underline;
+					}
 					.xd-comments-header{
 						justify-content: inherit; 
 						
@@ -341,7 +446,65 @@
 			}
 			
 		}
+		button::after {
+			  border: none;
+			}
+			.butShare{
+				height: 70upx;
+				width: 90upx;
+				background-color: #FFFFFF;
+			}
+			.xd-comments-cardList{
+				width: 100%;
+				height: auto;
+				display: flex;
+				flex-direction: column ;
+				padding-top: 20upx;
+				padding-left: 50upx;
+			}
+			.cardList-image{
+				margin-left: 20upx;
+				margin-left: 60upx;
+			}
+			.cardList-text{
+				font-size: 32upx;
+				margin-left: 66upx;
+				margin-right: 56rpx;
+					
+			}
+			.cardList-time{
+				font-size: 28upx;
+				text-indent: 30rpx;
+
+			}
 		
-	
-	
+	.imgs{
+		margin-left: 15upx;
+	}
+	.comentInput{
+		padding-left: 30upx;
+	}
+	.heradImg{
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 10upx;
+	}
+	.heradImgName{
+		padding-top: 15upx;
+		padding-left: 10upx;
+	}
+	.xd-content{
+	font-size: 30rpx;
+	word-break: break-all;/*允许在单词内换行*/
+	text-align: left;
+	color: #323232;
+	line-height: 45rpx;
+	// text-overflow: -o-ellipsis-lastline;/*css3中webkit内核提供的一个方法类似ellipsis*/
+	// overflow: hidden;
+	// text-overflow: ellipsis;
+	// display: -webkit-box;/*自适应盒子*/
+	// -webkit-line-clamp: 2;/*此处为1行,如果是两行就改成2*/
+	// -webkit-box-orient: vertical;
+	// text-indent:50rpx;
+	}
 </style>

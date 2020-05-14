@@ -14,6 +14,7 @@ const serverUrls = { //根据接口具体配置
 	xd_saveCardReplayComment: serverBaseUrl + '/cardReplayComment/saveCardReplayComment' ,//保存打卡回复评论
 	xd_saveCardComment: serverBaseUrl + '/cardComment/saveCardComment' ,//保存打卡评论
 	xd_showCardComment: serverBaseUrl + '/cardComment/showCardCommentAndReplayCommtent' ,//评论和回复的展现
+	xd_showUserCardCommentAndReplayCommtent: serverBaseUrl + '/cardComment/showUserCardCommentAndReplayCommtent' ,//通过用户id查询所有打卡详情、评论及评论回复
 	
 	xd_saveGiveLikeByPush: serverBaseUrl + '/giveLike/saveGiveLikeByPush' ,//给行动项或打卡记录点赞
 	xd_getAttentionList: serverBaseUrl + '/attention/getAttentionList' ,//获取关注列表
@@ -24,11 +25,13 @@ const serverUrls = { //根据接口具体配置
 	xd_pushByHighGradeList: serverBaseUrl + '/publishTarget/pushByHighGradeList' ,//根据点赞数获取目标列表
 	xd_pushByUserIdList: serverBaseUrl + '/publishTarget/pushByUserIdList' ,//根据用户id获取目标列表
 	xd_savePush: serverBaseUrl + '/publishTarget/savePush' ,//保存发起的目标
+	xd_pushByLabel: serverBaseUrl + '/publishTarget/pushByLabel' ,//根据标签获取行动项列表
 	
 	xd_uploadFile: serverBaseUrl + '/uploadFile/saveFiles' ,//上传图片
 	
 	xd_getLookerByPushId: serverBaseUrl + '/looker/getLookerByPushId' ,//根据行动项id查看围观人
 	xd_saveLooker: serverBaseUrl + '/looker/saveLooker' ,//保存围观信息
+	xd_getLookerByUserId: serverBaseUrl + '/looker/getLookerByUserId' ,//根据用户id获取围观数据
 	
 	xd_wechatCommercialTenant: serverBaseUrl + '/wechatCommercialTenant/pay' ,//微信商户给用户付款pay
 	xd_decodeUserInfo: serverBaseUrl + '/wechat/decodeUserInfo' ,//获取微信的openid和unionid

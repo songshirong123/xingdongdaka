@@ -104,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"components/actionlist":1,"pages/selfCenter/selfCenterList":1};
+/******/ 		var cssChunks = {"components/indexList":1,"components/actionlist":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"components/actionlist":"components/actionlist","pages/selfCenter/selfCenterList":"pages/selfCenter/selfCenterList"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"components/indexList":"components/indexList","components/actionlist":"components/actionlist"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {

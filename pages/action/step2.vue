@@ -42,12 +42,17 @@
 			<view class="uni-form-item uni-column">
 				<view class="title">所属分类</view>
 				<view class="sb-box">
-					<view class="select">
-						<picker @change="bindLabel" :value="labelList[indexs].id" :range="labelList" :range-key="'labelName'" name="label">
+					<!-- <view class="select"> -->
+						<!-- <picker @change="bindLabel" :value="labelList[indexs].id" :range="labelList" :range-key="'labelName'" name="label">
 							<view class="uni-input">{{labelList[indexs].labelName}}</view>
-						</picker>
-					</view>
-					<view class="sb-icon"><view class="triangle"></view></view>
+						</picker> -->
+						 <checkbox-group name="label">
+							<label v-for="item in labelList" :key="item.id">
+								<checkbox  class ="labeChech":value="item.id">{{item.labelName}}</checkbox>
+							</label>
+						 </checkbox-group>
+					<!-- </view>
+					<view class="sb-icon"><view class="triangle"></view></view> -->
 				</view>
 			</view>
 			<!-- <view class="uni-form-item uni-column">
@@ -85,6 +90,7 @@ export default {
 	},
 	methods: {
 		formSubmit(e) {
+			console.log(e)
 			if(e.detail.value.targetDay==''){
 				uni.showToast({
 				    title: '请出入打卡总天数',
@@ -195,7 +201,6 @@ export default {
 }
 .sb-box {
 	display: flex;
-	height: 65rpx;
 	line-height: 65rpx;
 	border: 1px solid $xd-color-base;
 	border-radius: 5px;
@@ -228,6 +233,9 @@ export default {
 	}
 	.uni-input{
 		padding-left: 10upx;
+	}
+	.labeChech{
+		padding-left: 5upx;
 	}
 }
 </style>

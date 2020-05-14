@@ -43,7 +43,7 @@
 			</view>
 			<!--  #ifdef  MP-WEIXIN -->
 			<view class="btn_bar">
-				<view class="btns"><button class="btn" form-type="submit" >微信支付</button></view>
+				<view class="btns"><button class="btn" form-type="submit" >提交</button></view>
 			</view>
 			<!--  #endif -->
 		</form>
@@ -51,6 +51,7 @@
 </template>
 
 <script>
+	import{ mapState,mapMutations} from 'vuex'
 export default {
 	data() {
 		return {
@@ -61,26 +62,40 @@ export default {
 			saveData:{}
 		};
 	},
+	computed: {
+	           ...mapState(['hasLogin'])  
+	       },  
 	onLoad(option) {
 		console.log(option);
 		this.formData= JSON.parse(decodeURIComponent(option.data));
 		
 	},
 	methods: {
+		timeType(res){
+			var data=res.obj;
+			var  time=this.xdUniUtils.xd_timestampToTime(data.createTime);
+			    data.createTime=time;
+				return data;
+		},
 		formSubmit(e) {
-			var that = this;
-			if(that.rmb.challengeRmb==null){
-				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
-					uni.showToast({
-					    title: '请出入保障金',
-						mask:true,
-					    duration: 1000,
-						image:'/static/images/icon/clock.png'
-					});
-					return false
-				};
+			if(!this.hasLogin){
+				uni.navigateTo({
+					url: '../login/login' 
+				});
+				return false;
 			}
-				
+			var that = this;
+			// if(that.rmb.challengeRmb==null){
+			// 	if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
+			// 		uni.showToast({
+			// 		    title: '请出入保障金',
+			// 			mask:true,
+			// 		    duration: 1000,
+			// 			image:'/static/images/icon/clock.png'
+			// 		});
+			// 		return false
+			// 	};
+			// }		
 			let userData={
 				token:'',
 				userId:'',
@@ -96,12 +111,21 @@ export default {
 			}else{
 				that.saveData=Object.assign(that.formData,e.detail.value,userData);
 				
-			}
-			that.goPay();
-			
+			};
+			if(that.rmb.challengeRmb==null){
+				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
+					that.saveData.challengeRmb=0;
+					that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
+						uni.reLaunch({
+							url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
+							})
+					})
+				};
+			}else{
+				that.goPay();
+			}		
 		},
-		priceRmb(e){
-		
+		priceRmb(e){		
 			this.rmb.challengeRmb=e;
 			this.formSubmit();
 		},
@@ -117,7 +141,7 @@ export default {
 				openid:'',
 				city:'',
 				province:'',
-				status:0,
+				payRmb:'',
 			};
 			let userInfo={};
 			try{
@@ -133,9 +157,9 @@ export default {
 			data.province=userInfo.province;
 			data.unionId=userInfo.unionId;
 			data.openid=userInfo.openId;
-			console.log(data)
+			data.payRmb=that.saveData.challengeRmb*100
+			
 			that.xd_request_post(that.xdServerUrls.xd_pay,data,false).then(res=>{
-				console.log(res)
 				uni.requestPayment({
 					 'appId': res.obj.appId,
 					'timeStamp': res.obj.timeStamp,
@@ -143,35 +167,42 @@ export default {
 					'package': res.obj.packageAlias,
 					'signType': 'MD5',
 					'paySign': res.obj.paySign,
-					success: function (res) {
+					success: function (re) {
 						that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
-							console.log(res)
+							uni.reLaunch({
+								url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
+							})
 						}),
-						that.xd_request_post(that.xdServerUrls.xd_resultCallBack,{},false).then( res=>{
-						})
+						// that.xd_request_post(that.xdServerUrls.xd_resultCallBack,{
+						// 	userId:
+						// 	outTradeNo:
+						// },false).then( res=>{
+						// 	console.log(res)
+						// })
 						uni.showToast({
 							title: '微信支付成功',
 							icon: 'success',
 							duration: 1500
 						});
-						uni.reLaunch({
-							url: '../index/index'
-						})
 					},
 					fail: function (err) {
 						// 支付失败的回调中 用户未付款
 						uni.showModal({
 							content:'支付取消',
 							confirmText:'继续支付',
-							cancelText:'返回首页',
+							cancelText:'发布行动',
 							image:'/static/images/icon/clock.png',
-							success:function(res) {
-								 if (res.confirm) {
+							success:function(ress) {
+								 if (ress.confirm) {
 									return false
-								} else if (res.cancel) {
-									uni.reLaunch({
-										url: '../index/index',
-										})
+								} else if (ress.cancel) {
+									that.saveData.challengeRmb=0;
+									that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
+										uni.reLaunch({
+											url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
+											})
+										
+									})
 									}
 								},
 								

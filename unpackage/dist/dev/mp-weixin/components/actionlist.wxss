@@ -43,7 +43,7 @@
   display: flex;
 }
 .actionLi .ali-main .ali-main-img ._img {
-    width: 236rpx;
+  width: 236rpx;
 }
 .actionLi .ali-footer {
   display: -webkit-box;
@@ -55,12 +55,12 @@
   padding: 20rpx;
 }
 .actionLi .ali-footer .actionBar {
-    position: relative;
-    background: #f9ebe5;
-    color: #e17175;
+  position: relative;
+  background: #f9ebe5;
+  color: #e17175;
 }
 .actionLi .ali-footer .actionBar .price {
-      color: #ea030b;
+  color: #ea030b;
 }
 .actionLi .ali-btns {
   display: -webkit-box;
@@ -71,12 +71,12 @@
           justify-content: center;
 }
 .actionLi .ali-btns .btn {
-    text-align: center;
-    padding: 0;
-    font-size: 26rpx;
-    height: 66rpx;
-    background: #ffa700;
-    width: 200rpx;
-    margin: 0 20rpx 0 0;
+  text-align: center;
+  padding: 0;
+  font-size: 26rpx;
+  height: 66rpx;
+  background: #ffa700;
+  width: 200rpx;
+  margin: 0 20rpx 0 0;
 }
 

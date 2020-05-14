@@ -1,21 +1,24 @@
 <template>
+	<view >
 	<view class="content">
 		
 		<view class="xd-info-main">				
 			<view class="xd-list xd-border-b-black">
 				<view class="xd-list-items">
 					<view class="xd-list-image xd-relative">
-						<image class="xd-list-image" src="../../../static/images/pic/list2.jpg"></image>
+						<image class="xd-list-image" v-if="pushList.pictures!=''" :src="pushList.pictures" mode="aspectFit"></image>
+						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error"></image>
 						<view class="xd-list-head">
-							<image class="xd-list-head-img" src="../../../static/images/pic/header.png" mode="widthFix"></image>
+							<image class="xd-list-head-img" :src="pushList.userHead" mode="aspectFill"></image>
 						</view>
 					</view>
 					<view class="xd-list-body">
 						<view class="xd-list-title">
-								<text class="xd-list-title-text">小太阳</text>
-								<text class="xd-tags">关注</text>
+								<text class="xd-list-title-text userName">{{pushList.userName}}</text>
+								<view class="xd-tags" v-show="userId!=pushList.userId" @tap="tags">关注</view>
+								
 						</view>
-						<view class="xd-list-desc xd-ellipsis-line2">这个人比较懒，什么也没写。</view>
+						<view class="xd-list-desc xd-ellipsis-line2">{{pushList.content}}</view>
 					</view>
 				</view>
 				
@@ -23,18 +26,19 @@
 					<view class="xd-grids-items sponsor-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">赞助</view>
-							<view class="xd-badge">45</view>
+							<view class="xd-badge">{{pushList.giveReward}}</view>
 						</view>
 					</view>
 					<view class="xd-grids-items bond-grids">
 						<view class="xd-relative">
-							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥50</text></view>
+							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{pushList.challengeRmb}}</text></view>
 						</view>
 					</view>
 					<view class="xd-grids-items supervise-grids">
 						<view class="xd-relative">
-							<view class="xd-tbr-large">邀请围观</view>
-							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">23</view>
+							<!-- <view class="xd-tbr-large">邀请围观</view> -->
+							<button class="xd-tbr-large buttclass" type="default" open-type="share">邀请围观</button>
+							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{pushList.onlookerCount}}</view>
 						</view>
 					</view>
 				</view>
@@ -45,27 +49,27 @@
 			<view class="flag-box top">
 				<view class="xd-list-title xd-border-b-black">
 					<text class="xd-list-title-text">阶段期限</text>
-					<text class="xd-list-desc">2020年1月2日-2020年3月2日</text>
+					<text class="xd-list-desc">{{pushList.createTime }} - {{ pushList.endTime}}</text>
 				</view>
 				<view class="xd-list-title">
 					<view class="list-title-row xd-rows">
 						<text class="xd-list-title-text">坚持天数</text>
-						<text class="xd-list-desc">10/30</text>
+						<text class="xd-list-desc">{{pushList.targetDay-pushList.holidayDay-pushList.pushCardCount}}/{{pushList.targetDay}}</text>
 					</view>
 					<view class="list-title-row xd-rows">
 						<text class="xd-list-title-text">休假天数</text>
-						<text class="xd-list-desc">2/10</text>
+						<text class="xd-list-desc">{{pushList.holidayDay}}</text>
 					</view>
 				</view>
 			</view>
 			<view class="flag-box bottom xd-border-b-black">
 				<view class="xd-list-title">
 					<text class="xd-list-title-text">动机目标：</text>
-					<text class="xd-list-desc">成为更好的自己</text>
+					<text class="xd-list-desc">{{pushList.content}}</text>
 				</view>
 				<view class="xd-list-title">
 					<text class="xd-list-title-text">打卡方式：</text>
-					<text class="xd-list-desc">按时拍食物和健身照片</text>
+					<text class="xd-list-desc">{{pushList.punchCardWay}}</text>
 				</view>
 			</view>
 		</view>
@@ -78,17 +82,24 @@
 			<!-- 打卡 -->
 			<view class="xd-list-info" :hidden="active == 1">
 				<!-- 循环 xd-list -->
-				<view class="xd-list xd-border-b-black">
-					<view class="xd-list-items">
-						<view class="xd-comments-image">
-							<image src="../../../static/images/pic/detail2.jpg" class="xd-comments-img" mode="widthFix"></image>
+				<view class="xd-list xd-border-b-black" v-for="(list,index) in pusCardList" :key="index" >
+					<view class="xd-list-items" @tap="cardComentList(list)">
+						<view class="xd-comments-image xd_card_imgs">
+							<image :src="list.pictures[0]" class="xd-comments-img" v-if="list.pictures!=''"></image>
+							<image class="xd-comments-img" v-else :src="audioPlaySrc" @error="error"></image>
 						</view>
 						<view class="xd-list-body">
-							<view class="xd-list-body-desc">1月2日 15:57 (20/30)</view>
-							<view class="xd-list-desc xd-ellipsis-line2">我又吃多了</view>
+							<view class="xd-list-body-desc">{{list.createTime}}</view>
+							<view class="xd-list-desc xd-ellipsis-line2">{{list.extendContent}}</view>
+						</view>
+						<view class="xd-grids-items comment-grids">
+							<view class="xd-relative">
+								<image class="xd-grids-icon-img-comment comentimg" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
+								<view class="xd-badge">23</view>
+							</view>
 						</view>
 					</view>
-					<view class="xd-grids">
+					<!-- <view class="xd-grids">
 						<view class="xd-grids-items comment-grids">
 							<view class="xd-relative">
 								<image class="xd-grids-icon-img-comment" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
@@ -101,179 +112,235 @@
 								<view class="xd-badge">32</view>
 							</view>
 						</view>
-					</view>
+					</view> -->
 				</view>
-				
-				<view class="xd-list xd-border-b-black">
-					<view class="xd-list-items">
-						<view class="xd-comments-image">
-							<image src="../../../static/images/pic/detail2.jpg" class="xd-comments-img" mode="widthFix"></image>
-						</view>
-						<view class="xd-list-body">
-							<view class="xd-list-body-desc">1月2日 15:57 (20/30)</view>
-							<view class="xd-list-desc xd-ellipsis-line2">我又吃多了</view>
-						</view>
-					</view>
-					<view class="xd-grids">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-comment" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">23</view>
-							</view>
-						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-								<view class="xd-badge">32</view>
-							</view>
-						</view>
-					</view>
-				</view>
-				
-				<view class="xd-list xd-border-b-black">
-					<view class="xd-list-items">
-						<view class="xd-comments-image">
-							<image src="../../../static/images/pic/detail2.jpg" class="xd-comments-img" mode="widthFix"></image>
-						</view>
-						<view class="xd-list-body">
-							<view class="xd-list-body-desc">1月2日 15:57 (20/30)</view>
-							<view class="xd-list-desc xd-ellipsis-line2">我又吃多了</view>
-						</view>
-					</view>
-					<view class="xd-grids">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-comment" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">23</view>
-							</view>
-						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-								<view class="xd-badge">32</view>
-							</view>
-						</view>
-					</view>
-				</view>
-				
-				<view class="xd-list xd-border-b-black">
-					<view class="xd-list-items">
-						<view class="xd-comments-image">
-							<image src="../../../static/images/pic/detail2.jpg" class="xd-comments-img" mode="widthFix"></image>
-						</view>
-						<view class="xd-list-body">
-							<view class="xd-list-body-desc">1月2日 15:57 (20/30)</view>
-							<view class="xd-list-desc xd-ellipsis-line2">我又吃多了</view>
-						</view>
-					</view>
-					<view class="xd-grids">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-comment" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">23</view>
-							</view>
-						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-								<view class="xd-badge">32</view>
-							</view>
-						</view>
-					</view>
-				</view>
-				
-				<view class="xd-list xd-border-b-black">
-					<view class="xd-list-items">
-						<view class="xd-comments-image">
-							<image src="../../../static/images/pic/detail2.jpg" class="xd-comments-img" mode="widthFix"></image>
-						</view>
-						<view class="xd-list-body">
-							<view class="xd-list-body-desc">1月2日 15:57 (20/30)</view>
-							<view class="xd-list-desc xd-ellipsis-line2">我又吃多了</view>
-						</view>
-					</view>
-					<view class="xd-grids">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-comment" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">23</view>
-							</view>
-						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-								<view class="xd-badge">32</view>
-							</view>
-						</view>
-					</view>
-				</view>
-				
 			</view>
 			
 			<!-- 详情 -->
 			<view class="xd-list-info" :hidden="active == 0">
-				详情
+				<view class="xd-list-extendContent">
+					<text class="xd-list-extendContentText">{{pushList.extendContent}}</text>
+				</view>
 			</view>
 		</view>
 		
 		<view style="height: 10upx;"></view>
 		<!-- 底部 -->
 		<view class="footer">
-			<view class="xd-grids xd-space-between xd-flex-v-center">
-				<view class="xd-grids-items comment-grids">
+			
+			<view class="xd-grids xd-space-between xd-flex-v-center" >
+				<view class="xd-grids-items comment-grids" @tap='openAddr'>
 					<view class="xd-relative">
 						<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-						<view class="xd-badge">34</view>
+						<view class="xd-badge">0</view>
 					</view>
 				</view>
-				<view class="xd-grids-items love-grids">
-					<view class="xd-relative">
+				<view class="xd-grids-items love-grids" >
+					<!-- <view class="xd-relative" v-show="!list.currentUserGiveLike">
 						<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-						<view class="xd-badge">5</view>
+						<view class="xd-badge">{{pushList.giveLike}}</view>
+					</view> -->
+					
+					<view class="xd-relative" v-show="!pushList.currentUserGiveLike">
+						  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix" @tap="loveClick" ></image>
+						  <view class="xd-badge">{{pushList.giveLike}}</view>
+					</view>
+					<view class="xd-relative" v-show="pushList.currentUserGiveLike">
+						  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love-on.png" mode="widthFix" @tap="loveClick"></image>
+						  <view class="xd-badge">{{pushList.giveLike}}</view>
 					</view>
 				</view>
 				<view class="xd-grids-items collect-grids">
 					<view class="xd-relative">
 						<image class="xd-grids-icon-img" src="../../../static/images/icon/collect.png" mode="widthFix"></image>
-						<view class="xd-badge">15</view>
+						<view class="xd-badge">0</view>
 					</view>
 				</view>
 				<view class="xd-grids-items share-grids">
 					<view class="xd-relative">
-						<image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"></image>
-						<view class="xd-badge">34</view>
+						<button  class="butShare" open-type="share" >
+						  <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"  ></image>
+						</button>
+						<view class="xd-badge">0</view>
 					</view>
 				</view>
 				<view class="xd-grids-items reward-grids">
 					<view class="xd-relative">
 						<view class="xd-tbr-large">打赏</view>
-						<view class="xd-badge">6</view>
+						<view class="xd-badge">0</view>
 					</view>
 				</view>
-				<view class="xd-grids-items action-grids">
+				<view class="xd-grids-items action-grids" @tap="goStep">
 					<view class="xd-relative">
-						<view class="xd-tbr-large">一起行动</view>
-						<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">12</view>
+						<view class="xd-tbr-large" @tap="goStep">一起行动</view>
+						<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">0</view>
 					</view>
 				</view>
 			</view>
 		</view>
 	</view>
+	<!-- <view class='xd-list modal-screen' v-show="modal"  >	
+		<view class="xd-list xd-border-b-black" v-for="(list,index) in pushComentList" :key="index" >
+				<view class="xd-list-push-item" >
+					<view class="xd-comments-head">
+						<view class="xd-pushcomments-image">
+							<image :src="list.userHead" class="xd-pushcomments-img" mode="widthFix"></image>
+						</view>
+						<view class="xd-list-body-content">
+							<view class="xd-list-desc xd-ellipsis-line2">{{list.userName}}</view>
+							<view class="xd-list-desc xd-ellipsis-line2">{{list.createTime}}</view>
+							<image src="../../../static/images/icon/love.png" class="love-click" mode="widthFix"></image>
+							<view class="love-click-num">0</view>
+						</view>
+					</view>
+					<view class="text-coment-content" @tap="goComent">
+						<text class="xd-content" >{{list.content}}</text>
+						<text  class="xd-content-more">全部评论({{list.replayPushCommentList.length==undefined?'0':list.replayPushCommentList.length}})</text>
+					</view>
+			</view>
+		</view>
+	</view> -->
+	</view>
 </template>
 
 <script>
-	
+	import{ mapState,mapMutations} from 'vuex'
 	export default {
 		data() {
 			return {
 				active: 0,
+				pushComentList:[],
+				pusCardList:[],
+				pushList:{},
+				modal: false,
+				addrAnimation:'',
+				audioPlaySrc:'../../../static/images/icon/img/titl.png',
+				userId:uni.getStorageSync('id')
+				
 			};
 		},
-		
-		onLoad() {
-	
+		computed: {
+		           ...mapState(['hasLogin'])  
+		       },  
+		onLoad(option) {
+			this.endTime(option);
+			this.getPushCardList();
 		},
 		methods:{
+			error: function() {
+				var num=Math.floor(Math.random()*8+1);
+				console.log(num)
+				this.audioPlaySrc='../../../static/images/icon/img/title'+num+'.png'
+				console.log(this.audioPlaySrc)
+			            }  ,
+						
+			// goComent(){
+			// 	uni.navigateTo({
+			// 		url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
+			// 	});
+			// },
+			cardComentList(e){
+				var pushCard={
+					pushList:this.pushList,
+					pusCardList:e
+				};
+				uni.navigateTo({
+					url: '../cardDetails/cardDetails?pushCard='+encodeURIComponent(JSON.stringify(pushCard))
+				});
+			},
+			loveClick:function(e,index){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				this.xd_request_post(this.xdServerUrls.xd_saveGiveLikeByPush,{
+					
+					pushId:this.pushList.id,
+					initiatorUserId:uni.getStorageSync('id'),
+					giveLikeUserId:this.pushList.userId,
+					token:uni.getStorageSync('token'),
+				},false
+				   ).then(res => {		
+						   if(!this.pushList.currentUserGiveLike){								   
+												this.pushList.currentUserGiveLike=true;
+												this.pushList.giveLike++;
+						   }else{
+						   uni.showToast({
+														title:'已经赞过了',
+														 duration: 1000,
+														 icon:'none',
+						   })}
+					  }).catch(err => {
+					  						   if(err=='操作失败'){
+					  							   uni.showToast({
+					  								title:'已经赞过了',
+					  								 duration: 1000,
+					  								 icon:'none',
+					  							   })
+					  						   }
+					
+				})
+				
+				
+			},
+			timeStamp(res){
+				let dataList=res.obj;
+				for(var i=0;i <res.obj.length;i++){
+				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj[i].createTime,true);
+					dataList[i].createTime=time;
+				}
+				return dataList;
+			},
+			openAddr() {
+			// 	this.getPushComenList();
+			
+			//       this.modal=!this.modal;
+			uni.navigateTo({
+				url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
+			});
+			     
+			  },
+			endTime(option){
+				var pushListdata=JSON.parse(decodeURIComponent(option.pushList));
+				pushListdata['endTime']=0;
+				console.log(pushListdata);
+				pushListdata.endTime=this.xdUniUtils.xd_daysAddSub(pushListdata.createTime,pushListdata.targetDay);
+				console.log(pushListdata);
+				this.pushList=pushListdata
+				
+			},
+			goStep(){
+				uni.navigateTo({
+					url: `/pages/action/step1`
+				});
+			},
+			getPushComenList(){
+				this.xd_request_post(this.xdServerUrls.xd_showCommentAndReplayCommtent,{
+					pushId:this.pushList.id,
+						token:uni.getStorageSync('token')
+				},false).then(res=>{
+					console.log(res)
+					
+					this.pushComentList=this.timeStamp(res);
+				})
+			},
+			getPushCardList(){
+				this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId,{
+					token:uni.getStorageSync('token'),
+					pushId:this.pushList.id,		
+					
+				},false).then(res=>{
+					var data=res.obj.list;
+					for(let i=0;i<res.obj.list.length;i++){
+						data[i].pictures=JSON.parse(res.obj.list[i].pictures)
+					}
+					this.pusCardList=data;
+					console.log(res.obj.list.pictures)
+					console.log(res.obj.list.pictures[0])
+				})
+			},
 			// 打卡
 			cardFn: function () {
 				this.active = 0;
@@ -281,6 +348,19 @@
 			// 详情
 			detailFn : function(){
 				this.active = 1;
+			},
+			tags(){
+				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
+					userId:uni.getStorageSync('id'),
+					attentionUserId:this.pushList.userId,		
+					
+				},false).then(res=>{
+					console.log(res)
+					uni.showToast({
+						icon:'none',
+					  title: res.msg,
+					})
+				})
 			},
 		}
 	}
@@ -423,6 +503,7 @@
 			}
 			.xd-grids-items.action-grids{
 				.xd-tbr-large{
+					
 					background: #ffe66f;
 					color: #101010;
 					border:1px solid #ffa700;
@@ -431,5 +512,106 @@
 		}
 		
 	}
+	.buttclass{
+		height: 40upx;
+		margin-top: 5upx;
+		font-size: 28upx;
+}
+	button::after {
+		  border: none;
+		}
+		.butShare{
+			height: 70upx;
+			width: 90upx;
+		}
+		//
+		.modal-screen{
+		  position:fixed;
+		  overflow: auto;
+		  width:100%;
+		  height:50%;
+		  bottom: 90upx;
+		  background:#fff;
+		  z-index: 1;
+		}
+		.xd-list-push-item{
+			display: flex;
+			flex-direction: column;
+		}
+		.xd-comments-head{
+			display: flex;
+			justify-content:space-around ;
+			align-items: center;
+		}
+		.xd-pushcomments-image{
+			padding-top: 10rpx;
+			
+		}
+		.xd-pushcomments-img{
+			height: 60rpx;
+			width: 100rpx;
+			border-radius: 50%;
+		}
+		.xd-list-body-content{
+			display: flex;
+			justify-content: space-around;
+			align-items: center;
+			width: 80%;
 	
+		}
+		.love-click{
+			width: 50upx;
+			height:50upx ;
+		}
+		.love-click-num{
+			position: absolute;
+			font-size: 22rpx;
+			margin-left: 37%;
+			margin-top: -20rpx;
+		}
+		.text-coment-content{
+			padding-left: 10rpx;
+			display: flex;
+			align-items: flex-end;
+
+		}
+		.xd-content{
+			font-size: 30rpx;
+			word-break: break-all;/*允许在单词内换行*/
+			text-align: left;
+			color: #323232;
+			line-height: 45rpx;
+			text-overflow: -o-ellipsis-lastline;/*css3中webkit内核提供的一个方法类似ellipsis*/
+			overflow: hidden;
+			text-overflow: ellipsis;
+			display: -webkit-box;/*自适应盒子*/
+			-webkit-line-clamp: 2;/*此处为1行,如果是两行就改成2*/
+			-webkit-box-orient: vertical;
+			text-indent:50rpx;
+			
+		}
+		.xd-content-more{
+			font-size: 20rpx;
+			color: #00aaff;
+		}
+		.comentimg{
+			width: 60upx;
+			height: 50upx;
+		}
+		.xd_card_imgs{
+			height: auto;
+		}
+		.xd-list-extendContentText{
+			font-size: 28upx;
+			color: #101010;
+		}
+		.xd-list-extendContent{
+			margin-left: 25upx;
+			margin-right: 10upx;
+			text-indent: 55upx;
+
+		}
+		.userName{
+			margin-top: -10upx;
+		}
 </style>

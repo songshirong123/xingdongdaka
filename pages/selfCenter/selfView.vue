@@ -2,16 +2,17 @@
 	<view class="selfCenter">
 		<!-- <button @click="clickMe">支付</button> -->
 		<view class="personContent">
-			<view class="personHead" @click="goPage('/pages/selfCenter/editUserInfo')">
-				<img src="../../static/images/pic/header.png" alt="" class="imgHead">
+			<view class="personHead" >
+				<image class="imgHead" :src="userInfo.avatarUrl" ></image>
+				
 			</view>
-			<view class="personInfo"  @click="goPage('/pages/selfCenter/editUserInfo')">
+			<view class="personInfo"  >
 				<view class="xd-list-title-text name ">
-					<text>暖暖</text>
+					<text>{{userInfo.nickName}}</text>
 				</view>
-				<view class="subInfo">
+				<!-- <view class="subInfo">
 					<text>健身狂魔</text>
-				</view>
+				</view> -->
 			</view>
 			<view class="personOpt">
 				<!-- <button @click="clickMe" class="pay">支付</button> -->
@@ -20,21 +21,24 @@
 		<view class="moreInfo">
 			<view class="moreInfoRow">
 				<view class="moreInfoIn">
-					<text>湖南长沙</text>
+					<text>{{userInfo.province}}.{{userInfo.city}}</text>
 				</view>
-				<view class="moreInfoIn">
-					<!-- <text class="gender">♂</text> -->
-					<text class="gender">♀</text>
-					<text>20</text>
+		
+				<view class="moreInfoIn" >
+					<text v-if="userInfo.gender==1" class="boy">♂</text>
+					<text v-else-if="userInfo.gender==0" class="gender">♀</text>
+					<text v-else class="boy">密</text>
+					<!-- <text>20</text> -->
 				</view>
+			
 				<view class="moreInfoIn flex1">
-					<text>学校</text>
+					<text>学校：</text>
 				</view>
 				<!-- <view class="moreInfoIn">
 					<text>  &nbsp;</text>
 				</view> -->
 			</view>
-			<view class="moreInfoRow">
+		<!-- 	<view class="moreInfoRow">
 				<view class="moreInfoIn">
 					<text>行业</text>
 				</view>
@@ -47,22 +51,22 @@
 				<view class="moreInfoIn link">
 					<text>产品服务</text>
 				</view>
-			</view>
+			</view> -->
 			<view class="moreInfoRow">
 				<view class="moreInfoIn personAction">
-					<text>关注：1</text>
+					<text>关注：0</text>
 				</view>
 				<view class="moreInfoIn personAction">
 					<text>粉丝：0</text>
 				</view>
 				<view class="moreInfoIn personAction">
-					<text>获赞：12</text>
+					<text>获赞：0</text>
 				</view>
 				<view class="moreInfoIn personAction">
-					<text>获分享：14</text>
+					<text>获同行：0</text>
 				</view>
 			</view>
-			<view class="moreInfoRow rowaction">
+			<!-- <view class="moreInfoRow rowaction">
 				<view class="moreInfoIn link" v-if="getRole()">
 					<text>订单详情</text>
 				</view>
@@ -72,17 +76,17 @@
 				<view class="moreInfoIn link" @click="goPage('/pages/selfCenter/income')" v-if="getRole()">
 					<text>收益：1999</text>
 				</view>
-			</view>
+			</view> -->
 			
 		</view>
 		
 		<view class="actionInfo">
 			<view class="tabbar">
-				<view class="tab " :class="tab===0?'active':''" @click="tab=0">
-					<text>行动 (1)</text>
+				<view class="tab " :class="tab===0?'active':''" @click="tab=0" >
+					<text>行动 ({{total}})</text>
 				</view>
 				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
-					<text>围观 (125)</text>
+					<text>围观 ({{lookTotal}})</text>
 				</view>
 				<!-- <view class="tab" :class="tab===2?'active':''" @click="tab=2">
 					<text>收藏 (128)</text>
@@ -90,13 +94,32 @@
 			</view>
 			<view class="actionTabList">
 				<view class="actionMy" v-show="tab===0">
-					<actionlist v-for="(item,index) in [1,2,3,4]" :key="index" :tab="tab" :view="view"></actionlist>
+					<actionlist v-for="(item,index) in list" :key="index" :tab="tab" :showBut='1' :item='item'></actionlist>
 				</view>
 				<view class="actionLook" v-show="tab===1">
-					<actionlist  :tab="tab"  :view="view"></actionlist>
+					<block v-for="(attention, index) in lookerList" :key="index" >
+						<view class="actionLi" >
+							<view class="ali-main">
+								<view class="ali-main-img">
+									<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
+								</view>
+								<view class="lli-main-content xd-list-body ">
+									<view class="xd-list-title-text">
+										<text>{{attention.userName}}</text>
+									</view>
+									<view  >
+										<text v-if="attention.sex==1" class="boy">♂</text>
+										<text v-else-if="attention.sex==0" class="gender">♀</text>
+										<text v-else class="boy">密</text>
+										<!-- <text>20</text> -->
+									</view>
+								</view>
+							</view>
+						</view>
+					</block>
 				</view>
 				<view class="actionFavorite" v-show="tab===2">
-					<actionlist v-for="(item,index) in [1,2]" :key="index" :tab="tab"  :view="view"></actionlist>
+					<actionlist v-for="(item,index) in [1,2]" :key="index" :tab="tab"  :showBut='1'></actionlist>
 				</view>
 			</view>
 		</view>
@@ -104,28 +127,52 @@
 </template>
 
 <script>
-	import actionlist from "./selfCenterList.vue"
+	import actionlist from "@/components/actionlist.vue"
 	export default {
 		data() {
 			return {
 				tab:0,//行动，围观，收藏
-				list:[1,2,3,4,5],
-				view:""
+				list:[],
+				userInfo:uni.getStorageSync('userInfo'),
+				userId:'',
+				total:'',
+				lookerList:[],
+				pushId:'',
+				lookTotal:'',
 			}
+		},
+		onShow() {
+			
 		},
 		onLoad(option) {
-			this.view = option.view;
-			console.log(option.view)
+			this.userId = option.userId;
+			this.pushId = option.pushId;
+			console.log(option.userId);
+			this.getCardList();
+			this.getLookerList();
 		},
 		methods: {
-			goPage(url){
-				uni.navigateTo({
-					url
-				});
+			getCardList(){
+				this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,{
+					token:uni.getStorageSync('token'),
+					userId:this.userId,
+				},false)
+				.then(res=>{
+					console.log(res);
+					this.list=res.obj.list;
+					this.total=res.obj.total
+				})
 			},
-			getRole(){
-				return this.view != "other";
-			}
+			getLookerList(){
+				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
+					pushId:this.pushId,
+				},false)
+				.then(res=>{
+					console.log(res);
+					this.lookerList=res.obj.list;
+					this.lookTotal=res.obj.total
+				})
+			},
 			
 		},
 		components:{
@@ -213,6 +260,26 @@
 				flex: 1;
 			}
 			text-align: left;
+			.gender{
+				background:#fd5107;
+				color:#fff;
+				display: inline-block;
+				padding:0 6rpx;
+				border-radius: 100%;
+				font-size: 22rpx;
+				margin-right: 2rpx;
+				// height: 24rpx;
+				// line-height: 24rpx;
+			}
+			.boy{
+				background:#66CCFF;
+				color:#fff;
+				display: inline-block;
+				padding:0 6rpx;
+				border-radius: 100%;
+				font-size: 22rpx;
+				margin-right: 2rpx;
+			}
 		}
 	}
 }
@@ -234,6 +301,26 @@
 		}
 	}
 }
+.actionLi{
+		padding-top: 20rpx;
+		border-bottom: 1upx solid #ffa700;
+		.ali-main{
+			display: flex;
+			}
+			.xd-mag{
+				height: 125rpx;
+				width: 125rpx;
+			}
+		}
+	.boy{
+		background:#66CCFF;
+		color:#fff;
+		display: inline-block;
+		padding:0 6rpx;
+		border-radius: 100%;
+		font-size: 22rpx;
+		margin-right: 2rpx;
+	}
 
 
 </style>

@@ -14,7 +14,8 @@
     "pages/index/cardDetails/cardDetails",
     "pages/index/action/action",
     "pages/selfCenter/editUserInfo",
-    "pages/login/login"
+    "pages/login/login",
+    "pages/web/webShow"
   ],
   "subPackages": [],
   "window": {
@@ -33,7 +34,7 @@
         "pagePath": "pages/index/index",
         "iconPath": "static/images/icon/tabbar/tabbar1.png",
         "selectedIconPath": "static/images/icon/tabbar/tabbar1-on.png",
-        "text": "首页"
+        "text": "圈子"
       },
       {
         "pagePath": "pages/action/action",
@@ -56,6 +57,5 @@
     ]
   },
   "permission": {},
-  "usingComponents": {},
-  "sitemapLocation": "sitemap51.json"
+  "usingComponents": {}
 }

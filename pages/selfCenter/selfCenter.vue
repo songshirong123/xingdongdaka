@@ -13,10 +13,10 @@
 					<text></text>
 				</view>
 			</view>
-			<!-- <view class="personOpt">
-				<text class="viewself link"  @click="goPage('/pages/selfCenter/selfView?view=other')">个人主页</text>
+			<view class="personOpt">
+				<!-- <text class="viewself link"  @click="goPage('/pages/selfCenter/selfView')">个人主页</text> -->
 				<button @click="clickMe" class="pay">支付</button>
-			</view> -->
+			</view>
 		</view>
 		<view class="moreInfo">
 			<view class="moreInfoRow">
@@ -25,11 +25,12 @@
 				</view>
 				<view class="moreInfoIn" >
 					<text v-if="userInfo.gender==1" class="boy">♂</text>
-					<text v-else class="gender">♀</text>
+					<text v-else-if="userInfo.gender==0" class="gender">♀</text>
+					<text v-else class="boy">密</text>
 					<!-- <text>20</text> -->
 				</view>
 				<view class="moreInfoIn flex1">
-					<text>学校</text>
+					<text>学校：</text>
 				</view>
 				<!-- <view class="moreInfoIn">
 					<text>  &nbsp;</text>
@@ -105,15 +106,47 @@
 </template>
 
 <script>
+	import{ mapState,mapMutations} from 'vuex'
 	// import actionlist from "./selfCenterList.vue"
-	import actionlist from "@/components/actionlist.vue"
+	// import actionlist from "@/components/actionlist.vue"
 	export default {
 		data() {
 			return {
 				tab:0,//行动，围观，收藏
 				list:[1,2,3,4,5],
-				userInfo:uni.getStorageSync('userInfo'),
+				userInfo:'',
 			}
+		},
+		computed: {
+		           ...mapState(['hasLogin'])  
+		       }, 
+	   onShow() {
+		if(this.userInfo==''||this.userInfo==undefined||this.userInfo==null){
+			try{
+				
+				this.userInfo=uni.getStorageSync('userInfo')
+				console.log(this.userInfo)
+			}catch(e){
+								   console.log(Error)
+							   };
+			
+		}
+	   },
+	   
+		onLoad() {
+			if(!this.hasLogin){
+				uni.redirectTo({
+					url: '../login/login' 
+				});
+				return false;
+			};
+			try{
+				
+				this.userInfo=uni.getStorageSync('userInfo')
+				console.log(this.userInfo)
+			}catch(e){
+								   console.log(Error)
+							   };
 		},
 		methods: {
 			goPage(url){
@@ -121,144 +154,79 @@
 					url
 				});
 			},
+			
 			clickMe: function () {
-			 
-			 //  wx.showToast({
-			 //    title: '成功-2',
-			 //    icon: 'success',
-			 //    duration: 2000
-			 //  })
-			  // 登录
-			  wx.login({
-			    success: res => {
-			      console.info("aaaaa" + res.code);
-			      let code = res.code;
-			      var getOpenId = "https://api.weixin.qq.com/sns/jscode2session?appid=wxc2af58f1589eb15d&secret="+
-			      "e89b64565ff1deacc73ee0c5e9ddd581&js_code="+ res.code +"&grant_type=authorization_code";
-			      wx.request({
-			        url: getOpenId, //仅为示例，并非真实的接口地址
-			        header: {
-			          'content-type': 'application/json' // 默认值
-			        },
-			        success(res) {
-			          console.info(1111111);
-			          console.log(res)
-			
-			          wx.request({
-			            url: 'https://xingdongdaka.zhidashixun.com/wechat/pay', //仅为示例，并非真实的接口地址
-			            method: 'post',
-			            data: {
-			              openid: res.data.openid
-			            },
-			           header: {
-			             'content-type': 'application/x-www-form-urlencoded' // 默认值
-			            },
-			            success(res) {
-			              console.info(2222222);
-			              console.log(res.data);
-			              console.log(res.data.obj.appId);
-			
-			
-			              // 获取用户信息
+				let that=this;	
+						console.log('支付')
 			              wx.getSetting({
 			                success: res => {
+								console.log(res)
 			                  if (res.authSetting['scope.userInfo']) {
-			                    // 已经授权，可以直接调用 getUserInfo 获取头像昵称，不会弹框
-			                    wx.getUserInfo({
-			                      success: res => {
-			                        console.info(55555);
-			                        console.info(res);
-			                        console.info(res.iv);
-			                        console.info(res.encryptedData);
-			                        console.info(res.cloudID);
-			                        let iv = res.iv;
-			                        let encryptedData = res.encryptedData;
-			
-			                       //  // 可以将 res 发送给后台解码出 unionId
-			                       //  this.globalData.userInfo = res.userInfo
-			
-			                       //  // 由于 getUserInfo 是网络请求，可能会在 Page.onLoad 之后才返回
-			                       //  // 所以此处加入 callback 以防止这种情况
-			                       //  if (this.userInfoReadyCallback) {
-			                       //    this.userInfoReadyCallback(res)
-			                       //  }
-			                         console.info("bbbbb");
-			                        console.info(iv);
-			                        console.info(encryptedData);
-			                        console.info(encodeURIComponent(encryptedData))
-			                        console.info(code);
-			                       //  wx.request({
-			                       //    url: 'http://xingdongdaka.zhidashixun.com/login/weiXinLogin',
-			                       //    method: 'post',
-			                       //    data: {
-			                       //       userName: "1212aaa",
-			                       //      encryptedData: encodeURIComponent(encryptedData),
-			                       //       iv: iv,
-			                       //      code: code
-			                       //    },
-			                       //    header: {
-			                       //      'content-type': 'application/x-www-form-urlencoded' // 默认值
-			                       //    },
-			                       //    success(res) {
-			                       //      console.info(66666);
-			                       //      console.info(res);
-			                       //    }
-			                       //  });
-			
-			
+			                    that.xd_request_post(that.xdServerUrls.xd_pay,
+								{
+									unionId:that.userInfo.unionId,
+									openid:that.userInfo.openId,
+									userName:that.userInfo.nickName,
+									id:uni.getStorageSync('id'),
+									token:uni.getStorageSync('token'),
+									userHead:that.userInfo.avatarUrl,
+									city:that.userInfo.city,
+									province:that.userInfo.province,
+									payRmb:1,
+									
+								},false).then(res=>{	
+									console.log(res)
+			                    	uni.requestPayment({
+			                    		 'appId': res.obj.appId,
+			                    		'timeStamp': res.obj.timeStamp,
+			                    		'nonceStr': res.obj.nonceStr,
+			                    		'package': res.obj.packageAlias,
+			                    		'signType': 'MD5',
+			                    		'paySign': res.obj.paySign,
+			                    		success: function (res) {
+			                    			that.xd_request_post(that.xdServerUrls.xd_resultCallBack,{},false).then( res=>{
+			                    			})
+			                    			uni.showToast({
+			                    				title: '微信支付成功',
+			                    				icon: 'success',
+			                    				duration: 1500
+			                    			});
+			                    			uni.reLaunch({
+			                    				url: '../index/index'
+			                    			})
+			                    		},
+			                    		fail: function (err) {
+			                    			// 支付失败的回调中 用户未付款
+			                    			uni.showModal({
+			                    				content:'支付取消',
+			                    				confirmText:'继续支付',
+			                    				cancelText:'返回首页',
+			                    				image:'/static/images/icon/clock.png',
+			                    				success:function(res) {
+			                    					 if (res.confirm) {
+			                    						return false
+			                    					} else if (res.cancel) {
+			                    						uni.reLaunch({
+			                    							url: '../index/index',
+			                    							})
+			                    						}
+			                    					},
+			                    					
+			                    			});
+			                    		}
+			                    	});
+			                    })
 			
 			                      }
-			                    })
-			                  }
-			                }
+			                    }
 			              })
 			
-			             
-			              
-			
-			       wx.requestPayment(
-			             {
-			             'appId': res.data.obj.appId,
-			           'timeStamp': res.data.obj.timeStamp,
-			           'nonceStr': res.data.obj.nonceStr,
-			           'package': res.data.obj.packageAlias,
-			           'signType': 'MD5',
-			           'paySign': res.data.obj.paySign,
-			               'success': function (res) {
-			                 console.info(res);
-			               },
-			               'fail': function (res) {console.info(res) },
-			               'complete': function (res) {
-			                 console.info(res);
-			               }
-			             })
-			
-			
-			            }
-			          })
-			
-			
-			        }
-			      })
-			
-			
-			    }, 'fail': function (res) { console.info(res) },
-			       'complete': function (res) {
-			
-			         // wx.showToast({
-			         //   title: 'error' + res,
-			         //   icon: 'success',
-			         //   duration: 2000
-			         // })
-			       }
-			  })
-			
-			
+
 			 },
 		},
-		components:{
-			actionlist
-		}
+		// components:{
+		// 	actionlist
+		// }
 	}
 </script>
 

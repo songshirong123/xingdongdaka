@@ -2,7 +2,7 @@
 	<view class="msg">
 		<view class="msglis">
 			
-			<view class="msgli" @click="goPage('/pages/msg/talk')" v-for="(item,index) in 6" :key="index">
+			<!-- <view class="msgli" @click="goPage('/pages/msg/talk')" v-for="(item,index) in 6" :key="index">
 				<view class="msgheader">
 					<img src="../../static/images/pic/header.png" class="xd-list-head-img ">
 				</view>
@@ -16,7 +16,7 @@
 					</text>
 				</view>
 			</view>
-			
+			 -->
 		</view>
 	</view>
 </template>
@@ -25,6 +25,13 @@
 	export default {
 		data(){
 			return {}
+		},
+		onLoad() {
+			uni.showToast({
+				icon:'none',
+				title:'正在加紧开发中!',
+				duration:3000,
+			})
 		},
 		methods:{
 			goPage(url){

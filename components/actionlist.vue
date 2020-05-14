@@ -2,21 +2,21 @@
 	<view class="actionLi">
 		<view class="ali-top">
 			<view class="ali-top-in">
-				<text>进度:{{item.targetDay-item.holidayDay-item.pushCardCount}}\{{item.targetDay}}</text>
+				<text>进度:{{item.pushCardCount}}/{{item.targetDay}}</text>
 			</view>
 			<view class="ali-top-in">
-				<text>休假:{{item.holidayDay}}</text>
+				<text>休假天数:{{item.holidayDay}}</text>
 			</view>
 		</view>
 		<view class="ali-main">
 			<view class="ali-main-img">
-				<img :src="item.pictures" alt="" class="xd-list-image">
-			</view>
+				<img v-if="item.pictures!=''" :src="item.pictures" alt="" class="xd-list-image" mode="aspectFit">
+				<img v-else :src="audioPlaySrc" alt="" class="xd-list-image" @error="error(index)">
+			</view>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 			<view class="lli-main-content xd-list-body ">
-				<view class="xd-list-title-text">
+				<view class="xd-list-title-text" @tap="goPageCard(item)">
 					<text>{{item.content}}</text>
-				</view>
-				
+				</view>	
 			</view>
 		</view>
 		<view class="ali-footer">
@@ -27,15 +27,17 @@
 			</view>
 			<view class="actionBar xd-tbr-large">
 				<text>我的保证金</text>
-				<text class="price">￥{{item.challengeRmb}}</text>
+				<text class="price">￥{{item.challengeRmb/100}}</text>
 			</view>
 			<view class="actionBar xd-tbr-large">
 				<text>邀请围观</text>
 				<text class="sub xd-badge">{{item.onlookerCount}}</text>
 			</view>
 		</view>
-		<view class="ali-btns" :v-if="tab===0&&getRole()">
-			<button class="btn" @click="goPage(item)">立即打卡</button>
+		<view class="ali-btns" v-if="tab===0&&showBut!=1">
+			<button v-if="item.btn==0" class="btn"  @click="goPage(item.id)">立即打卡</button>
+			<button v-else-if="item.btn==1" class="btn"  style="background-color: #ff0000;">未完成</button>
+			<button v-else-if="item.btn==2" class="btn" style="background-color: #46ca5c;">已完成</button>
 		</view>
 	</view>
 </template>
@@ -43,24 +45,32 @@
 <script>
 	export default {
 		name:"actionlist",
-		props:['tab','item','view'],
-		
+		props:['tab','item','showBut'],
 		
 		data(){
 			return {
-				
+				audioPlaySrc:'../static/images/icon/img/title.png',
 			}
 		},
 		methods:{
+			error: function(index) {
+				console.log(index)
+				var num=Math.floor(Math.random()*8+1);
+				this.audioPlaySrc='../static/images/icon/img/title'+num+'.png'
+			            }  ,
 			goPage(item){
 				console.log(item)
 				uni.navigateTo({
-					url:'/pages/selfCenter/clockIn?pushId='+item.id
+					url:'/pages/selfCenter/clockIn?pushId='+item
 				});
 			},
-			getRole(){
-				return this.view != "other";
+			goPageCard(e){
+				
+				uni.navigateTo({
+					url:'../index/action/action?pushList='+encodeURIComponent(JSON.stringify(e))
+				})
 			}
+			
 		}
 	}
 </script>

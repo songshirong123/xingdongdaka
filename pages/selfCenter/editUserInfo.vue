@@ -62,6 +62,7 @@ export default {
 			province:'',
 			city:'',
 			img:'',
+			openId:'',
 		};
 	},
 	onLoad() {
@@ -71,6 +72,7 @@ export default {
 		this.city=userInfo.city;
 		this.current=userInfo.gender;
 		this.img=userInfo.avatarUrl;
+		this.openId=userInfo.openId;
 	},
 	methods: {
 		// openAddres() {
@@ -128,13 +130,15 @@ export default {
 				userName:e.detail.value.userName,
 				province:e.detail.value.province,
 				city:e.detail.value.city,
-				// token:userData.token,
+				token:userData.token,
 				sex:e.detail.value.sex, 
 				id:userData.id,
 				userHead:this.img,
+				openId:this.openId,
+				
 			},
 			false).then(res=>{
-				console.log(res)
+				
 			})
 		},
 	},

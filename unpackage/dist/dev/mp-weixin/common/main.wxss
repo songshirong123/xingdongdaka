@@ -50,7 +50,7 @@
 .xd-flex1{-webkit-box-flex:1;-webkit-flex:1;flex:1;}
 /* 宫格布局 */
 .xd-grids{padding:0; display:-webkit-box; display:-webkit-flex; display:flex; -webkit-flex-wrap:wrap; flex-wrap:wrap;}
-.xd-grids-items{width:100rpx; padding:20rpx 0 0 0; display:-webkit-box; display:-webkit-flex; display:flex;  box-sizing:border-box; -webkit-box-orient:vertical; -webkit-box-direction:normal; -webkit-flex-direction:column; flex-direction:column; -webkit-box-align:center; -webkit-align-items:center; align-items:center;}
+.xd-grids-items{width:100rpx; padding:20rpx 0 0 0; display:-webkit-box; display:-webkit-flex; display:flex;  -webkit-box-sizing:border-box;  box-sizing:border-box; -webkit-box-orient:vertical; -webkit-box-direction:normal; -webkit-flex-direction:column; flex-direction:column; -webkit-box-align:center; -webkit-align-items:center; align-items:center;}
 .xd-grids-icon{width:100%; height:80rpx; font-size:60rpx; line-height:80rpx; text-align:center;}
 .xd-grids-icon-img{width:64rpx; height:64rpx;}
 .xd-grids-icon-img-love{width:52rpx; height:52rpx;}
@@ -75,7 +75,7 @@
 .xd-border-b-color{border-bottom:1px solid #ff9800;}
 .xd-no-border{border:none !important;}
 /* 边框阴影 */
-.xd-box-shadow{box-shadow:6rpx 4rpx 4rpx 2rpx #ff9800;}
+.xd-box-shadow{-webkit-box-shadow:6rpx 4rpx 4rpx 2rpx #ff9800;box-shadow:6rpx 4rpx 4rpx 2rpx #ff9800;}
 /* 分割线 */
 .xd-line{
 	width: 100%; height: 6rpx; background: #ff9800;
@@ -87,11 +87,11 @@
 .xd-list-items{display:-webkit-box;display:-webkit-flex;display:flex; -webkit-box-orient:horizontal; -webkit-box-direction:normal; -webkit-flex-direction:row; flex-direction:row; -webkit-flex-wrap:nowrap; flex-wrap:nowrap; -webkit-box-align:center; -webkit-align-items:center; align-items:center; -webkit-box-pack:center; -webkit-justify-content:center; justify-content:center;}
 .xd-list-image{width:236rpx; height:150rpx; border-radius:20rpx; font-size:0; -webkit-flex-shrink:0; flex-shrink:0;}
 .xd-list-head-img{width:70rpx; height:70rpx; border-radius:70rpx; font-size:0; -webkit-flex-shrink:0; flex-shrink:0;}
-.xd-list-body{padding:26rpx 0; margin-left:48rpx; width:100rpx; -webkit-box-flex:1; -webkit-flex:auto; flex:auto;}
+.xd-list-body{padding:26rpx 0; margin-left:48rpx; width:100rpx; -webkit-box-flex:1; -webkit-flex:auto; flex:auto;height: 130rpx; margin-top:-20rpx;}
 .xd-list-title{display:-webkit-box;display:-webkit-flex;display:flex; -webkit-box-orient:horizontal; -webkit-box-direction:normal; -webkit-flex-direction:row; flex-direction:row; -webkit-flex-wrap:nowrap; flex-wrap:nowrap;}
 .xd-list-title-text{display:block; font-size:30rpx !important; color:#101010; line-height:40rpx; font-weight: bold;}
 .xd-list-title-desc,.list-time{display:block; font-size:22rpx; color:#888888; line-height:32rpx;-webkit-flex-shrink:0;flex-shrink:0;}
-.xd-list-body-desc{font-size:24rpx; color:#888888; line-height:36rpx; padding-top: 8rpx;}
+.xd-list-body-desc{font-size:24rpx; color:#888888; line-height:36rpx; padding-top: 30rpx;}
 .xd-list-desc{font-size:28rpx !important; color:#101010; line-height:36rpx;}
 /* 评论列表 */
 .xd-comments{}
@@ -117,12 +117,12 @@
 .xd-badge{font-size:22rpx; color: #888888; position:absolute; right:-20rpx; top:-20rpx; z-index:1;}
 /* 搜索框 */
 .xd-search-box{
-	width: 100%; box-sizing: border-box;
+	width: 100%; -webkit-box-sizing: border-box; box-sizing: border-box;
 	background: #ffe66f;
 	padding: 14rpx 10%;
 }
 .xd-search{
-	background:#ccc; border-radius:66rpx; box-sizing:border-box; padding:6rpx 10rpx; display:-webkit-box; display:-webkit-flex; display:flex; -webkit-flex-wrap:nowrap; flex-wrap:nowrap; -webkit-box-align:center; -webkit-align-items:center; align-items:center; overflow:hidden;
+	background:#ccc; border-radius:66rpx; -webkit-box-sizing:border-box; box-sizing:border-box; padding:6rpx 10rpx; display:-webkit-box; display:-webkit-flex; display:flex; -webkit-flex-wrap:nowrap; flex-wrap:nowrap; -webkit-box-align:center; -webkit-align-items:center; align-items:center; overflow:hidden;
 }
 .xd-icons.icon-search{
 	text-align:center; -webkit-flex-shrink:0; flex-shrink:0;width: 60rpx; height:60rpx;

@@ -33,12 +33,15 @@
 						></video>
 					</view> -->
 					<view class="section">
-						<image  class="imagetip" v-show="param.pictures" :src="param.pictures" ></image>
-						<view class="imagetip"  v-show="!param.pictures" >
+						<block v-for="(pictures, index) in param.pictures" :key="index" >	
+						 <image  class="imagetip" v-show="param.pictures[index]" :src="pictures" ></image>
+						</block>
+						<view class="imagetip"  v-show="!param.pictures[0]" >
 							<view class="imagetipicon">
 								<text>+</text>
 							</view> 
 						</view> 
+						
 					</view>
 				</view>
 				<view class="form-item nobtm itembtns">
@@ -56,13 +59,14 @@
 				<view class="form-item nobtm"><textarea class="inputarea" name='extendContent' placeholder="请输入概况" maxlength="250" /></view>
 			</view>
 			<view class="btn_bar">
-				<view class="btns"><button class="btn" form-type="submit" >提交</button></view>
+				<view class="btns"><button class="btn" form-type="submit" >提交打卡</button></view>
 			</view>
 		</form>
 	</view>
 </template>
 
 <script>
+	import{ mapState,mapMutations} from 'vuex'
 export default {
 	data() {
 		return {
@@ -79,16 +83,20 @@ export default {
 			second:'', // 秒
 			strtime : '2020-05-21 00:00:00:000',
 			timeCount:'',
-			dayData:'',
+			dayData:'00:00:00',
 			param:{
-				pictures:""
+				'pictures':[],
 			},
 			pushId:'',
 			startTimes:undefined,
+			stTimes:undefined,
 			endTimes:undefined
 			
 		};
 	},
+	computed: {
+	           ...mapState(['hasLogin'])  
+	       },  
 	onLoad(option) {
 		console.log(option.pushId)
 		this.pushId=option.pushId;
@@ -96,14 +104,18 @@ export default {
 	},
 	methods: {
 		submitFrom(e){
-			if(this.endTimes==undefined){
-				uni.showToast({
-				    title: '计时以后才能提交',
-					mask:true,
-				    duration: 1000,
-					image:'/static/images/icon/clock.png'
+			var start='';
+			var end='';
+			if(!this.hasLogin){
+				uni.navigateTo({
+					url: '../login/login' 
 				});
-				return false
+				return false;
+			}
+			if(!this.endTimes!=undefined){
+				var start=this.stTimes;
+				var end=this.endTimes;
+				
 			};
 			if(e.detail.value.content==''){
 				uni.showToast({
@@ -113,16 +125,48 @@ export default {
 					image:'/static/images/icon/clock.png'
 				});
 				return false
-			}
+			};
+			// if(this.param.pictures==''){
+			// 	uni.showToast({
+			// 	    title: '请上传图片',
+			// 		mask:true,
+			// 	    duration: 1000,
+			// 		image:'/static/images/icon/clock.png'
+			// 	});
+			// 	return false
+			// }
+			// if(e.detail.value.extendContent==''){
+			// 	uni.showToast({
+			// 	    title: '概述不能为空',
+			// 		mask:true,
+			// 	    duration: 1000,
+			// 		image:'/static/images/icon/clock.png'
+			// 	});
+			// 	return false
+			// }			 
+			 // var pictures=JSON.stringify( this.param.pictures);
+			 // console.log(pictures)
+			 
 			this.xd_request_post(this.xdServerUrls.xd_savePushCard,{
 				pushId:this.pushId,
 				userId:uni.getStorageSync('id'),
 				content:e.detail.value.content,
 				extendContent:e.detail.value.extendContent,
 				pictures:this.param.pictures,
-				startTime:this.startTimes,
-				endTime:this.endTimes,
+				startTime:start,
+				endTime:end,
 			},false).then(res=>{
+				console.log(res)
+				uni.showToast({
+					title: '保存成功',
+					icon: 'success',
+					duration: 1500,
+					success() {
+						uni.reLaunch({
+							url: '../index/cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(res.obj))
+						})
+					}
+				});
 				
 			})
 			
@@ -143,8 +187,8 @@ export default {
 					                'userId': uni.getStorageSync('id'),
 					            },
 					            success: (uploadFileRes) => {
-			
-									that.param.pictures=JSON.parse(uploadFileRes.data).obj[0];
+									that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0])
+									console.log(that.param.pictures)
 					               
 					            }
 					        });
@@ -153,14 +197,19 @@ export default {
 		},
 		getTime(){
 			let _this = this;
-		var date = new Date(),
-		 hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours(),
-		 minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes(),
-		 second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
-		  _this.hour=hour;
-		   _this.minute=minute;
-		    _this.second=second;
-			_this.startTimes=date
+		var date = new Date();
+		var year = date.getFullYear();//当前年份 
+		var month = date.getMonth()+1< 10 ? "0" + (date.getMonth()+1) : (date.getMonth()+1); //当前月份
+		var day = date.getDate()< 10 ? "0" + date.getDate() : date.getDate();; //当前月份几号
+		var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+		var minute = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+		var second = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+		  // _this.hour=hour;
+		  //  _this.minute=minute;
+		  //   _this.second=second;
+		  _this.startTimes=date;
+		  console.log(month)
+			_this.stTimes=year+'-'+month+'-'+day+' '+hour + ':' + minute + ':' + second;
 		var timer = hour + ':' + minute + ':' + second;
 		_this.times=timer;
 		},
@@ -177,9 +226,18 @@ export default {
 		        var timeHour = Math.floor(time4 / 60 / 60) - timeDay * 24;
 		        var timeMinute = Math.floor(time4 / 60) - timeDay * 24 * 60 - timeHour * 60;
 		        var timeSecond = Math.floor(time4) - timeDay * 24 * 60 * 60 - timeHour * 60 * 60 - timeMinute * 60;
-		        _this.timeHour = timeHour; // 小时
-		        _this.timeMinute = timeMinute; // 分钟
-		        _this.timeSecond = timeSecond; // 秒
+				if(timeHour<10){
+								  timeHour='0'+timeHour
+				}
+				if(timeMinute<10){
+						 timeMinute='0'+timeMinute		   
+				}
+				if(timeSecond<10){
+						 timeSecond='0'+timeSecond		   
+				}
+		        // _this.timeHour = timeHour; // 小时
+		        // _this.timeMinute = timeMinute; // 分钟
+		        // _this.timeSecond = timeSecond; // 秒
 				 _this.startTime = timeHour + ':' + timeMinute + ':' + timeSecond;
 		    }, 1000);
 			this.buttonStart=!this.buttonStart;
@@ -187,12 +245,19 @@ export default {
 			stop(){
 				var dd=new Date();
 				clearInterval(this.timeCount); 
-				this.endTimes=dd;
+				var year = dd.getFullYear();//当前年份
+				var month = dd.getMonth()+1< 10 ? "0" + (dd.getMonth()+1) : (dd.getMonth()+1); //当前月份
+				var day = dd.getDate()< 10 ? "0" + dd.getDate() : dd.getDate();; //当前月份几号
+				var hour = dd.getHours() < 10 ? "0" + dd.getHours() : dd.getHours();
+				var minute = dd.getMinutes() < 10 ? "0" + dd.getMinutes() : dd.getMinutes();
+				var second = dd.getSeconds() < 10 ? "0" + dd.getSeconds() : dd.getSeconds();
+				console.log(month)
+				this.endTimes=year+'-'+month+'-'+day+' '+hour + ':' + minute + ':' + second;
 				this.getDateCha(this.startTimes,dd);
 				this.buttonStart=!this.buttonStart;
 			},
 			getDateCha(beginDate,endDate){  
-			    var res={D:0,H:0,M:0,S:0,abs:true,error:false};  
+			    var res={D:'00',H:'00',M:'00',S:'00',abs:true,error:false};  
 			    //属性形式验证：第一次参数必须是Date类型，第二个参数可以为空，默认为new Date()  
 			    if(typeof(endDate)=="undefined" || null== endDate||""==endDate ){endDate = new Date();}  
 			    if( !(beginDate instanceof (Date)) ||  !(endDate instanceof (Date))){  
@@ -220,7 +285,18 @@ export default {
 			    res.S=(chaTime-res.M*1000*60)/1000;//减去分钟的毫秒数。再求秒的个数  
 			    //alert(res.S);  
 			   console.log(res)
-			   this.dayData= res.H+":"+res.M+":"+Math.trunc(res.S);  
+			   if(res.H<10){
+				   res.H='0'+res.H
+			   }
+			   if(res.M<10){
+			   		 res.M='0'+res.M		   
+			   }
+			   if(Math.trunc(res.S)<10){
+			   		 res.S='0'+Math.trunc(res.S)		   
+			   }else{
+				    res.S=Math.trunc(res.S)	
+			   }
+			   this.dayData= res.H+":"+res.M+":"+res.S;  
 			   
 			}  
 			
@@ -237,12 +313,12 @@ export default {
 		border:4px solid #eee;
 		color:#eee;
 		position: relative;
-		width:200rpx;
+		width:193rpx;
 		height: 150rpx;
 		// line-height: 100rpx;
 		font-size: 100rpx;
 		text-align: center;
-		margin-left: 35%;
+		// margin-left: 35%;
 	}
 .clockbar {
 	height: 100rpx;
@@ -298,6 +374,7 @@ export default {
 	border-radius: 5px;
 	padding: 20rpx;
 	height: 130rpx;
+	width: auto;
 }
 .btn_bar {
 	position: fixed;

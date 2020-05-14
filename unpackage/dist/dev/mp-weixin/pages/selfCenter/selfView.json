@@ -1,6 +1,6 @@
 {
   "navigationBarTitleText": "查看信息",
   "usingComponents": {
-    "actionlist": "/pages/selfCenter/selfCenterList"
+    "actionlist": "/components/actionlist"
   }
 }

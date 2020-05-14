@@ -61,15 +61,17 @@ export default {
 				});
 				return false
 			};
-			if(e.detail.value.extendContent==''){
-				uni.showToast({
-				    title: '请出入行动目标',
-					mask:true,
-				    duration: 1000,
-					image:'/static/images/icon/clock.png'
-				});
-				return false
-			}
+			// if(e.detail.value.extendContent==''){
+			// 	uni.showToast({
+			// 	    title: '请出入行动目标',
+			// 		mask:true,
+			// 	    duration: 1000,
+			// 		image:'/static/images/icon/clock.png'
+			// 	});
+			// 	return false
+			// }if(this.param.pictures==''){
+				
+			// }
 			uni.navigateTo({
 				url: '/pages/action/step2?pictures='+this.param.pictures+'&formData='+encodeURIComponent(JSON.stringify(e.detail.value))
 			});

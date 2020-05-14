@@ -25,6 +25,7 @@ const store = new Vuex.Store({
         lang: lang,
 		hasLogin:false,
 		infoRes:{},
+		userInfo:{},
 		
 		
     },
@@ -45,22 +46,18 @@ const store = new Vuex.Store({
 		logIn(state,provider){
 			state.hasLogin=true;
 			state.userInfo=provider;
+			console.log(state.userInfo)
+			uni.setStorageSync('userInfo',state.userInfo)
 			
-			uni.setStorage({
-				key:'userInfo',
-				data:provider
-			})
-			
+		},
+		IndexlogIn(state){
+			state.hasLogin=true;	
 		},
 		logOut(state){
 			state.hasLogin=false;
 			state.userInfo={};
-			uni.setStorage({
-				key:'userInfo',
-			})
-			uni.setStorage({
-				key:'token',
-			})
+			uni.setStorageSync('userInfo',state.userInfo)
+			uni.setStorageSync('token',{})
 		}
     }
 })

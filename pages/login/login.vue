@@ -4,7 +4,7 @@
 	<view v-if="!hasLogin"><!--  -->
 		<view>
 			<view class='header'>
-				<image src='../../static/images/pic/header.png'></image>
+				<image src='../../static/images/icon/img/xddak.jpg'></image>
 			</view>
 			<view class='content'>
 				<view>申请获取以下权限</view>
@@ -82,8 +82,6 @@ export default {
 				   {'content-type': 'application/x-www-form-urlencoded'} 
 				   
 				       ).then(res=>{
-						   console.log(res.obj.id)
-					
 						   if(res.resultCode == 0){
 							   console.log(_this.userInfo)
 							   _this.logIn(_this.userInfo);
