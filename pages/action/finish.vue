@@ -66,7 +66,7 @@ export default {
 	           ...mapState(['hasLogin'])  
 	       },  
 	onLoad(option) {
-		console.log(option);
+		
 		this.formData= JSON.parse(decodeURIComponent(option.data));
 		
 	},
@@ -75,6 +75,7 @@ export default {
 			var data=res.obj;
 			var  time=this.xdUniUtils.xd_timestampToTime(data.createTime);
 			    data.createTime=time;
+				data.challengeRmb=Math.trunc(data.challengeRmb/100);
 				return data;
 		},
 		formSubmit(e) {
@@ -115,18 +116,22 @@ export default {
 			if(that.rmb.challengeRmb==null){
 				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
 					that.saveData.challengeRmb=0;
-					that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
+					that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
 						uni.reLaunch({
 							url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
 							})
 					})
-				};
+				}else{
+					
+					that.goPay();
+				}
 			}else{
+				
 				that.goPay();
 			}		
 		},
-		priceRmb(e){		
-			this.rmb.challengeRmb=e;
+		priceRmb(e){	
+			this.rmb.challengeRmb=e
 			this.formSubmit();
 		},
 		//#ifdef MP-WEIXIN
@@ -150,6 +155,7 @@ export default {
 			}catch(e){
 				//TODO handle the exception
 			};
+			that.saveData.challengeRmb=that.saveData.challengeRmb*100;
 			data.id=that.saveData.userId;
 			data.token=that.saveData.token;
 			data.city=userInfo.city;
@@ -157,7 +163,7 @@ export default {
 			data.province=userInfo.province;
 			data.unionId=userInfo.unionId;
 			data.openid=userInfo.openId;
-			data.payRmb=that.saveData.challengeRmb*100
+			data.payRmb=that.saveData.challengeRmb
 			
 			that.xd_request_post(that.xdServerUrls.xd_pay,data,false).then(res=>{
 				uni.requestPayment({
@@ -168,7 +174,7 @@ export default {
 					'signType': 'MD5',
 					'paySign': res.obj.paySign,
 					success: function (re) {
-						that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
+						that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
 							uni.reLaunch({
 								url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
 							})
@@ -194,10 +200,11 @@ export default {
 							image:'/static/images/icon/clock.png',
 							success:function(ress) {
 								 if (ress.confirm) {
+									that.rmb.challengeRmb=null;
 									return false
 								} else if (ress.cancel) {
 									that.saveData.challengeRmb=0;
-									that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,false).then( res=>{
+									that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
 										uni.reLaunch({
 											url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
 											})

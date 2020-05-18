@@ -88,9 +88,9 @@ export default {
 				'pictures':[],
 			},
 			pushId:'',
-			startTimes:undefined,
-			stTimes:undefined,
-			endTimes:undefined
+			startTimes:'',
+			stTimes:'',
+			endTimes:'',
 			
 		};
 	},
@@ -98,21 +98,21 @@ export default {
 	           ...mapState(['hasLogin'])  
 	       },  
 	onLoad(option) {
-		console.log(option.pushId)
+		
 		this.pushId=option.pushId;
 		this.getTime();
 	},
 	methods: {
 		submitFrom(e){
-			var start='';
-			var end='';
+			var start=undefined;
+			var end=undefined;
 			if(!this.hasLogin){
 				uni.navigateTo({
 					url: '../login/login' 
 				});
 				return false;
 			}
-			if(!this.endTimes!=undefined){
+			if(this.endTimes!=''){
 				var start=this.stTimes;
 				var end=this.endTimes;
 				
@@ -155,15 +155,18 @@ export default {
 				pictures:this.param.pictures,
 				startTime:start,
 				endTime:end,
-			},false).then(res=>{
-				console.log(res)
+			},true).then(res=>{
+				var data ={
+					pushId:this.pushId,
+					cardId:res.obj
+				}
 				uni.showToast({
 					title: '保存成功',
 					icon: 'success',
 					duration: 1500,
 					success() {
 						uni.reLaunch({
-							url: '../index/cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(res.obj))
+							url: '../index/cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(data))
 						})
 					}
 				});
@@ -188,7 +191,7 @@ export default {
 					            },
 					            success: (uploadFileRes) => {
 									that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0])
-									console.log(that.param.pictures)
+									
 					               
 					            }
 					        });
@@ -208,7 +211,6 @@ export default {
 		  //  _this.minute=minute;
 		  //   _this.second=second;
 		  _this.startTimes=date;
-		  console.log(month)
 			_this.stTimes=year+'-'+month+'-'+day+' '+hour + ':' + minute + ':' + second;
 		var timer = hour + ':' + minute + ':' + second;
 		_this.times=timer;
@@ -251,7 +253,6 @@ export default {
 				var hour = dd.getHours() < 10 ? "0" + dd.getHours() : dd.getHours();
 				var minute = dd.getMinutes() < 10 ? "0" + dd.getMinutes() : dd.getMinutes();
 				var second = dd.getSeconds() < 10 ? "0" + dd.getSeconds() : dd.getSeconds();
-				console.log(month)
 				this.endTimes=year+'-'+month+'-'+day+' '+hour + ':' + minute + ':' + second;
 				this.getDateCha(this.startTimes,dd);
 				this.buttonStart=!this.buttonStart;
@@ -284,7 +285,6 @@ export default {
 			    res.M = Math.floor(chaTime/(1000*60));  
 			    res.S=(chaTime-res.M*1000*60)/1000;//减去分钟的毫秒数。再求秒的个数  
 			    //alert(res.S);  
-			   console.log(res)
 			   if(res.H<10){
 				   res.H='0'+res.H
 			   }

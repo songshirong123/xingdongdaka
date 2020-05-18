@@ -6,8 +6,8 @@
 			<view class="xd-list xd-border-b-black">
 				<view class="xd-list-items">
 					<view class="xd-list-image xd-relative">
-						<image class="xd-list-image" v-if="pushList.pictures!=''" :src="pushList.pictures" mode="aspectFit"></image>
-						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error"></image>
+						<image class="xd-list-image" v-if="pushList.pictures!=''" :src="pushList.pictures" mode="aspectFill" @tap="goPageImg(pushList.pictures)"></image>
+						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 						<view class="xd-list-head">
 							<image class="xd-list-head-img" :src="pushList.userHead" mode="aspectFill"></image>
 						</view>
@@ -65,7 +65,7 @@
 			<view class="flag-box bottom xd-border-b-black">
 				<view class="xd-list-title">
 					<text class="xd-list-title-text">动机目标：</text>
-					<text class="xd-list-desc">{{pushList.content}}</text>
+					<text class="xd-list-desc">{{pushList.extendContent}}</text>
 				</view>
 				<view class="xd-list-title">
 					<text class="xd-list-title-text">打卡方式：</text>
@@ -85,12 +85,12 @@
 				<view class="xd-list xd-border-b-black" v-for="(list,index) in pusCardList" :key="index" >
 					<view class="xd-list-items" @tap="cardComentList(list)">
 						<view class="xd-comments-image xd_card_imgs">
-							<image :src="list.pictures[0]" class="xd-comments-img" v-if="list.pictures!=''"></image>
-							<image class="xd-comments-img" v-else :src="audioPlaySrc" @error="error"></image>
+							<image :src="list.pictures[0]" class="xd-comments-img" v-if="list.pictures!=''" mode="aspectFill"  @tap="goPageImg(list.pictures)"></image>
+							<image class="xd-comments-img" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 						</view>
 						<view class="xd-list-body">
 							<view class="xd-list-body-desc">{{list.createTime}}</view>
-							<view class="xd-list-desc xd-ellipsis-line2">{{list.extendContent}}</view>
+							<view class="xd-list-desc xd-ellipsis-line2">{{list.content}}</view>
 						</view>
 						<view class="xd-grids-items comment-grids">
 							<view class="xd-relative">
@@ -143,11 +143,11 @@
 					
 					<view class="xd-relative" v-show="!pushList.currentUserGiveLike">
 						  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix" @tap="loveClick" ></image>
-						  <view class="xd-badge">{{pushList.giveLike}}</view>
+						  <view class="xd-badge">0</view>
 					</view>
 					<view class="xd-relative" v-show="pushList.currentUserGiveLike">
 						  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love-on.png" mode="widthFix" @tap="loveClick"></image>
-						  <view class="xd-badge">{{pushList.giveLike}}</view>
+						  <view class="xd-badge">0</view>
 					</view>
 				</view>
 				<view class="xd-grids-items collect-grids">
@@ -177,6 +177,9 @@
 					</view>
 				</view>
 			</view>
+		</view>
+		<view class="btn_bar" v-if="userId==pushList.userId">
+			<view class="btns"><button class="btn" @click="goSteps">立即打卡</button></view>
 		</view>
 	</view>
 	<!-- <view class='xd-list modal-screen' v-show="modal"  >	
@@ -223,15 +226,43 @@
 		           ...mapState(['hasLogin'])  
 		       },  
 		onLoad(option) {
-			this.endTime(option);
-			this.getPushCardList();
+			console.log(option)
+			if(option.pushList==undefined){
+				this.pushId=option.pushId;
+				console.log(this.pushId)
+				this.getpushList();
+			}else{
+				var pushdata=JSON.parse(decodeURIComponent(option.pushList));
+				this.endTime(pushdata);
+				this.getPushCardList();
+			}
+		},
+		onShareAppMessage(res) {
+			let that = this;
+			return {
+				title: that.pushList.content,
+				path: '/pages/index/action/action?pushId='+ that.pushList.id,
+				imageUrl:that.pushList.pictures?that.pushList.pictures:'../../static/images/icon/img/title1.png',
+			}
+					
 		},
 		methods:{
+			goSteps(){
+				uni.navigateTo({
+					url: '../../selfCenter/clockIn??pushId='+this.pushList.id
+				});
+			},
+			goPageImg(e){
+				uni.navigateTo({
+					
+					url:'../../img/img?url='+encodeURIComponent(JSON.stringify(e))
+				})
+			},
 			error: function() {
 				var num=Math.floor(Math.random()*8+1);
-				console.log(num)
+				
 				this.audioPlaySrc='../../../static/images/icon/img/title'+num+'.png'
-				console.log(this.audioPlaySrc)
+				
 			            }  ,
 						
 			// goComent(){
@@ -240,9 +271,12 @@
 			// 	});
 			// },
 			cardComentList(e){
+				
+				var data=[];
+				data.push(e);
 				var pushCard={
 					pushList:this.pushList,
-					pusCardList:e
+					pushCardList:data,
 				};
 				uni.navigateTo({
 					url: '../cardDetails/cardDetails?pushCard='+encodeURIComponent(JSON.stringify(pushCard))
@@ -302,12 +336,23 @@
 			});
 			     
 			  },
-			endTime(option){
-				var pushListdata=JSON.parse(decodeURIComponent(option.pushList));
+			  getpushList(){
+			  	this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId,{
+			  		pushId:this.pushId,
+			  		token:uni.getStorageSync('token')
+			  	},true).then(res=>{	
+					
+			  		this.endTime(res.obj);
+			  		this.getPushCardList();
+			  		
+			  	})
+			  },
+			endTime(pushdata){
+				var pushListdata=pushdata
 				pushListdata['endTime']=0;
-				console.log(pushListdata);
+				
 				pushListdata.endTime=this.xdUniUtils.xd_daysAddSub(pushListdata.createTime,pushListdata.targetDay);
-				console.log(pushListdata);
+				
 				this.pushList=pushListdata
 				
 			},
@@ -321,24 +366,21 @@
 					pushId:this.pushList.id,
 						token:uni.getStorageSync('token')
 				},false).then(res=>{
-					console.log(res)
+					
 					
 					this.pushComentList=this.timeStamp(res);
 				})
 			},
 			getPushCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId,{
-					token:uni.getStorageSync('token'),
 					pushId:this.pushList.id,		
 					
-				},false).then(res=>{
+				},true).then(res=>{
 					var data=res.obj.list;
 					for(let i=0;i<res.obj.list.length;i++){
-						data[i].pictures=JSON.parse(res.obj.list[i].pictures)
+						data[i].pictures=res.obj.list[i].pictures.split(',')
 					}
 					this.pusCardList=data;
-					console.log(res.obj.list.pictures)
-					console.log(res.obj.list.pictures[0])
 				})
 			},
 			// 打卡
@@ -355,7 +397,7 @@
 					attentionUserId:this.pushList.userId,		
 					
 				},false).then(res=>{
-					console.log(res)
+					
 					uni.showToast({
 						icon:'none',
 					  title: res.msg,
@@ -614,4 +656,30 @@
 		.userName{
 			margin-top: -10upx;
 		}
+		.btn_bar{
+			bottom: 0;
+			left:0;
+			width: 100%;
+			.btns {
+				height: 100rpx;
+				
+				display: flex;
+				align-items: center;
+				justify-content: space-between;
+				padding: 0 200rpx;
+				font-size: 28rpx;
+				margin-top: 100rpx;
+
+				.btn {
+					flex: 1;
+					height: 64rpx;
+					line-height: 64rpx;
+					background: #ffa700;
+					// color: #fff;
+					font-size: 28rpx;
+					border-radius: 40rpx;
+		
+				}
+			}
+			}
 </style>

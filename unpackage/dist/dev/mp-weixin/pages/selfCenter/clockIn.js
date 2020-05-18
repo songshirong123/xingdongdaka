@@ -230,9 +230,9 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         'pictures': [] },
 
       pushId: '',
-      startTimes: undefined,
-      stTimes: undefined,
-      endTimes: undefined };
+      startTimes: '',
+      stTimes: '',
+      endTimes: '' };
 
 
   },
@@ -240,21 +240,21 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
   (0, _vuex.mapState)(['hasLogin'])),
 
   onLoad: function onLoad(option) {
-    console.log(option.pushId);
+
     this.pushId = option.pushId;
     this.getTime();
   },
   methods: {
-    submitFrom: function submitFrom(e) {
-      var start = '';
-      var end = '';
+    submitFrom: function submitFrom(e) {var _this2 = this;
+      var start = undefined;
+      var end = undefined;
       if (!this.hasLogin) {
         uni.navigateTo({
           url: '../login/login' });
 
         return false;
       }
-      if (!this.endTimes != undefined) {
+      if (this.endTimes != '') {
         var start = this.stTimes;
         var end = this.endTimes;
 
@@ -297,15 +297,18 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         pictures: this.param.pictures,
         startTime: start,
         endTime: end },
-      false).then(function (res) {
-        console.log(res);
+      true).then(function (res) {
+        var data = {
+          pushId: _this2.pushId,
+          cardId: res.obj };
+
         uni.showToast({
           title: '保存成功',
           icon: 'success',
           duration: 1500,
           success: function success() {
             uni.reLaunch({
-              url: '../index/cardDetails/cardDetails?pushList=' + encodeURIComponent(JSON.stringify(res.obj)) });
+              url: '../index/cardDetails/cardDetails?pushList=' + encodeURIComponent(JSON.stringify(data)) });
 
           } });
 
@@ -330,7 +333,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
             success: function success(uploadFileRes) {
               that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);
-              console.log(that.param.pictures);
+
 
             } });
 
@@ -350,7 +353,6 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       //  _this.minute=minute;
       //   _this.second=second;
       _this.startTimes = date;
-      console.log(month);
       _this.stTimes = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
       var timer = hour + ':' + minute + ':' + second;
       _this.times = timer;
@@ -393,7 +395,6 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       var hour = dd.getHours() < 10 ? "0" + dd.getHours() : dd.getHours();
       var minute = dd.getMinutes() < 10 ? "0" + dd.getMinutes() : dd.getMinutes();
       var second = dd.getSeconds() < 10 ? "0" + dd.getSeconds() : dd.getSeconds();
-      console.log(month);
       this.endTimes = year + '-' + month + '-' + day + ' ' + hour + ':' + minute + ':' + second;
       this.getDateCha(this.startTimes, dd);
       this.buttonStart = !this.buttonStart;
@@ -426,7 +427,6 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       res.M = Math.floor(chaTime / (1000 * 60));
       res.S = (chaTime - res.M * 1000 * 60) / 1000; //减去分钟的毫秒数。再求秒的个数  
       //alert(res.S);  
-      console.log(res);
       if (res.H < 10) {
         res.H = '0' + res.H;
       }

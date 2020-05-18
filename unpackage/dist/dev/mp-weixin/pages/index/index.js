@@ -223,7 +223,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var indexList = function indexList() {__webpack_require__.e(/*! require.ensure | components/indexList */ "components/indexList").then((function () {return resolve(__webpack_require__(/*! @/components/indexList.vue */ 152));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var indexList = function indexList() {__webpack_require__.e(/*! require.ensure | components/indexList */ "components/indexList").then((function () {return resolve(__webpack_require__(/*! @/components/indexList.vue */ 160));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 
 {
@@ -231,7 +231,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     return {
       // audioPlaySrc:'../static/images/icon/img/title1.png',
       active: 1,
-      currentIndex: 0,
+      currentIndex: -1,
       labelId: 1,
       bannerList: [],
       tabs: [],
@@ -245,9 +245,12 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
   },
   onShareAppMessage: function onShareAppMessage(res) {
+    var that = this;
     return {
-      title: '我在行动打卡，快来围观我吧',
-      path: '/pages/index/index' };
+      title: that.listsTab[res.target.id].content,
+      path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id,
+      imageUrl: that.listsTab[res.target.id].pictures ? that.listsTab[res.target.id].pictures : '../static/images/icon/img/title1.png' };
+
 
   },
 
@@ -273,7 +276,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     //首页信息
     indexData: function indexData() {var _this = this;
       var token = uni.getStorageSync('token');
-      console.log(token);
+
       if (token != '') {
         this.IndexlogIn();
       }
@@ -340,8 +343,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         giveLikeUserId: list.userId },
       true).
       then(function (res) {
-        console.log(res);
-        console.log(index);
+
         if (!_this2.listsTab[index].currentUserGiveLike) {
           _this2.listsTab[index].currentUserGiveLike = true;
           _this2.listsTab[index].giveLike++;
@@ -351,7 +353,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
             duration: 1000,
             icon: 'none' });
         }
-        console.log(_this2.listsTab);
+
       }).catch(function (err) {
         if (err == '操作失败') {
           uni.showToast({
@@ -603,6 +605,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
 
   onShow: function onShow() {
+    this.currentIndex = -1;
     this.active = 1;
     this.indexData();
   },
@@ -628,7 +631,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         this.indexData(),
         this.pageNum = 1,
         uni.stopPullDownRefresh();
-        this.currentIndex = 0;
+        this.currentIndex = -1;
         break;}
 
   },

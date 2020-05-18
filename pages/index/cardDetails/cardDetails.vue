@@ -6,8 +6,8 @@
 			<view class="xd-list">
 				<view class="xd-list-items">
 					<view class="xd-list-image">
-						<image class="xd-list-image" v-if="pusCardLists.pictures!=''" :src="pusCardLists.pictures" mode="aspectFit"></image>
-						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error"></image>
+						<image class="xd-list-image" v-if="pusCardLists.pictures!=''" :src="pusCardLists.pictures" mode="aspectFill"  @tap="goPageImg(pusCardLists.pictures)"></image>
+						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 					</view>
 					<view class="xd-list-body">
 						<view class="xd-list-title-text xd-ellipsis-line2">{{pusCardLists.content}}</view>
@@ -27,7 +27,7 @@
 					</view>
 					<view class="xd-grids-items supervise-grids">
 						<view class="xd-relative">
-							<view class="xd-tbr-large">邀请围观</view>
+							<button class="xd-tbr-large buttclass" type="default" open-type="share">邀请围观</button>
 							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">0</view>
 						</view>
 					</view>
@@ -36,11 +36,11 @@
 			<view class="xd-line"></view>
 			
 			<!-- 打卡列表 -->
-			<view class="card-list xd-comments">
+			<view class="card-list xd-comments" >
 				<block v-for="(item, indexs) in cardList" :key="indexs" >	
-					<view class="xd-comments-cardList">
+					<view class="xd-comments-cardList" :id="'index'+item.pushCard.id" >
 						<view class="xd-list-head heradImg">
-							<image class="xd-list-head-img" :src="pusCardLists.userHead" ></image>
+							<image class="xd-comments-face" :src="pusCardLists.userHead" ></image>
 							<view class="xd-list-title heradImgName">
 								<text class="xd-list-title-text">{{pusCardLists.userName}}</text>
 							</view>
@@ -49,7 +49,7 @@
 							<!-- <block v-for="(pictures, index) in item.pushCard.pictures" :key="index" v-if="item.pushCard.pictures"  >	
 								<image :src="pictures" class="xd-comments-img imgs" mode="widthFix"></image>
 							</block> -->
-							<image :src="item.pushCard.pictures" class="xd-comments-img imgs" mode="widthFix" v-show="item.pushCard.pictures.length!=0" ></image>
+							<image :src="item.pushCard.pictures" class="xd-comments-img imgs" mode="aspectFill" v-show="item.pushCard.pictures.length!=0" @tap="goPageImg(item.pushCard.pictures)"></image>
 						</view>
 						<view class="cardList-text" >
 							<text class="xd-content">{{item.pushCard.content}}</text>
@@ -65,34 +65,22 @@
 							<view class="xd-comments-body">
 								<view class="xd-comments-header">
 									<text class="xd-comments-header-name">{{list.userName}}</text>
-									<text class="xd-comments-header-text">{{list.createTime}}</text>
+									<text class="xd-comments-header-text">{{list.createTimeStr}}</text>
 								</view>
 								<view class="xd-comments-info-text">{{list.content}}</view>
 								<view class="xd-comments-key xd-border-b-black">
 									<image src="../../../static/images/icon/address.png"></image>
-									<text class="xd-comments-key-text comenttext" v-if="id==pusCardLists.pusCardList[index].id" @tap="userRepaly(item.pushCard,indexs)">#回复:</text>
+									<text class="xd-comments-key-text comenttext" v-if="id==pusCardLists.userId" @tap="userRepaly(list,indexs,index)">#回复:</text>
 									<text class="xd-comments-key-text" v-else>#：</text>
 								</view>
 								<!-- 评论 -->
-								<view class="xd-fri-comments" v-show="list.replayPushCommentList!=undefined">
-									<view class="xd-comments-items" v-for="(lists,index) in list.replayPushCommentList" :key="index">
-										<image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image>
-										<view class="xd-comments-body">
-											<view class="xd-comments-header">
-												<text class="xd-comments-header-name">{{lists.userName}}</text>
-												<text class="xd-comments-header-text">{{lists.createTime}}</text>
-											</view>
-											<view class="xd-comments-info-text">{{lists.content}}</view>
-										</view>
-									</view>
-								</view>
 								<view class="xd-fri-comments" v-show="list.cardReplayCommentList!=undefined">
 									<view class="xd-comments-items" v-for="(lists,index) in list.cardReplayCommentList" :key="index">
-										<image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image>
+										<!-- <image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image> -->
 										<view class="xd-comments-body">
 											<view class="xd-comments-header">
-												<text class="xd-comments-header-name">{{lists.userName}}</text>
-												<text class="xd-comments-header-text">{{lists.createTime}}</text>
+												<text class="xd-comments-header-name commentsText" >{{pusCardLists.userName}}-回复:{{lists.userName}}</text>
+												<text class="xd-comments-header-text">{{lists.createTimeStr}}</text>
 											</view>
 											<view class="xd-comments-info-text">{{lists.content}}</view>
 										</view>
@@ -151,7 +139,7 @@
 							</view>
 						</view><!-- 功能列表end -->
 						<view class="comentInput">
-							<input  v-show="showInput&&indexs==indexId"  placeholder="请输入评论内容"  adjust-position='false' auto-height='true' hold-keyboard='true' @confirm='inputComent' confirm-type="done" :focus="showInput"/>
+							<input  v-show="showInput&&indexs==indexId" :value='value' placeholder="请输入评论内容"  adjust-position='false' auto-height='true' hold-keyboard='true' @confirm='inputComent' confirm-type="done" :focus="showInput"/>
 						</view>
 					</view><!-- card-list-item end -->		
 				</block>
@@ -177,43 +165,74 @@
 				cardId:'',
 				dataCardId:'',
 				indexId:'',
-				pushUserId:''
+				pushUserId:'',
+				commentId:'',
+				pushId:'',
 			}
 		},
 		computed: {
 		           ...mapState(['hasLogin'])  
 		       },  
+		onReady() {		
+			var that=this;
+				setTimeout(function(){
+					
+					uni.createSelectorQuery().in(that).select('#index'+that.cardId).boundingClientRect(data=>{//目标节点
+					
+					　　uni.createSelectorQuery().select(".card-list").boundingClientRect((res)=>{//最外层盒子节点
+					
+					　　　　uni.pageScrollTo({
+					　　　　　　duration:0,//过渡时间必须为0，uniapp bug，否则运行到手机会报错
+					　　　　　　scrollTop:data.top-res.top ,//滚动到实际距离是元素距离顶部的距离减去最外层盒子的滚动距离
+					　　　　})
+					　　}).exec()
+					}).exec(); 
+					
+							},3000);
+		},
+		onShareAppMessage(res) {
+			let that = this;
+			return {
+				title: that.pusCardLists.content,
+				path: '/pages/index/action/action?pushId='+ that.pusCardLists.id,
+				imageUrl:that.pusCardLists.pictures?that.pusCardLists.pictures:'../../static/images/icon/img/title1.png',
+			}
+					
+		},
 		onLoad(option) {
 			if(option.pushList!=undefined){
-				this.pusCardLists=JSON.parse(decodeURIComponent(option.pushList));
-				this.getPushComenList();
+				var data=JSON.parse(decodeURIComponent(option.pushList));
+				
+				if(data.pushId==undefined){
+					this.pusCardLists=data;
+					this.cardId=data.pushCardList[0].id;
+					this.getPushComenList();
+				}else{
+					this.pushId=data.pushId;
+					
+					this.getpushList();
+				}
 			}else if(option.pushCard!=undefined){
 				var pusCard=JSON.parse(decodeURIComponent(option.pushCard));
-				this.cardId=pusCard.pusCardList[0].id;
-				this.pushUserId=pusCard.pusCardList[0].
-				this.pusCardLists=pusCard.userId;
+				this.pushUserId=pusCard.pushCardList[0].userId;
+				this.cardId=pusCard.pushCardList[0].id;
+				this.pusCardLists=pusCard.pushList;
 				this.getPushComenList();
-			}
+				this.showInput=true;
+			} 
 		},
 		methods: {
-			 scrollTo:function(){     
-			                for(var i=0;i<this.cardList.length;i++){//一个循环查找若是对应区域无点击元素所对应的ID元素，
-			                    if(this.cardList[i].pushCard.id==this.cardId){//进行一个筛选，当点击的元素所对应的id存在时才执行以下语句
-			                        var element=document.getElementById(this.cardId) //利用Id找到对应的需要滚动的区域
-			                        var height1=element.offsetTop-44  //获取滚动区域到页面顶部的距离
-			                        uni.pageScrollTo({//uni-app中页面滚动接口
-			                            scrollTop:height1,//滚动到页面的目标位置（单位px）
-			                            duration:100  //滚动动画的时长，默认300ms，单位 ms
-			                        })
-			                    }
-			                }   
-			}, 
-	
+			 goPageImg(e){
+				uni.navigateTo({
+					
+					url:'../../img/img?url='+encodeURIComponent(JSON.stringify(e))
+				})
+			},
 			error: function() {
 				var num=Math.floor(Math.random()*8+1);
-				console.log(num)
+				
 				this.audioPlaySrc='../../../static/images/icon/img/title'+num+'.png'
-				console.log(this.audioPlaySrc)
+				
 			            }  ,
 			loveClick:function(e,index){
 				if(!this.hasLogin){
@@ -254,33 +273,47 @@
 					url: `/pages/action/step1`
 				});
 			},
-			userRepaly(e){
+			userRepaly(e,indexs,index){
+				if(e.userId==this.id){
+					uni.showToast({
+						title:'无法回复自己',
+						 duration: 1000,
+						 icon:'none',
+					})
+					return false;
+				}
+				this.commentId=e.id;
 				this.showInput=true;
-				this.userId=e.pushCommentList.userId,
-				this.dataCardId=e.pushCard.id;
+				this.indexId=indexs;
+				this.userId=e.userId,
+				this.dataCardId=e.cardId;
 				this.inputType=1;
 			},
 			inputComent(e){
-				console.log(e)
+				
 				if(this.inputType==1){
-						console.log('1')
-						this.xd_request_post(this.xdServerUrls.xd_saveReplayComment,{
-							cardId:this.dataCardId,
-							userId:this.userId,
-							content:e.detail.value,
-						},true).then(res=>{
-							console.log(res)
-							this.showInput=false;
-							this.getPushComenList();
-						})
-				}else if(this.inputType==2){	
-						this.xd_request_post(this.xdServerUrls.xd_saveComment,{
+						
+						this.xd_request_post(this.xdServerUrls.xd_saveCardReplayComment,{
+							replayUserId:this.userId,
+							commentId:this.commentId,
 							cardId:this.dataCardId,
 							userId:this.id,
 							content:e.detail.value,
 						},true).then(res=>{
-							console.log(res)
+						
 							this.showInput=false;
+							this.value='';
+							this.getPushComenList();
+						})
+				}else if(this.inputType==2){	
+						this.xd_request_post(this.xdServerUrls.xd_saveCardComment,{
+							cardId:this.dataCardId,
+							userId:this.id,
+							content:e.detail.value,
+						},true).then(res=>{
+							
+							this.showInput=false;
+							this.value='';
 							this.getPushComenList();
 						})
 					
@@ -289,29 +322,36 @@
 				
 			},
 			showInputComent(e,indexs){
-				console.log(e)
+				
 				if(!this.hasLogin){
 					uni.navigateTo({
 						url: '../../login/login' 
 					});
 					return false;
 				}
-				this.dataCardId=e.id;
+				this.dataCardId=e.pushCard.id;
 				this.indexId=indexs;
-				console.log(indexs)
 				this.showInput=!this.showInput;
 				this.inputType=2;
 			},
+			getpushList(){
+				this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId,{
+					pushId:this.pushId,
+					token:uni.getStorageSync('token')
+				},true).then(res=>{	
+					this.pusCardLists=res.obj;
+					this.getPushComenList();
+					
+				})
+			},
 			getPushComenList(){
-				console.log(this.pusCardLists)
 				this.xd_request_post(this.xdServerUrls.xd_showUserCardCommentAndReplayCommtent,{
-					userid:this.pushUserId,
+					userid:this.pusCardLists.userId,
+					pushId:this.pusCardLists.id,
 					// token:uni.getStorageSync('token')
 				},true).then(res=>{	
 					this.cardList=res.obj;
-					if(this.cardId!=''){
-						this.scrollTo();
-					}
+					
 				})
 			},
 			// getPushCardComenList(){
@@ -393,7 +433,7 @@
 				.xd-comments-items{
 					width: 100%;
 					box-sizing: border-box;
-					padding: 0 30upx;
+					padding: 0 100upx;
 					
 					.xd-comments-image{
 						width:285upx; height:207upx; margin:5upx; font-size:0; overflow:hidden;
@@ -507,4 +547,12 @@
 	// -webkit-box-orient: vertical;
 	// text-indent:50rpx;
 	}
+	.buttclass{
+			height: 40upx;
+			margin-top: 5upx;
+			font-size: 28upx;
+	}
+		button::after {
+			  border: none;
+			}
 </style>

@@ -338,6 +338,9 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 {
   data: function data() {
@@ -357,15 +360,43 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
   (0, _vuex.mapState)(['hasLogin'])),
 
   onLoad: function onLoad(option) {
-    this.endTime(option);
-    this.getPushCardList();
+    console.log(option);
+    if (option.pushList == undefined) {
+      this.pushId = option.pushId;
+      console.log(this.pushId);
+      this.getpushList();
+    } else {
+      var pushdata = JSON.parse(decodeURIComponent(option.pushList));
+      this.endTime(pushdata);
+      this.getPushCardList();
+    }
+  },
+  onShareAppMessage: function onShareAppMessage(res) {
+    var that = this;
+    return {
+      title: that.pushList.content,
+      path: '/pages/index/action/action?pushId=' + that.pushList.id,
+      imageUrl: that.pushList.pictures ? that.pushList.pictures : '../../static/images/icon/img/title1.png' };
+
+
   },
   methods: {
+    goSteps: function goSteps() {
+      uni.navigateTo({
+        url: '../../selfCenter/clockIn??pushId=' + this.pushList.id });
+
+    },
+    goPageImg: function goPageImg(e) {
+      uni.navigateTo({
+
+        url: '../../img/img?url=' + encodeURIComponent(JSON.stringify(e)) });
+
+    },
     error: function error() {
       var num = Math.floor(Math.random() * 8 + 1);
-      console.log(num);
+
       this.audioPlaySrc = '../../../static/images/icon/img/title' + num + '.png';
-      console.log(this.audioPlaySrc);
+
     },
 
     // goComent(){
@@ -374,9 +405,12 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     // 	});
     // },
     cardComentList: function cardComentList(e) {
+
+      var data = [];
+      data.push(e);
       var pushCard = {
         pushList: this.pushList,
-        pusCardList: e };
+        pushCardList: data };
 
       uni.navigateTo({
         url: '../cardDetails/cardDetails?pushCard=' + encodeURIComponent(JSON.stringify(pushCard)) });
@@ -436,12 +470,23 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
 
     },
-    endTime: function endTime(option) {
-      var pushListdata = JSON.parse(decodeURIComponent(option.pushList));
+    getpushList: function getpushList() {var _this2 = this;
+      this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId, {
+        pushId: this.pushId,
+        token: uni.getStorageSync('token') },
+      true).then(function (res) {
+
+        _this2.endTime(res.obj);
+        _this2.getPushCardList();
+
+      });
+    },
+    endTime: function endTime(pushdata) {
+      var pushListdata = pushdata;
       pushListdata['endTime'] = 0;
-      console.log(pushListdata);
+
       pushListdata.endTime = this.xdUniUtils.xd_daysAddSub(pushListdata.createTime, pushListdata.targetDay);
-      console.log(pushListdata);
+
       this.pushList = pushListdata;
 
     },
@@ -450,29 +495,26 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         url: "/pages/action/step1" });
 
     },
-    getPushComenList: function getPushComenList() {var _this2 = this;
+    getPushComenList: function getPushComenList() {var _this3 = this;
       this.xd_request_post(this.xdServerUrls.xd_showCommentAndReplayCommtent, {
         pushId: this.pushList.id,
         token: uni.getStorageSync('token') },
       false).then(function (res) {
-        console.log(res);
 
-        _this2.pushComentList = _this2.timeStamp(res);
+
+        _this3.pushComentList = _this3.timeStamp(res);
       });
     },
-    getPushCardList: function getPushCardList() {var _this3 = this;
+    getPushCardList: function getPushCardList() {var _this4 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId, {
-        token: uni.getStorageSync('token'),
         pushId: this.pushList.id },
 
-      false).then(function (res) {
+      true).then(function (res) {
         var data = res.obj.list;
         for (var i = 0; i < res.obj.list.length; i++) {
-          data[i].pictures = JSON.parse(res.obj.list[i].pictures);
+          data[i].pictures = res.obj.list[i].pictures.split(',');
         }
-        _this3.pusCardList = data;
-        console.log(res.obj.list.pictures);
-        console.log(res.obj.list.pictures[0]);
+        _this4.pusCardList = data;
       });
     },
     // 打卡
@@ -489,7 +531,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         attentionUserId: this.pushList.userId },
 
       false).then(function (res) {
-        console.log(res);
+
         uni.showToast({
           icon: 'none',
           title: res.msg });

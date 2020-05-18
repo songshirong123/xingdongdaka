@@ -10,7 +10,7 @@
 		</view>
 		<view class="ali-main">
 			<view class="ali-main-img">
-				<img v-if="item.pictures!=''" :src="item.pictures" alt="" class="xd-list-image" mode="aspectFit">
+				<img v-if="item.pictures!=''" :src="item.pictures" alt="" class="xd-list-image" mode="aspectFill">
 				<img v-else :src="audioPlaySrc" alt="" class="xd-list-image" @error="error(index)">
 			</view>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 			<view class="lli-main-content xd-list-body ">
@@ -30,7 +30,7 @@
 				<text class="price">￥{{item.challengeRmb/100}}</text>
 			</view>
 			<view class="actionBar xd-tbr-large">
-				<text>邀请围观</text>
+				<button class="xd-tbr-large buttclass" :id='index' open-type="share">邀请围观</button>
 				<text class="sub xd-badge">{{item.onlookerCount}}</text>
 			</view>
 		</view>
@@ -45,7 +45,7 @@
 <script>
 	export default {
 		name:"actionlist",
-		props:['tab','item','showBut'],
+		props:['tab','item','showBut','index'],
 		
 		data(){
 			return {
@@ -121,4 +121,17 @@
 			}
 		}
 	}
+	.buttclass{
+			background: #f9ebe5;
+			color: #e17175;
+			height: 40upx;
+			border-radius: 20upx;
+			font-size: 25upx;
+			margin-top: -4px;
+	
+	}
+		button::after {
+			  border: none;
+			
+			}
 </style>

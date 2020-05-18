@@ -42,7 +42,7 @@
 								@tap="navChange">
 								<view class="nav-item-title">
 									{{item.labelName}}
-									<view class="nav-item-desc">{{item.id}}项</view>
+									<!-- <view class="nav-item-desc">{{item.id}}项</view> -->
 								</view>
 							</view>
 						</scroll-view>
@@ -99,7 +99,7 @@
 			return {
 				// audioPlaySrc:'../static/images/icon/img/title1.png',
 				active:1,
-				currentIndex:0,
+				currentIndex:-1,
 				labelId:1,
 				bannerList:[],
 				tabs: [],
@@ -113,11 +113,14 @@
 			};
 		},
 		onShareAppMessage(res) {
-		      return {
-		        title: '我在行动打卡，快来围观我吧',
-		        path: '/pages/index/index'
-		      }
-		    },
+			let that = this;
+			return {
+				title: that.listsTab[res.target.id].content,
+				path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id,
+				imageUrl:that.listsTab[res.target.id].pictures?that.listsTab[res.target.id].pictures:'../static/images/icon/img/title1.png',
+			}
+					
+		},
 		
 		onLoad() {
 		    this.indexData();
@@ -141,7 +144,7 @@
 			//首页信息
 			indexData:function(){
 				var token=uni.getStorageSync('token');
-				console.log(token)
+				
 				if(token!=''){
 					this.IndexlogIn();
 				}
@@ -208,8 +211,7 @@
 					giveLikeUserId:list.userId,
 				},true
 				   ).then(res => {	
-						   console.log(res)
-						   console.log(index)
+						   
 						   if(!this.listsTab[index].currentUserGiveLike){								   
 												this.listsTab[index].currentUserGiveLike=true;
 												this.listsTab[index].giveLike++;
@@ -219,7 +221,7 @@
 						   								 duration: 1000,
 						   								 icon:'none',
 						   })}
-						   console.log(this.listsTab)
+						   
 					   }).catch(err => {
 						   if(err=='操作失败'){
 							   uni.showToast({
@@ -471,6 +473,7 @@
 			
 		},
 		onShow() {
+			this.currentIndex=-1;
 			this.active=1;
 			this.indexData();
 		},
@@ -496,7 +499,7 @@
 				this.indexData(),
 				this.pageNum=1,
 				uni.stopPullDownRefresh();
-				this.currentIndex=0;
+				this.currentIndex=-1;
 				break;
 			}
 		},

@@ -51,6 +51,8 @@ const serverUrls = { //根据接口具体配置
 	xd_savePushCard: serverBaseUrl + '/publishCard/savePushCard' ,//保存打卡记录
 	xd_pushCardListByPushId: serverBaseUrl + '/publishCard/pushCardListByPushId' ,//根据行动项id获取打卡列表
 	
+	xd_pushDataByPushId: serverBaseUrl + '/publishTarget/pushDataByPushId' ,//根据行动项id获取行动项信息
+	
 }
 export default {
 	serverUrls,

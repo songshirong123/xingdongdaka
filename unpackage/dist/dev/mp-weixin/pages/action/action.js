@@ -105,10 +105,6 @@ var render = function() {
     _vm.e1 = function($event) {
       _vm.tab = 1
     }
-
-    _vm.e2 = function($event) {
-      _vm.tab = 2
-    }
   }
 }
 var recyclableRender = false
@@ -178,7 +174,27 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var actionlist = function actionlist() {__webpack_require__.e(/*! require.ensure | components/actionlist */ "components/actionlist").then((function () {return resolve(__webpack_require__(/*! @/components/actionlist.vue */ 159));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var actionlist = function actionlist() {__webpack_require__.e(/*! require.ensure | components/actionlist */ "components/actionlist").then((function () {return resolve(__webpack_require__(/*! @/components/actionlist.vue */ 167));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 {
   data: function data() {
@@ -203,6 +219,15 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
   computed: _objectSpread({},
   (0, _vuex.mapState)(['hasLogin'])),
 
+  onShareAppMessage: function onShareAppMessage(res) {
+    var that = this;
+    return {
+      title: that.cardList[res.target.id].content,
+      path: '/pages/index/action/action?pushId=' + that.cardList[res.target.id].id,
+      imageUrl: that.cardList[res.target.id].pictures ? that.cardList[res.target.id].pictures : '../static/images/icon/img/title1.png' };
+
+
+  },
   methods: {
     goStep: function goStep() {
       uni.navigateTo({
@@ -232,10 +257,9 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         pageNum: 1,
         pageSize: 10 },
 
-      false).
+      true).
 
       then(function (res) {
-        console.log(res);
         _this.cardList = _this.dataPaly(res);
         _this.nextPage = res.obj.nextPage;
         _this.total = res.obj.total;
@@ -248,10 +272,10 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         pageNum: 1,
         pageSize: 10 },
 
-      false).
+      true).
 
       then(function (res) {
-        console.log(res);
+
         _this.lookerList = res.obj.list;
         _this.nextPageTwo = res.obj.nextPage;
         _this.looktotal = res.obj.total;
@@ -330,7 +354,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       var dataList = res.obj.list;
       var date = new Date();
       date = date.getTime();
-      console.log(dataList);
+
       for (var i = 0; i < dataList.length; i++) {
         var num = dataList[i].targetDay - dataList[i].holidayDay - dataList[i].pushCardCount;
         var num2 = dataList[i].targetDay;
@@ -339,7 +363,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         var d = new Date(dataList[i].createTime);
         var newD = new Date(d.setDate(d.getDate() + num3));
         var dd = Math.trunc((date - newD) / (1000 * 60 * 60 * 24));
-        console.log(dd);
+
         if (num2 >= num && dd < num3) {
           dataList[i].btn = 0; //立即打卡
         } else if (num2 > num && dd > num3) {
@@ -347,7 +371,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         else if (num2 = num && num4 != 0) {
             dataList[i].btn = 2;} //已完成    
       }
-      console.log(dataList);
+
       return dataList;
     } },
 

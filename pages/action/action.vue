@@ -8,16 +8,36 @@
 				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
 					<text>围观 ({{looktotal}})</text>
 				</view>
-				<view class="tab" :class="tab===2?'active':''" @click="tab=2">
-					<text>收藏 ({{total}})</text>
+				<view class="tab" :class="tab===2?'active':''" >
+					<text>收藏 ({{0}})</text>
 				</view>
 			</view>
 			<view class="actionTabList">
 				<view class="actionMy" v-show="tab===0">
-					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab" ></actionlist>
+					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab" :index='index'></actionlist>
 				</view>
 				<view class="actionLook" v-show="tab===1">
-					<actionlist  v-for="(item,index) in lookerList" :item="item" :key="index" :tab="tab"></actionlist>
+					<block v-for="(attention, index) in lookerList" :key="index" >					
+							<view class="ali-main">
+								<view class="ali-main-img">
+									<image class='userhead xd-box-shadow' :src="attention.userHead"></image>
+								</view>
+								<view class="lli-main-content xd-list-body ">
+									<view class="xd-list-title-text">
+										<text>{{attention.userName}}</text>
+									</view>
+									<view  >
+										<text v-if="attention.sex==1" class="boy">♂</text>
+										<text v-else-if="attention.sex==0" class="gender">♀</text>
+										<text v-else class="boy">密</text>
+										<!-- <text>20</text> -->
+									</view>
+								</view>
+								<view class="lli-main-content">
+									<text>取消围观</text>
+								</view>
+							</view>
+					</block>
 				</view>
 				<view class="actionFavorite" v-show="tab===2">
 					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab"></actionlist>
@@ -58,6 +78,15 @@ export default {
 	computed: {
 	           ...mapState(['hasLogin'])  
 	       },  
+	onShareAppMessage(res) {
+		let that = this;
+		return {
+			title: that.cardList[res.target.id].content,
+			path: '/pages/index/action/action?pushId='+ that.cardList[res.target.id].id,
+			imageUrl:that.cardList[res.target.id].pictures?that.cardList[res.target.id].pictures:'../static/images/icon/img/title1.png',
+		}
+				
+	},
 	methods: {
 		goStep(){
 			uni.navigateTo({
@@ -87,10 +116,9 @@ export default {
 			   pageNum:1,
 			   pageSize:10,
 			   },
-			   false
+			   true
 			   
 			       ).then(res=>{
-					   console.log(res)
 						 this.cardList=this.dataPaly(res);
 						 this.nextPage=res.obj.nextPage;
 						 this.total=res.obj.total;
@@ -103,10 +131,10 @@ export default {
 				pageNum:1,
 				pageSize:10,
 				},
-				false
+				true
 				
 				    ).then(res=>{
-									   console.log(res)
+									  
 										 this.lookerList=res.obj.list;
 										 this.nextPageTwo=res.obj.nextPage;
 										 this.looktotal=res.obj.total;
@@ -185,7 +213,7 @@ export default {
 					let dataList=res.obj.list;
 					var date=new Date();
 					date=date.getTime();
-					console.log(dataList)
+					
 					for(var i=0;i <dataList.length;i++){
 						var num=dataList[i].targetDay-dataList[i].holidayDay-dataList[i].pushCardCount;
 						var num2=dataList[i].targetDay;
@@ -194,7 +222,7 @@ export default {
 						let d = new Date(dataList[i].createTime);
 						let newD = new Date(d.setDate(d.getDate() + num3));
 						let dd=Math.trunc((date-newD) / (1000 * 60 * 60 * 24));
-						console.log(dd)
+						
 						if(num2>=num && dd<num3){
 							dataList[i].btn=0//立即打卡
 						}else if(num2>num && dd>num3){
@@ -202,7 +230,7 @@ export default {
 							else if(num2=num &&num4!=0){
 								dataList[i].btn=2}	//已完成    
 					}
-					console.log(dataList)
+				
 					return dataList;
 				}
 				
@@ -266,5 +294,42 @@ export default {
 
 		}
 	}
-}
+	}
+	.ali-main{
+		display: flex;
+		flex-direction: row;
+		padding-top: 10rpx;
+		}
+		.xd-mag{
+			height: 125rpx;
+			width: 125rpx;
+		}
+		.lli-main-content{
+			padding-top: 20rpx;
+		}
+		
+	.gender{
+		background:#fd5107;
+		color:#fff;
+		display: inline-block;
+		padding:0 6rpx;
+		border-radius: 100%;
+		font-size: 22rpx;
+		margin-right: 2rpx;
+		// height: 24rpx;
+		// line-height: 24rpx;
+	}
+	.boy{
+		background:#66CCFF;
+		color:#fff;
+		display: inline-block;
+		padding:0 6rpx;
+		border-radius: 100%;
+		font-size: 22rpx;
+		margin-right: 2rpx;
+	}
+	.userhead{
+		height: 120rpx;
+		width: 120rpx;
+	}
 </style>

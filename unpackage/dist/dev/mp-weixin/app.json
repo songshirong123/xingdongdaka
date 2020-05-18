@@ -15,7 +15,8 @@
     "pages/index/action/action",
     "pages/selfCenter/editUserInfo",
     "pages/login/login",
-    "pages/web/webShow"
+    "pages/web/webShow",
+    "pages/img/img"
   ],
   "subPackages": [],
   "window": {
@@ -57,5 +58,6 @@
     ]
   },
   "permission": {},
-  "usingComponents": {}
+  "usingComponents": {},
+  "sitemapLocation": "sitemap92.json"
 }

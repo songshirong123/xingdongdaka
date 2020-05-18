@@ -79,4 +79,15 @@
   width: 200rpx;
   margin: 0 20rpx 0 0;
 }
+.buttclass {
+  background: #f9ebe5;
+  color: #e17175;
+  height: 40rpx;
+  border-radius: 20rpx;
+  font-size: 25rpx;
+  margin-top: -4px;
+}
+button::after {
+  border: none;
+}
 

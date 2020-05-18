@@ -139,7 +139,7 @@ __webpack_require__.r(__webpack_exports__);
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var actionlist = function actionlist() {__webpack_require__.e(/*! require.ensure | components/actionlist */ "components/actionlist").then((function () {return resolve(__webpack_require__(/*! @/components/actionlist.vue */ 159));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var actionlist = function actionlist() {__webpack_require__.e(/*! require.ensure | components/actionlist */ "components/actionlist").then((function () {return resolve(__webpack_require__(/*! @/components/actionlist.vue */ 167));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 
 
@@ -279,7 +279,7 @@ __webpack_require__.r(__webpack_exports__);
       total: '',
       lookerList: [],
       pushId: '',
-      lookTotal: '' };
+      lookTotal: 0 };
 
   },
   onShow: function onShow() {
@@ -288,7 +288,7 @@ __webpack_require__.r(__webpack_exports__);
   onLoad: function onLoad(option) {
     this.userId = option.userId;
     this.pushId = option.pushId;
-    console.log(option.userId);
+
     this.getCardList();
     this.getLookerList();
   },
@@ -299,7 +299,7 @@ __webpack_require__.r(__webpack_exports__);
         userId: this.userId },
       false).
       then(function (res) {
-        console.log(res);
+
         _this.list = res.obj.list;
         _this.total = res.obj.total;
       });
@@ -309,7 +309,7 @@ __webpack_require__.r(__webpack_exports__);
         pushId: this.pushId },
       false).
       then(function (res) {
-        console.log(res);
+
         _this2.lookerList = res.obj.list;
         _this2.lookTotal = res.obj.total;
       });

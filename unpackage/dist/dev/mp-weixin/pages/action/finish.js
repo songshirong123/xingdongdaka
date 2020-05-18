@@ -198,7 +198,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
   (0, _vuex.mapState)(['hasLogin'])),
 
   onLoad: function onLoad(option) {
-    console.log(option);
+
     this.formData = JSON.parse(decodeURIComponent(option.data));
 
   },
@@ -207,6 +207,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       var data = res.obj;
       var time = this.xdUniUtils.xd_timestampToTime(data.createTime);
       data.createTime = time;
+      data.challengeRmb = Math.trunc(data.challengeRmb / 100);
       return data;
     },
     formSubmit: function formSubmit(e) {
@@ -247,13 +248,17 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       if (that.rmb.challengeRmb == null) {
         if (e.detail.value.challengeRmb == '' || e.detail.value.challengeRmb == 0) {
           that.saveData.challengeRmb = 0;
-          that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, false).then(function (res) {
+          that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, true).then(function (res) {
             uni.reLaunch({
               url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(that.timeType(res))) });
 
           });
-        };
+        } else {
+
+          that.goPay();
+        }
       } else {
+
         that.goPay();
       }
     },
@@ -282,6 +287,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       } catch (e) {
         //TODO handle the exception
       };
+      that.saveData.challengeRmb = that.saveData.challengeRmb * 100;
       data.id = that.saveData.userId;
       data.token = that.saveData.token;
       data.city = userInfo.city;
@@ -289,7 +295,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       data.province = userInfo.province;
       data.unionId = userInfo.unionId;
       data.openid = userInfo.openId;
-      data.payRmb = that.saveData.challengeRmb * 100;
+      data.payRmb = that.saveData.challengeRmb;
 
       that.xd_request_post(that.xdServerUrls.xd_pay, data, false).then(function (res) {
         uni.requestPayment({
@@ -300,7 +306,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
           'signType': 'MD5',
           'paySign': res.obj.paySign,
           success: function success(re) {
-            that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, false).then(function (res) {
+            that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, true).then(function (res) {
               uni.reLaunch({
                 url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(that.timeType(res))) });
 
@@ -326,10 +332,11 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
               image: '/static/images/icon/clock.png',
               success: function success(ress) {
                 if (ress.confirm) {
+                  that.rmb.challengeRmb = null;
                   return false;
                 } else if (ress.cancel) {
                   that.saveData.challengeRmb = 0;
-                  that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, false).then(function (res) {
+                  that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, true).then(function (res) {
                     uni.reLaunch({
                       url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(that.timeType(res))) });
 

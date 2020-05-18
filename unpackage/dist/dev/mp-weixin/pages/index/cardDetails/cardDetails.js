@@ -281,18 +281,6 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 {
   data: function data() {
@@ -309,43 +297,74 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       cardId: '',
       dataCardId: '',
       indexId: '',
-      pushUserId: '' };
+      pushUserId: '',
+      commentId: '',
+      pushId: '' };
 
   },
   computed: _objectSpread({},
   (0, _vuex.mapState)(['hasLogin'])),
 
+  onReady: function onReady() {
+    var that = this;
+    setTimeout(function () {
+
+      uni.createSelectorQuery().in(that).select('#index' + that.cardId).boundingClientRect(function (data) {//目标节点
+
+        uni.createSelectorQuery().select(".card-list").boundingClientRect(function (res) {//最外层盒子节点
+
+          uni.pageScrollTo({
+            duration: 0, //过渡时间必须为0，uniapp bug，否则运行到手机会报错
+            scrollTop: data.top - res.top //滚动到实际距离是元素距离顶部的距离减去最外层盒子的滚动距离
+          });
+        }).exec();
+      }).exec();
+
+    }, 3000);
+  },
+  onShareAppMessage: function onShareAppMessage(res) {
+    var that = this;
+    return {
+      title: that.pusCardLists.content,
+      path: '/pages/index/action/action?pushId=' + that.pusCardLists.id,
+      imageUrl: that.pusCardLists.pictures ? that.pusCardLists.pictures : '../../static/images/icon/img/title1.png' };
+
+
+  },
   onLoad: function onLoad(option) {
     if (option.pushList != undefined) {
-      this.pusCardLists = JSON.parse(decodeURIComponent(option.pushList));
-      this.getPushComenList();
+      var data = JSON.parse(decodeURIComponent(option.pushList));
+
+      if (data.pushId == undefined) {
+        this.pusCardLists = data;
+        this.cardId = data.pushCardList[0].id;
+        this.getPushComenList();
+      } else {
+        this.pushId = data.pushId;
+
+        this.getpushList();
+      }
     } else if (option.pushCard != undefined) {
       var pusCard = JSON.parse(decodeURIComponent(option.pushCard));
-      this.cardId = pusCard.pusCardList[0].id;
-      this.pushUserId = pusCard.pusCardList[0].
-      this.pusCardLists = pusCard.userId;
+      this.pushUserId = pusCard.pushCardList[0].userId;
+      this.cardId = pusCard.pushCardList[0].id;
+      this.pusCardLists = pusCard.pushList;
       this.getPushComenList();
+      this.showInput = true;
     }
   },
   methods: {
-    scrollTo: function scrollTo() {
-      for (var i = 0; i < this.cardList.length; i++) {//一个循环查找若是对应区域无点击元素所对应的ID元素，
-        if (this.cardList[i].pushCard.id == this.cardId) {//进行一个筛选，当点击的元素所对应的id存在时才执行以下语句
-          var element = document.getElementById(this.cardId); //利用Id找到对应的需要滚动的区域
-          var height1 = element.offsetTop - 44; //获取滚动区域到页面顶部的距离
-          uni.pageScrollTo({ //uni-app中页面滚动接口
-            scrollTop: height1, //滚动到页面的目标位置（单位px）
-            duration: 100 //滚动动画的时长，默认300ms，单位 ms
-          });
-        }
-      }
-    },
+    goPageImg: function goPageImg(e) {
+      uni.navigateTo({
 
+        url: '../../img/img?url=' + encodeURIComponent(JSON.stringify(e)) });
+
+    },
     error: function error() {
       var num = Math.floor(Math.random() * 8 + 1);
-      console.log(num);
+
       this.audioPlaySrc = '../../../static/images/icon/img/title' + num + '.png';
-      console.log(this.audioPlaySrc);
+
     },
     loveClick: function loveClick(e, index) {var _this = this;
       if (!this.hasLogin) {
@@ -386,33 +405,47 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         url: "/pages/action/step1" });
 
     },
-    userRepaly: function userRepaly(e) {
+    userRepaly: function userRepaly(e, indexs, index) {
+      if (e.userId == this.id) {
+        uni.showToast({
+          title: '无法回复自己',
+          duration: 1000,
+          icon: 'none' });
+
+        return false;
+      }
+      this.commentId = e.id;
       this.showInput = true;
-      this.userId = e.pushCommentList.userId,
-      this.dataCardId = e.pushCard.id;
+      this.indexId = indexs;
+      this.userId = e.userId,
+      this.dataCardId = e.cardId;
       this.inputType = 1;
     },
     inputComent: function inputComent(e) {var _this2 = this;
-      console.log(e);
+
       if (this.inputType == 1) {
-        console.log('1');
-        this.xd_request_post(this.xdServerUrls.xd_saveReplayComment, {
-          cardId: this.dataCardId,
-          userId: this.userId,
-          content: e.detail.value },
-        true).then(function (res) {
-          console.log(res);
-          _this2.showInput = false;
-          _this2.getPushComenList();
-        });
-      } else if (this.inputType == 2) {
-        this.xd_request_post(this.xdServerUrls.xd_saveComment, {
+
+        this.xd_request_post(this.xdServerUrls.xd_saveCardReplayComment, {
+          replayUserId: this.userId,
+          commentId: this.commentId,
           cardId: this.dataCardId,
           userId: this.id,
           content: e.detail.value },
         true).then(function (res) {
-          console.log(res);
+
           _this2.showInput = false;
+          _this2.value = '';
+          _this2.getPushComenList();
+        });
+      } else if (this.inputType == 2) {
+        this.xd_request_post(this.xdServerUrls.xd_saveCardComment, {
+          cardId: this.dataCardId,
+          userId: this.id,
+          content: e.detail.value },
+        true).then(function (res) {
+
+          _this2.showInput = false;
+          _this2.value = '';
           _this2.getPushComenList();
         });
 
@@ -421,29 +454,36 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
     },
     showInputComent: function showInputComent(e, indexs) {
-      console.log(e);
+
       if (!this.hasLogin) {
         uni.navigateTo({
           url: '../../login/login' });
 
         return false;
       }
-      this.dataCardId = e.id;
+      this.dataCardId = e.pushCard.id;
       this.indexId = indexs;
-      console.log(indexs);
       this.showInput = !this.showInput;
       this.inputType = 2;
     },
-    getPushComenList: function getPushComenList() {var _this3 = this;
-      console.log(this.pusCardLists);
+    getpushList: function getpushList() {var _this3 = this;
+      this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId, {
+        pushId: this.pushId,
+        token: uni.getStorageSync('token') },
+      true).then(function (res) {
+        _this3.pusCardLists = res.obj;
+        _this3.getPushComenList();
+
+      });
+    },
+    getPushComenList: function getPushComenList() {var _this4 = this;
       this.xd_request_post(this.xdServerUrls.xd_showUserCardCommentAndReplayCommtent, {
-        userid: this.pushUserId
+        userid: this.pusCardLists.userId,
+        pushId: this.pusCardLists.id
         // token:uni.getStorageSync('token')
       }, true).then(function (res) {
-        _this3.cardList = res.obj;
-        if (_this3.cardId != '') {
-          _this3.scrollTo();
-        }
+        _this4.cardList = res.obj;
+
       });
     },
     // getPushCardComenList(){

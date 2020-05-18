@@ -73,7 +73,7 @@
   width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 0 30rpx;
+  padding: 0 100rpx;
 }
 .card-list .card-list-item .xd-comments-items .xd-comments-image.data-v-1a82ed53 {
   width: 285rpx;
@@ -181,5 +181,13 @@ button.data-v-1a82ed53::after {
   text-align: left;
   color: #323232;
   line-height: 45rpx;
+}
+.buttclass.data-v-1a82ed53 {
+  height: 40rpx;
+  margin-top: 5rpx;
+  font-size: 28rpx;
+}
+button.data-v-1a82ed53::after {
+  border: none;
 }
 

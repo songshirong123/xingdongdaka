@@ -138,7 +138,7 @@
 				total:'',
 				lookerList:[],
 				pushId:'',
-				lookTotal:'',
+				lookTotal:0,
 			}
 		},
 		onShow() {
@@ -147,7 +147,7 @@
 		onLoad(option) {
 			this.userId = option.userId;
 			this.pushId = option.pushId;
-			console.log(option.userId);
+			
 			this.getCardList();
 			this.getLookerList();
 		},
@@ -158,7 +158,7 @@
 					userId:this.userId,
 				},false)
 				.then(res=>{
-					console.log(res);
+					
 					this.list=res.obj.list;
 					this.total=res.obj.total
 				})
@@ -168,7 +168,7 @@
 					pushId:this.pushId,
 				},false)
 				.then(res=>{
-					console.log(res);
+					
 					this.lookerList=res.obj.list;
 					this.lookTotal=res.obj.total
 				})
