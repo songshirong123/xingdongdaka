@@ -1,32 +1,31 @@
 <template>
-	<view class="previewImg" >
-		<view class="mask" v-if="imgType">
-			<swiper @change="changeSwiper" class="my_swiper" :current="current" :circular="circular" :indicator-dots="indicatorDots" :autoplay="autoplay" :duration="duration">
-				<swiper-item v-for="(x, y) in picList" :key="y">
-					<view class="bg_img" :style="{ backgroundImage: 'url('+x+')'}"></view>
-				</swiper-item>
-			</swiper>
+	<view>
+		<!-- <view class="img-num"> {{nun}}-{{img.length}}</view> -->
+		<view class="uni-padding-wrap uni-common-mt" @touchstart="start" @touchend="end">
+				<movable-area scale-area>
+					<block v-for="(item,index) in img " :key="index">
+						<movable-view v-if="index+1==nun" direction="all" @scale="onScale" scale="true" scale-min="1" scale-max="4" :scale-value="scale">
+							<image :src="item" mode="widthFix"></image>
+						</movable-view>
+					</block>	
+				</movable-area>
 		</view>
-		<view class="page" v-if="picList.length>0">{{ current + 1 }} / {{ picList.length }}</view>
-		<view class="mask" v-if="!imgType">
-			<image :src="img"></image>
-		</view>
-	</view>
+		<view class="img-num"> {{nun}}-{{img.length}}</view>
+	</view>	
 </template>
 
 <script>
 export default { 
 	data() {
 		return {
-			picList: [],
-			indicatorDots: false,
-			autoplay: false,
-			duration: 500,
-			circular: true,
-			current: 0,
-			isShowSwiper: false,
-			img:'',
-			imgType:true,
+			nun:1,
+			   img:[],
+			 scale:1,
+			 startData:{
+				clientX:'',
+				clientY:''
+			},
+			startTime:'',
 		};
 	},
 	onLoad(option) {
@@ -38,69 +37,79 @@ export default {
 			var notS = url.split(':')[0];
 			var a = notS.indexOf('ps') > -1;
 			if(a){
-				this.picList.push(url);	
-				this.imgType=true;
+				var ig=[];
+				ig=url.split(",")
+				this.img=ig;
 			}else{
-				this.imgType=false;
 				var num=Math.floor(Math.random()*8+1);
-				this.img='../../static/images/icon/img/title'+num+'.png'
+				var imgs='../../static/images/icon/img/title'+num+'.png'
+				this.img.push(imgs);
 			}			
 		},
-		clickPic(index) {
-			this.current = index;
-			this.isShowSwiper = true;
+		onScale(){
+		                
+		            },
+		start(e){
+			console.log('start')      
+		         console.log(e)                       
+			this.startData.clientX=e.changedTouches[0].clientX;
+						 
+			this.startData.clientY=e.changedTouches[0].clientY;
+			this.startTime=e.timeStamp;
 		},
-		changeSwiper(e) {
-			this.current = e.target.current;
-		}
+		end(e){
+			console.log('end')  
+			console.log(e)      
+			const subX=e.changedTouches[0].clientX-this.startData.clientX;
+			const subY=e.changedTouches[0].clientY - this.startData.clientY;
+			const  time=e.timeStamp-this.startTime;
+			
+			if(subY>50 || subY<-50){
+			//上下
+			}else{
+				if(subX>100&&time<200){
+					// 右滑动
+					if(this.nun>1&&this.nun<=this.img.length){
+						this.nun--;
+					}
+				}else if(subX<-100&&time<200){
+					// 左滑
+					if(this.nun<this.img.length){
+						this.nun++;
+					}
+				}else{
+					
+				}
+			}
+			}
 	}
 };
 </script>
 
 <style lang="scss" scoped>
-.page {
-	position: fixed;
-	z-index: 6;
-	color: #fff;
-	bottom: 20rpx;
-	text-align: center;
-	width: 100%;
-}
-.mask {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	background-color: #000;
-	z-index: 5;
-	> .my_swiper {
-		width: 100%;
-		height: 60vh;
-		.bg_img {
-			background-size: 100% auto;
-			background-repeat: no-repeat;
-			background-position:center;
-			width: 100%;
-			height: 100%;
-		}
-	}
+movable-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height:100%;
 }
 
-.pic_list {
-	display: flex;
-	flex-flow: row wrap;
-	> view {
-		flex: 0 0 33.3vw;
-		height: 33.3vw;
-		padding: 1vw;
-		> image {
-			width: 100%;
-			height: 100%;
-		}
-	}
+movable-area {
+    height: 100%;
+    width: 100%;
+    position:fixed;
+    overflow: hidden;
+}
+    
+movable-view image{
+    width:100%;
+}
+.img-num{
+	position:absolute;
+	 z-index: 1;
+	 bottom: 40upx;
+	 left: 46%;
+
 }
 </style>

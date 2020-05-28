@@ -81,7 +81,7 @@
           align-items: center;
 }
 .uni-form-item .form-item.mediaList .section {
-  width: 100%;
+  margin-left: 15rpx;
   margin-bottom: 12rpx;
 }
 .uni-form-item .form-item.mediaList .section audio {
@@ -152,5 +152,9 @@
 .btn.other {
   background: #fd5107;
   color: #fff;
+}
+.btn .videotip {
+  height: 150rpx;
+  width: 150rpx;
 }
 

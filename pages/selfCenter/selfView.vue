@@ -3,12 +3,12 @@
 		<!-- <button @click="clickMe">支付</button> -->
 		<view class="personContent">
 			<view class="personHead" >
-				<image class="imgHead" :src="userInfo.avatarUrl" ></image>
+				<image class="imgHead" :src="userInfo.userHead" ></image>
 				
 			</view>
 			<view class="personInfo"  >
 				<view class="xd-list-title-text name ">
-					<text>{{userInfo.nickName}}</text>
+					<text>{{userInfo.userName}}</text>
 				</view>
 				<!-- <view class="subInfo">
 					<text>健身狂魔</text>
@@ -52,7 +52,7 @@
 					<text>产品服务</text>
 				</view>
 			</view> -->
-			<view class="moreInfoRow">
+		<!-- 	<view class="moreInfoRow">
 				<view class="moreInfoIn personAction">
 					<text>关注：0</text>
 				</view>
@@ -65,7 +65,7 @@
 				<view class="moreInfoIn personAction">
 					<text>获同行：0</text>
 				</view>
-			</view>
+			</view> -->
 			<!-- <view class="moreInfoRow rowaction">
 				<view class="moreInfoIn link" v-if="getRole()">
 					<text>订单详情</text>
@@ -133,7 +133,7 @@
 			return {
 				tab:0,//行动，围观，收藏
 				list:[],
-				userInfo:uni.getStorageSync('userInfo'),
+				userInfo:'',
 				userId:'',
 				total:'',
 				lookerList:[],
@@ -150,6 +150,7 @@
 			
 			this.getCardList();
 			this.getLookerList();
+			this.getuserinfo();
 		},
 		methods: {
 			getCardList(){
@@ -158,10 +159,20 @@
 					userId:this.userId,
 				},false)
 				.then(res=>{
-					
-					this.list=res.obj.list;
-					this.total=res.obj.total
+					this.list=this.timeStamp(res);
+					console.log(this.list);
+					this.total=res.obj.total;
 				})
+			},
+			timeStamp(res){
+				let dataList=res.obj.list;
+				for(var i=0;i <res.obj.list.length;i++){
+				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
+					dataList[i].createTime=time;
+					dataList[i].challengeRmb=Math.floor(dataList[i].challengeRmb/100);
+					
+				}
+				return dataList;
 			},
 			getLookerList(){
 				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
@@ -171,6 +182,15 @@
 					
 					this.lookerList=res.obj.list;
 					this.lookTotal=res.obj.total
+				})
+			},
+			getuserinfo(){
+				this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId,{
+					token:uni.getStorageSync('token'),
+					userId:this.userId,
+				},true)
+				.then(res=>{
+					this.userInfo=res.obj;
 				})
 			},
 			

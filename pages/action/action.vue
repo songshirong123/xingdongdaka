@@ -8,7 +8,7 @@
 				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
 					<text>围观 ({{looktotal}})</text>
 				</view>
-				<view class="tab" :class="tab===2?'active':''" >
+				<view class="tab" :class="tab===2?'active':''"  v-show="false">
 					<text>收藏 ({{0}})</text>
 				</view>
 			</view>
@@ -19,11 +19,11 @@
 				<view class="actionLook" v-show="tab===1">
 					<block v-for="(attention, index) in lookerList" :key="index" >					
 							<view class="ali-main">
-								<view class="ali-main-img">
-									<image class='userhead xd-box-shadow' :src="attention.userHead"></image>
+								<view class="ali-main-img" >
+									<image class='userhead xd-box-shadow' :src="attention.userHead" @tap="toAction(attention.pushId)"></image>
 								</view>
 								<view class="lli-main-content xd-list-body ">
-									<view class="xd-list-title-text">
+									<view class="xd-list-title-text" @tap="toAction(attention.pushId)">
 										<text>{{attention.userName}}</text>
 									</view>
 									<view  >
@@ -83,16 +83,22 @@ export default {
 		return {
 			title: that.cardList[res.target.id].content,
 			path: '/pages/index/action/action?pushId='+ that.cardList[res.target.id].id,
-			imageUrl:that.cardList[res.target.id].pictures?that.cardList[res.target.id].pictures:'../static/images/icon/img/title1.png',
+			imageUrl:that.cardList[res.target.id].pictures?that.cardList[res.target.id].pictures:'../../static/images/icon/img/title1.png',
 		}
 				
 	},
 	methods: {
+		toAction(e){
+			uni.navigateTo({
+				url: '../index/action/action?pushId='+e
+			});
+		},
 		goStep(){
 			uni.navigateTo({
 				url: `/pages/action/step1`
 			});
 		},
+		
 		inDada(){		
 			let token='';
 			let id='';
@@ -229,8 +235,11 @@ export default {
 							dataList[i].btn=1}//未达成
 							else if(num2=num &&num4!=0){
 								dataList[i].btn=2}	//已完成    
+						var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
+						dataList[i].createTime=time;
+						dataList[i].challengeRmb=Math.floor(dataList[i].challengeRmb/100);		
+						
 					}
-				
 					return dataList;
 				}
 				

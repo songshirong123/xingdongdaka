@@ -109,6 +109,15 @@ export default {
 				});
 				return false
 			};
+			if(e.detail.value.label==''||e.detail.value.label==undefined){
+				uni.showToast({
+				    title: '请选择分类',
+					mask:true,
+				    duration: 1000,
+					image:'/static/images/icon/clock.png'
+				});
+				return false
+			};
 			let data=Object.assign(this.formData,e.detail.value,this.img);
 			uni.navigateTo({
 				url: '/pages/action/finish?data='+encodeURIComponent(JSON.stringify(data))

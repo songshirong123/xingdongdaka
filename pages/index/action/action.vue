@@ -23,12 +23,12 @@
 				</view>
 				
 				<view class="xd-grids xd-flex-center">
-					<view class="xd-grids-items sponsor-grids">
+					<!-- <view class="xd-grids-items sponsor-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">赞助</view>
 							<view class="xd-badge">{{pushList.giveReward}}</view>
 						</view>
-					</view>
+					</view> -->
 					<view class="xd-grids-items bond-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{pushList.challengeRmb}}</text></view>
@@ -54,7 +54,7 @@
 				<view class="xd-list-title">
 					<view class="list-title-row xd-rows">
 						<text class="xd-list-title-text">坚持天数</text>
-						<text class="xd-list-desc">{{pushList.targetDay-pushList.holidayDay-pushList.pushCardCount}}/{{pushList.targetDay}}</text>
+						<text class="xd-list-desc">{{pushList.pushCardCount}}/{{pushList.targetDay}}</text>
 					</view>
 					<view class="list-title-row xd-rows">
 						<text class="xd-list-title-text">休假天数</text>
@@ -83,19 +83,19 @@
 			<view class="xd-list-info" :hidden="active == 1">
 				<!-- 循环 xd-list -->
 				<view class="xd-list xd-border-b-black" v-for="(list,index) in pusCardList" :key="index" >
-					<view class="xd-list-items" @tap="cardComentList(list)">
+					<view class="xd-list-items">
 						<view class="xd-comments-image xd_card_imgs">
 							<image :src="list.pictures[0]" class="xd-comments-img" v-if="list.pictures!=''" mode="aspectFill"  @tap="goPageImg(list.pictures)"></image>
 							<image class="xd-comments-img" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 						</view>
-						<view class="xd-list-body">
+						<view class="xd-list-body" @tap="cardComentList(list)">
 							<view class="xd-list-body-desc">{{list.createTime}}</view>
 							<view class="xd-list-desc xd-ellipsis-line2">{{list.content}}</view>
 						</view>
 						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-comment comentimg" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">23</view>
+							<view class="xd-relative" >
+								<image class="xd-grids-icon-img-comment comentimg" src="../../../static/images/icon/comment.png" mode="widthFix" @tap="cardComentList(list)"></image>
+								<view class="xd-badge"></view>
 							</view>
 						</view>
 					</view>
@@ -125,6 +125,9 @@
 		</view>
 		
 		<view style="height: 10upx;"></view>
+		<view class="btn_bar" v-if="userId==pushList.userId">
+			<view class="btns"><button class="btn" @click="goSteps">立即打卡</button></view>
+		</view>
 		<!-- 底部 -->
 		<view class="footer">
 			
@@ -164,12 +167,12 @@
 						<view class="xd-badge">0</view>
 					</view>
 				</view>
-				<view class="xd-grids-items reward-grids">
+				<!-- <view class="xd-grids-items reward-grids">
 					<view class="xd-relative">
 						<view class="xd-tbr-large">打赏</view>
 						<view class="xd-badge">0</view>
 					</view>
-				</view>
+				</view> -->
 				<view class="xd-grids-items action-grids" @tap="goStep">
 					<view class="xd-relative">
 						<view class="xd-tbr-large" @tap="goStep">一起行动</view>
@@ -177,9 +180,6 @@
 					</view>
 				</view>
 			</view>
-		</view>
-		<view class="btn_bar" v-if="userId==pushList.userId">
-			<view class="btns"><button class="btn" @click="goSteps">立即打卡</button></view>
 		</view>
 	</view>
 	<!-- <view class='xd-list modal-screen' v-show="modal"  >	
@@ -248,13 +248,13 @@
 		},
 		methods:{
 			goSteps(){
+				
 				uni.navigateTo({
-					url: '../../selfCenter/clockIn??pushId='+this.pushList.id
+					url: '../../selfCenter/clockIn?pushId='+this.pushList.id
 				});
 			},
 			goPageImg(e){
-				uni.navigateTo({
-					
+				uni.navigateTo({	
 					url:'../../img/img?url='+encodeURIComponent(JSON.stringify(e))
 				})
 			},
@@ -341,8 +341,10 @@
 			  		pushId:this.pushId,
 			  		token:uni.getStorageSync('token')
 			  	},true).then(res=>{	
-					
-			  		this.endTime(res.obj);
+					var data=res.obj;
+					data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime)
+					data.challengeRmb=res.obj.challengeRmb/100;
+			  		this.endTime(data);
 			  		this.getPushCardList();
 			  		
 			  	})
@@ -354,6 +356,7 @@
 				pushListdata.endTime=this.xdUniUtils.xd_daysAddSub(pushListdata.createTime,pushListdata.targetDay);
 				
 				this.pushList=pushListdata
+				console.log(pushListdata)
 				
 			},
 			goStep(){
@@ -657,18 +660,17 @@
 			margin-top: -10upx;
 		}
 		.btn_bar{
+			position: fixed;
 			bottom: 0;
 			left:0;
 			width: 100%;
 			.btns {
-				height: 100rpx;
-				
 				display: flex;
 				align-items: center;
 				justify-content: space-between;
 				padding: 0 200rpx;
 				font-size: 28rpx;
-				margin-top: 100rpx;
+				margin-top: -170rpx;
 
 				.btn {
 					flex: 1;

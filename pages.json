@@ -10,12 +10,12 @@
 				"enablePullDownRefresh": true
 			}
 		}, 
-		{
-			"path": "pages/msg/msg",
-			"style": {
-				"navigationBarTitleText": "消息"
-			}
-		}, 
+		// {
+		// 	"path": "pages/msg/msg",
+		// 	"style": {
+		// 		"navigationBarTitleText": "消息"
+		// 	}
+		// }, 
 		{
 			"path": "pages/msg/talk",
 			"style": {
@@ -125,12 +125,14 @@
 			"iconPath": "static/images/icon/tabbar/tabbar2.png",
 			"selectedIconPath": "static/images/icon/tabbar/tabbar2-on.png",
 			"text": "行动"
-		}, {
-			"pagePath": "pages/msg/msg",
-			"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
-			"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
-			"text": "消息"
-		}, {
+		}, 
+		// {
+		// 	"pagePath": "pages/msg/msg",
+		// 	"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
+		// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
+		// 	"text": "消息"
+		// }, 
+		{
 			"pagePath": "pages/selfCenter/selfCenter",
 			"iconPath": "static/images/icon/tabbar/tabbar3.png",
 			"selectedIconPath": "static/images/icon/tabbar/tabbar3-on.png",

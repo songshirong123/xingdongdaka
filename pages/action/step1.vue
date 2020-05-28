@@ -51,6 +51,7 @@ export default {
 	},
 	methods: {
 		formSubmit(e){
+			console.log(e)
 			console.log(e.detail.value.content)
 			if(e.detail.value.content==''){
 				uni.showToast({
@@ -61,6 +62,10 @@ export default {
 				});
 				return false
 			};
+			this.xdUniUtils.xd_request_text({content:e.detail.value}).then(res=>{
+				console.log(res)
+				
+			})
 			// if(e.detail.value.extendContent==''){
 			// 	uni.showToast({
 			// 	    title: '请出入行动目标',
@@ -77,26 +82,31 @@ export default {
 			});
 		},
 		popUpImg(){
-			const that = this;
+			const that=this;
 			uni.chooseImage({
 			    count: 1, //默认9
 			    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 			    sourceType: ['album'], //从相册选择
 			    success: function (res) {
 					let tempFilePaths = res.tempFilePaths;
-					 uni.uploadFile({
-					            url: that.xdServerUrls.xd_uploadFile, 
-					            filePath: tempFilePaths[0],
-					            name: 'files',
-					            formData: {
-					                'userId': uni.getStorageSync('id'),
-					            },
-					            success: (uploadFileRes) => {
-	
-									that.param.pictures=JSON.parse(uploadFileRes.data).obj[0];
-					               
-					            }
-					        });
+					that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res=>{
+						if(res){
+							uni.uploadFile({
+							           url: that.xdServerUrls.xd_uploadFile, 
+							           filePath: tempFilePaths[0],
+							           name: 'files',
+							           formData: {
+							               'userId': uni.getStorageSync('id'),
+							           },
+							           success: (uploadFileRes) => {
+																
+																 that.param.pictures=JSON.parse(uploadFileRes.data).obj[0];
+																
+							           }
+							       });
+						}
+					});
+					
 			    }
 			});
 		},

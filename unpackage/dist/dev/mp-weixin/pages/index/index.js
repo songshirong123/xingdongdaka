@@ -223,7 +223,11 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var indexList = function indexList() {__webpack_require__.e(/*! require.ensure | components/indexList */ "components/indexList").then((function () {return resolve(__webpack_require__(/*! @/components/indexList.vue */ 160));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
+
+
+
+
+var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var indexList = function indexList() {__webpack_require__.e(/*! require.ensure | components/indexList */ "components/indexList").then((function () {return resolve(__webpack_require__(/*! @/components/indexList.vue */ 152));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 
 {
@@ -240,7 +244,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       token: uni.getStorageSync('token'),
       pageNum: 1, //当前页数
       pageSize: 10, //每页条数
-      userId: '' };
+      userId: '',
+      searchValue: '请输入行动项·昵称' };
 
 
   },
@@ -249,11 +254,10 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     return {
       title: that.listsTab[res.target.id].content,
       path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id,
-      imageUrl: that.listsTab[res.target.id].pictures ? that.listsTab[res.target.id].pictures : '../static/images/icon/img/title1.png' };
+      imageUrl: that.listsTab[res.target.id].pictures ? that.listsTab[res.target.id].pictures : '../../static/images/icon/img/title1.png' };
 
 
   },
-
   onLoad: function onLoad() {
     this.indexData();
   },
@@ -262,6 +266,24 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
   methods: _objectSpread({},
   (0, _vuex.mapMutations)(['logIn', 'logOut', 'IndexlogIn']), {
+    searchfocus: function searchfocus() {
+      this.searchValue = '';
+    },
+    search: function search(e) {var _this = this;
+      console.log(e);
+      this.xd_request_post(this.xdServerUrls.xd_searchPushData,
+      {
+        pushName: e.detail.value },
+
+
+      true).
+      then(function (res) {
+        _this.listsTab = _this.timeStamp(res);
+        _this.pageNum = res.obj.nextPage == undefined ? 1 : res.obj.nextPage;
+      }).catch(function (err) {
+      });
+
+    },
     goPage: function goPage(url) {
       if (!this.hasLogin) {
         uni.navigateTo({
@@ -274,7 +296,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
     },
     //首页信息
-    indexData: function indexData() {var _this = this;
+    indexData: function indexData() {var _this2 = this;
       var token = uni.getStorageSync('token');
 
       if (token != '') {
@@ -282,35 +304,38 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       }
       this.xd_request_post(this.xdServerUrls.xd_bannerList, {}, true).
       then(function (res) {
-        _this.bannerList = res.obj;
+        _this2.bannerList = res.obj;
 
       }).catch(function (err) {
       });
       this.xd_request_post(this.xdServerUrls.xd_label, {}, false).
       then(function (res) {
-        _this.tabs = res.obj;
+        _this2.tabs = res.obj;
       }).catch(function (err) {
       });
       this.getShowRecommend();
 
     },
     //围观
-    lookerClick: function lookerClick(list) {
-      if (!this.hasLogin) {
+    lookerClick: function lookerClick(list, index) {
+      var that = this;
+      if (!that.hasLogin) {
         uni.navigateTo({
           url: '../login/login' });
 
         return false;
       }
-      this.userId = uni.getStorageSync('id');
-      this.xd_request_post(this.xdServerUrls.xd_saveLooker, {
+      that.userId = uni.getStorageSync('id');
+      that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
 
         pushId: list.id,
-        lookUserId: this.userId },
+        lookUserId: that.userId },
       false).
       then(function (res) {
 
         if (res.resultCode == 0) {
+          that.listsTab[index].onlooker = true;
+          that.listsTab[index].lookerCount++;
           uni.showToast({
             title: '围观成功',
             duration: 1000,
@@ -328,7 +353,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       });
     },
     //点赞
-    loveClick: function loveClick(e, index) {var _this2 = this;
+    loveClick: function loveClick(e, index) {var _this3 = this;
       var list = e;
       if (!this.hasLogin) {
         uni.navigateTo({
@@ -344,9 +369,9 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       true).
       then(function (res) {
 
-        if (!_this2.listsTab[index].currentUserGiveLike) {
-          _this2.listsTab[index].currentUserGiveLike = true;
-          _this2.listsTab[index].giveLike++;
+        if (!_this3.listsTab[index].currentUserGiveLike) {
+          _this3.listsTab[index].currentUserGiveLike = true;
+          _this3.listsTab[index].giveLike++;
         } else {
           uni.showToast({
             title: '已经赞过了',
@@ -374,7 +399,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       this.listsTab = [];
       this.getShowNew();
     },
-    getShowNew: function getShowNew() {var _this3 = this;
+    getShowNew: function getShowNew() {var _this4 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushByCreateTimeList,
       {
         pageNum: 1,
@@ -383,8 +408,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       true).
       then(function (res) {
 
-        _this3.listsTab = _this3.timeStamp(res);
-        _this3.pageNum = res.obj.nextPage;
+        _this4.listsTab = _this4.timeStamp(res);
+        _this4.pageNum = res.obj.nextPage;
       }).catch(function (err) {
       });
 
@@ -397,7 +422,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       this.indexData();
 
     },
-    getShowRecommend: function getShowRecommend() {var _this4 = this;
+    getShowRecommend: function getShowRecommend() {var _this5 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushByHighGradeList,
       {
         token: uni.getStorageSync('token'),
@@ -406,8 +431,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
       true).
       then(function (res) {
-        _this4.listsTab = _this4.timeStamp(res);
-        _this4.pageNum = res.obj.nextPage;
+        _this5.listsTab = _this5.timeStamp(res);
+        _this5.pageNum = res.obj.nextPage;
       }).catch(function (err) {
       });
 
@@ -417,7 +442,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       for (var i = 0; i < res.obj.list.length; i++) {
         var time = this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
         dataList[i].createTime = time;
-        dataList[i].challengeRmb = Math.trunc(dataList[i].challengeRmb / 100);
+        dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
       }
       return dataList;
@@ -428,7 +453,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       this.pageNum = 1;
       this.getShowFollow();
     },
-    getShowFollow: function getShowFollow() {var _this5 = this;
+    getShowFollow: function getShowFollow() {var _this6 = this;
       if (!this.hasLogin) {
         uni.navigateTo({
           url: '../login/login' });
@@ -443,15 +468,15 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
       true).
       then(function (res) {
-        _this5.attentionList = res.obj.list;
-        _this5.pageNum = res.obj.nextPage;
+        _this6.attentionList = res.obj.list;
+        _this6.pageNum = res.obj.nextPage;
       }).catch(function (err) {
       });
 
 
     },
     //标签获取列表
-    getPushByLabel: function getPushByLabel() {var _this6 = this;
+    getPushByLabel: function getPushByLabel() {var _this7 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushByLabel,
       {
         token: uni.getStorageSync('token'),
@@ -461,8 +486,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
       true).
       then(function (res) {
-        _this6.listsTab = _this6.timeStamp(res);
-        _this6.pageNum = res.obj.nextPage == undefined ? 1 : res.obj.nextPage;
+        _this7.listsTab = _this7.timeStamp(res);
+        _this7.pageNum = res.obj.nextPage == undefined ? 1 : res.obj.nextPage;
       }).catch(function (err) {
       });
 

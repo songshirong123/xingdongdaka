@@ -172,7 +172,7 @@ function xd_request_post(url, params, withToken) {
 // 上传
 function xd_request_upload(url, params, withToken) {
 	var headers = {
-		'content-type': 'application/x-www-form-urlencoded',
+		'content-type': "multipart/form-data",
 	};
 	if (withToken !== false) {
 		
@@ -182,9 +182,49 @@ function xd_request_upload(url, params, withToken) {
 			  url: '../login/login'
 			});
 		}
-		headers.token = token; // accessToken
+		headers.session_token = token; // accessToken
 	}
 	return xd_request(url, 'POST', params, headers);
+}
+//图片检查
+function xd_request_img(data) {
+return	new Promise((resolve, reject) => {
+	 uni.uploadFile({
+	           url: 'https://xingdongdaka.zhidashixun.com/login/getImgIsNormal', 
+	           filePath: data,
+	           name: 'file',
+			   header: {
+			          "Content-Type": "multipart/form-data"//记得设置
+			        },
+	           formData: {
+	               
+					'token':uni.getStorageSync('token')
+	           },
+	           success: (uploadFileRes) => {
+				            var jsonObj = JSON.parse(uploadFileRes.data);
+				            var jsonObj1 = JSON.parse(jsonObj.obj);
+					if(jsonObj1.errcode==0
+					){
+						resolve(true);
+					}	else{
+						uni.showToast({
+							title:'图片不符规定',
+							duration:2000
+						});
+						resolve(false);
+					}				
+					;
+										
+	           }
+	       });
+		    });
+}
+// 类容检查
+function xd_request_text(params) {
+var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
+var url='https://xingdongdaka.zhidashixun.com/login/getContentIsNormal'
+	headers.token = uni.getStorageSync('token');
+	return xd_request(url, 'GET', params, headers);
 }
 // 简单操作
 function xd_request_simpleOperate(url, message) {
@@ -204,7 +244,7 @@ function xd_navigateBack(delta) {
 	})
 }
 //时间处理
- function xd_timestampToTime(timestamp,times) {
+ function xd_timestampToTime(timestamp,times,times1) {
   var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
   var Y = date.getFullYear() + '-';
   var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -215,6 +255,13 @@ function xd_navigateBack(delta) {
 	  // var m = date.getMinutes() ;
 	  var s = date.getSeconds();
 	   return M+D+h+m+s;
+  }
+  if(times1){
+  	  var h = date.getHours() + ':';
+  	  var m = date.getMinutes() + ':';
+  	  // var m = date.getMinutes() ;
+  	  var s = date.getSeconds();
+  	   return Y+M+D+h+m+s;
   }
   return Y+M+D;
 }
@@ -260,5 +307,7 @@ export default {
 	xd_request_delete,
 	xd_navigateBack,
 	xd_timestampToTime,
-	xd_daysAddSub
+	xd_daysAddSub,
+	xd_request_img,
+	xd_request_text
 }

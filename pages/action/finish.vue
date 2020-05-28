@@ -56,10 +56,14 @@ export default {
 	data() {
 		return {
 			rmb:{
-				challengeRmb:null,
+				challengeRmb:'',
 			},
 			formData:{},
-			saveData:{}
+			saveData:{},
+			pushData:'',
+			payNum:0,
+				
+			
 		};
 	},
 	computed: {
@@ -71,6 +75,7 @@ export default {
 		
 	},
 	methods: {
+		...mapMutations(['logOut'])  ,
 		timeType(res){
 			var data=res.obj;
 			var  time=this.xdUniUtils.xd_timestampToTime(data.createTime);
@@ -107,14 +112,14 @@ export default {
 			}catch(e){
 				//TODO handle the exception
 			}
-			if(that.rmb.challengeRmb!=null){
+			if(that.rmb.challengeRmb!=''){
 				that.saveData=Object.assign(that.formData,that.rmb,userData);	
 			}else{
 				that.saveData=Object.assign(that.formData,e.detail.value,userData);
 				
 			};
-			if(that.rmb.challengeRmb==null){
-				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
+			if(that.rmb.challengeRmb==''&&that.payNum<=0){
+				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb<=0){
 					that.saveData.challengeRmb=0;
 					that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
 						uni.reLaunch({
@@ -122,13 +127,44 @@ export default {
 							})
 					})
 				}else{
-					
-					that.goPay();
+					that.saveData.challengeRmb=that.saveData.challengeRmb*100;
+					if(that.payNum>0){
+						that.pushData.obj.challengeRmb=that.saveData.challengeRmb;
+						that.updataPushId();		
+					}else{
+						that.getPushId();		
+					}
+					    		
 				}
 			}else{
-				
-				that.goPay();
+				that.saveData.challengeRmb=that.saveData.challengeRmb*100;
+				if(that.payNum>0){
+					that.pushData.obj.challengeRmb=that.saveData.challengeRmb;
+					that.updataPushId();		
+				}else{
+					that.getPushId();		
+				}
 			}		
+		},
+		updataPushId(){
+			console.log(this.pushData.obj)
+			this.xd_request_post(this.xdServerUrls.xd_updatePushDataByPushId,
+				{
+					id:this.pushData.obj.id,
+					userId:this.pushData.obj.userId,
+					challengeRmb:0,
+				}
+			,true).then( res=>{
+					uni.reLaunch({
+						url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(this.timeType(this.pushData)))
+						})
+			})
+		},
+		getPushId(){
+			this.xd_request_post(this.xdServerUrls.xd_savePush,this.saveData,true).then( res=>{
+				this.pushData=res;
+				this.goPay();
+			})
 		},
 		priceRmb(e){	
 			this.rmb.challengeRmb=e
@@ -147,6 +183,7 @@ export default {
 				city:'',
 				province:'',
 				payRmb:'',
+				pushId:'',
 			};
 			let userInfo={};
 			try{
@@ -155,7 +192,6 @@ export default {
 			}catch(e){
 				//TODO handle the exception
 			};
-			that.saveData.challengeRmb=that.saveData.challengeRmb*100;
 			data.id=that.saveData.userId;
 			data.token=that.saveData.token;
 			data.city=userInfo.city;
@@ -164,63 +200,76 @@ export default {
 			data.unionId=userInfo.unionId;
 			data.openid=userInfo.openId;
 			data.payRmb=that.saveData.challengeRmb
-			
-			that.xd_request_post(that.xdServerUrls.xd_pay,data,false).then(res=>{
-				uni.requestPayment({
-					 'appId': res.obj.appId,
-					'timeStamp': res.obj.timeStamp,
-					'nonceStr': res.obj.nonceStr,
-					'package': res.obj.packageAlias,
-					'signType': 'MD5',
-					'paySign': res.obj.paySign,
-					success: function (re) {
-						that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
-							uni.reLaunch({
-								url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
-							})
-						}),
-						// that.xd_request_post(that.xdServerUrls.xd_resultCallBack,{
-						// 	userId:
-						// 	outTradeNo:
-						// },false).then( res=>{
-						// 	console.log(res)
-						// })
-						uni.showToast({
-							title: '微信支付成功',
-							icon: 'success',
-							duration: 1500
-						});
-					},
-					fail: function (err) {
-						// 支付失败的回调中 用户未付款
-						uni.showModal({
-							content:'支付取消',
-							confirmText:'继续支付',
-							cancelText:'发布行动',
-							image:'/static/images/icon/clock.png',
-							success:function(ress) {
-								 if (ress.confirm) {
-									that.rmb.challengeRmb=null;
-									return false
-								} else if (ress.cancel) {
-									that.saveData.challengeRmb=0;
-									that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
-										uni.reLaunch({
-											url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
-											})
+			data.pushId=that.pushData.obj.id;
+			wx.getSetting({
+			  success: res => {
+			    if (res.authSetting['scope.userInfo']) {
+					that.xd_request_post(that.xdServerUrls.xd_pay,data,false).then(res=>{
+						uni.requestPayment({
+							 'appId': res.obj.appId,
+							'timeStamp': res.obj.timeStamp,
+							'nonceStr': res.obj.nonceStr,
+							'package': res.obj.packageAlias,
+							'signType': 'MD5',
+							'paySign': res.obj.paySign,
+							success: function (re) {
+								uni.showToast({
+									title: '微信支付成功',
+									icon: 'success',
+									duration: 1000
+								});
+								uni.reLaunch({
+									url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(that.pushData)))
+								})
+							},
+							fail: function (err) {
+								// 支付失败的回调中 用户未付款
+								uni.showModal({
+									content:'支付取消',
+									confirmText:'发布行动',
+									// cancelText:'发布行动',
+									showCancel:false,
+									image:'/static/images/icon/clock.png',
+									success:function(ress) {
+										 if (ress.confirm) {
+											 that.pushData.obj.challengeRmb=0;
+												that.updataPushId();
+						// 					 that.xd_request_post(that.xdServerUrls.xd_updatePushDataByPushId,
+						// 					 {
+						// 						pushTarget: that.pushData.obj.toString()
+						// 					 }
+						
+						// 					 ,true).then( res=>{
+						// 					 	uni.reLaunch({
+						// 					 		url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
+						// 					 		})
+											 	
+						// 					 })
+										}
+										 // else if (ress.cancel) {
+										// 	that.rmb.challengeRmb='';
+										// 	that.payNum++;
+										// 	console.log(that.rmb.challengeRmb)
+										// 	return false
+										// 	}
+										},
 										
-									})
-									}
-								},
-								
+								});
+							}
 						});
-					}
-				});
-			})
-			
+					})
+			}else{
+				  this.logOut();
+				  uni.navigateTo({
+					url: '../login/login'
+				  });
+			  }
+								
 		}
-		//#endif
 		
+		})
+		//#endif
+		}
 	},
 	
 };

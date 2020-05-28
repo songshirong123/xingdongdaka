@@ -93,19 +93,23 @@ export default {
 			    sourceType: ['album'], //从相册选择
 			    success: function (res) {
 					let tempFilePaths = res.tempFilePaths;
-					 uni.uploadFile({
-					            url: that.xdServerUrls.xd_uploadFile, 
-					            filePath: tempFilePaths[0],
-					            name: 'files',
-					            formData: {
-					                'userId': uni.getStorageSync('id'),
-					            },
-					            success: (uploadFileRes) => {
-			
-									that.img=JSON.parse(uploadFileRes.data).obj[0];
-					               
-					            }
-					        });
+					that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res=>{
+						if(res){
+							uni.uploadFile({
+							           url: that.xdServerUrls.xd_uploadFile, 
+							           filePath: tempFilePaths[0],
+							           name: 'files',
+							           formData: {
+							               'userId': uni.getStorageSync('id'),
+							           },
+							           success: (uploadFileRes) => {
+																
+																 that.img=JSON.parse(uploadFileRes.data).obj[0];
+																
+							           }
+							       });
+						}
+					});
 			    }
 			});
 		},
@@ -122,25 +126,39 @@ export default {
 			}catch(e){
 				//TODO handle the exception
 			}
+			this.xdUniUtils.xd_request_text({content:e.detail.value}).then(res=>{
+				if(res.obj.errcode==0){
+					this.xd_request_post(this.xdServerUrls.xd_modifyUserInfo,
+					{
+						userMobile:e.detail.value.userMobile,
+						schoolName:e.detail.value.schoolName,
+						userName:e.detail.value.userName,
+						province:e.detail.value.province,
+						city:e.detail.value.city,
+						token:userData.token,
+						sex:e.detail.value.sex, 
+						id:userData.id,
+						userHead:this.img,
+						openId:this.openId,
+						
+					},
+					true).then(res=>{
+						
+					})
+				  }else{
+					uni.showToast({
+					    title: '内容包含敏感内容',
+						mask:true,
+					    duration: 2000,
+						
+					});
+					return false
+				}
+				
+				});
 			
-			this.xd_request_post(this.xdServerUrls.xd_modifyUserInfo,
-			{
-				userMobile:e.detail.value.userMobile,
-				schoolName:e.detail.value.schoolName,
-				userName:e.detail.value.userName,
-				province:e.detail.value.province,
-				city:e.detail.value.city,
-				token:userData.token,
-				sex:e.detail.value.sex, 
-				id:userData.id,
-				userHead:this.img,
-				openId:this.openId,
-				
-			},
-			false).then(res=>{
-				
-			})
-		},
+			
+		}
 	},
 
 	// components: {

@@ -25,61 +25,32 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
-.page.data-v-a01de79c {
-  position: fixed;
-  z-index: 6;
-  color: #fff;
-  bottom: 20rpx;
-  text-align: center;
-  width: 100%;
-}
-.mask.data-v-a01de79c {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+movable-view.data-v-a01de79c {
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-          justify-content: center;
   -webkit-box-align: center;
   -webkit-align-items: center;
           align-items: center;
-  background-color: #000;
-  z-index: 5;
-}
-.mask > .my_swiper.data-v-a01de79c {
-  width: 100%;
-  height: 60vh;
-}
-.mask > .my_swiper .bg_img.data-v-a01de79c {
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-position: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
   width: 100%;
   height: 100%;
 }
-.pic_list.data-v-a01de79c {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-flow: row wrap;
-          flex-flow: row wrap;
-}
-.pic_list > view.data-v-a01de79c {
-  -webkit-box-flex: 0;
-  -webkit-flex: 0 0 33.3vw;
-          flex: 0 0 33.3vw;
-  height: 33.3vw;
-  padding: 1vw;
-}
-.pic_list > view > image.data-v-a01de79c {
-  width: 100%;
+movable-area.data-v-a01de79c {
   height: 100%;
+  width: 100%;
+  position: fixed;
+  overflow: hidden;
+}
+movable-view image.data-v-a01de79c {
+  width: 100%;
+}
+.img-num.data-v-a01de79c {
+  position: absolute;
+  z-index: 1;
+  bottom: 40rpx;
+  left: 46%;
 }
 

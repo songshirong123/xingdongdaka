@@ -15,7 +15,7 @@
 			</view>
 			<view class="personOpt">
 				<!-- <text class="viewself link"  @click="goPage('/pages/selfCenter/selfView')">个人主页</text> -->
-				<button @click="clickMe" class="pay">支付</button>
+				<button @click="clickMe" class="pay" v-if="onOff">支付</button>
 			</view>
 		</view>
 		<view class="moreInfo">
@@ -115,6 +115,7 @@
 				tab:0,//行动，围观，收藏
 				list:[1,2,3,4,5],
 				userInfo:'',
+				onOff:true,
 			}
 		},
 		computed: {
@@ -147,8 +148,20 @@
 			}catch(e){
 								   console.log(Error)
 							   };
+							   this.onToOff();
 		},
 		methods: {
+			...mapMutations(['logOut'])  ,
+			onToOff(){
+				
+				this.xd_request_post(this.xdServerUrls.xd_onOff,
+				{
+					versionCode:'2.0.9',
+					
+				},true).then(res=>{	
+					this.onOff=res.obj
+					})
+			},
 			goPage(url){
 				uni.navigateTo({
 					url
@@ -173,8 +186,9 @@
 									city:that.userInfo.city,
 									province:that.userInfo.province,
 									payRmb:1,
+									pushId:1,
 									
-								},false).then(res=>{	
+								},true).then(res=>{	
 									console.log(res)
 			                    	uni.requestPayment({
 			                    		 'appId': res.obj.appId,
@@ -217,7 +231,12 @@
 			                    	});
 			                    })
 			
-			                      }
+			                      }else{
+									  this.logOut();
+									  uni.navigateTo({
+									  	url: '../login/login'
+									  });
+								  }
 			                    }
 			              })
 			

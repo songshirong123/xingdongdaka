@@ -12,7 +12,8 @@ const appConfig = {
 	// server 配置
 	serverProtocal: 'https', // server 协议
 	serverIp: 'xingdongdaka.zhidashixun.com', // server IP
-	serverPort: '10060', // server 端口
+	// serverPort: '10060', // server 端口
+	serverPort: '10160', // 测试server 端口
 	serverName: 'xingdongdaka' // server项目名称
 }
 export default {

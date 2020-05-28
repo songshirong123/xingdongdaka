@@ -41,12 +41,12 @@
 					<view class="xd-badge">{{list.giveLike}}</view>
 				</view>
 			</view>
-			<view class="xd-grids-items sponsor-grids">
+			<!-- <view class="xd-grids-items sponsor-grids">
 				<view class="xd-relative">
 					<view class="xd-tbr-large">赞助</view>
 					<view class="xd-badge">{{list.giveReward}}</view>
 				</view>
-			</view>
+			</view> -->
 			<view class="xd-grids-items bond-grids">
 				<view class="xd-relative">
 					<view class="xd-tbr-large" v-show="list.challengeRmb>0">保证金<text class="xd-tbr-txt-bold">￥{{list.challengeRmb}}</text></view>
@@ -56,8 +56,8 @@
 				<view class="xd-relative">
 					<!-- #ifdef MP-WEIXIN -->
 					<button class="buttonShare" v-if="list.userId==userId || list.onlooker "  :id="index" open-type="share" >邀请围观</button>
-					<button class="buttonShare" v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0"  @tap="lookerClick(list)">围观</button>
-					<button class="buttonShare" v-else  @tap="lookerClick(list)">围观分钱</button>
+					<button class="buttonShare" v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0"  @tap="lookerClick(list,index)">围观</button>
+					<button class="buttonShare" v-else  @tap="lookerClick(list,index)">围观分钱</button>
 					<!-- #endif -->
 					<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{list.lookerCount}}</view>
 				</view>
@@ -81,9 +81,9 @@
 				var num=Math.floor(Math.random()*8+1);
 				this.audioPlaySrc='../static/images/icon/img/title'+num+'.png'
 			            }  ,
-			lookerClick(list){
+			lookerClick(list,index){
 				
-				this.$emit('lookerClick',list);
+				this.$emit('lookerClick',list,index);
 			},
 			loveClick(e,index){
 				

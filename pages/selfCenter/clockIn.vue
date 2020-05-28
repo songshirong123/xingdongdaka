@@ -23,15 +23,15 @@
 			<view class="uni-form-item uni-column">
 				<view class="form-item nobtm mediaList">
 					<!-- <view class="section" >
-						<audio style="text-align: left" :src="current.src" :name="current.name" :author="current.author" :action="audioAction" controls></audio>
+						<audio style="text-align: left" :src="current.src" :name="current.name" :author="60" :action="audioAction" controls autoplay='true'></audio>
 					</view> -->
-					<!-- <view class="section">
-						<video
+					<view class="section" v-if="videodata">
+						<video class="imagetip videotip"
 							id="myVideo"
-							src="https://dcloud-img.oss-cn-hangzhou.aliyuncs.com/guide/uniapp/%E7%AC%AC1%E8%AE%B2%EF%BC%88uni-app%E4%BA%A7%E5%93%81%E4%BB%8B%E7%BB%8D%EF%BC%89-%20DCloud%E5%AE%98%E6%96%B9%E8%A7%86%E9%A2%91%E6%95%99%E7%A8%8B@20181126.mp4"
+							:src="videodata"
 							controls
 						></video>
-					</view> -->
+					</view>
 					<view class="section">
 						<block v-for="(pictures, index) in param.pictures" :key="index" >	
 						 <image  class="imagetip" v-show="param.pictures[index]" :src="pictures" ></image>
@@ -46,8 +46,8 @@
 				</view>
 				<view class="form-item nobtm itembtns">
 					<button class="btn" @click="popUpImg">上传图片</button>
-					<button class="btn">上传视频</button>
-					<button class="btn">上传音频</button>
+					<button class="btn"  @click="popUpVideo">上传视频</button>
+					<button class="btn"  @click="popUpMP3">上传音频</button>
 				</view>
 			</view>
 			<view class="uni-form-item uni-column">
@@ -91,6 +91,7 @@ export default {
 			startTimes:'',
 			stTimes:'',
 			endTimes:'',
+			videodata:'',
 			
 		};
 	},
@@ -98,7 +99,6 @@ export default {
 	           ...mapState(['hasLogin'])  
 	       },  
 	onLoad(option) {
-		
 		this.pushId=option.pushId;
 		this.getTime();
 	},
@@ -126,6 +126,44 @@ export default {
 				});
 				return false
 			};
+			this.xdUniUtils.xd_request_text({content:e.detail.value}).then(res=>{
+				if(res.obj.errcode==0){
+					this.xd_request_post(this.xdServerUrls.xd_savePushCard,{
+						pushId:this.pushId,
+						userId:uni.getStorageSync('id'),
+						content:e.detail.value.content,
+						extendContent:e.detail.value.extendContent,
+						pictures:this.param.pictures,
+						startTime:start,
+						endTime:end,
+					},true).then(res=>{
+						var data ={
+							pushId:this.pushId,
+							cardId:res.obj
+						}
+						uni.showToast({
+							title: '保存成功',
+							icon: 'success',
+							duration: 1500,
+							success() {
+								uni.reLaunch({
+									url: '../index/cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(data))
+								})
+							}
+						});
+						
+					})
+				}else{
+					uni.showToast({
+					    title: '内容包含敏感内容',
+						mask:true,
+					    duration: 2000,
+						
+					});
+					return false
+				}
+				  
+			})
 			// if(this.param.pictures==''){
 			// 	uni.showToast({
 			// 	    title: '请上传图片',
@@ -147,31 +185,7 @@ export default {
 			 // var pictures=JSON.stringify( this.param.pictures);
 			 // console.log(pictures)
 			 
-			this.xd_request_post(this.xdServerUrls.xd_savePushCard,{
-				pushId:this.pushId,
-				userId:uni.getStorageSync('id'),
-				content:e.detail.value.content,
-				extendContent:e.detail.value.extendContent,
-				pictures:this.param.pictures,
-				startTime:start,
-				endTime:end,
-			},true).then(res=>{
-				var data ={
-					pushId:this.pushId,
-					cardId:res.obj
-				}
-				uni.showToast({
-					title: '保存成功',
-					icon: 'success',
-					duration: 1500,
-					success() {
-						uni.reLaunch({
-							url: '../index/cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(data))
-						})
-					}
-				});
-				
-			})
+			
 			
 		},
 		popUpImg(){
@@ -182,21 +196,62 @@ export default {
 			    sourceType: ['album'], //从相册选择
 			    success: function (res) {
 					let tempFilePaths = res.tempFilePaths;
-					 uni.uploadFile({
-					            url: that.xdServerUrls.xd_uploadFile, 
-					            filePath: tempFilePaths[0],
-					            name: 'files',
-					            formData: {
-					                'userId': uni.getStorageSync('id'),
-					            },
-					            success: (uploadFileRes) => {
-									that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0])
-									
-					               
-					            }
-					        });
+					that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res=>{
+						if(res){
+							uni.uploadFile({
+							           url: that.xdServerUrls.xd_uploadFile, 
+							           filePath: tempFilePaths[0],
+							           name: 'files',
+							           formData: {
+							               'userId': uni.getStorageSync('id'),
+							           },
+							           success: (uploadFileRes) => {
+																
+										 that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);				
+							           }
+							       });
+						}
+					});
 			    }
 			});
+		},
+		popUpVideo(){
+			 // 上传视频
+			                uni.chooseVideo({
+			                    maxDuration:60,
+			                    count: 1,
+			                    // camera: this.cameraList[this.cameraIndex].value,
+			                    sourceType: ['album'],
+			                    success: (responent) => {
+									console.log(responent)
+			                        let videoFile = responent.tempFilePath;
+			                        uni.uploadFile({
+			                            url:this.xdServerUrls.xd_uploadFile,
+										formData: {
+										    'userId': uni.getStorageSync('id'),
+										},
+			                            filePath:videoFile,
+			                            name:'file',
+			                            success: (res) => {                    
+			                                // let videoUrls = JSON.parse(res.data) //微信和头条支持
+											console.log(res)
+			                                let videoUrls = res.data //百度支持
+			                                this.imagesUrlPath = this.imagesUrlPath.concat(videoUrls.result.filePath);
+			                                this.src = videoUrls.result.filePath; //微信
+			                                if(this.src) {
+			                                    this.itemList = ['图片']
+			                                } else {
+			                                    this.itemList = ['图片','视频']
+			                                }
+			                                
+			                            }
+			                        })
+			                    }
+			                })
+			
+		},
+		popUpMP3(){
+			
 		},
 		getTime(){
 			let _this = this;
@@ -357,7 +412,7 @@ export default {
 			display: flex;
 			align-items: center;
 			.section{
-				width:100%;
+				margin-left: 15upx;
 				margin-bottom: 12rpx;
 				audio{
 					width: 100%;
@@ -416,6 +471,10 @@ export default {
 	&.other {
 		background: #fd5107;
 		color: #fff;
+	}
+	.videotip{
+		height: 150upx;
+		width: 150upx;
 	}
 }
 </style>

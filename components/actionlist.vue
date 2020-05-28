@@ -20,14 +20,14 @@
 			</view>
 		</view>
 		<view class="ali-footer">
-			<view class="actionBar xd-tbr-large">
+			<!-- <view class="actionBar xd-tbr-large">
 				<text>获赞助金</text>
 				<text class="price">￥{{item.giveReward}}</text>
 				<text class="sub xd-badge">{{item.onlookerCount}}</text>
-			</view>
+			</view> -->
 			<view class="actionBar xd-tbr-large">
 				<text>我的保证金</text>
-				<text class="price">￥{{item.challengeRmb/100}}</text>
+				<text class="price">￥{{item.challengeRmb}}</text>
 			</view>
 			<view class="actionBar xd-tbr-large">
 				<button class="xd-tbr-large buttclass" :id='index' open-type="share">邀请围观</button>

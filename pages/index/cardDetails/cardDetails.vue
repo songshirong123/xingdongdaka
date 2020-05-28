@@ -14,12 +14,12 @@
 					</view>		
 				</view>
 				<view class="xd-grids xd-flex-center">
-					<view class="xd-grids-items sponsor-grids">
+					<!-- <view class="xd-grids-items sponsor-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">赞助</view>
 							<view class="xd-badge">0</view>
 						</view>
-					</view>
+					</view> -->
 					<view class="xd-grids-items bond-grids">
 						<view class="xd-relative">
 							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{pusCardLists.challengeRmb}}</text></view>
@@ -46,10 +46,10 @@
 							</view>
 						</view>
 					<view class="cardList-image" >
-							<!-- <block v-for="(pictures, index) in item.pushCard.pictures" :key="index" v-if="item.pushCard.pictures"  >	
-								<image :src="pictures" class="xd-comments-img imgs" mode="widthFix"></image>
-							</block> -->
-							<image :src="item.pushCard.pictures" class="xd-comments-img imgs" mode="aspectFill" v-show="item.pushCard.pictures.length!=0" @tap="goPageImg(item.pushCard.pictures)"></image>
+							<block v-for="(pictures, index) in item.pushCard.pictures" :key="index" v-if="item.pushCard.pictures"  >	
+								<image :src="pictures" class="xd-comments-img imgs" mode="aspectFill" @tap="goPageImg(item.pushCard.pictures)"></image>
+							</block>
+							<!-- <image :src="item.pushCard.pictures" class="xd-comments-img imgs" mode="aspectFill" v-show="item.pushCard.pictures.length!=0" @tap="goPageImg(item.pushCard.pictures)"></image> -->
 						</view>
 						<view class="cardList-text" >
 							<text class="xd-content">{{item.pushCard.content}}</text>
@@ -70,16 +70,16 @@
 								<view class="xd-comments-info-text">{{list.content}}</view>
 								<view class="xd-comments-key xd-border-b-black">
 									<image src="../../../static/images/icon/address.png"></image>
-									<text class="xd-comments-key-text comenttext" v-if="id==pusCardLists.userId" @tap="userRepaly(list,indexs,index)">#回复:</text>
-									<text class="xd-comments-key-text" v-else>#：</text>
+									<text class="xd-comments-key-text comenttext"  @tap="userRepaly(list,indexs,index)">回复:</text>
+									<!-- <text class="xd-comments-key-text" v-else>#：</text> -->
 								</view>
 								<!-- 评论 -->
-								<view class="xd-fri-comments" v-show="list.cardReplayCommentList!=undefined">
+								<view class="xd-fri-comments" v-show="list.cardReplayCommentList.length>0">
 									<view class="xd-comments-items" v-for="(lists,index) in list.cardReplayCommentList" :key="index">
 										<!-- <image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image> -->
 										<view class="xd-comments-body">
 											<view class="xd-comments-header">
-												<text class="xd-comments-header-name commentsText" >{{pusCardLists.userName}}-回复:{{lists.userName}}</text>
+												<text class="xd-comments-header-name commentsText" >{{lists.userName}}-回复:{{pusCardLists.userName}}</text>
 												<text class="xd-comments-header-text">{{lists.createTimeStr}}</text>
 											</view>
 											<view class="xd-comments-info-text">{{lists.content}}</view>
@@ -125,12 +125,12 @@
 									<view class="xd-badge">0</view>
 								</view>
 							</view>
-							<view class="xd-grids-items reward-grids">
+							<!-- <view class="xd-grids-items reward-grids">
 								<view class="xd-relative">
 									<view class="xd-tbr-large">打赏</view>
 									<view class="xd-badge">0</view>
 								</view>
-							</view>
+							</view> -->
 							<view class="xd-grids-items action-grids">
 								<view class="xd-relative" @tap="goStep">
 									<view class="xd-tbr-large">一起行动</view>
@@ -143,6 +143,9 @@
 						</view>
 					</view><!-- card-list-item end -->		
 				</block>
+			</view>
+			<view class="btn_bar" v-if="id==pusCardLists.userId">
+				<view class="btns"><button class="btn" @click="goSteps">立即打卡</button></view>
 			</view>
 		</view>
 	</view>
@@ -222,6 +225,12 @@
 			} 
 		},
 		methods: {
+			goSteps(){
+				
+				uni.navigateTo({
+					url: '../../selfCenter/clockIn?pushId='+this.pusCardLists.id
+				});
+			},
 			 goPageImg(e){
 				uni.navigateTo({
 					
@@ -301,9 +310,12 @@
 							content:e.detail.value,
 						},true).then(res=>{
 						
-							this.showInput=false;
-							this.value='';
-							this.getPushComenList();
+							// this.showInput=false;
+							// this.value='';
+							uni.redirectTo({
+								url:'../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pusCardLists))
+							})
+							// this.getPushComenList();
 						})
 				}else if(this.inputType==2){	
 						this.xd_request_post(this.xdServerUrls.xd_saveCardComment,{
@@ -312,9 +324,12 @@
 							content:e.detail.value,
 						},true).then(res=>{
 							
-							this.showInput=false;
-							this.value='';
-							this.getPushComenList();
+							// this.showInput=false;
+							// this.value='';
+							uni.redirectTo({
+								url:'../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pusCardLists))
+							})
+							// this.getPushComenList();
 						})
 					
 				}
@@ -339,7 +354,9 @@
 					pushId:this.pushId,
 					token:uni.getStorageSync('token')
 				},true).then(res=>{	
-					this.pusCardLists=res.obj;
+					var data =res.obj;
+					data.challengeRmb=res.obj.challengeRmb/100;
+					this.pusCardLists=data;
 					this.getPushComenList();
 					
 				})
@@ -350,7 +367,7 @@
 					pushId:this.pusCardLists.id,
 					// token:uni.getStorageSync('token')
 				},true).then(res=>{	
-					this.cardList=res.obj;
+					this.cardList=this.strToArr(res.obj);
 					
 				})
 			},
@@ -363,19 +380,14 @@
 			// 		this.pushComentList=this.timeStampCard(res);
 			// 	})
 			// },
-			timeStampCard(res){
-				let dataList=res.obj;
-				for(var i=0;i <res.obj.length;i++){
-				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj[i].createTime,true);
-					dataList[i].createTime=time;
-					dataList[i].pictures=JSON.parse(dataList[i].pictures)
-					if(dataList[i].cardReplayCommentList!=undefined){
-						for(var j=0;j <dataList[i].cardReplayCommentList.length;j++){
-							var  time2=this.xdUniUtils.xd_timestampToTime(res.obj[i].cardReplayCommentList[j].createTime,true);
-							dataList[i].cardReplayCommentList[j].createTime=time2;
-						}
+			strToArr(res){
+				var dataList=res;
+				for(var i=0;i <res.length;i++){
+					if(res[i].pushCard.pictures){
+						 dataList[i].pushCard.pictures=res[i].pushCard.pictures.split(",")
 					}
 				}
+				console.log(dataList)
 				return dataList;
 			},
 			
@@ -555,4 +567,29 @@
 		button::after {
 			  border: none;
 			}
+			.btn_bar{
+				position:fixed ;
+				bottom: 0;
+				left:0;
+				width: 100%;
+				.btns {
+					display: flex;
+					align-items: center;
+					justify-content: space-between;
+					padding: 0 200rpx;
+					font-size: 28rpx;
+					margin-top: 100rpx;
+			
+					.btn {
+						flex: 1;
+						height: 64rpx;
+						line-height: 64rpx;
+						background: #ffa700;
+						// color: #fff;
+						font-size: 28rpx;
+						border-radius: 40rpx;
+			
+					}
+				}
+				}
 </style>

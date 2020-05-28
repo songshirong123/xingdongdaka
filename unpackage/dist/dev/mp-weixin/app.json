@@ -1,7 +1,6 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/msg/msg",
     "pages/msg/talk",
     "pages/selfCenter/clockIn",
     "pages/selfCenter/selfCenter",
@@ -44,12 +43,6 @@
         "text": "行动"
       },
       {
-        "pagePath": "pages/msg/msg",
-        "iconPath": "static/images/icon/tabbar/tabbarMsg.png",
-        "selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
-        "text": "消息"
-      },
-      {
         "pagePath": "pages/selfCenter/selfCenter",
         "iconPath": "static/images/icon/tabbar/tabbar3.png",
         "selectedIconPath": "static/images/icon/tabbar/tabbar3-on.png",
@@ -58,6 +51,5 @@
     ]
   },
   "permission": {},
-  "usingComponents": {},
-  "sitemapLocation": "sitemap92.json"
+  "usingComponents": {}
 }

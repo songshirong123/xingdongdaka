@@ -1,6 +1,7 @@
 // url路径
 import xdConfig from './xdConfig.js';
 const config = xdConfig.appConfig; // 配置
+
 const serverBaseUrl = `${config.serverProtocal}://${config.serverIp}`;//:${config.serverPort}`;//${config.serverName}`;  基本路径
 const serverUrls = { //根据接口具体配置
 	xd_register: serverBaseUrl + '/xxx', // 注册
@@ -52,6 +53,17 @@ const serverUrls = { //根据接口具体配置
 	xd_pushCardListByPushId: serverBaseUrl + '/publishCard/pushCardListByPushId' ,//根据行动项id获取打卡列表
 	
 	xd_pushDataByPushId: serverBaseUrl + '/publishTarget/pushDataByPushId' ,//根据行动项id获取行动项信息
+	xd_getUserInfoByUserId: serverBaseUrl + '/login/getUserInfoByUserId' ,//根据用户id获取用户信息
+	xd_updatePushDataByPushId: serverBaseUrl + '/publishTarget/updatePushDataByPushId' ,//根据行动项id修改行动项信息
+	
+	xd_getContentIsNormal: serverBaseUrl + '/login/getContentIsNormal' ,//内容是否正常
+	xd_getImgIsNormal: serverBaseUrl + '/login/getImgIsNormal' ,//内容是否正常
+	xd_searchPushData: serverBaseUrl + '/publishTarget/searchPushData' ,//根据行动项名称搜索行动项
+	
+	xd_onOff: serverBaseUrl + '/config/onOff' ,//根据行动项名称搜索行动项
+	
+
+	
 	
 }
 export default {

@@ -4,7 +4,11 @@
 		<view class="xd-search-box">
 			<view class="xd-search">
 				<view class="xd-icons icon-search"><image src="../../static/images/icon/search.png"></image></view>
-				<input type="text" class="xd-search-input" value="" placeholder="行动项·昵称" placeholder-style="color:#ffffff"/>
+				<input type="text" class="xd-search-input" :value="searchValue"  
+				placeholder-style="color:#ffffff" 
+				adjust-position='false' 
+				@confirm='search'
+				@focus='searchfocus'/>
 			</view>
 		</view>
 		
@@ -109,6 +113,7 @@
 				pageNum:1,//当前页数
 				pageSize:10,//每页条数
 				userId:'',
+				searchValue:'请输入行动项·昵称',
 					
 			};
 		},
@@ -117,11 +122,10 @@
 			return {
 				title: that.listsTab[res.target.id].content,
 				path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id,
-				imageUrl:that.listsTab[res.target.id].pictures?that.listsTab[res.target.id].pictures:'../static/images/icon/img/title1.png',
+				imageUrl:that.listsTab[res.target.id].pictures?that.listsTab[res.target.id].pictures:'../../static/images/icon/img/title1.png',
 			}
 					
 		},
-		
 		onLoad() {
 		    this.indexData();
 		},
@@ -130,6 +134,24 @@
 		        },  
 		methods:{
 			...mapMutations(['logIn','logOut','IndexlogIn'])  ,
+			searchfocus(){
+				this.searchValue='';
+			},
+			search(e){
+				console.log(e)
+				this.xd_request_post(this.xdServerUrls.xd_searchPushData,
+				{
+					pushName:e.detail.value ,
+					
+				},
+				true
+					   ).then((res) => {
+						   this.listsTab=this.timeStamp(res);
+						   this.pageNum=res.obj.nextPage==undefined? 1:res.obj.nextPage;
+					   }).catch(err => {											
+				                           });
+				
+			},
 			goPage(url){
 				if(!this.hasLogin){
 					uni.navigateTo({
@@ -163,22 +185,25 @@
 				
 			},
 			//围观
-			lookerClick:function(list){
-				if(!this.hasLogin){
+			lookerClick:function(list,index){
+				var that=this ;
+				if(!that.hasLogin){
 					uni.navigateTo({
 						url: '../login/login' 
 					});
 					return false;
 				}
-				this.userId=uni.getStorageSync('id');
-				this.xd_request_post(this.xdServerUrls.xd_saveLooker,{
+				that.userId=uni.getStorageSync('id');
+				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
 					
 					pushId:list.id,
-					lookUserId:this.userId,
+					lookUserId:that.userId,
 				},false
 				   ).then(res => {	
 				
 						   if(res.resultCode==0){
+							   that.listsTab[index].onlooker=true
+							   that.listsTab[index].lookerCount++;
 							   uni.showToast({
 								title:'围观成功',
 								 duration: 1000,
@@ -285,7 +310,7 @@
 				for(var i=0;i <res.obj.list.length;i++){
 				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
 					dataList[i].createTime=time;
-					dataList[i].challengeRmb=Math.trunc(dataList[i].challengeRmb/100);
+					dataList[i].challengeRmb=Math.floor(dataList[i].challengeRmb/100);
 					
 				}
 				return dataList;
