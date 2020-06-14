@@ -63,6 +63,8 @@ export default {
 			city:'',
 			img:'',
 			openId:'',
+			unionId:'',
+			
 		};
 	},
 	onLoad() {
@@ -73,6 +75,8 @@ export default {
 		this.current=userInfo.gender;
 		this.img=userInfo.avatarUrl;
 		this.openId=userInfo.openId;
+		this.schoolName=userInfo.schoolName;
+		this.unionId=userInfo.unionId;
 	},
 	methods: {
 		// openAddres() {
@@ -80,7 +84,7 @@ export default {
 		// },
 		onConfirm(e) {
 			this.pickerText = e.label; //JSON.stringify(e);
-			console.log(e);
+			
 		},
 		// bindDateChange: function(e) {
 		// 	this.date = e.target.value;
@@ -114,7 +118,7 @@ export default {
 			});
 		},
 		fromSubmit(e){
-			console.log(e)
+			
 			let userData={
 				token:'',
 				id:'',
@@ -143,6 +147,53 @@ export default {
 						
 					},
 					true).then(res=>{
+						if(res.resultCode==0){
+							this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId,
+							{
+							userId:	res.obj.id		
+							}, true ).then(res=>{
+								if(res.resultCode==0){
+									uni.setStorageSync('userInfo','');
+									let userInfo={
+										nickName:'',
+										avatarUrl:'',
+										province:'',
+										city:'',
+										gender:'',
+										schoolName:'',
+										openId:this.openId,
+										unionId:this.unionId,
+									};
+									userInfo.nickName=res.obj.userName;
+									userInfo.avatarUrl=res.obj.userHead;
+									userInfo.province=res.obj.province;
+									userInfo.city=res.obj.city;
+									userInfo.gender=res.obj.sex?res.obj.sex:'2';
+									userInfo.schoolName=res.obj.schoolName?res.obj.schoolName:'无';
+									uni.setStorageSync('userInfo',userInfo);
+									uni.showToast({
+									    title: '保存成功',
+										mask:true,
+									    duration: 2000,
+									});
+									uni.navigateBack({
+										delta:1,
+									})
+								}
+							   })
+							   
+							
+						}else{
+							uni.showToast({
+							    title: '保存失败',
+								mask:true,
+							    duration: 2000,
+								
+							});
+							uni.navigateBack({
+								delta:1,
+							})
+						}
 						
 					})
 				  }else{

@@ -25,14 +25,14 @@
 				</view>
 		
 				<view class="moreInfoIn" >
-					<text v-if="userInfo.gender==1" class="boy">♂</text>
-					<text v-else-if="userInfo.gender==0" class="gender">♀</text>
+					<text v-if="userInfo.sex==1" class="boy">♂</text>
+					<text v-else-if="userInfo.sex==0" class="gender">♀</text>
 					<text v-else class="boy">密</text>
 					<!-- <text>20</text> -->
 				</view>
 			
-				<view class="moreInfoIn flex1">
-					<text>学校：</text>
+				<view class="moreInfoIn flex1" v-if="userInfo.schoolName">
+					<text>{{userInfo.schoolName}}</text>
 				</view>
 				<!-- <view class="moreInfoIn">
 					<text>  &nbsp;</text>
@@ -86,7 +86,8 @@
 					<text>行动 ({{total}})</text>
 				</view>
 				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
-					<text>围观 ({{lookTotal}})</text>
+					<text v-if="userId==user">围观的行动({{lookTotal}})</text>
+					<text v-else>TA围观的行动({{lookTotal}})</text>
 				</view>
 				<!-- <view class="tab" :class="tab===2?'active':''" @click="tab=2">
 					<text>收藏 (128)</text>
@@ -99,7 +100,7 @@
 				<view class="actionLook" v-show="tab===1">
 					<block v-for="(attention, index) in lookerList" :key="index" >
 						<view class="actionLi" >
-							<view class="ali-main">
+							<view class="ali-main" @tap="goPush(attention.pushId)">
 								<view class="ali-main-img">
 									<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
 								</view>
@@ -119,7 +120,7 @@
 					</block>
 				</view>
 				<view class="actionFavorite" v-show="tab===2">
-					<actionlist v-for="(item,index) in [1,2]" :key="index" :tab="tab"  :showBut='1'></actionlist>
+					<actionlist v-for="(item,index) in [1,2]" :key="index" :tab="tab"  :showBut='1' v-on:lookerClick="lookerClick"  :userId='userId'></actionlist>
 				</view>
 			</view>
 		</view>
@@ -135,6 +136,7 @@
 				list:[],
 				userInfo:'',
 				userId:'',
+				user:uni.getStorageSync('id'),
 				total:'',
 				lookerList:[],
 				pushId:'',
@@ -146,21 +148,68 @@
 		},
 		onLoad(option) {
 			this.userId = option.userId;
-			this.pushId = option.pushId;
-			
 			this.getCardList();
 			this.getLookerList();
-			this.getuserinfo();
+			this.getUserInfo();
 		},
 		methods: {
+			goPush(e){
+				uni.navigateTo({
+					url: '../index/action/action?pushId='+e
+				});
+			},
+			//围观
+			lookerClick:function(list,index){
+				var that=this ;
+				if(!that.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				that.userId=uni.getStorageSync('id');
+				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
+					
+					pushId:list.id,
+					lookUserId:that.userId,
+				},true
+				   ).then(res => {	
+				
+						   if(res.resultCode==0){
+							   that.list[index].onlooker=true
+							   that.list[index].lookerCount++;
+							   uni.showToast({
+								title:'围观成功',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }else if(res.resultCode==10015){
+							   uni.showToast({
+								title:'您已经围观了',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }
+						   
+					
+				})
+			},
+			getUserInfo(){
+				this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId,{
+					userId:this.userId,
+				},true)
+				.then(res=>{
+					this.userInfo=res.obj;
+				})
+			},
 			getCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,{
 					token:uni.getStorageSync('token'),
 					userId:this.userId,
-				},false)
+				},true)
 				.then(res=>{
 					this.list=this.timeStamp(res);
-					console.log(this.list);
+					
 					this.total=res.obj.total;
 				})
 			},
@@ -175,24 +224,18 @@
 				return dataList;
 			},
 			getLookerList(){
-				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
-					pushId:this.pushId,
-				},false)
+				this.xd_request_post(this.xdServerUrls.xd_getLookerByUserId,{
+					userId:this.userId,
+					pageNum:1,
+					pageSize:10,
+				},true)
 				.then(res=>{
 					
 					this.lookerList=res.obj.list;
 					this.lookTotal=res.obj.total
 				})
 			},
-			getuserinfo(){
-				this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId,{
-					token:uni.getStorageSync('token'),
-					userId:this.userId,
-				},true)
-				.then(res=>{
-					this.userInfo=res.obj;
-				})
-			},
+			
 			
 		},
 		components:{

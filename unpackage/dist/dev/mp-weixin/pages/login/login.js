@@ -186,11 +186,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
             success: function success(infoRes) {
               //获取用户信息后向调用信息更新方法
               _this.iv = infoRes.iv;
-
-              // _this.city=infoRes.userInfo.city;
-              // _this.province=infoRes.userInfo.province;
               _this.encryptedData = encodeURIComponent(infoRes.encryptedData);
-              console.log(infoRes);
+
               _this.getOpenId();
             } });
 
@@ -215,17 +212,27 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
       then(function (res) {
         if (res.resultCode == 0) {
-          console.log(_this.userInfo);
-          _this.logIn(_this.userInfo);
           try {
             uni.setStorageSync('token', res.obj.token);
             uni.setStorageSync('id', res.obj.id);
           } catch (e) {
             console.log(Error);
           };
+          _this.xd_request_post(_this.xdServerUrls.xd_getUserInfoByUserId,
+          {
+            userId: res.obj.id },
+          true).then(function (res) {
+            _this.userInfo.nickName = res.obj.userName;
+            _this.userInfo.avatarUrl = res.obj.userHead;
+            _this.userInfo.province = res.obj.province;
+            _this.userInfo.city = res.obj.city;
+            _this.userInfo.gender = res.obj.sex ? res.obj.sex : '2';
+            _this.userInfo.schoolName = res.obj.schoolName ? res.obj.schoolName : '无';
 
-          uni.switchTab({
-            url: '../index/index' });
+            _this.logIn(_this.userInfo);
+          });
+          uni.navigateBack({
+            delta: 1 });
 
         }
 
@@ -243,18 +250,18 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         provider: 'weixin',
         success: function success(loginRes) {
           co = loginRes.code;
-          console.log(co);
+
           _this.xd_request_post(_this.xdServerUrls.xd_decodeUserInfo,
           {
             code: co,
             encryptedData: _this.encryptedData,
             iv: _this.iv },
           false).then(function (res) {
-            console.log(res);
+
             _this.userInfo = res.userInfo;
             wx.getSetting({
               success: function success(res) {
-                console.log(res);
+
                 if (res.authSetting["scope.userInfo"]) {
 
                   _this.isLogin();
@@ -265,12 +272,6 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
               } });
 
-            // try{
-            // 	   uni.setStorageSync('openId',res.userInfo.openId);
-            // 	   uni.setStorageSync('unionId',res.userInfo.unionId)
-            // }catch(e){
-            // 	console.log(e)
-            // };
           }).
           catch(function (Error) {
             console.log(Error);

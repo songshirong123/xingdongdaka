@@ -56,9 +56,12 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
+		 "navigateToMiniProgramAppIdList": [
+		            "wxf9286c35b3f9d0d0"  
+		        ],
         "appid" : "wxc2af58f1589eb15d",
         "setting" : {
-            "urlCheck" : true,
+            "urlCheck" : false,
             "minified" : false,
             "postcss" : true,
             "es6" : true

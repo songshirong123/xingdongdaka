@@ -90,4 +90,14 @@
 button::after {
   border: none;
 }
+.buttonShare {
+  background: #f9ebe5;
+  color: #e17175;
+  border-radius: 20rpx;
+  font-size: 25rpx;
+  line-height: 1.4;
+}
+.ali_right {
+  font-size: 40rpx;
+}
 

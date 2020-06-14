@@ -29,8 +29,8 @@
 					<text v-else class="boy">密</text>
 					<!-- <text>20</text> -->
 				</view>
-				<view class="moreInfoIn flex1">
-					<text>学校：</text>
+				<view class="moreInfoIn flex1" v-if="userInfo.schoolName">
+					<text>{{userInfo.schoolName}}</text>
 				</view>
 				<!-- <view class="moreInfoIn">
 					<text>  &nbsp;</text>
@@ -123,10 +123,8 @@
 		       }, 
 	   onShow() {
 		if(this.userInfo==''||this.userInfo==undefined||this.userInfo==null){
-			try{
-				
+			try{	
 				this.userInfo=uni.getStorageSync('userInfo')
-				console.log(this.userInfo)
 			}catch(e){
 								   console.log(Error)
 							   };
@@ -144,7 +142,7 @@
 			try{
 				
 				this.userInfo=uni.getStorageSync('userInfo')
-				console.log(this.userInfo)
+				
 			}catch(e){
 								   console.log(Error)
 							   };
@@ -156,7 +154,7 @@
 				
 				this.xd_request_post(this.xdServerUrls.xd_onOff,
 				{
-					versionCode:'2.0.9',
+					versionCode:'2',
 					
 				},true).then(res=>{	
 					this.onOff=res.obj
@@ -170,10 +168,10 @@
 			
 			clickMe: function () {
 				let that=this;	
-						console.log('支付')
+						
 			              wx.getSetting({
 			                success: res => {
-								console.log(res)
+								
 			                  if (res.authSetting['scope.userInfo']) {
 			                    that.xd_request_post(that.xdServerUrls.xd_pay,
 								{
@@ -189,7 +187,7 @@
 									pushId:1,
 									
 								},true).then(res=>{	
-									console.log(res)
+									
 			                    	uni.requestPayment({
 			                    		 'appId': res.obj.appId,
 			                    		'timeStamp': res.obj.timeStamp,

@@ -1,4 +1,4 @@
-<template>
+ <template>
 	<view class="clockIn">
 		<form @submit="submitFrom">
 			<view class="uni-form-item uni-column cl-time">
@@ -18,6 +18,7 @@
 				<view class="form-item timetr">
 					<text>时长：</text>
 					<text>{{dayData}}</text>
+					<button class="toMore" type="default" @tap="toMore">更多事项记录</button>
 				</view>
 			</view>
 			<view class="uni-form-item uni-column">
@@ -103,6 +104,14 @@ export default {
 		this.getTime();
 	},
 	methods: {
+		toMore(){
+			uni.navigateToMiniProgram({
+			  appId: 'wxf9286c35b3f9d0d0',
+			  success(res) {
+			    // 打开成功
+			  }
+			})
+		},
 		submitFrom(e){
 			var start=undefined;
 			var end=undefined;
@@ -191,27 +200,30 @@ export default {
 		popUpImg(){
 			const that = this;
 			uni.chooseImage({
-			    count: 1, //默认9
+			    count: 4, //默认9
 			    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 			    sourceType: ['album'], //从相册选择
 			    success: function (res) {
+					
 					let tempFilePaths = res.tempFilePaths;
-					that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res=>{
-						if(res){
-							uni.uploadFile({
-							           url: that.xdServerUrls.xd_uploadFile, 
-							           filePath: tempFilePaths[0],
-							           name: 'files',
-							           formData: {
-							               'userId': uni.getStorageSync('id'),
-							           },
-							           success: (uploadFileRes) => {
-																
-										 that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);				
-							           }
-							       });
-						}
-					});
+					for(let k=0;k<tempFilePaths.length;k++){
+						that.xdUniUtils.xd_request_img(res.tempFilePaths[k]).then(res=>{
+							if(res){
+								uni.uploadFile({
+								           url: that.xdServerUrls.xd_uploadFile, 
+								           filePath: tempFilePaths[k],
+								           name: 'files',
+								           formData: {
+								               'userId': uni.getStorageSync('id'),
+								           },
+								           success: (uploadFileRes) => {
+																	
+											 that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);				
+								           }
+								       });
+							}
+						});
+					}
 			    }
 			});
 		},
@@ -220,10 +232,8 @@ export default {
 			                uni.chooseVideo({
 			                    maxDuration:60,
 			                    count: 1,
-			                    // camera: this.cameraList[this.cameraIndex].value,
-			                    sourceType: ['album'],
+			                   compressed:false,
 			                    success: (responent) => {
-									console.log(responent)
 			                        let videoFile = responent.tempFilePath;
 			                        uni.uploadFile({
 			                            url:this.xdServerUrls.xd_uploadFile,
@@ -234,15 +244,8 @@ export default {
 			                            name:'file',
 			                            success: (res) => {                    
 			                                // let videoUrls = JSON.parse(res.data) //微信和头条支持
-											console.log(res)
-			                                let videoUrls = res.data //百度支持
-			                                this.imagesUrlPath = this.imagesUrlPath.concat(videoUrls.result.filePath);
-			                                this.src = videoUrls.result.filePath; //微信
-			                                if(this.src) {
-			                                    this.itemList = ['图片']
-			                                } else {
-			                                    this.itemList = ['图片','视频']
-			                                }
+											
+			                              
 			                                
 			                            }
 			                        })
@@ -423,6 +426,13 @@ export default {
 			}
 		}
 	}
+}
+.toMore{
+	width: 220upx;
+	height: 70upx;
+	font-size: 26upx;
+	margin-right: 10upx;
+	padding-top: -40upx;
 }
 .inputarea {
 	border: 1px solid #dfdfdf;

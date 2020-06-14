@@ -269,6 +269,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 {
   data: function data() {
     return {
@@ -276,6 +277,7 @@ __webpack_require__.r(__webpack_exports__);
       list: [],
       userInfo: '',
       userId: '',
+      user: uni.getStorageSync('id'),
       total: '',
       lookerList: [],
       pushId: '',
@@ -287,22 +289,69 @@ __webpack_require__.r(__webpack_exports__);
   },
   onLoad: function onLoad(option) {
     this.userId = option.userId;
-    this.pushId = option.pushId;
-
     this.getCardList();
     this.getLookerList();
-    this.getuserinfo();
+    this.getUserInfo();
   },
   methods: {
-    getCardList: function getCardList() {var _this = this;
+    goPush: function goPush(e) {
+      uni.navigateTo({
+        url: '../index/action/action?pushId=' + e });
+
+    },
+    //围观
+    lookerClick: function lookerClick(list, index) {
+      var that = this;
+      if (!that.hasLogin) {
+        uni.navigateTo({
+          url: '../login/login' });
+
+        return false;
+      }
+      that.userId = uni.getStorageSync('id');
+      that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
+
+        pushId: list.id,
+        lookUserId: that.userId },
+      true).
+      then(function (res) {
+
+        if (res.resultCode == 0) {
+          that.list[index].onlooker = true;
+          that.list[index].lookerCount++;
+          uni.showToast({
+            title: '围观成功',
+            duration: 1000,
+            icon: 'none' });
+
+        } else if (res.resultCode == 10015) {
+          uni.showToast({
+            title: '您已经围观了',
+            duration: 1000,
+            icon: 'none' });
+
+        }
+
+
+      });
+    },
+    getUserInfo: function getUserInfo() {var _this = this;
+      this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId, {
+        userId: this.userId },
+      true).
+      then(function (res) {
+        _this.userInfo = res.obj;
+      });
+    },
+    getCardList: function getCardList() {var _this2 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList, {
         token: uni.getStorageSync('token'),
         userId: this.userId },
-      false).
+      true).
       then(function (res) {
-        _this.list = _this.timeStamp(res);
-        console.log(_this.list);
-        _this.total = res.obj.total;
+        _this2.list = _this2.timeStamp(res);
+
+        _this2.total = res.obj.total;
       });
     },
     timeStamp: function timeStamp(res) {
@@ -315,25 +364,19 @@ __webpack_require__.r(__webpack_exports__);
       }
       return dataList;
     },
-    getLookerList: function getLookerList() {var _this2 = this;
-      this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId, {
-        pushId: this.pushId },
-      false).
-      then(function (res) {
-
-        _this2.lookerList = res.obj.list;
-        _this2.lookTotal = res.obj.total;
-      });
-    },
-    getuserinfo: function getuserinfo() {var _this3 = this;
-      this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId, {
-        token: uni.getStorageSync('token'),
-        userId: this.userId },
+    getLookerList: function getLookerList() {var _this3 = this;
+      this.xd_request_post(this.xdServerUrls.xd_getLookerByUserId, {
+        userId: this.userId,
+        pageNum: 1,
+        pageSize: 10 },
       true).
       then(function (res) {
-        _this3.userInfo = res.obj;
+
+        _this3.lookerList = res.obj.list;
+        _this3.lookTotal = res.obj.total;
       });
     } },
+
 
 
   components: {

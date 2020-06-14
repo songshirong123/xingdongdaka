@@ -7651,12 +7651,14 @@ var appConfig = {
   appLogTag: "xingdongdaka-log", // log tag
   enableDebug: true, // 设置是否打开调试开关。此开关对正式版也能生效。
   // server 配置
+  serverName: 'xingdongdaka', // server项目名称
+
   serverProtocal: 'https', // server 协议
   serverIp: 'xingdongdaka.zhidashixun.com', // server IP
-  // serverPort: '10060', // server 端口
-  serverPort: '10160', // 测试server 端口
-  serverName: 'xingdongdaka' // server项目名称
-};var _default =
+
+  serverProtocaltest: 'http', // server 协议
+  serverIptest: 'testxingdongdaka.zhidashixun.com' };var _default =
+
 {
   appConfig: appConfig };exports.default = _default;
 
@@ -7673,7 +7675,8 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 var _xdConfig = _interopRequireDefault(__webpack_require__(/*! ./xdConfig.js */ 8));var _serverUrls;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
 var config = _xdConfig.default.appConfig; // 配置
 
-var serverBaseUrl = "".concat(config.serverProtocal, "://").concat(config.serverIp); //:${config.serverPort}`;//${config.serverName}`;  基本路径
+var serverBaseUrl = config.serverProtocaltest + '://' + config.serverIptest; //测试
+// const serverBaseUrl=config.serverProtocal+'://'+config.serverIp;
 var serverUrls = (_serverUrls = { //根据接口具体配置
   xd_register: serverBaseUrl + '/xxx', // 注册
   xd_login: serverBaseUrl + '/xxx', // 登录
@@ -7713,6 +7716,7 @@ var serverUrls = (_serverUrls = { //根据接口具体配置
   xd_getImgIsNormal: serverBaseUrl + '/login/getImgIsNormal', //图片是否正常
   xd_modifyUserInfo: serverBaseUrl + '/login/modifyUserInfo', //修改用户的基础信息
   xd_weiXinLogin: serverBaseUrl + '/login/weiXinLogin', //微信登陆接口
+  xd_getUserInfoByUserId: serverBaseUrl + '/login/getUserInfoByUserId', //根据用户id获取用户信息
   // GET /login/getAccessToken 获取token
   // GET /login/getContentIsNormal 内容是否正常
 
@@ -7723,15 +7727,18 @@ var serverUrls = (_serverUrls = { //根据接口具体配置
   xd_savePushCard: serverBaseUrl + '/publishCard/savePushCard', //保存打卡记录
   xd_pushCardListByPushId: serverBaseUrl + '/publishCard/pushCardListByPushId', //根据行动项id获取打卡列表
 
-  xd_pushDataByPushId: serverBaseUrl + '/publishTarget/pushDataByPushId', //根据行动项id获取行动项信息
-  xd_getUserInfoByUserId: serverBaseUrl + '/login/getUserInfoByUserId', //根据用户id获取用户信息
-  xd_updatePushDataByPushId: serverBaseUrl + '/publishTarget/updatePushDataByPushId', //根据行动项id修改行动项信息
+  xd_pushDataByPushId: serverBaseUrl + '/publishTarget/pushDataByPushId' }, _defineProperty(_serverUrls, "xd_getUserInfoByUserId",
+serverBaseUrl + '/login/getUserInfoByUserId'), _defineProperty(_serverUrls, "xd_updatePushDataByPushId",
+serverBaseUrl + '/publishTarget/updatePushDataByPushId'), _defineProperty(_serverUrls, "xd_getContentIsNormal",
 
-  xd_getContentIsNormal: serverBaseUrl + '/login/getContentIsNormal' }, _defineProperty(_serverUrls, "xd_getImgIsNormal",
+serverBaseUrl + '/login/getContentIsNormal'), _defineProperty(_serverUrls, "xd_getImgIsNormal",
 serverBaseUrl + '/login/getImgIsNormal'), _defineProperty(_serverUrls, "xd_searchPushData",
 serverBaseUrl + '/publishTarget/searchPushData'), _defineProperty(_serverUrls, "xd_onOff",
 
-serverBaseUrl + '/config/onOff'), _serverUrls);var _default =
+serverBaseUrl + '/config/onOff'), _defineProperty(_serverUrls, "xd_delPushDataByPushId",
+serverBaseUrl + '/publishTarget/delPushDataByPushId'), _defineProperty(_serverUrls, "xd_saveShareInfo",
+serverBaseUrl + '/share/saveShareInfo'), _defineProperty(_serverUrls, "xd_getLookerByPushId",
+serverBaseUrl + '/looker/getLookerByPushId'), _serverUrls);var _default =
 
 
 
@@ -7906,6 +7913,7 @@ var store = new _vuex.default.Store({
   state: {
     lang: lang,
     hasLogin: false,
+    real: false,
     infoRes: {},
     userInfo: {} },
 
@@ -7928,7 +7936,6 @@ var store = new _vuex.default.Store({
     logIn: function logIn(state, provider) {
       state.hasLogin = true;
       state.userInfo = provider;
-      console.log(state.userInfo);
       uni.setStorageSync('userInfo', state.userInfo);
 
     },
@@ -9177,7 +9184,7 @@ function xd_navigateBack(delta) {
 
 }
 //时间处理
-function xd_timestampToTime(timestamp, times, times1) {
+function xd_timestampToTime(timestamp, times, times1, times2) {
   var date = new Date(timestamp); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
   var Y = date.getFullYear() + '-';
   var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
@@ -9196,6 +9203,12 @@ function xd_timestampToTime(timestamp, times, times1) {
     var s = date.getSeconds();
     return Y + M + D + h + m + s;
   }
+  if (times2) {
+    var h = date.getHours() + ':';
+    var m = date.getMinutes();
+
+    return Y + M + D + h + m;
+  }
   return Y + M + D;
 }
 //获取今天只后日期
@@ -9206,7 +9219,10 @@ function xd_daysAddSub(date, num) {
   var Y = newD.getFullYear() + '-';
   var M = (newD.getMonth() + 1 < 10 ? '0' + (newD.getMonth() + 1) : newD.getMonth() + 1) + '-';
   var D = newD.getDate() + ' ';
-  return Y + M + D;
+  var h = newD.getHours() + ':';
+  var m = newD.getMinutes();
+
+  return Y + M + D + h + m;
 }
 
 //数据校验

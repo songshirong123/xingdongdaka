@@ -194,6 +194,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var actionlist = function actionlist() {__webpack_require__.e(/*! require.ensure | components/actionlist */ "components/actionlist").then((function () {return resolve(__webpack_require__(/*! @/components/actionlist.vue */ 159));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 {
@@ -203,15 +214,18 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       tab: 0, //行动，围观，收藏
       cardList: [],
       lookerList: [],
+      maskState: 0,
       nextPage: 1, //当前页数
       pageSize: 10, //每页条数
       nextPageTwo: '',
       total: '',
-      looktotal: '' };
+      looktotal: '',
+      pushId: '',
+      index: '' };
 
   },
   onShow: function onShow() {
-    this.inDada();
+    // this.inDada();
   },
   onLoad: function onLoad() {
     this.inDada();
@@ -221,15 +235,95 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
   onShareAppMessage: function onShareAppMessage(res) {
     var that = this;
+    that.setSaveShareInfo(res);
     return {
       title: that.cardList[res.target.id].content,
-      path: '/pages/index/action/action?pushId=' + that.cardList[res.target.id].id,
+      path: '/pages/index/action/action?pushId=' + that.cardList[res.target.id].id + '&share=' + uni.getStorageSync('id'),
       imageUrl: that.cardList[res.target.id].pictures ? that.cardList[res.target.id].pictures : '../../static/images/icon/img/title1.png' };
 
 
   },
   methods: {
+    setSaveShareInfo: function setSaveShareInfo(res) {
+      this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
+        pushId: this.cardList[res.target.id].id,
+        shareUserId: uni.getStorageSync('id') },
+      true).
+      then(function (res) {
+        console.log(res);
+      });
+    },
+    creatXd: function creatXd(e) {
+      var that = this;
+      var id = that.pushId;
+      var i = that.index;
+      if (e == 1) {
+        uni.showModal({
+          title: '重新编辑行动',
+          content: '将删除原行动及打卡信息，在重新发布新行动',
+          success: function success(res) {
+            if (res.confirm) {
+              that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId, { pushid: id }, true).then(function (res) {
+                if (res.resultCode == 0) {
+                  uni.showToast({
+                    title: '删除成功，将重新编辑',
+                    icon: 'none',
+                    duration: 1500,
+                    success: function success() {
+                      try {
+                        uni.setStorageSync('pushData', that.cardList[i]);
+                      } catch (e) {
+                        // error
+                      }
+
+                      uni.navigateTo({
+                        url: 'step1' });
+
+                    } });
+
+                }
+              });
+            } else if (res.cancel) {
+              that.maskState = 0;
+            }
+          } });
+
+      } else if (e == 2) {
+        uni.showModal({
+          title: '删除行动',
+          content: '删除后无法恢复，相关打卡也会被删除',
+          success: function success(res) {
+            if (res.confirm) {
+              that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId, { pushid: id }, true).then(function (res) {
+                console.log(res);
+                if (res.resultCode == 0) {
+                  uni.showToast({
+                    title: '删除成功',
+                    icon: 'none',
+                    duration: 1500 });
+
+                  that.cardList.splice(i, 1);
+                }
+              });
+            } else if (res.cancel) {
+              that.maskState = 0;
+            }
+          } });
+
+      }
+    },
+    toggleMask: function toggleMask(type, index) {var _this = this;
+      var timer = type >= 0 ? 10 : 300;
+      var state = type >= 0 ? 1 : 0;
+      this.maskState = 2;
+      this.pushId = type;
+      this.index = index;
+      setTimeout(function () {
+        _this.maskState = state;
+      }, timer);
+    },
     toAction: function toAction(e) {
+      console.log(e);
       uni.navigateTo({
         url: '../index/action/action?pushId=' + e });
 
@@ -240,7 +334,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
     },
 
-    inDada: function inDada() {var _this = this;
+    inDada: function inDada() {var _this2 = this;
       var token = '';
       var id = '';
       if (!this.hasLogin) {
@@ -266,15 +360,15 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       true).
 
       then(function (res) {
-        _this.cardList = _this.dataPaly(res);
-        _this.nextPage = res.obj.nextPage;
-        _this.total = res.obj.total;
+        _this2.cardList = _this2.dataPaly(res);
+        _this2.nextPage = res.obj.nextPage;
+        _this2.total = res.obj.total;
       }).catch(function (Error) {
         console.log(Error);
       });
       this.xd_request_post(this.xdServerUrls.xd_getLookerByUserId,
       {
-        token: token,
+        userId: uni.getStorageSync("id"),
         pageNum: 1,
         pageSize: 10 },
 
@@ -282,14 +376,14 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
       then(function (res) {
 
-        _this.lookerList = res.obj.list;
-        _this.nextPageTwo = res.obj.nextPage;
-        _this.looktotal = res.obj.total;
+        _this2.lookerList = res.obj.list;
+        _this2.nextPageTwo = res.obj.nextPage;
+        _this2.looktotal = res.obj.total;
       }).catch(function (Error) {
         console.log(Error);
       });
     },
-    getReachList: function getReachList() {var _this2 = this;
+    getReachList: function getReachList() {var _this3 = this;
       if (this.tab == 0) {
         if (this.nextPage == 0) {
           uni.showLoading(
@@ -315,9 +409,9 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
         false).
         then(function (res) {
-          _this2.nextPage = res.obj.nextPage;
-          var data = _this2.dataPaly(res);
-          _this2.cardList = _this2.cardList.concat(data);
+          _this3.nextPage = res.obj.nextPage;
+          var data = _this3.dataPaly(res);
+          _this3.cardList = _this3.cardList.concat(data);
           setTimeout(function () {
             uni.hideLoading();
           }, 1000);
@@ -348,8 +442,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
         false).
         then(function (res) {
-          _this2.nextPageTwo = res.obj.nextPage;
-          _this2.cardList = _this2.lookerList.concat(res.obj.list);
+          _this3.nextPageTwo = res.obj.nextPage;
+          _this3.cardList = _this3.lookerList.concat(res.obj.list);
           setTimeout(function () {
             uni.hideLoading();
           }, 1000);
@@ -362,25 +456,26 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       date = date.getTime();
 
       for (var i = 0; i < dataList.length; i++) {
-        var num = dataList[i].targetDay - dataList[i].holidayDay - dataList[i].pushCardCount;
+        var num = dataList[i].targetDay - dataList[i].pushCardCount;
         var num2 = dataList[i].targetDay;
-        var num3 = dataList[i].targetDay - dataList[i].holidayDay;
-        var num4 = dataList[i].holidayDay;
+        var num3 = dataList[i].targetDay + dataList[i].holidayDay;
+        var num4 = dataList[i].pushCardCount;
         var d = new Date(dataList[i].createTime);
         var newD = new Date(d.setDate(d.getDate() + num3));
-        var dd = Math.trunc((date - newD) / (1000 * 60 * 60 * 24));
-
-        if (num2 >= num && dd < num3) {
+        newD = newD.getTime();
+        var dd = Math.round((date - newD) / (1000 * 60 * 60 * 24));
+        if (num > 0 && dd <= 0) {
           dataList[i].btn = 0; //立即打卡
-        } else if (num2 > num && dd > num3) {
+        } else if (num2 > num4 && dd > 0) {
           dataList[i].btn = 1;} //未达成
-        else if (num2 = num && num4 != 0) {
+        else if (num == 0 && num2 == num4) {
             dataList[i].btn = 2;} //已完成    
-        var time = this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
-        dataList[i].createTime = time;
+        // var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
+        // dataList[i].createTime=time;
         dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
       }
+
       return dataList;
     } },
 
@@ -389,7 +484,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     this.getReachList();
   },
   onPullDownRefresh: function onPullDownRefresh() {
-
+    this.inDada();
   },
   components: {
     actionlist: actionlist } };exports.default = _default;

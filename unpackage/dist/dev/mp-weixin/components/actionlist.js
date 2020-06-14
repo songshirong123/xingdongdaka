@@ -158,10 +158,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 var _default =
 {
   name: "actionlist",
-  props: ['tab', 'item', 'showBut', 'index'],
+  props: ['tab', 'item', 'showBut', 'index', 'userId'],
 
   data: function data() {
     return {
@@ -183,8 +186,21 @@ var _default =
     goPageCard: function goPageCard(e) {
 
       uni.navigateTo({
-        url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(e)) });
+        url: '../index/action/action?pushId=' + e.id });
 
+    },
+    goPageImg: function goPageImg(e) {
+      console.log(e);
+      uni.navigateTo({
+        url: '../img/img?url=' + encodeURIComponent(JSON.stringify(e)) });
+
+    },
+    lookerClick: function lookerClick(list, index) {
+
+      this.$emit('lookerClick', list, index);
+    },
+    toggleMask: function toggleMask(e, index) {
+      this.$emit('toggleMask', e, index);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

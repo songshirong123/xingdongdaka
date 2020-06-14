@@ -208,6 +208,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
 var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 {
   data: function data() {
@@ -245,6 +246,14 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     this.getTime();
   },
   methods: {
+    toMore: function toMore() {
+      uni.navigateToMiniProgram({
+        appId: 'wxf9286c35b3f9d0d0',
+        success: function success(res) {
+          // 打开成功
+        } });
+
+    },
     submitFrom: function submitFrom(e) {var _this2 = this;
       var start = undefined;
       var end = undefined;
@@ -333,27 +342,30 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     popUpImg: function popUpImg() {
       var that = this;
       uni.chooseImage({
-        count: 1, //默认9
+        count: 4, //默认9
         sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
         sourceType: ['album'], //从相册选择
         success: function success(res) {
-          var tempFilePaths = res.tempFilePaths;
-          that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(function (res) {
-            if (res) {
-              uni.uploadFile({
-                url: that.xdServerUrls.xd_uploadFile,
-                filePath: tempFilePaths[0],
-                name: 'files',
-                formData: {
-                  'userId': uni.getStorageSync('id') },
 
-                success: function success(uploadFileRes) {
+          var tempFilePaths = res.tempFilePaths;var _loop = function _loop(
+          k) {
+            that.xdUniUtils.xd_request_img(res.tempFilePaths[k]).then(function (res) {
+              if (res) {
+                uni.uploadFile({
+                  url: that.xdServerUrls.xd_uploadFile,
+                  filePath: tempFilePaths[k],
+                  name: 'files',
+                  formData: {
+                    'userId': uni.getStorageSync('id') },
 
-                  that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);
-                } });
+                  success: function success(uploadFileRes) {
 
-            }
-          });
+                    that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);
+                  } });
+
+              }
+            });};for (var k = 0; k < tempFilePaths.length; k++) {_loop(k);
+          }
         } });
 
     },
@@ -362,10 +374,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       uni.chooseVideo({
         maxDuration: 60,
         count: 1,
-        // camera: this.cameraList[this.cameraIndex].value,
-        sourceType: ['album'],
+        compressed: false,
         success: function success(responent) {
-          console.log(responent);
           var videoFile = responent.tempFilePath;
           uni.uploadFile({
             url: _this3.xdServerUrls.xd_uploadFile,
@@ -376,15 +386,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
             name: 'file',
             success: function success(res) {
               // let videoUrls = JSON.parse(res.data) //微信和头条支持
-              console.log(res);
-              var videoUrls = res.data; //百度支持
-              _this3.imagesUrlPath = _this3.imagesUrlPath.concat(videoUrls.result.filePath);
-              _this3.src = videoUrls.result.filePath; //微信
-              if (_this3.src) {
-                _this3.itemList = ['图片'];
-              } else {
-                _this3.itemList = ['图片', '视频'];
-              }
+
+
 
             } });
 

@@ -3,7 +3,7 @@
 		<form @submit="formSubmit">
 			<view class="uni-form-item uni-column">
 				<view class="title">打卡总天数</view>
-				<view class="form-item"><input class="uni-input" type="number" name="targetDay" placeholder="请输入打卡总天数" maxlength="50" step="1" min="1" /></view>
+				<view class="form-item"><input class="uni-input" :value="targetDay" type="number" name="targetDay" placeholder="请输入打卡总天数" maxlength="50" step="1" min="1" /></view>
 			</view>
 			<!-- <view class="uni-form-item uni-column">
 				<view class="title">每周打卡天数</view>
@@ -11,12 +11,12 @@
 			</view> -->
 			<view class="uni-form-item uni-column">
 				<view class="title">可休假天数</view>
-				<view class="form-item"><input class="uni-input" type="number" name="holidayDay" placeholder="请输入可休假天数" maxlength="150" step="1" min="0" /></view>
+				<view class="form-item"><input class="uni-input" :value="holidayDay" type="number" name="holidayDay" placeholder="请输入可休假天数" maxlength="150" step="1" min="0" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">是否公开</view>
 				<view class="form-item nobtm">
-					<radio-group name="status">
+					<radio-group name="isopen">
 					<label class="radio">
 						<radio value="0" checked="true" color="#ffa700" />
 						是
@@ -48,7 +48,7 @@
 						</picker> -->
 						 <checkbox-group name="label">
 							<label v-for="item in labelList" :key="item.id">
-								<checkbox  class ="labeChech":value="item.id">{{item.labelName}}</checkbox>
+								<checkbox  class ="labeChech" :value="item.id">{{item.labelName}}</checkbox>
 							</label>
 						 </checkbox-group>
 					<!-- </view>
@@ -70,6 +70,8 @@
 export default {
 	data() {
 		return {
+			targetDay: '',
+			holidayDay: '',
 			index: 0,
 			indexs:0,
 			dateList: [],
@@ -82,7 +84,11 @@ export default {
 		};
 	},
 	onLoad(option) {
-		console.log(option);
+		var data=uni.getStorageSync("pushData");
+		if(data){
+			this.targetDay=data.targetDay;
+			this.holidayDay=data.holidayDay;
+		}
 		this.formData= JSON.parse(decodeURIComponent(option.formData));
 		this.img.pictures=option.pictures;
 		this.initDateList();
@@ -90,7 +96,7 @@ export default {
 	},
 	methods: {
 		formSubmit(e) {
-			console.log(e)
+			
 			if(e.detail.value.targetDay==''){
 				uni.showToast({
 				    title: '请出入打卡总天数',
@@ -126,7 +132,7 @@ export default {
 		tabs(){
 			this.xd_request_post(this.xdServerUrls.xd_label,{},false
 				   ).then((res) => {
-					   console.log(res)
+					  
 				       this.labelList=res.obj
 				       
 				   }).catch(err => {
@@ -146,7 +152,7 @@ export default {
 					showStr: `(${ddd}) ${str}`
 				});
 			}
-			console.log(list);
+			
 			this.dateList = list;
 		},
 		getNextWeek(i) {

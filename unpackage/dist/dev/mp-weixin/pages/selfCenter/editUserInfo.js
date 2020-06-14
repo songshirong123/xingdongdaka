@@ -194,7 +194,9 @@ var _default = {
       province: '',
       city: '',
       img: '',
-      openId: '' };
+      openId: '',
+      unionId: '' };
+
 
   },
   onLoad: function onLoad() {
@@ -205,6 +207,8 @@ var _default = {
     this.current = userInfo.gender;
     this.img = userInfo.avatarUrl;
     this.openId = userInfo.openId;
+    this.schoolName = userInfo.schoolName;
+    this.unionId = userInfo.unionId;
   },
   methods: {
     // openAddres() {
@@ -212,7 +216,7 @@ var _default = {
     // },
     onConfirm: function onConfirm(e) {
       this.pickerText = e.label; //JSON.stringify(e);
-      console.log(e);
+
     },
     // bindDateChange: function(e) {
     // 	this.date = e.target.value;
@@ -246,7 +250,7 @@ var _default = {
 
     },
     fromSubmit: function fromSubmit(e) {var _this = this;
-      console.log(e);
+
       var userData = {
         token: '',
         id: '' };
@@ -275,6 +279,53 @@ var _default = {
 
 
           true).then(function (res) {
+            if (res.resultCode == 0) {
+              _this.xd_request_post(_this.xdServerUrls.xd_getUserInfoByUserId,
+              {
+                userId: res.obj.id },
+              true).then(function (res) {
+                if (res.resultCode == 0) {
+                  uni.setStorageSync('userInfo', '');
+                  var userInfo = {
+                    nickName: '',
+                    avatarUrl: '',
+                    province: '',
+                    city: '',
+                    gender: '',
+                    schoolName: '',
+                    openId: _this.openId,
+                    unionId: _this.unionId };
+
+                  userInfo.nickName = res.obj.userName;
+                  userInfo.avatarUrl = res.obj.userHead;
+                  userInfo.province = res.obj.province;
+                  userInfo.city = res.obj.city;
+                  userInfo.gender = res.obj.sex ? res.obj.sex : '2';
+                  userInfo.schoolName = res.obj.schoolName ? res.obj.schoolName : '无';
+                  uni.setStorageSync('userInfo', userInfo);
+                  uni.showToast({
+                    title: '保存成功',
+                    mask: true,
+                    duration: 2000 });
+
+                  uni.navigateBack({
+                    delta: 1 });
+
+                }
+              });
+
+
+            } else {
+              uni.showToast({
+                title: '保存失败',
+                mask: true,
+                duration: 2000 });
+
+
+              uni.navigateBack({
+                delta: 1 });
+
+            }
 
           });
         } else {

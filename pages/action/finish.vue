@@ -28,7 +28,7 @@
 			<view class="uni-form-item uni-column">
 				<view class="title">设置保障金</view>
 				
-				<view class="form-item"><input :value="rmb.challengeRmb" type="digit" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="50" /></view>
+				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="50" /></view>
 				<view class="pricelis">
 					<view class="priceli" @click="priceRmb(1)"><text>1元</text></view>
 					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
@@ -91,17 +91,7 @@ export default {
 				return false;
 			}
 			var that = this;
-			// if(that.rmb.challengeRmb==null){
-			// 	if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
-			// 		uni.showToast({
-			// 		    title: '请出入保障金',
-			// 			mask:true,
-			// 		    duration: 1000,
-			// 			image:'/static/images/icon/clock.png'
-			// 		});
-			// 		return false
-			// 	};
-			// }		
+			
 			let userData={
 				token:'',
 				userId:'',
@@ -118,52 +108,81 @@ export default {
 				that.saveData=Object.assign(that.formData,e.detail.value,userData);
 				
 			};
-			if(that.rmb.challengeRmb==''&&that.payNum<=0){
+			if(that.rmb.challengeRmb==''){
 				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb<=0){
 					that.saveData.challengeRmb=0;
 					that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
-						uni.reLaunch({
-							url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
-							})
+						if(res.resultCode==0){
+							uni.showToast({
+								title: '发布成功',
+								icon: 'success',
+								duration: 2000,
+								success:function(){
+									 uni.setStorageSync('pushData','' );
+									uni.reLaunch({
+										url: '../index/action/action?pushId='+res.obj.id
+										})
+								}
+							});
+								
+						}else{
+							
+							uni.showToast({
+								title: res.obj,
+								icon: 'none',
+								duration: 3000,
+								success:function(){
+								
+									return false;
+								}
+							});
+							
+						}
 					})
 				}else{
 					that.saveData.challengeRmb=that.saveData.challengeRmb*100;
-					if(that.payNum>0){
-						that.pushData.obj.challengeRmb=that.saveData.challengeRmb;
-						that.updataPushId();		
-					}else{
-						that.getPushId();		
-					}
-					    		
+					
+						that.getPushId();		  		
 				}
-			}else{
+			}
+			else{
 				that.saveData.challengeRmb=that.saveData.challengeRmb*100;
-				if(that.payNum>0){
-					that.pushData.obj.challengeRmb=that.saveData.challengeRmb;
-					that.updataPushId();		
-				}else{
+				
 					that.getPushId();		
-				}
+			
 			}		
 		},
 		updataPushId(){
-			console.log(this.pushData.obj)
-			this.xd_request_post(this.xdServerUrls.xd_updatePushDataByPushId,
-				{
-					id:this.pushData.obj.id,
-					userId:this.pushData.obj.userId,
-					challengeRmb:0,
-				}
+			var that=this;
+			that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:that.pushData.obj.id}
 			,true).then( res=>{
-					uni.reLaunch({
-						url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(this.timeType(this.pushData)))
-						})
+				     that.saveData.challengeRmb=0;
+					 
+						return false	
+					
+				
 			})
 		},
 		getPushId(){
+			console.log(this.saveData)
 			this.xd_request_post(this.xdServerUrls.xd_savePush,this.saveData,true).then( res=>{
-				this.pushData=res;
-				this.goPay();
+				if(res.resultCode==0){
+					this.pushData=res;
+					this.goPay();
+					
+				}else{
+					
+					uni.showToast({
+						title: res.obj,
+						icon: 'none',
+						duration: 3000,
+						success:function(){
+							return false;
+						}
+					});
+					
+				}
+				
 			})
 		},
 		priceRmb(e){	
@@ -214,44 +233,38 @@ export default {
 							'paySign': res.obj.paySign,
 							success: function (re) {
 								uni.showToast({
-									title: '微信支付成功',
+									title: '发布成功',
 									icon: 'success',
-									duration: 1000
+									duration: 2000,
+									success:function(){
+										uni.setStorageSync('pushData','' );
+										uni.reLaunch({
+											url: '../index/action/action?pushId='+that.pushData.obj.id
+										})
+									}
 								});
-								uni.reLaunch({
-									url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(that.pushData)))
-								})
 							},
 							fail: function (err) {
 								// 支付失败的回调中 用户未付款
 								uni.showModal({
 									content:'支付取消',
-									confirmText:'发布行动',
-									// cancelText:'发布行动',
-									showCancel:false,
+									confirmText:'重新填写',
+									cancelText:'回到首页',
 									image:'/static/images/icon/clock.png',
 									success:function(ress) {
 										 if (ress.confirm) {
-											 that.pushData.obj.challengeRmb=0;
-												that.updataPushId();
-						// 					 that.xd_request_post(that.xdServerUrls.xd_updatePushDataByPushId,
-						// 					 {
-						// 						pushTarget: that.pushData.obj.toString()
-						// 					 }
-						
-						// 					 ,true).then( res=>{
-						// 					 	uni.reLaunch({
-						// 					 		url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
-						// 					 		})
-											 	
-						// 					 })
-										}
-										 // else if (ress.cancel) {
-										// 	that.rmb.challengeRmb='';
-										// 	that.payNum++;
-										// 	console.log(that.rmb.challengeRmb)
-										// 	return false
-										// 	}
+											 uni.setStorageSync('pushData',that.pushData.obj );
+											 that.updataPushId();
+											 uni.reLaunch({
+												url: 'step1'
+												  })
+														}else if (ress.cancel) {
+											that.updataPushId();				
+											uni.setStorageSync('pushData',that.pushData.obj );
+											uni.reLaunch({
+												url: '../index/index'
+											     })
+                                                        }
 										},
 										
 								});

@@ -176,15 +176,25 @@ var _default =
 {
   data: function data() {
     return {
+      content: '',
+      extendContent: '',
+      punchCardWay: '',
       param: {
         pictures: "" } };
 
 
   },
+  onLoad: function onLoad() {
+    var data = uni.getStorageSync("pushData");
+    if (data) {
+      this.content = data.content;
+      this.extendContent = data.extendContent;
+      this.punchCardWay = data.punchCardWay;
+      this.param.pictures = data.pictures;
+    }
+  },
   methods: {
-    formSubmit: function formSubmit(e) {
-      console.log(e);
-      console.log(e.detail.value.content);
+    formSubmit: function formSubmit(e) {var _this = this;
       if (e.detail.value.content == '') {
         uni.showToast({
           title: '请出入行动项名称',
@@ -195,7 +205,9 @@ var _default =
         return false;
       };
       this.xdUniUtils.xd_request_text({ content: e.detail.value }).then(function (res) {
-        console.log(res);
+        if (res.obj.errcode == 0)
+        uni.navigateTo({
+          url: '/pages/action/step2?pictures=' + _this.param.pictures + '&formData=' + encodeURIComponent(JSON.stringify(e.detail.value)) });
 
       });
       // if(e.detail.value.extendContent==''){
@@ -209,8 +221,6 @@ var _default =
       // }if(this.param.pictures==''){
 
       // }
-      uni.navigateTo({
-        url: '/pages/action/step2?pictures=' + this.param.pictures + '&formData=' + encodeURIComponent(JSON.stringify(e.detail.value)) });
 
     },
     popUpImg: function popUpImg() {

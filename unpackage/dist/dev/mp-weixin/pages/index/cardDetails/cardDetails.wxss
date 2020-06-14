@@ -73,7 +73,7 @@
   width: 100%;
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
-  padding: 0 100rpx;
+  padding-left: 100rpx;
 }
 .card-list .card-list-item .xd-comments-items .xd-comments-image.data-v-1a82ed53 {
   width: 285rpx;
@@ -219,5 +219,19 @@ button.data-v-1a82ed53::after {
   background: #ffa700;
   font-size: 28rpx;
   border-radius: 40rpx;
+}
+.commentsText.data-v-1a82ed53 {
+  font-size: 25rpx;
+  font-weight: bold;
+}
+.commentstxt.data-v-1a82ed53 {
+  font-size: 25rpx;
+  color: #888888;
+}
+.comments-time.data-v-1a82ed53 {
+  color: #888888;
+  font-size: 22rpx;
+  line-height: 40rpx;
+  padding-left: 18rpx;
 }
 

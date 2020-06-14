@@ -117,17 +117,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         return false;
       }
       var that = this;
-      // if(that.rmb.challengeRmb==null){
-      // 	if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb==0){
-      // 		uni.showToast({
-      // 		    title: '请出入保障金',
-      // 			mask:true,
-      // 		    duration: 1000,
-      // 			image:'/static/images/icon/clock.png'
-      // 		});
-      // 		return false
-      // 	};
-      // }		
+
       var userData = {
         token: '',
         userId: '' };
@@ -144,52 +134,81 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         that.saveData = Object.assign(that.formData, e.detail.value, userData);
 
       };
-      if (that.rmb.challengeRmb == '' && that.payNum <= 0) {
+      if (that.rmb.challengeRmb == '') {
         if (e.detail.value.challengeRmb == '' || e.detail.value.challengeRmb <= 0) {
           that.saveData.challengeRmb = 0;
           that.xd_request_post(that.xdServerUrls.xd_savePush, that.saveData, true).then(function (res) {
-            uni.reLaunch({
-              url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(that.timeType(res))) });
+            if (res.resultCode == 0) {
+              uni.showToast({
+                title: '发布成功',
+                icon: 'success',
+                duration: 2000,
+                success: function success() {
+                  uni.setStorageSync('pushData', '');
+                  uni.reLaunch({
+                    url: '../index/action/action?pushId=' + res.obj.id });
 
+                } });
+
+
+            } else {
+
+              uni.showToast({
+                title: res.obj,
+                icon: 'none',
+                duration: 3000,
+                success: function success() {
+
+                  return false;
+                } });
+
+
+            }
           });
         } else {
           that.saveData.challengeRmb = that.saveData.challengeRmb * 100;
-          if (that.payNum > 0) {
-            that.pushData.obj.challengeRmb = that.saveData.challengeRmb;
-            that.updataPushId();
-          } else {
-            that.getPushId();
-          }
 
-        }
-      } else {
-        that.saveData.challengeRmb = that.saveData.challengeRmb * 100;
-        if (that.payNum > 0) {
-          that.pushData.obj.challengeRmb = that.saveData.challengeRmb;
-          that.updataPushId();
-        } else {
           that.getPushId();
         }
+      } else
+      {
+        that.saveData.challengeRmb = that.saveData.challengeRmb * 100;
+
+        that.getPushId();
+
       }
     },
-    updataPushId: function updataPushId() {var _this = this;
-      console.log(this.pushData.obj);
-      this.xd_request_post(this.xdServerUrls.xd_updatePushDataByPushId,
-      {
-        id: this.pushData.obj.id,
-        userId: this.pushData.obj.userId,
-        challengeRmb: 0 },
-
+    updataPushId: function updataPushId() {
+      var that = this;
+      that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId, { pushid: that.pushData.obj.id },
       true).then(function (res) {
-        uni.reLaunch({
-          url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(_this.timeType(_this.pushData))) });
+        that.saveData.challengeRmb = 0;
+
+        return false;
+
 
       });
     },
-    getPushId: function getPushId() {var _this2 = this;
+    getPushId: function getPushId() {var _this = this;
+      console.log(this.saveData);
       this.xd_request_post(this.xdServerUrls.xd_savePush, this.saveData, true).then(function (res) {
-        _this2.pushData = res;
-        _this2.goPay();
+        if (res.resultCode == 0) {
+          _this.pushData = res;
+          _this.goPay();
+
+        } else {
+
+          uni.showToast({
+            title: res.obj,
+            icon: 'none',
+            duration: 3000,
+            success: function success() {
+              return false;
+            } });
+
+
+        }
+
       });
     },
     priceRmb: function priceRmb(e) {
@@ -197,7 +216,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       this.formSubmit();
     },
 
-    goPay: function goPay() {var _this3 = this;
+    goPay: function goPay() {var _this2 = this;
       var that = this;
       var data = {
         id: '',
@@ -240,44 +259,38 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
                 'paySign': res.obj.paySign,
                 success: function success(re) {
                   uni.showToast({
-                    title: '微信支付成功',
+                    title: '发布成功',
                     icon: 'success',
-                    duration: 1000 });
+                    duration: 2000,
+                    success: function success() {
+                      uni.setStorageSync('pushData', '');
+                      uni.reLaunch({
+                        url: '../index/action/action?pushId=' + that.pushData.obj.id });
 
-                  uni.reLaunch({
-                    url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(that.timeType(that.pushData))) });
+                    } });
 
                 },
                 fail: function fail(err) {
                   // 支付失败的回调中 用户未付款
                   uni.showModal({
                     content: '支付取消',
-                    confirmText: '发布行动',
-                    // cancelText:'发布行动',
-                    showCancel: false,
+                    confirmText: '重新填写',
+                    cancelText: '回到首页',
                     image: '/static/images/icon/clock.png',
                     success: function success(ress) {
                       if (ress.confirm) {
-                        that.pushData.obj.challengeRmb = 0;
+                        uni.setStorageSync('pushData', that.pushData.obj);
                         that.updataPushId();
-                        // 					 that.xd_request_post(that.xdServerUrls.xd_updatePushDataByPushId,
-                        // 					 {
-                        // 						pushTarget: that.pushData.obj.toString()
-                        // 					 }
+                        uni.reLaunch({
+                          url: 'step1' });
 
-                        // 					 ,true).then( res=>{
-                        // 					 	uni.reLaunch({
-                        // 					 		url: '../index/action/action?pushList='+encodeURIComponent(JSON.stringify(that.timeType(res)))
-                        // 					 		})
+                      } else if (ress.cancel) {
+                        that.updataPushId();
+                        uni.setStorageSync('pushData', that.pushData.obj);
+                        uni.reLaunch({
+                          url: '../index/index' });
 
-                        // 					 })
                       }
-                      // else if (ress.cancel) {
-                      // 	that.rmb.challengeRmb='';
-                      // 	that.payNum++;
-                      // 	console.log(that.rmb.challengeRmb)
-                      // 	return false
-                      // 	}
                     } });
 
 
@@ -285,7 +298,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
             });
           } else {
-            _this3.logOut();
+            _this2.logOut();
             uni.navigateTo({
               url: '../login/login' });
 

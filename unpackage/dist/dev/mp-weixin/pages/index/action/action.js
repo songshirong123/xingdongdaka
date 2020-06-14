@@ -341,6 +341,15 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 {
   data: function data() {
@@ -352,7 +361,11 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       modal: false,
       addrAnimation: '',
       audioPlaySrc: '../../../static/images/icon/img/titl.png',
-      userId: uni.getStorageSync('id') };
+      userId: uni.getStorageSync('id'),
+      share: '',
+      lookerList: [],
+      pushId: '',
+      isShare: 0 };
 
 
   },
@@ -360,29 +373,139 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
   (0, _vuex.mapState)(['hasLogin'])),
 
   onLoad: function onLoad(option) {
-    console.log(option);
     if (option.pushList == undefined) {
       this.pushId = option.pushId;
-      console.log(this.pushId);
+      if (option.share != undefined) {
+        this.share = option.share;
+        this.isShare = 1;
+      }
       this.getpushList();
-    } else {
-      var pushdata = JSON.parse(decodeURIComponent(option.pushList));
-      this.endTime(pushdata);
-      this.getPushCardList();
     }
+  },
+  onShow: function onShow() {
+    this.clickSaveShareInfo();
   },
   onShareAppMessage: function onShareAppMessage(res) {
     var that = this;
-    return {
-      title: that.pushList.content,
-      path: '/pages/index/action/action?pushId=' + that.pushList.id,
-      imageUrl: that.pushList.pictures ? that.pushList.pictures : '../../static/images/icon/img/title1.png' };
+    if (that.pusCardList.length > 0) {
+      that.setSaveShareInfo();
+      return {
+        title: that.pusCardList[0].content,
+        path: '/pages/index/action/action?pushId=' + that.pushList.id + '&share=' + userId,
+        imageUrl: that.pusCardList[0].pictures[0] ? that.pusCardList[0].pictures[0] : '../../../static/images/icon/img/title1.png' };
+
+
+    } else {
+      that.setSaveShareInfo();
+      return {
+        title: that.pushList.content,
+        path: '/pages/index/action/action?pushId=' + that.pushList.id + '&share=' + userId,
+        imageUrl: that.pushList.pictures ? that.pushList.pictures : '../../../static/images/icon/img/title1.png' };
+
+
+    }
 
 
   },
   methods: {
-    goSteps: function goSteps() {
+    isOpen: function isOpen() {
 
+    },
+    setSaveShareInfo: function setSaveShareInfo() {
+      this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
+        pushId: this.pushId,
+        shareUserId: this.userId },
+      true).
+      then(function (res) {
+        console.log(res);
+      });
+    },
+    clickSaveShareInfo: function clickSaveShareInfo() {
+      if (this.share != '') {
+        this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
+          pushId: this.pushId,
+          shareUserId: this.share,
+          clickUserId: this.userId },
+        true).
+        then(function (res) {
+          console.log(res);
+        });
+      }
+    },
+    getShareInfo: function getShareInfo() {
+      if (!this.hasLogin) {
+        uni.navigateTo({
+          url: '../../login/login' });
+
+        return false;
+      }
+      if (this.share == '' || this.share == undefined) {
+        return false;
+      }
+      this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
+        pushId: this.pushId,
+        shareUserId: this.share,
+        clickUserId: this.userId },
+      true).
+      then(function (res) {
+        console.log(res);
+      });
+    },
+    goUser: function goUser(e) {
+
+      if (!this.hasLogin) {
+        uni.navigateTo({
+          url: '../../login/login' });
+
+        return false;
+      }
+      uni.navigateTo({
+        url: '../../selfCenter/selfView?userId=' + e });
+
+    },
+    //围观
+    lookerClick: function lookerClick(list, index) {
+      var that = this;
+      if (!that.hasLogin) {
+        uni.navigateTo({
+          url: '../login/login' });
+
+        return false;
+      }
+      that.userId = uni.getStorageSync('id');
+      that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
+
+        pushId: list.id,
+        lookUserId: that.userId },
+      true).
+      then(function (res) {
+
+        if (res.resultCode == 0) {
+          that.pushList.onlooker = true;
+          that.pushList.lookerCount++;
+          uni.showToast({
+            title: '围观成功',
+            duration: 1000,
+            icon: 'none' });
+
+        } else if (res.resultCode == 10015) {
+          uni.showToast({
+            title: '您已经围观了',
+            duration: 1000,
+            icon: 'none' });
+
+        }
+
+
+      });
+    },
+    goSteps: function goSteps() {
+      if (!this.hasLogin) {
+        uni.navigateTo({
+          url: '../../login/login' });
+
+        return false;
+      }
       uni.navigateTo({
         url: '../../selfCenter/clockIn?pushId=' + this.pushList.id });
 
@@ -404,10 +527,18 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     // 		url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
     // 	});
     // },
-    cardComentList: function cardComentList(e) {
+    gocardComentList: function gocardComentList(e) {
+      this.pushList.pushCardList[0].id = e.id;
+      this.pushList.pushCardList[0].userId = e.userId;
+      uni.navigateTo({
+        url: '../cardDetails/cardDetails?pushList=' + encodeURIComponent(JSON.stringify(this.pushList)) });
 
+    },
+    cardComentList: function cardComentList(e) {
       var data = [];
       data.push(e);
+      this.pushList.pushCardList[0].id = e.id;
+      this.pushList.pushCardList[0].userId = e.userId;
       var pushCard = {
         pushList: this.pushList,
         pushCardList: data };
@@ -473,24 +604,35 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     getpushList: function getpushList() {var _this2 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId, {
         pushId: this.pushId,
+        isShare: this.isShare,
         token: uni.getStorageSync('token') },
       true).then(function (res) {
-        var data = res.obj;
-        data.createTime = _this2.xdUniUtils.xd_timestampToTime(res.obj.createTime);
-        data.challengeRmb = res.obj.challengeRmb / 100;
-        _this2.endTime(data);
-        _this2.getPushCardList();
+        if (res.resultCode == 0) {
+          var data = res.obj;
+          data.createTime = _this2.xdUniUtils.xd_timestampToTime(res.obj.createTime, false, false, true);
+          data.challengeRmb = res.obj.challengeRmb / 100;
+          _this2.endTime(data);
+          _this2.getPushCardList();
+          if (_this2.share != '') {
+            _this2.getShareInfo();
+          }
+        } else {
+          uni.showToast({
+            title: res.msg,
+            icon: 'none' });
+
+        }
 
       });
     },
     endTime: function endTime(pushdata) {
+      console.log(pushdata);
+      var da = { id: '1' };
       var pushListdata = pushdata;
       pushListdata['endTime'] = 0;
-
       pushListdata.endTime = this.xdUniUtils.xd_daysAddSub(pushListdata.createTime, pushListdata.targetDay);
-
+      pushListdata.pushCardList.push(da);
       this.pushList = pushListdata;
-      console.log(pushListdata);
 
     },
     goStep: function goStep() {
@@ -500,7 +642,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     },
     getPushComenList: function getPushComenList() {var _this3 = this;
       this.xd_request_post(this.xdServerUrls.xd_showCommentAndReplayCommtent, {
-        pushId: this.pushList.id,
+        pushId: this.pushId,
         token: uni.getStorageSync('token') },
       false).then(function (res) {
 
@@ -510,7 +652,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     },
     getPushCardList: function getPushCardList() {var _this4 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId, {
-        pushId: this.pushList.id },
+        pushId: this.pushId },
 
       true).then(function (res) {
         var data = res.obj.list;
@@ -528,7 +670,18 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     detailFn: function detailFn() {
       this.active = 1;
     },
+    // 围观的人
+    lookFn: function lookFn() {
+      this.active = 2;
+      this.getLookerList();
+    },
     tags: function tags() {
+      if (!this.hasLogin) {
+        uni.navigateTo({
+          url: '../../login/login' });
+
+        return false;
+      }
       this.xd_request_post(this.xdServerUrls.xd_saveAttention, {
         userId: uni.getStorageSync('id'),
         attentionUserId: this.pushList.userId },
@@ -539,6 +692,18 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
           icon: 'none',
           title: res.msg });
 
+      });
+    },
+    getLookerList: function getLookerList() {var _this5 = this;
+      this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId, {
+        pushId: this.pushId,
+        pageNum: 1,
+        pageSize: 10 },
+      true).
+      then(function (res) {
+
+        _this5.lookerList = res.obj.list;
+        _this5.lookTotal = res.obj.total;
       });
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

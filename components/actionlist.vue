@@ -7,11 +7,14 @@
 			<view class="ali-top-in">
 				<text>休假天数:{{item.holidayDay}}</text>
 			</view>
+			<view class="ali_right" @click="toggleMask(item.id,index)">
+				<text class="cuIcon-moreandroid" ></text>
+			</view>
 		</view>
 		<view class="ali-main">
 			<view class="ali-main-img">
-				<img v-if="item.pictures!=''" :src="item.pictures" alt="" class="xd-list-image" mode="aspectFill">
-				<img v-else :src="audioPlaySrc" alt="" class="xd-list-image" @error="error(index)">
+				<img v-if="item.pictures!=''" :src="item.pictures" alt="" class="xd-list-image" mode="aspectFill" @tap="goPageImg(item.pictures)">
+				<img v-else :src="audioPlaySrc" alt="" class="xd-list-image" @error="error(index)" @tap="goPageImg(audioPlaySrc)">
 			</view>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
 			<view class="lli-main-content xd-list-body ">
 				<view class="xd-list-title-text" @tap="goPageCard(item)">
@@ -29,15 +32,15 @@
 				<text>我的保证金</text>
 				<text class="price">￥{{item.challengeRmb}}</text>
 			</view>
-			<view class="actionBar xd-tbr-large">
-				<button class="xd-tbr-large buttclass" :id='index' open-type="share">邀请围观</button>
-				<text class="sub xd-badge">{{item.onlookerCount}}</text>
+			<view class="actionBar xd-tbr-large" >
+				<button class="buttonShare"   :id="index" open-type="share" >邀请围观</button>
+
 			</view>
 		</view>
 		<view class="ali-btns" v-if="tab===0&&showBut!=1">
 			<button v-if="item.btn==0" class="btn"  @click="goPage(item.id)">立即打卡</button>
-			<button v-else-if="item.btn==1" class="btn"  style="background-color: #ff0000;">未完成</button>
-			<button v-else-if="item.btn==2" class="btn" style="background-color: #46ca5c;">已完成</button>
+			<button v-else-if="item.btn==1" class="btn"  style="background-color: #ff0000;">未达成</button>
+			<button v-else-if="item.btn==2" class="btn" style="background-color: #46ca5c;">已达成</button>
 		</view>
 	</view>
 </template>
@@ -45,7 +48,7 @@
 <script>
 	export default {
 		name:"actionlist",
-		props:['tab','item','showBut','index'],
+		props:['tab','item','showBut','index','userId'],
 		
 		data(){
 			return {
@@ -67,10 +70,22 @@
 			goPageCard(e){
 				
 				uni.navigateTo({
-					url:'../index/action/action?pushList='+encodeURIComponent(JSON.stringify(e))
+					url:'../index/action/action?pushId='+e.id
 				})
+			},
+			goPageImg(e){
+				console.log(e)
+				uni.navigateTo({
+					url:'../img/img?url='+encodeURIComponent(JSON.stringify(e))
+				})
+			},
+			lookerClick(list,index){
+				
+				this.$emit('lookerClick',list,index);
+			},
+			toggleMask(e,index){
+				this.$emit('toggleMask',e,index);
 			}
-			
 		}
 	}
 </script>
@@ -133,5 +148,16 @@
 		button::after {
 			  border: none;
 			
+			}
+			.buttonShare{
+				background: #f9ebe5;
+				color: #e17175;
+				
+				border-radius: 20upx;
+				font-size: 25upx;
+				line-height: 1.4;
+			}
+			.ali_right{
+				font-size: 40upx;
 			}
 </style>

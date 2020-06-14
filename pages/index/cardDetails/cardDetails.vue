@@ -9,8 +9,8 @@
 						<image class="xd-list-image" v-if="pusCardLists.pictures!=''" :src="pusCardLists.pictures" mode="aspectFill"  @tap="goPageImg(pusCardLists.pictures)"></image>
 						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 					</view>
-					<view class="xd-list-body">
-						<view class="xd-list-title-text xd-ellipsis-line2">{{pusCardLists.content}}</view>
+					<view class="xd-list-body" @tap="goAction(pusCardLists.id)">
+						<view class="xd-list-title-text xd-ellipsis-line2" >{{pusCardLists.content}}</view>
 					</view>		
 				</view>
 				<view class="xd-grids xd-flex-center">
@@ -27,7 +27,10 @@
 					</view>
 					<view class="xd-grids-items supervise-grids">
 						<view class="xd-relative">
-							<button class="xd-tbr-large buttclass" type="default" open-type="share">邀请围观</button>
+				
+							<button class="xd-tbr-large buttclass" v-if="pusCardLists.userId==id || pusCardLists.onlooker "  open-type="share" id='-1' >邀请围观</button>
+							<button class="xd-tbr-large buttclass" v-else-if="pusCardLists.userId!=id && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0"  @tap="lookerClick(pusCardLists)">围观</button>
+							<button class="xd-tbr-large buttclass" v-else  @tap="lookerClick(pusCardLists)">围观分钱</button>
 							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">0</view>
 						</view>
 					</view>
@@ -39,14 +42,14 @@
 			<view class="card-list xd-comments" >
 				<block v-for="(item, indexs) in cardList" :key="indexs" >	
 					<view class="xd-comments-cardList" :id="'index'+item.pushCard.id" >
-						<view class="xd-list-head heradImg">
+						<view class="xd-list-head heradImg" @tap="goUser(item.pushCard.userId)">
 							<image class="xd-comments-face" :src="pusCardLists.userHead" ></image>
 							<view class="xd-list-title heradImgName">
 								<text class="xd-list-title-text">{{pusCardLists.userName}}</text>
 							</view>
 						</view>
 					<view class="cardList-image" >
-							<block v-for="(pictures, index) in item.pushCard.pictures" :key="index" v-if="item.pushCard.pictures"  >	
+							<block v-for="(pictures, pindex) in item.pushCard.pictures" :key="pindex" v-if="item.pushCard.pictures"  >	
 								<image :src="pictures" class="xd-comments-img imgs" mode="aspectFill" @tap="goPageImg(item.pushCard.pictures)"></image>
 							</block>
 							<!-- <image :src="item.pushCard.pictures" class="xd-comments-img imgs" mode="aspectFill" v-show="item.pushCard.pictures.length!=0" @tap="goPageImg(item.pushCard.pictures)"></image> -->
@@ -60,27 +63,30 @@
 					</view>
 					<!-- 循环card-list-item 为一条打卡记录 -->
 					<view class="card-list-item xd-border-b-color">
-						<view class="xd-comments-items" v-for="(list,index) in item.pushCommentList" :key="index" v-show="item.pushCommentList.length>0"> 
-							<image :src="list.userHead" class="xd-comments-face"></image>
+						<view class="xd-comments-items" v-for="(list,cindex) in item.pushCommentList" :key="cindex" v-show="item.pushCommentList.length>0"> 
+							<image  @tap="goUser(list.userId)" :src="list.userHead" class="xd-comments-face"></image>
 							<view class="xd-comments-body">
 								<view class="xd-comments-header">
-									<text class="xd-comments-header-name">{{list.userName}}</text>
+									<text class="xd-comments-header-name"  @tap="goUser(list.userId)">{{list.userName}}</text>
 									<text class="xd-comments-header-text">{{list.createTimeStr}}</text>
 								</view>
 								<view class="xd-comments-info-text">{{list.content}}</view>
 								<view class="xd-comments-key xd-border-b-black">
 									<image src="../../../static/images/icon/address.png"></image>
-									<text class="xd-comments-key-text comenttext"  @tap="userRepaly(list,indexs,index)">回复:</text>
+									<text class="xd-comments-key-text comenttext"  @tap="userRepaly(list,item)">回复:</text>
 									<!-- <text class="xd-comments-key-text" v-else>#：</text> -->
 								</view>
 								<!-- 评论 -->
 								<view class="xd-fri-comments" v-show="list.cardReplayCommentList.length>0">
-									<view class="xd-comments-items" v-for="(lists,index) in list.cardReplayCommentList" :key="index">
+									<view class="xd-comments-items" v-for="(lists,coindex) in list.cardReplayCommentList" :key="coindex">
 										<!-- <image src="../../../static/images/pic/Scar.jpg" class="xd-comments-face"></image> -->
 										<view class="xd-comments-body">
 											<view class="xd-comments-header">
-												<text class="xd-comments-header-name commentsText" >{{lists.userName}}-回复:{{pusCardLists.userName}}</text>
-												<text class="xd-comments-header-text">{{lists.createTimeStr}}</text>
+												<text class=" commentsText"  @tap="goUser(lists.userId)" >{{lists.userName }}</text>
+												<text class=" commentstxt"> 回复:</text>
+												<text class=" commentsText"  @tap="goUser(lists.replayUserId)" >
+												{{list.userName}}</text>
+												<text class="comments-time">{{lists.createTimeStr}}</text>
 											</view>
 											<view class="xd-comments-info-text">{{lists.content}}</view>
 										</view>
@@ -92,7 +98,7 @@
 						<view class="xd-grids xd-space-between xd-flex-v-center">
 							<view class="xd-grids-items comment-grids">
 								<view class="xd-relative">
-									<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix" @tap="showInputComent(item,indexs)"></image>
+									<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix" @tap="showInputComent(item)"></image>
 									<view class="xd-badge">0</view>
 								</view>
 							</view>
@@ -118,8 +124,8 @@
 							</view>
 							<view class="xd-grids-items share-grids">
 								<view class="xd-relative">
-									<button  class="butShare" open-type="share" >
-									  <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"  ></image>
+									<button  class="butShare" open-type="share"  :id="indexs">
+									  <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix" ></image>
 									</button>
 									<!-- <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"></image> -->
 									<view class="xd-badge">0</view>
@@ -139,13 +145,13 @@
 							</view>
 						</view><!-- 功能列表end -->
 						<view class="comentInput">
-							<input  v-show="showInput&&indexs==indexId" :value='value' placeholder="请输入评论内容"  adjust-position='false' auto-height='true' hold-keyboard='true' @confirm='inputComent' confirm-type="done" :focus="showInput"/>
+							<input  v-show="showInput&&item.pushCard.id==indexId" :value='value' :placeholder="conmmmenttext"  adjust-position='false' auto-height='true' hold-keyboard='true' @confirm='inputComent' confirm-type="done" :focus="showInput"/>
 						</view>
 					</view><!-- card-list-item end -->		
 				</block>
 			</view>
 			<view class="btn_bar" v-if="id==pusCardLists.userId">
-				<view class="btns"><button class="btn" @click="goSteps">立即打卡</button></view>
+				<view class="btns" v-if="pusCardLists.targetDay>pusCardLists.pushCardCount"><button class="btn" @click="goSteps">立即打卡</button></view>
 			</view>
 		</view>
 	</view>
@@ -164,67 +170,154 @@
 				value:'',
 				id:uni.getStorageSync('id'),
 				userId:'',
-				inputType:1,//2评论，1回复
+				inputType:2,//2评论，1回复
 				cardId:'',
 				dataCardId:'',
 				indexId:'',
 				pushUserId:'',
 				commentId:'',
 				pushId:'',
+				tolist:false,
+				conmmmenttext:'请输入评论内容',
+				
 			}
 		},
 		computed: {
 		           ...mapState(['hasLogin'])  
 		       },  
-		onReady() {		
+		onReady(e) {		
 			var that=this;
-				setTimeout(function(){
-					
-					uni.createSelectorQuery().in(that).select('#index'+that.cardId).boundingClientRect(data=>{//目标节点
-					
-					　　uni.createSelectorQuery().select(".card-list").boundingClientRect((res)=>{//最外层盒子节点
-					
-					　　　　uni.pageScrollTo({
-					　　　　　　duration:0,//过渡时间必须为0，uniapp bug，否则运行到手机会报错
-					　　　　　　scrollTop:data.top-res.top ,//滚动到实际距离是元素距离顶部的距离减去最外层盒子的滚动距离
-					　　　　})
-					　　}).exec()
-					}).exec(); 
-					
-							},3000);
+			
+			let int = setInterval(function() {
+			if (that.cardList&&that.tolist) {
+				uni.createSelectorQuery().in(that).select('#index'+that.cardId).boundingClientRect(data=>{//目标节点
+				　　uni.createSelectorQuery().select(".card-list").boundingClientRect((res)=>{//最外层盒子节点
+				　　　　uni.pageScrollTo({
+				　　　　　　duration:0,//过渡时间必须为0，uniapp bug，否则运行到手机会报错
+				　　　　　　scrollTop:data.top-res.top ,//滚动到实际距离是元素距离顶部的距离减去最外层盒子的滚动距离
+				　　　　})
+				　　}).exec()
+				}).exec(); 
+				clearInterval(int);
+				}else if(!that.tolist){
+					clearInterval(int);
+				}
+			}, 100); 
+			
+			
 		},
 		onShareAppMessage(res) {
+			
 			let that = this;
-			return {
-				title: that.pusCardLists.content,
-				path: '/pages/index/action/action?pushId='+ that.pusCardLists.id,
-				imageUrl:that.pusCardLists.pictures?that.pusCardLists.pictures:'../../static/images/icon/img/title1.png',
+			if(!that.hasLogin){
+				uni.navigateTo({
+					url: '../../login/login' 
+				});
+				return false;
 			}
+			that.setSaveShareInfo(res);
+			if(res.target.id<0){
+				return {
+					title: that.pusCardLists.content,
+					path: '/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+id,
+					imageUrl:that.pusCardLists.pictures?that.pusCardLists.pictures:'../../../static/images/icon/img/title1.png',
+				}
+			}else {
+				return {
+					title: that.cardList[res.target.id].pushCard.content,
+					path: '/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+id,
+					imageUrl:that.cardList[res.target.id].pushCard.pictures[0]?that.cardList[res.target.id].pushCard.pictures[0]:'../../../static/images/icon/img/title1.png',
+				}
+			}	
 					
 		},
 		onLoad(option) {
 			if(option.pushList!=undefined){
 				var data=JSON.parse(decodeURIComponent(option.pushList));
-				
 				if(data.pushId==undefined){
+					
 					this.pusCardLists=data;
 					this.cardId=data.pushCardList[0].id;
+					this.tolist=true;
 					this.getPushComenList();
 				}else{
 					this.pushId=data.pushId;
-					
 					this.getpushList();
 				}
 			}else if(option.pushCard!=undefined){
 				var pusCard=JSON.parse(decodeURIComponent(option.pushCard));
+				
 				this.pushUserId=pusCard.pushCardList[0].userId;
 				this.cardId=pusCard.pushCardList[0].id;
 				this.pusCardLists=pusCard.pushList;
-				this.getPushComenList();
+				this.indexId=pusCard.pushCardList[0].id;
 				this.showInput=true;
+				this.getPushComenList();
 			} 
 		},
 		methods: {
+			//围观
+			lookerClick:function(list){
+				var that=this ;
+				if(!that.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				that.userId=uni.getStorageSync('id');
+				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
+					
+					pushId:list.id,
+					lookUserId:that.userId,
+				},false
+				   ).then(res => {	
+				
+						   if(res.resultCode==0){
+							   that.pusCardLists.onlooker=true
+							   that.pusCardLists.lookerCount++;
+							   uni.showToast({
+								title:'围观成功',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }else if(res.resultCode==10015){
+							   uni.showToast({
+								title:'您已经围观了',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }
+						   
+					
+				})
+			},
+			goAction(e){
+				uni.navigateTo({
+					url:'/pages/index/action/action?pushId='+e
+				})
+			},
+			setSaveShareInfo(res){
+				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
+					pushId:this.pusCardLists.id,
+					shareUserId:uni.getStorageSync('id'),
+				},true
+				   ).then(res => {
+					   console.log(res)
+					   })
+			},
+			goUser(e){
+				
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
+				uni.navigateTo({
+					url:'../../selfCenter/selfView?userId='+e
+				})
+			},
 			goSteps(){
 				
 				uni.navigateTo({
@@ -282,7 +375,7 @@
 					url: `/pages/action/step1`
 				});
 			},
-			userRepaly(e,indexs,index){
+			userRepaly(e,indexs){
 				if(e.userId==this.id){
 					uni.showToast({
 						title:'无法回复自己',
@@ -293,10 +386,11 @@
 				}
 				this.commentId=e.id;
 				this.showInput=true;
-				this.indexId=indexs;
+				this.indexId=indexs.pushCard.id;
 				this.userId=e.userId,
 				this.dataCardId=e.cardId;
 				this.inputType=1;
+				this.conmmmenttext='回复：'+e.userName
 			},
 			inputComent(e){
 				
@@ -319,7 +413,7 @@
 						})
 				}else if(this.inputType==2){	
 						this.xd_request_post(this.xdServerUrls.xd_saveCardComment,{
-							cardId:this.dataCardId,
+							cardId:this.dataCardId?this.dataCardId:this.cardId,
 							userId:this.id,
 							content:e.detail.value,
 						},true).then(res=>{
@@ -336,7 +430,7 @@
 	
 				
 			},
-			showInputComent(e,indexs){
+			showInputComent(e){
 				
 				if(!this.hasLogin){
 					uni.navigateTo({
@@ -345,9 +439,10 @@
 					return false;
 				}
 				this.dataCardId=e.pushCard.id;
-				this.indexId=indexs;
+				this.indexId=e.pushCard.id;
 				this.showInput=!this.showInput;
 				this.inputType=2;
+				this.conmmmenttext='请输入评论内容'
 			},
 			getpushList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId,{
@@ -387,7 +482,7 @@
 						 dataList[i].pushCard.pictures=res[i].pushCard.pictures.split(",")
 					}
 				}
-				console.log(dataList)
+				
 				return dataList;
 			},
 			
@@ -445,7 +540,7 @@
 				.xd-comments-items{
 					width: 100%;
 					box-sizing: border-box;
-					padding: 0 100upx;
+					padding-left: 100upx;
 					
 					.xd-comments-image{
 						width:285upx; height:207upx; margin:5upx; font-size:0; overflow:hidden;
@@ -591,5 +686,20 @@
 			
 					}
 				}
+				}
+				.commentsText{
+					font-size: 25upx;
+					font-weight: bold;
+				}
+				.commentstxt{
+					font-size: 25upx;
+					color: #888888;
+
+				}
+				.comments-time{
+					color: #888888;
+					font-size: 22upx;
+					line-height: 40upx;
+					padding-left: 18upx;
 				}
 </style>

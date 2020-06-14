@@ -256,9 +256,7 @@ var _default = {
   onShow: function onShow() {
     if (this.userInfo == '' || this.userInfo == undefined || this.userInfo == null) {
       try {
-
         this.userInfo = uni.getStorageSync('userInfo');
-        console.log(this.userInfo);
       } catch (e) {
         console.log(Error);
       };
@@ -276,7 +274,7 @@ var _default = {
     try {
 
       this.userInfo = uni.getStorageSync('userInfo');
-      console.log(this.userInfo);
+
     } catch (e) {
       console.log(Error);
     };
@@ -288,7 +286,7 @@ var _default = {
 
       this.xd_request_post(this.xdServerUrls.xd_onOff,
       {
-        versionCode: '2.0.9' },
+        versionCode: '2' },
 
       true).then(function (res) {
         _this.onOff = res.obj;
@@ -302,10 +300,10 @@ var _default = {
 
     clickMe: function clickMe() {var _this2 = this;
       var that = this;
-      console.log('支付');
+
       wx.getSetting({
         success: function success(res) {
-          console.log(res);
+
           if (res.authSetting['scope.userInfo']) {
             that.xd_request_post(that.xdServerUrls.xd_pay,
             {
@@ -321,7 +319,7 @@ var _default = {
               pushId: 1 },
 
             true).then(function (res) {
-              console.log(res);
+
               uni.requestPayment({
                 'appId': res.obj.appId,
                 'timeStamp': res.obj.timeStamp,

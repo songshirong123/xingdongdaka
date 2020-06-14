@@ -62,7 +62,7 @@
 			<!-- 关注 -->
 			<view class="xd-list-info" :hidden="active == 0||active==1 ||active == 3">
 				<block v-for="(attention, index) in attentionList" :key="index" >	
-					<view class="actionLi" @tap="attention(attention.attentionUserId)">
+					<view class="actionLi" @tap="goUser(attention.attentionUserId)">
 						<view class="ali-main">
 							<view class="ali-main-img">
 								<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
@@ -79,7 +79,7 @@
 								</view>
 							</view>
 							<view class="lli-main-content">
-								<text>取消关注</text>
+								<!-- <text>取消关注</text> -->
 							</view>
 						</view>
 					</view>
@@ -119,10 +119,19 @@
 		},
 		onShareAppMessage(res) {
 			let that = this;
+			var imgs=[];
+			 imgs=that.listsTab[res.target.id].pushCardList[0].pictures.split(",")
+			 if(!that.hasLogin){
+			 	uni.navigateTo({
+			 		url: '../login/login' 
+			 	});
+			 	return false;
+			 }
+			that.setSaveShareInfo(res);
 			return {
-				title: that.listsTab[res.target.id].content,
-				path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id,
-				imageUrl:that.listsTab[res.target.id].pictures?that.listsTab[res.target.id].pictures:'../../static/images/icon/img/title1.png',
+				title: that.listsTab[res.target.id].pushCardList[0].content,
+				path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id+'&share='+uni.getStorageSync('id'),
+				imageUrl:imgs[0]?imgs[0]:'../../static/images/icon/img/title1.png',
 			}
 					
 		},
@@ -134,6 +143,27 @@
 		        },  
 		methods:{
 			...mapMutations(['logIn','logOut','IndexlogIn'])  ,
+			goUser(e){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				uni.navigateTo({
+					url:'../selfCenter/selfView?userId='+e
+				})
+			},
+			//分享记录
+			setSaveShareInfo(res){
+				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
+					pushId:this.listsTab[res.target.id].id,
+					shareUserId:uni.getStorageSync('id'),
+				},true
+				   ).then(res => {
+					   console.log(res)
+					   })
+			},
 			searchfocus(){
 				this.searchValue='';
 			},
@@ -308,8 +338,8 @@
 			timeStamp(res){
 				let dataList=res.obj.list;
 				for(var i=0;i <res.obj.list.length;i++){
-				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
-					dataList[i].createTime=time;
+				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].pushCardList[0].createTime,false,false,true);
+					dataList[i].pushCardList[0].createTime=time;
 					dataList[i].challengeRmb=Math.floor(dataList[i].challengeRmb/100);
 					
 				}
@@ -497,11 +527,11 @@
 			},      
 			
 		},
-		onShow() {
-			this.currentIndex=-1;
-			this.active=1;
-			this.indexData();
-		},
+		// onShow() {
+		// 	this.currentIndex=-1;
+		// 	this.active=1;
+		// 	this.indexData();
+		// },
 		// 下拉刷新
 		onPullDownRefresh() {
 			switch(this.active){

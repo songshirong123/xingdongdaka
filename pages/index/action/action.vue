@@ -9,12 +9,12 @@
 						<image class="xd-list-image" v-if="pushList.pictures!=''" :src="pushList.pictures" mode="aspectFill" @tap="goPageImg(pushList.pictures)"></image>
 						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 						<view class="xd-list-head">
-							<image class="xd-list-head-img" :src="pushList.userHead" mode="aspectFill"></image>
+							<image class="xd-list-head-img" :src="pushList.userHead" mode="aspectFill" @tap="goUser(pushList.userId)"></image>
 						</view>
 					</view>
 					<view class="xd-list-body">
 						<view class="xd-list-title">
-								<text class="xd-list-title-text userName">{{pushList.userName}}</text>
+								<text class="xd-list-title-text userName" @tap="goUser(pushList.userId)">{{pushList.userName}}</text>
 								<view class="xd-tags" v-show="userId!=pushList.userId" @tap="tags">关注</view>
 								
 						</view>
@@ -37,8 +37,11 @@
 					<view class="xd-grids-items supervise-grids">
 						<view class="xd-relative">
 							<!-- <view class="xd-tbr-large">邀请围观</view> -->
-							<button class="xd-tbr-large buttclass" type="default" open-type="share">邀请围观</button>
-							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{pushList.onlookerCount}}</view>
+							<!-- <button class="xd-tbr-large buttclass" type="default" open-type="share">邀请围观</button> -->
+							<button class="xd-tbr-large buttclass" v-if="pushList.userId==userId || pushList.onlooker "  :id="index" open-type="share" >邀请围观</button>
+							<button class="xd-tbr-large buttclass" v-else-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0"  @tap="lookerClick(pushList,index)">围观</button>
+							<button class="xd-tbr-large buttclass" v-else  @tap="lookerClick(pushList,index)">围观分钱</button>
+							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{pushList.lookerCount}}</view>
 						</view>
 					</view>
 				</view>
@@ -65,7 +68,7 @@
 			<view class="flag-box bottom xd-border-b-black">
 				<view class="xd-list-title">
 					<text class="xd-list-title-text">动机目标：</text>
-					<text class="xd-list-desc">{{pushList.extendContent}}</text>
+					<text class="xd-list-desc extendContenttext">{{pushList.extendContent}}</text>
 				</view>
 				<view class="xd-list-title">
 					<text class="xd-list-title-text">打卡方式：</text>
@@ -78,9 +81,11 @@
 			<view class="pageNav xd-rows xd-border-b-black">
 				<view :class="['navbar', active == 0 ? 'active' : '']" @tap="cardFn">打卡</view>
 				<view :class="['navbar', active == 1 ? 'active' : '']" @tap="detailFn">详情</view>
+				<view :class="['navbar', active == 2 ? 'active' : '']" @tap="lookFn" v-if="userId==pushList.userId">围观的人</view>
+				<view :class="['navbar', active == 2 ? 'active' : '']" @tap="lookFn" v-else>围观TA的人</view>
 			</view>
 			<!-- 打卡 -->
-			<view class="xd-list-info" :hidden="active == 1">
+			<view class="xd-list-info" v-if="active==0">
 				<!-- 循环 xd-list -->
 				<view class="xd-list xd-border-b-black" v-for="(list,index) in pusCardList" :key="index" >
 					<view class="xd-list-items">
@@ -88,14 +93,14 @@
 							<image :src="list.pictures[0]" class="xd-comments-img" v-if="list.pictures!=''" mode="aspectFill"  @tap="goPageImg(list.pictures)"></image>
 							<image class="xd-comments-img" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
 						</view>
-						<view class="xd-list-body" @tap="cardComentList(list)">
+						<view class="xd-list-body"  @tap="gocardComentList(list)">
 							<view class="xd-list-body-desc">{{list.createTime}}</view>
 							<view class="xd-list-desc xd-ellipsis-line2">{{list.content}}</view>
 						</view>
 						<view class="xd-grids-items comment-grids">
 							<view class="xd-relative" >
 								<image class="xd-grids-icon-img-comment comentimg" src="../../../static/images/icon/comment.png" mode="widthFix" @tap="cardComentList(list)"></image>
-								<view class="xd-badge"></view>
+								<view class="xd-badge" >{{list.commentCount}}</view>
 							</view>
 						</view>
 					</view>
@@ -117,16 +122,41 @@
 			</view>
 			
 			<!-- 详情 -->
-			<view class="xd-list-info" :hidden="active == 0">
+			<view class="xd-list-info" v-else-if="active==1">
 				<view class="xd-list-extendContent">
 					<text class="xd-list-extendContentText">{{pushList.extendContent}}</text>
+				</view>
+			</view>
+			<!-- 围观的人 -->
+			<view class="xd-list-info" v-else-if="active==2">
+				<view class="actionLook" >
+					<block v-for="(attention, index) in lookerList" :key="index" >
+						<view class="actionLi" >
+							<view class="ali-main">
+								<view class="ali-main-img">
+									<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
+								</view>
+								<view class="lli-main-content xd-list-body ">
+									<view class="xd-list-title-text">
+										<text>{{attention.userName}}</text>
+									</view>
+									<view  >
+										<text v-if="attention.sex==1" class="boy">♂</text>
+										<text v-else-if="attention.sex==0" class="gender">♀</text>
+										<text v-else class="boy">密</text>
+										<!-- <text>20</text> -->
+									</view>
+								</view>
+							</view>
+						</view>
+					</block>
 				</view>
 			</view>
 		</view>
 		
 		<view style="height: 10upx;"></view>
 		<view class="btn_bar" v-if="userId==pushList.userId">
-			<view class="btns"><button class="btn" @click="goSteps">立即打卡</button></view>
+			<view class="btns" v-if="pushList.pushCardCount<pushList.targetDay"><button class="btn" @click="goSteps">立即打卡</button></view>
 		</view>
 		<!-- 底部 -->
 		<view class="footer">
@@ -182,27 +212,6 @@
 			</view>
 		</view>
 	</view>
-	<!-- <view class='xd-list modal-screen' v-show="modal"  >	
-		<view class="xd-list xd-border-b-black" v-for="(list,index) in pushComentList" :key="index" >
-				<view class="xd-list-push-item" >
-					<view class="xd-comments-head">
-						<view class="xd-pushcomments-image">
-							<image :src="list.userHead" class="xd-pushcomments-img" mode="widthFix"></image>
-						</view>
-						<view class="xd-list-body-content">
-							<view class="xd-list-desc xd-ellipsis-line2">{{list.userName}}</view>
-							<view class="xd-list-desc xd-ellipsis-line2">{{list.createTime}}</view>
-							<image src="../../../static/images/icon/love.png" class="love-click" mode="widthFix"></image>
-							<view class="love-click-num">0</view>
-						</view>
-					</view>
-					<view class="text-coment-content" @tap="goComent">
-						<text class="xd-content" >{{list.content}}</text>
-						<text  class="xd-content-more">全部评论({{list.replayPushCommentList.length==undefined?'0':list.replayPushCommentList.length}})</text>
-					</view>
-			</view>
-		</view>
-	</view> -->
 	</view>
 </template>
 
@@ -218,37 +227,151 @@
 				modal: false,
 				addrAnimation:'',
 				audioPlaySrc:'../../../static/images/icon/img/titl.png',
-				userId:uni.getStorageSync('id')
+				userId:uni.getStorageSync('id'),
+				share:'',
+				lookerList:[],
+				pushId:'',
+				isShare:0,
 				
 			};
 		},
 		computed: {
 		           ...mapState(['hasLogin'])  
 		       },  
-		onLoad(option) {
-			console.log(option)
+		onLoad(option) {			
 			if(option.pushList==undefined){
 				this.pushId=option.pushId;
-				console.log(this.pushId)
+				if(option.share!=undefined){
+					this.share=option.share;
+					this.isShare=1;
+				}
 				this.getpushList();
-			}else{
-				var pushdata=JSON.parse(decodeURIComponent(option.pushList));
-				this.endTime(pushdata);
-				this.getPushCardList();
 			}
+		},
+		onShow() {	
+		this.clickSaveShareInfo();
 		},
 		onShareAppMessage(res) {
 			let that = this;
-			return {
-				title: that.pushList.content,
-				path: '/pages/index/action/action?pushId='+ that.pushList.id,
-				imageUrl:that.pushList.pictures?that.pushList.pictures:'../../static/images/icon/img/title1.png',
+			if(that.pusCardList.length>0){
+				that.setSaveShareInfo();
+				return {
+					title: that.pusCardList[0].content,
+					path: '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+userId,
+					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'../../../static/images/icon/img/title1.png',
+				}
+				
+			}else{
+				that.setSaveShareInfo();
+				return {
+					title: that.pushList.content,
+					path: '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+userId,
+					imageUrl:that.pushList.pictures?that.pushList.pictures:'../../../static/images/icon/img/title1.png',
+				}
+				
 			}
+			
 					
 		},
 		methods:{
-			goSteps(){
+			isOpen(){
 				
+			},
+			setSaveShareInfo(){
+				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
+					pushId:this.pushId,
+					shareUserId:this.userId,
+				},true
+				   ).then(res => {
+					   console.log(res)
+					   })
+			},
+			clickSaveShareInfo(){
+				if(this.share!=''){
+					this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
+						pushId:this.pushId,
+						shareUserId:this.share,
+						clickUserId:this.userId,
+					},true
+					   ).then(res => {
+						   console.log(res)
+						   })
+				}
+			},
+			getShareInfo(){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
+				if(this.share==''||this.share==undefined){
+					return false;
+				}
+				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
+					pushId:this.pushId,
+					shareUserId:this.share,
+					clickUserId:this.userId,
+				},true
+				   ).then(res => {
+					   console.log(res)
+					   })
+			},
+			goUser(e){
+				
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
+				uni.navigateTo({
+					url:'../../selfCenter/selfView?userId='+e
+				})
+			},
+			//围观
+			lookerClick:function(list,index){
+				var that=this ;
+				if(!that.hasLogin){
+					uni.navigateTo({
+						url: '../login/login' 
+					});
+					return false;
+				}
+				that.userId=uni.getStorageSync('id');
+				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
+					
+					pushId:list.id,
+					lookUserId:that.userId,
+				},true
+				   ).then(res => {	
+				
+						   if(res.resultCode==0){
+							   that.pushList.onlooker=true
+							   that.pushList.lookerCount++;
+							   uni.showToast({
+								title:'围观成功',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }else if(res.resultCode==10015){
+							   uni.showToast({
+								title:'您已经围观了',
+								 duration: 1000,
+								 icon:'none',
+							   })
+						   }
+						   
+					
+				})
+			},
+			goSteps(){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
 				uni.navigateTo({
 					url: '../../selfCenter/clockIn?pushId='+this.pushList.id
 				});
@@ -270,10 +393,18 @@
 			// 		url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
 			// 	});
 			// },
-			cardComentList(e){
-				
+			gocardComentList(e){
+				this.pushList.pushCardList[0].id=e.id;
+				this.pushList.pushCardList[0].userId=e.userId;
+				uni.navigateTo({
+					url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
+				});
+			},
+			cardComentList(e){			
 				var data=[];
 				data.push(e);
+				this.pushList.pushCardList[0].id=e.id;
+				this.pushList.pushCardList[0].userId=e.userId;
 				var pushCard={
 					pushList:this.pushList,
 					pushCardList:data,
@@ -339,24 +470,35 @@
 			  getpushList(){
 			  	this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId,{
 			  		pushId:this.pushId,
+					isShare:this.isShare,
 			  		token:uni.getStorageSync('token')
 			  	},true).then(res=>{	
-					var data=res.obj;
-					data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime)
-					data.challengeRmb=res.obj.challengeRmb/100;
-			  		this.endTime(data);
-			  		this.getPushCardList();
-			  		
+					if(res.resultCode==0){
+						var data=res.obj;
+						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true)
+						data.challengeRmb=res.obj.challengeRmb/100;
+						this.endTime(data);
+						this.getPushCardList();
+						if(this.share!=''){
+							this.getShareInfo();
+						}
+					}else{
+						uni.showToast({
+							title:res.msg,
+							icon:'none',
+						})
+					}
+					
 			  	})
 			  },
 			endTime(pushdata){
+				console.log(pushdata)
+				var da={id:'1'};
 				var pushListdata=pushdata
 				pushListdata['endTime']=0;
-				
 				pushListdata.endTime=this.xdUniUtils.xd_daysAddSub(pushListdata.createTime,pushListdata.targetDay);
-				
+				pushListdata.pushCardList.push(da)
 				this.pushList=pushListdata
-				console.log(pushListdata)
 				
 			},
 			goStep(){
@@ -366,7 +508,7 @@
 			},
 			getPushComenList(){
 				this.xd_request_post(this.xdServerUrls.xd_showCommentAndReplayCommtent,{
-					pushId:this.pushList.id,
+					pushId:this.pushId,
 						token:uni.getStorageSync('token')
 				},false).then(res=>{
 					
@@ -376,7 +518,7 @@
 			},
 			getPushCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId,{
-					pushId:this.pushList.id,		
+					pushId:this.pushId,		
 					
 				},true).then(res=>{
 					var data=res.obj.list;
@@ -394,7 +536,18 @@
 			detailFn : function(){
 				this.active = 1;
 			},
+			// 围观的人
+			lookFn : function(){
+				this.active = 2;
+				this.getLookerList();
+			},
 			tags(){
+				if(!this.hasLogin){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false;
+				}
 				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
 					userId:uni.getStorageSync('id'),
 					attentionUserId:this.pushList.userId,		
@@ -405,6 +558,18 @@
 						icon:'none',
 					  title: res.msg,
 					})
+				})
+			},
+			getLookerList(){
+				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
+					pushId:this.pushId,
+					pageNum:1,
+					pageSize:10,
+				},true)
+				.then(res=>{
+					
+					this.lookerList=res.obj.list;
+					this.lookTotal=res.obj.total
 				})
 			},
 		}
@@ -496,9 +661,9 @@
 	.xd-body{
 		width: 100%; box-sizing: border-box; padding-bottom: 86upx;
 		.pageNav{
-			padding: 20upx 0; background: #ffffff;
+			padding: 20upx 0; background: #ffffff;font-size: 28upx;
 			.navbar{
-				margin: 0 80upx; font-size: 34upx; line-height: 44upx;
+				margin: 0 80upx;  line-height: 44upx;
 				border-bottom: 3px solid #ffffff;
 			}
 			.navbar.active{
@@ -569,41 +734,6 @@
 			height: 70upx;
 			width: 90upx;
 		}
-		//
-		.modal-screen{
-		  position:fixed;
-		  overflow: auto;
-		  width:100%;
-		  height:50%;
-		  bottom: 90upx;
-		  background:#fff;
-		  z-index: 1;
-		}
-		.xd-list-push-item{
-			display: flex;
-			flex-direction: column;
-		}
-		.xd-comments-head{
-			display: flex;
-			justify-content:space-around ;
-			align-items: center;
-		}
-		.xd-pushcomments-image{
-			padding-top: 10rpx;
-			
-		}
-		.xd-pushcomments-img{
-			height: 60rpx;
-			width: 100rpx;
-			border-radius: 50%;
-		}
-		.xd-list-body-content{
-			display: flex;
-			justify-content: space-around;
-			align-items: center;
-			width: 80%;
-	
-		}
 		.love-click{
 			width: 50upx;
 			height:50upx ;
@@ -620,25 +750,7 @@
 			align-items: flex-end;
 
 		}
-		.xd-content{
-			font-size: 30rpx;
-			word-break: break-all;/*允许在单词内换行*/
-			text-align: left;
-			color: #323232;
-			line-height: 45rpx;
-			text-overflow: -o-ellipsis-lastline;/*css3中webkit内核提供的一个方法类似ellipsis*/
-			overflow: hidden;
-			text-overflow: ellipsis;
-			display: -webkit-box;/*自适应盒子*/
-			-webkit-line-clamp: 2;/*此处为1行,如果是两行就改成2*/
-			-webkit-box-orient: vertical;
-			text-indent:50rpx;
-			
-		}
-		.xd-content-more{
-			font-size: 20rpx;
-			color: #00aaff;
-		}
+		
 		.comentimg{
 			width: 60upx;
 			height: 50upx;
@@ -684,4 +796,31 @@
 				}
 			}
 			}
+			.extendContenttext{
+				width: 78%;
+			}
+			.actionLi{
+					padding-top: 20rpx;
+					border-bottom: 1upx solid #ffa700;
+					.ali-main{
+						display: flex;
+						}
+						.xd-mag{
+							height: 125rpx;
+							width: 125rpx;
+						}
+					}
+				.boy{
+					background:#66CCFF;
+					color:#fff;
+					display: inline-block;
+					padding:0 6rpx;
+					border-radius: 100%;
+					font-size: 22rpx;
+					margin-right: 2rpx;
+				}
+				.actionLook{
+					padding-left: 30upx;
+					width: 96%;
+				}
 </style>

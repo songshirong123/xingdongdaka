@@ -3,15 +3,15 @@
 		<form @submit="formSubmit">
 			<view class="uni-form-item uni-column">
 				<view class="title">行动项</view>
-				<view class="form-item"><input class="uni-input" name="content" placeholder="请输入行动项名称" maxlength="50" /></view>
+				<view class="form-item"><input class="uni-input" :value="content" name="content" placeholder="请输入行动项名称" maxlength="50" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">动机目标</view>
-				<view class="form-item"><input class="uni-input" name="extendContent" placeholder="请输入动机目标" maxlength="50" /></view>
+				<view class="form-item"><input class="uni-input" :value="extendContent" name="extendContent" placeholder="请输入动机目标" maxlength="50" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">打卡方式</view>
-				<view class="form-item"><input class="uni-input" name="punchCardWay" placeholder="请输入打卡方式" maxlength="150" /></view>
+				<view class="form-item"><input class="uni-input" :value="punchCardWay" name="punchCardWay" placeholder="请输入打卡方式" maxlength="150" /></view>
 			</view>
 			<view class="uni-form-item uni-column">
 				<view class="title">封面上传</view>
@@ -44,15 +44,25 @@
 export default {
 	data() {
 		return {
+			content:'',
+			extendContent:'',
+			punchCardWay:'',
 			param:{
 				pictures:""
 			}
 		};
 	},
+	onLoad() {
+		var data=uni.getStorageSync("pushData");
+		if(data){
+			this.content=data.content;
+			this.extendContent=data.extendContent;
+			this.punchCardWay=data.punchCardWay;
+			this.param.pictures=data.pictures;
+		}
+	},
 	methods: {
 		formSubmit(e){
-			console.log(e)
-			console.log(e.detail.value.content)
 			if(e.detail.value.content==''){
 				uni.showToast({
 				    title: '请出入行动项名称',
@@ -63,8 +73,10 @@ export default {
 				return false
 			};
 			this.xdUniUtils.xd_request_text({content:e.detail.value}).then(res=>{
-				console.log(res)
-				
+				if(res.obj.errcode==0)
+				uni.navigateTo({
+					url: '/pages/action/step2?pictures='+this.param.pictures+'&formData='+encodeURIComponent(JSON.stringify(e.detail.value))
+				});
 			})
 			// if(e.detail.value.extendContent==''){
 			// 	uni.showToast({
@@ -77,9 +89,7 @@ export default {
 			// }if(this.param.pictures==''){
 				
 			// }
-			uni.navigateTo({
-				url: '/pages/action/step2?pictures='+this.param.pictures+'&formData='+encodeURIComponent(JSON.stringify(e.detail.value))
-			});
+			
 		},
 		popUpImg(){
 			const that=this;

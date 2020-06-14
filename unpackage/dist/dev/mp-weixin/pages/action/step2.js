@@ -202,6 +202,8 @@ var _default =
 {
   data: function data() {
     return {
+      targetDay: '',
+      holidayDay: '',
       index: 0,
       indexs: 0,
       dateList: [],
@@ -214,7 +216,11 @@ var _default =
 
   },
   onLoad: function onLoad(option) {
-    console.log(option);
+    var data = uni.getStorageSync("pushData");
+    if (data) {
+      this.targetDay = data.targetDay;
+      this.holidayDay = data.holidayDay;
+    }
     this.formData = JSON.parse(decodeURIComponent(option.formData));
     this.img.pictures = option.pictures;
     this.initDateList();
@@ -222,7 +228,7 @@ var _default =
   },
   methods: {
     formSubmit: function formSubmit(e) {
-      console.log(e);
+
       if (e.detail.value.targetDay == '') {
         uni.showToast({
           title: '请出入打卡总天数',
@@ -258,7 +264,7 @@ var _default =
     tabs: function tabs() {var _this = this;
       this.xd_request_post(this.xdServerUrls.xd_label, {}, false).
       then(function (res) {
-        console.log(res);
+
         _this.labelList = res.obj;
 
       }).catch(function (err) {
@@ -278,7 +284,7 @@ var _default =
           showStr: "(".concat(ddd, ") ").concat(str) });
 
       }
-      console.log(list);
+
       this.dateList = list;
     },
     getNextWeek: function getNextWeek(i) {

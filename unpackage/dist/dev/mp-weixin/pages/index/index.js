@@ -251,10 +251,19 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
   },
   onShareAppMessage: function onShareAppMessage(res) {
     var that = this;
+    var imgs = [];
+    imgs = that.listsTab[res.target.id].pushCardList[0].pictures.split(",");
+    if (!that.hasLogin) {
+      uni.navigateTo({
+        url: '../login/login' });
+
+      return false;
+    }
+    that.setSaveShareInfo(res);
     return {
-      title: that.listsTab[res.target.id].content,
-      path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id,
-      imageUrl: that.listsTab[res.target.id].pictures ? that.listsTab[res.target.id].pictures : '../../static/images/icon/img/title1.png' };
+      title: that.listsTab[res.target.id].pushCardList[0].content,
+      path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync('id'),
+      imageUrl: imgs[0] ? imgs[0] : '../../static/images/icon/img/title1.png' };
 
 
   },
@@ -266,6 +275,27 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
   methods: _objectSpread({},
   (0, _vuex.mapMutations)(['logIn', 'logOut', 'IndexlogIn']), {
+    goUser: function goUser(e) {
+      if (!this.hasLogin) {
+        uni.navigateTo({
+          url: '../login/login' });
+
+        return false;
+      }
+      uni.navigateTo({
+        url: '../selfCenter/selfView?userId=' + e });
+
+    },
+    //分享记录
+    setSaveShareInfo: function setSaveShareInfo(res) {
+      this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
+        pushId: this.listsTab[res.target.id].id,
+        shareUserId: uni.getStorageSync('id') },
+      true).
+      then(function (res) {
+        console.log(res);
+      });
+    },
     searchfocus: function searchfocus() {
       this.searchValue = '';
     },
@@ -440,8 +470,8 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     timeStamp: function timeStamp(res) {
       var dataList = res.obj.list;
       for (var i = 0; i < res.obj.list.length; i++) {
-        var time = this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
-        dataList[i].createTime = time;
+        var time = this.xdUniUtils.xd_timestampToTime(res.obj.list[i].pushCardList[0].createTime, false, false, true);
+        dataList[i].pushCardList[0].createTime = time;
         dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
       }
@@ -629,11 +659,11 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
     } }),
 
 
-  onShow: function onShow() {
-    this.currentIndex = -1;
-    this.active = 1;
-    this.indexData();
-  },
+  // onShow() {
+  // 	this.currentIndex=-1;
+  // 	this.active=1;
+  // 	this.indexData();
+  // },
   // 下拉刷新
   onPullDownRefresh: function onPullDownRefresh() {
     switch (this.active) {

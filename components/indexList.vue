@@ -1,4 +1,33 @@
 <template name='indexList'>
+	<!-- <view >
+		<view class="cu-card case" :class="list?'no-card':''">
+			<view class="cu-item shadow">
+				<view class="image">
+					<image :src="list.pictures"
+					 mode="aspectFill"></image>
+					<view class="cu-tag bg-blue">{{list.label}}</view>
+					<view class="cu-bar bg-shadeBottom"> <text class="text-cut">{{list.content}}</text></view>
+				</view>
+				<view class="cu-list menu-avatar">
+					<view class="cu-item">
+						<image class="cu-avatar round lg" :src="list.userHead"
+						 mode="aspectFill"></image>
+						<view class="content flex-sub">
+							<view class="text-grey">{{list.userName}}</view>
+							<view class="text-gray text-sm flex justify-between">
+								{{list.createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})
+								<view class="text-gray text-sm">
+									<text class="cuIcon-attentionfill margin-lr-xs"></text> {{list.lookerCount}}
+									<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{list.giveLike}}
+									<text class="cuIcon-messagefill margin-lr-xs"></text> 0
+								</view>
+							</view>
+						</view>
+					</view>
+				</view>
+			</view>
+		</view>
+	</view> -->
 	<view class="xd-list xd-border-b-color">
 		<view class="xd-list-items">	
 			<view class="xd-list-image xd-relative">				
@@ -11,14 +40,13 @@
 			<view class="xd-list-body xd-border-b-black">
 				<view class="xd-list-title" @tap="goPage(list)">
 					<text class="xd-list-title-text">{{list.userName}}</text>
-					<!-- <view class="xd-list-title-desc">20190318</view> -->
 				</view>
 				
 					<view class="xd-list-body-desc xd-ellipsis-line2" @tap="goPageCard(list)" >{{list.content}}</view>
 				
 			</view>
 		</view>
-		<view class="xd-list-body-desc xd-list-time"><text>{{list.createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})</text></view>
+		<view class="xd-list-body-desc xd-list-time"><text>{{list.pushCardList[0].createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})</text></view>
 		
 			<view class="xd-list-desc" @tap="goComentConten(list)">{{list.pushCardList[0].content}}</view>
 			
@@ -41,12 +69,6 @@
 					<view class="xd-badge">{{list.giveLike}}</view>
 				</view>
 			</view>
-			<!-- <view class="xd-grids-items sponsor-grids">
-				<view class="xd-relative">
-					<view class="xd-tbr-large">赞助</view>
-					<view class="xd-badge">{{list.giveReward}}</view>
-				</view>
-			</view> -->
 			<view class="xd-grids-items bond-grids">
 				<view class="xd-relative">
 					<view class="xd-tbr-large" v-show="list.challengeRmb>0">保证金<text class="xd-tbr-txt-bold">￥{{list.challengeRmb}}</text></view>
@@ -54,11 +76,11 @@
 			</view>
 			<view class="xd-grids-items supervise-grids">
 				<view class="xd-relative">
-					<!-- #ifdef MP-WEIXIN -->
+					
 					<button class="buttonShare" v-if="list.userId==userId || list.onlooker "  :id="index" open-type="share" >邀请围观</button>
 					<button class="buttonShare" v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0"  @tap="lookerClick(list,index)">围观</button>
 					<button class="buttonShare" v-else  @tap="lookerClick(list,index)">围观分钱</button>
-					<!-- #endif -->
+					
 					<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{list.lookerCount}}</view>
 				</view>
 			</view>
@@ -113,13 +135,13 @@
 					return false;
 				}
 				uni.navigateTo({
-					url:'../selfCenter/selfView?userId='+e.userId+'&pushId='+e.id
+					url:'../selfCenter/selfView?userId='+e.userId
 				})
 			},
 			goPageCard(e){
 				
 				uni.navigateTo({
-					url:'../index/action/action?pushList='+encodeURIComponent(JSON.stringify(e))
+					url:'../index/action/action?pushId='+e.id
 				})
 			},
 			goPageImg(e){

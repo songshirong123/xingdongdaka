@@ -244,7 +244,7 @@ function xd_navigateBack(delta) {
 	})
 }
 //时间处理
- function xd_timestampToTime(timestamp,times,times1) {
+ function xd_timestampToTime(timestamp,times,times1,times2) {
   var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
   var Y = date.getFullYear() + '-';
   var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
@@ -263,6 +263,12 @@ function xd_navigateBack(delta) {
   	  var s = date.getSeconds();
   	   return Y+M+D+h+m+s;
   }
+  if(times2){
+  	  var h = date.getHours() + ':';
+  	  var m = date.getMinutes() ;
+
+  	   return Y+M+D+h+m;
+  }
   return Y+M+D;
 }
 //获取今天只后日期
@@ -273,7 +279,10 @@ function xd_daysAddSub(date, num) {
 			var Y = newD.getFullYear() + '-';
 			var M = (newD.getMonth()+1 < 10 ? '0'+(newD.getMonth()+1) : newD.getMonth()+1) + '-';
 			var D = newD.getDate() + ' ';
-            return Y+M+D;
+			var h = newD.getHours() + ':';
+			var m = newD.getMinutes() ;
+			
+            return Y+M+D+h+m;
 }
 
 //数据校验

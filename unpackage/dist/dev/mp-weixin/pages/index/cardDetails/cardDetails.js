@@ -284,6 +284,12 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 {
   data: function data() {
@@ -296,67 +302,154 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       value: '',
       id: uni.getStorageSync('id'),
       userId: '',
-      inputType: 1, //2评论，1回复
+      inputType: 2, //2评论，1回复
       cardId: '',
       dataCardId: '',
       indexId: '',
       pushUserId: '',
       commentId: '',
-      pushId: '' };
+      pushId: '',
+      tolist: false,
+      conmmmenttext: '请输入评论内容' };
+
 
   },
   computed: _objectSpread({},
   (0, _vuex.mapState)(['hasLogin'])),
 
-  onReady: function onReady() {
+  onReady: function onReady(e) {
     var that = this;
-    setTimeout(function () {
 
-      uni.createSelectorQuery().in(that).select('#index' + that.cardId).boundingClientRect(function (data) {//目标节点
-
-        uni.createSelectorQuery().select(".card-list").boundingClientRect(function (res) {//最外层盒子节点
-
-          uni.pageScrollTo({
-            duration: 0, //过渡时间必须为0，uniapp bug，否则运行到手机会报错
-            scrollTop: data.top - res.top //滚动到实际距离是元素距离顶部的距离减去最外层盒子的滚动距离
-          });
+    var _int = setInterval(function () {
+      if (that.cardList && that.tolist) {
+        uni.createSelectorQuery().in(that).select('#index' + that.cardId).boundingClientRect(function (data) {//目标节点
+          uni.createSelectorQuery().select(".card-list").boundingClientRect(function (res) {//最外层盒子节点
+            uni.pageScrollTo({
+              duration: 0, //过渡时间必须为0，uniapp bug，否则运行到手机会报错
+              scrollTop: data.top - res.top //滚动到实际距离是元素距离顶部的距离减去最外层盒子的滚动距离
+            });
+          }).exec();
         }).exec();
-      }).exec();
+        clearInterval(_int);
+      } else if (!that.tolist) {
+        clearInterval(_int);
+      }
+    }, 100);
 
-    }, 3000);
+
   },
   onShareAppMessage: function onShareAppMessage(res) {
-    var that = this;
-    return {
-      title: that.pusCardLists.content,
-      path: '/pages/index/action/action?pushId=' + that.pusCardLists.id,
-      imageUrl: that.pusCardLists.pictures ? that.pusCardLists.pictures : '../../static/images/icon/img/title1.png' };
 
+    var that = this;
+    if (!that.hasLogin) {
+      uni.navigateTo({
+        url: '../../login/login' });
+
+      return false;
+    }
+    that.setSaveShareInfo(res);
+    if (res.target.id < 0) {
+      return {
+        title: that.pusCardLists.content,
+        path: '/pages/index/action/action?pushId=' + that.pusCardLists.id + '&share=' + id,
+        imageUrl: that.pusCardLists.pictures ? that.pusCardLists.pictures : '../../../static/images/icon/img/title1.png' };
+
+    } else {
+      return {
+        title: that.cardList[res.target.id].pushCard.content,
+        path: '/pages/index/action/action?pushId=' + that.pusCardLists.id + '&share=' + id,
+        imageUrl: that.cardList[res.target.id].pushCard.pictures[0] ? that.cardList[res.target.id].pushCard.pictures[0] : '../../../static/images/icon/img/title1.png' };
+
+    }
 
   },
   onLoad: function onLoad(option) {
     if (option.pushList != undefined) {
       var data = JSON.parse(decodeURIComponent(option.pushList));
-
       if (data.pushId == undefined) {
+
         this.pusCardLists = data;
         this.cardId = data.pushCardList[0].id;
+        this.tolist = true;
         this.getPushComenList();
       } else {
         this.pushId = data.pushId;
-
         this.getpushList();
       }
     } else if (option.pushCard != undefined) {
       var pusCard = JSON.parse(decodeURIComponent(option.pushCard));
+
       this.pushUserId = pusCard.pushCardList[0].userId;
       this.cardId = pusCard.pushCardList[0].id;
       this.pusCardLists = pusCard.pushList;
-      this.getPushComenList();
+      this.indexId = pusCard.pushCardList[0].id;
       this.showInput = true;
+      this.getPushComenList();
     }
   },
   methods: {
+    //围观
+    lookerClick: function lookerClick(list) {
+      var that = this;
+      if (!that.hasLogin) {
+        uni.navigateTo({
+          url: '../login/login' });
+
+        return false;
+      }
+      that.userId = uni.getStorageSync('id');
+      that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
+
+        pushId: list.id,
+        lookUserId: that.userId },
+      false).
+      then(function (res) {
+
+        if (res.resultCode == 0) {
+          that.pusCardLists.onlooker = true;
+          that.pusCardLists.lookerCount++;
+          uni.showToast({
+            title: '围观成功',
+            duration: 1000,
+            icon: 'none' });
+
+        } else if (res.resultCode == 10015) {
+          uni.showToast({
+            title: '您已经围观了',
+            duration: 1000,
+            icon: 'none' });
+
+        }
+
+
+      });
+    },
+    goAction: function goAction(e) {
+      uni.navigateTo({
+        url: '/pages/index/action/action?pushId=' + e });
+
+    },
+    setSaveShareInfo: function setSaveShareInfo(res) {
+      this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
+        pushId: this.pusCardLists.id,
+        shareUserId: uni.getStorageSync('id') },
+      true).
+      then(function (res) {
+        console.log(res);
+      });
+    },
+    goUser: function goUser(e) {
+
+      if (!this.hasLogin) {
+        uni.navigateTo({
+          url: '../../login/login' });
+
+        return false;
+      }
+      uni.navigateTo({
+        url: '../../selfCenter/selfView?userId=' + e });
+
+    },
     goSteps: function goSteps() {
 
       uni.navigateTo({
@@ -414,7 +507,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         url: "/pages/action/step1" });
 
     },
-    userRepaly: function userRepaly(e, indexs, index) {
+    userRepaly: function userRepaly(e, indexs) {
       if (e.userId == this.id) {
         uni.showToast({
           title: '无法回复自己',
@@ -425,10 +518,11 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
       }
       this.commentId = e.id;
       this.showInput = true;
-      this.indexId = indexs;
+      this.indexId = indexs.pushCard.id;
       this.userId = e.userId,
       this.dataCardId = e.cardId;
       this.inputType = 1;
+      this.conmmmenttext = '回复：' + e.userName;
     },
     inputComent: function inputComent(e) {var _this2 = this;
 
@@ -451,7 +545,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         });
       } else if (this.inputType == 2) {
         this.xd_request_post(this.xdServerUrls.xd_saveCardComment, {
-          cardId: this.dataCardId,
+          cardId: this.dataCardId ? this.dataCardId : this.cardId,
           userId: this.id,
           content: e.detail.value },
         true).then(function (res) {
@@ -468,7 +562,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
 
 
     },
-    showInputComent: function showInputComent(e, indexs) {
+    showInputComent: function showInputComent(e) {
 
       if (!this.hasLogin) {
         uni.navigateTo({
@@ -477,9 +571,10 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
         return false;
       }
       this.dataCardId = e.pushCard.id;
-      this.indexId = indexs;
+      this.indexId = e.pushCard.id;
       this.showInput = !this.showInput;
       this.inputType = 2;
+      this.conmmmenttext = '请输入评论内容';
     },
     getpushList: function getpushList() {var _this3 = this;
       this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId, {
@@ -519,7 +614,7 @@ var _vuex = __webpack_require__(/*! vuex */ 14);function ownKeys(object, enumera
           dataList[i].pushCard.pictures = res[i].pushCard.pictures.split(",");
         }
       }
-      console.log(dataList);
+
       return dataList;
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))

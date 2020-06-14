@@ -182,6 +182,28 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   name: "actionlist",
@@ -229,13 +251,13 @@ var _default =
         return false;
       }
       uni.navigateTo({
-        url: '../selfCenter/selfView?userId=' + e.userId + '&pushId=' + e.id });
+        url: '../selfCenter/selfView?userId=' + e.userId });
 
     },
     goPageCard: function goPageCard(e) {
 
       uni.navigateTo({
-        url: '../index/action/action?pushList=' + encodeURIComponent(JSON.stringify(e)) });
+        url: '../index/action/action?pushId=' + e.id });
 
     },
     goPageImg: function goPageImg(e) {

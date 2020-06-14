@@ -182,16 +182,15 @@ var _default =
 
     },
     start: function start(e) {
-      console.log('start');
-      console.log(e);
+
+
       this.startData.clientX = e.changedTouches[0].clientX;
 
       this.startData.clientY = e.changedTouches[0].clientY;
       this.startTime = e.timeStamp;
     },
     end: function end(e) {
-      console.log('end');
-      console.log(e);
+
       var subX = e.changedTouches[0].clientX - this.startData.clientX;
       var subY = e.changedTouches[0].clientY - this.startData.clientY;
       var time = e.timeStamp - this.startTime;

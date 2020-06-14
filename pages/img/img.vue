@@ -50,16 +50,15 @@ export default {
 		                
 		            },
 		start(e){
-			console.log('start')      
-		         console.log(e)                       
+			 
+		                       
 			this.startData.clientX=e.changedTouches[0].clientX;
 						 
 			this.startData.clientY=e.changedTouches[0].clientY;
 			this.startTime=e.timeStamp;
 		},
 		end(e){
-			console.log('end')  
-			console.log(e)      
+			 
 			const subX=e.changedTouches[0].clientX-this.startData.clientX;
 			const subY=e.changedTouches[0].clientY - this.startData.clientY;
 			const  time=e.timeStamp-this.startTime;

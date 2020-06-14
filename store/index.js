@@ -24,6 +24,7 @@ const store = new Vuex.Store({
     state: {
         lang: lang,
 		hasLogin:false,
+		real:false,
 		infoRes:{},
 		userInfo:{},
 		
@@ -46,7 +47,6 @@ const store = new Vuex.Store({
 		logIn(state,provider){
 			state.hasLogin=true;
 			state.userInfo=provider;
-			console.log(state.userInfo)
 			uni.setStorageSync('userInfo',state.userInfo)
 			
 		},

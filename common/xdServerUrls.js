@@ -2,7 +2,8 @@
 import xdConfig from './xdConfig.js';
 const config = xdConfig.appConfig; // 配置
 
-const serverBaseUrl = `${config.serverProtocal}://${config.serverIp}`;//:${config.serverPort}`;//${config.serverName}`;  基本路径
+ const serverBaseUrl=config.serverProtocaltest+'://'+config.serverIptest; //测试
+// const serverBaseUrl=config.serverProtocal+'://'+config.serverIp;
 const serverUrls = { //根据接口具体配置
 	xd_register: serverBaseUrl + '/xxx', // 注册
 	xd_login: serverBaseUrl + '/xxx', // 登录
@@ -42,6 +43,7 @@ const serverUrls = { //根据接口具体配置
 	xd_getImgIsNormal: serverBaseUrl + '/login/getImgIsNormal' ,//图片是否正常
 	xd_modifyUserInfo: serverBaseUrl + '/login/modifyUserInfo' ,//修改用户的基础信息
 	xd_weiXinLogin: serverBaseUrl + '/login/weiXinLogin' ,//微信登陆接口
+	xd_getUserInfoByUserId: serverBaseUrl +'/login/getUserInfoByUserId',//根据用户id获取用户信息
 	// GET /login/getAccessToken 获取token
 	// GET /login/getContentIsNormal 内容是否正常
 	
@@ -61,6 +63,9 @@ const serverUrls = { //根据接口具体配置
 	xd_searchPushData: serverBaseUrl + '/publishTarget/searchPushData' ,//根据行动项名称搜索行动项
 	
 	xd_onOff: serverBaseUrl + '/config/onOff' ,//根据行动项名称搜索行动项
+	xd_delPushDataByPushId: serverBaseUrl + '/publishTarget/delPushDataByPushId' ,//根据行动项id逻辑删除行动项信息
+	xd_saveShareInfo: serverBaseUrl + '/share/saveShareInfo' ,//保存分享记录信息
+	xd_getLookerByPushId: serverBaseUrl + '/looker/getLookerByPushId' ,//根据行动项id查看围观人
 	
 
 	
