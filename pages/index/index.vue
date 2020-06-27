@@ -3,26 +3,19 @@
 		<!-- 搜索 -->
 		<view class="xd-search-box">
 			<view class="xd-search">
-				<view class="xd-icons icon-search"><image src="../../static/images/icon/search.png"></image></view>
-				<input type="text" class="xd-search-input" :value="searchValue"  
-				placeholder-style="color:#ffffff" 
-				adjust-position='false' 
-				@confirm='search'
-				@focus='searchfocus'/>
+				<view class="pageNav xd-flex-center">
+					<view :class="[active == 0 ? 'active' : '']" @tap="showNew">最新</view>
+					<view :class="[active == 1 || active ==3 ? 'active' : '']" @tap="showRecommend">推荐</view>
+					<view :class="[active == 2 ? 'active' : '']" @tap="showFollow">关注</view>
+				</view>
 			</view>
 		</view>
-		
 		<view class="xd-body">
-			<view class="pageNav xd-flex-center">
-				<view :class="[active == 0 ? 'active' : '']" @tap="showNew">最新</view>
-				<view :class="[active == 1 || active ==3 ? 'active' : '']" @tap="showRecommend">推荐</view>
-				<view :class="[active == 2 ? 'active' : '']" @tap="showFollow">关注</view>
-			</view>
 			
 			<!-- 最新 -->
 			<view class="xd-list-info" :hidden="active == 1||active==2|| active ==3">				
 				<block v-for="(list, index) in listsTab" :key="index" >								
-				  <indexList :list="list" :index="index" v-on:loveclick='loveClick' :hasLogin="hasLogin" :userId='userId' v-on:lookerClick="lookerClick"></indexList>
+				  <indexList :list="list" :index="index" v-on:loveclick='loveClick' :hasLogin="hasLogin" :userId='userId' v-on:lookerClick="lookerClick" :inimg='inimg'></indexList>
 				</block>
 			</view>
 			<!-- 推荐 -->
@@ -41,7 +34,7 @@
 					<view class="main-tabbar">
 						<scroll-view
 						:class="['xd-nav-bar', isCenter ? 'xd-nav-center' : '']" scroll-x="true" show-scrollbar="false" >
-							<view :class="['nav-item', currentIndex == index ? 'nav-active' : '']" :id="'tab-'+index" 
+							<view :class="['nav-item', currentIndex == item.id ? 'nav-active' : '']" :id="'tab-'+index" 
 								v-for="(item, index) in tabs" :key="index" :data-index="index" :data-id="item.id"
 								@tap="navChange">
 								<view class="nav-item-title">
@@ -54,7 +47,7 @@
 					<view class="xd-line"></view>
 					<!-- 推荐项对应内容 -->					
 					<block v-for="(list, index) in listsTab" :key="index" >								
-					  <indexList :list="list" :index="index" v-on:loveclick='loveClick' v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' ></indexList>
+					  <indexList :list="list" :index="index" v-on:loveclick='loveClick' v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' :inimg='inimg' ></indexList>
 					</block>
 				</view>
 			</view>
@@ -102,6 +95,7 @@
 		data() {
 			return {
 				// audioPlaySrc:'../static/images/icon/img/title1.png',
+				inimg:'',
 				active:1,
 				currentIndex:-1,
 				labelId:1,
@@ -119,8 +113,6 @@
 		},
 		onShareAppMessage(res) {
 			let that = this;
-			var imgs=[];
-			 imgs=that.listsTab[res.target.id].pushCardList[0].pictures.split(",")
 			 if(!that.hasLogin){
 			 	uni.navigateTo({
 			 		url: '../login/login' 
@@ -130,8 +122,8 @@
 			that.setSaveShareInfo(res);
 			return {
 				title: that.listsTab[res.target.id].pushCardList[0].content,
-				path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id+'&share='+uni.getStorageSync('id'),
-				imageUrl:imgs[0]?imgs[0]:'../../static/images/icon/img/title1.png',
+				path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.listsTab[res.target.id].isopen,
+				imageUrl:that.listsTab[res.target.id].pushCardList[0].pictures[0]?that.listsTab[res.target.id].pushCardList[0].pictures[0]:'../../static/images/icon/img/title1.png',
 			}
 					
 		},
@@ -161,14 +153,14 @@
 					shareUserId:uni.getStorageSync('id'),
 				},true
 				   ).then(res => {
-					   console.log(res)
+					 
 					   })
 			},
 			searchfocus(){
 				this.searchValue='';
 			},
 			search(e){
-				console.log(e)
+			
 				this.xd_request_post(this.xdServerUrls.xd_searchPushData,
 				{
 					pushName:e.detail.value ,
@@ -206,9 +198,14 @@
 													   
 													   }).catch(err => {						
 													});
+													this.getimg();
 													this.xd_request_post(this.xdServerUrls.xd_label,{},false
 														   ).then((res) => {
-															   this.tabs=res.obj										   
+															   var da =[{
+																   id:-1,
+																   labelName:"全部"
+															   },...res.obj];
+															   this.tabs=da;										   
 														   }).catch(err => {									
 													});
 													this.getShowRecommend();
@@ -315,6 +312,7 @@
 			// 推荐
 			showRecommend : function(){
 				this.active = 1;
+				this.currentIndex=-1,
 				this.pageNum=1;
 				this.listsTab=[];
 				this.indexData();
@@ -335,10 +333,25 @@
 				                           });
 				
 			},
+			getimg(){
+				this.xd_request_get(this.xdServerUrls.xd_tacitlyPushPng,
+				 ).then((res) => {
+						   this.inimg=res.obj;
+					   }).catch(err => {											
+				                           });
+				
+			},
 			timeStamp(res){
 				let dataList=res.obj.list;
 				for(var i=0;i <res.obj.list.length;i++){
+				   var imgs=[];
 				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].pushCardList[0].createTime,false,false,true);
+				    if(dataList[i].pushCardList[0].pictures){
+						imgs=dataList[i].pushCardList[0].pictures.split(",");
+						dataList[i].pushCardList[0].pictures=imgs;
+					}else{
+						dataList[i].pushCardList[0].pictures=[];
+					}
 					dataList[i].pushCardList[0].createTime=time;
 					dataList[i].challengeRmb=Math.floor(dataList[i].challengeRmb/100);
 					
@@ -393,13 +406,19 @@
 			
 			// 推荐内容切换
 			navChange: function (e) {
-				console.log(e)
+				
 				this.pageNum=1;
 				this.listsTab=[];
 				this.active=3;
 				this.currentIndex = e.currentTarget.dataset.index;
-				this.labelId=e.currentTarget.dataset.id;
-				this.getPushByLabel();
+				if(e.currentTarget.dataset.id==-1){
+					this.currentIndex=-1;
+					 this.getShowRecommend()();
+				}else{
+					this.labelId=e.currentTarget.dataset.id;
+					this.getPushByLabel();
+				}
+				
 				
 			},
 			getNewList(){
@@ -574,14 +593,14 @@
 <style scoped lang="scss">
 	.xd-body{
 		box-sizing: border-box;
-		padding: 0 30upx;
+		padding:15% 15upx;
 		width:100%;
 	}	
 	.pageNav{
 		padding: 20upx 0;
 		view{
 			margin: 0 28upx; font-size: 34upx; line-height: 44upx;
-			border-bottom: 3px solid #ffffff;
+			border-bottom: 3px solid #ffe66f;
 		}
 		view.active{
 			border-color:#fd5107; font-weight:bold; color:#fd5107;
@@ -607,8 +626,11 @@
 			width: 100%;
 			box-sizing: border-box;
 			border-bottom: 1px solid #efe5e8;
-			padding: 24upx 0 16upx 0;
+			padding: 10upx 0 16upx 0;
 			margin-bottom: 12upx;
+			background-color: #FFFFFF;
+			margin-top: 10upx;
+			height: 76upx;
 			
 			.xd-nav-bar{
 				width:100%; display:flex; white-space:nowrap;

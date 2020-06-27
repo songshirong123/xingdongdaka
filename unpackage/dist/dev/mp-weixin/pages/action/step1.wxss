@@ -25,84 +25,34 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
-.formAction {
-  padding: 0 30rpx 150rpx 30rpx;
-  font-size: 28rpx;
+.contentspe {
+  width: 100%;
 }
-.uni-form-item .title {
-  padding: 15rpx 0;
-  font-weight: bold;
+.label-left {
+  margin-left: 15%;
+  width: 390rpx;
 }
-.uni-form-item .form-item {
-  height: 68rpx;
-  line-height: 68rpx;
-  margin-bottom: 12rpx;
-  padding: 0 20rpx;
+.card-time-left {
+  margin-left: 15%;
+  width: 150rpx;
 }
-.uni-form-item .form-item:not(.nobtm) {
-  border-bottom: 1px solid #ffa700;
+.data-time-left {
+  margin-left: 34.5%;
+  width: 150rpx;
+}
+.timeinput {
+  width: 115rpx;
 }
 .btn_bar {
-  position: fixed;
+  position: absolute;
   bottom: 0;
-  left: 0;
   width: 100%;
+  margin-bottom: 10rpx;
 }
-.btn_bar .btns {
-  height: 120rpx;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-          justify-content: space-between;
-  padding: 0 30rpx;
-  font-size: 28rpx;
+.textare-heght {
+  height: 300rpx;
 }
-.btn_bar .btns .btn {
-  -webkit-box-flex: 1;
-  -webkit-flex: 1;
-          flex: 1;
-  height: 64rpx;
-  line-height: 64rpx;
-  background: #ffa700;
-  font-size: 28rpx;
-}
-.image-content {
-  position: relative;
-  width: 100%;
-  height: 180px;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-          justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-          align-items: center;
-}
-.image-content .imgShow {
-  width: 100%;
-  height: 180px;
-  background-color: #eee;
-}
-.image-content .imagetip {
-  border: 4px solid #eee;
-  color: #eee;
-  position: relative;
-  width: 200rpx;
-  height: 200rpx;
-  font-size: 100rpx;
-  text-align: center;
-}
-.image-content .imagetipicon {
-  margin-top: 45rpx;
-}
-.image-content .imagetiptxt {
-  font-size: 26rpx;
+.data-time-left-whint {
+  width: 115rpx;
 }
 

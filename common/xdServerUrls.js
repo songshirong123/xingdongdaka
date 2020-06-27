@@ -12,6 +12,7 @@ const serverUrls = { //根据接口具体配置
 	
 	xd_bannerList: serverBaseUrl + '/banner/bannerList' ,// banner广告
 	xd_label: serverBaseUrl + '/label/getLabels' ,//标签
+	xd_tacitlyPushPng: serverBaseUrl + '/publishTarget/tacitlyPushPng' ,//标签
 	
 	xd_saveCardReplayComment: serverBaseUrl + '/cardReplayComment/saveCardReplayComment' ,//保存打卡回复评论
 	xd_saveCardComment: serverBaseUrl + '/cardComment/saveCardComment' ,//保存打卡评论

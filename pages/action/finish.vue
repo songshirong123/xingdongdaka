@@ -1,34 +1,8 @@
 <template>
 	<view class="formAction">
 		<form @submit="formSubmit">
-			<!-- <view class="uni-form-item uni-column">
-				<view class="title">是否公开</view>
-				<view class="form-item nobtm">
-					<label class="radio">
-						<radio value="r1" checked="true" color="#ffa700" />
-						是
-					</label>
-					<label class="radio">
-						<radio value="r2" color="#ffa700" />
-						否
-					</label>
-				</view>
-			</view>
 			<view class="uni-form-item uni-column">
-				<view class="title">所属分类</view>
-				<view class="sb-box">
-					<view class="select">
-						<picker @change="bindPickerChange" :value="dateList[index]" :range="dateList" :range-key="'str'">
-							<view class="uni-input">{{ dateList[index]['showStr'] }}</view>
-						</picker>
-					</view>
-					<view class="sb-icon"><view class="triangle"></view></view>
-				</view>
-			</view> -->
-			<view class="uni-form-item uni-column">
-				<view class="title">设置保障金</view>
-				
-				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="50" /></view>
+				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="5" /></view>
 				<view class="pricelis">
 					<view class="priceli" @click="priceRmb(1)"><text>1元</text></view>
 					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
@@ -43,7 +17,7 @@
 			</view>
 			<!--  #ifdef  MP-WEIXIN -->
 			<view class="btn_bar">
-				<view class="btns"><button class="btn" form-type="submit" >提交</button></view>
+				<button class="bg-orange " form-type="submit">提交</button>
 			</view>
 			<!--  #endif -->
 		</form>
@@ -62,6 +36,7 @@ export default {
 			saveData:{},
 			pushData:'',
 			payNum:0,
+			j:0,
 				
 			
 		};
@@ -154,13 +129,17 @@ export default {
 		},
 		updataPushId(){
 			var that=this;
+			if( that.j>3){
+				return false
+			}
 			that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:that.pushData.obj.id}
 			,true).then( res=>{
-				     that.saveData.challengeRmb=0;
-					 
-						return false	
-					
-				
+				if(res.resultCode==0){
+					that.saveData.challengeRmb=0;
+				}else{
+					that.j++;
+					that.updataPushId();
+				}		 	
 			})
 		},
 		getPushId(){
@@ -289,6 +268,10 @@ export default {
 </script>
 
 <style lang="scss">
+	page{
+		height: 100%;
+		background-color: #FFFFFF;
+	}
 .formAction {
 	padding: 0 30rpx 150rpx 30rpx;
 	font-size: 30rpx;
@@ -300,8 +283,9 @@ export default {
 	}
 	.form-item {
 		&:not(.nobtm) {
-			border-bottom: 1px solid #ffa700;
+			border: 1px solid #ffa700;
 		}
+		margin-top: 50upx;
 		height: 68rpx;
 		line-height: 68rpx;
 		margin-bottom: 12rpx;
@@ -309,30 +293,17 @@ export default {
 		.radio {
 			margin-right: 20rpx;
 		}
-	}
-}
-.btn_bar {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	.btns {
-		height: 120rpx;
-
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0 30rpx;
-		font-size: 28rpx;
-		.btn {
-			flex: 1;
-			height: 64rpx;
-			line-height: 64rpx;
-			background: #ffa700;
-			// color: #fff;
-			font-size: 28rpx;
+		.digit{
+			height: 100%;
 		}
 	}
+	
+}
+.btn_bar {
+	position: absolute;
+	bottom: 0;
+	width: 92%;
+	margin-bottom: 10upx;
 }
 .pricelis {
 	display: flex;

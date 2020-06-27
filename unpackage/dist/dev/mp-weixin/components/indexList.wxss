@@ -25,70 +25,10 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
-.xd-list {
-  width: 100%;
-  padding-top: 25rpx;
-  margin-bottom: 3rpx;
+.imgheit {
+  height: 320rpx;
 }
-.xd-list .xd-list-head {
-  position: absolute;
-  top: -24rpx;
-  right: -28rpx;
-  z-index: 9;
-}
-.xd-list .xd-list-time {
-  padding: 18rpx 0 12rpx 0;
-}
-.xd-list .xd-list-desc {
-  height: 110rpx;
-  overflow: hidden;
-  padding-bottom: 20rpx;
-  text-indent: 50rpx;
-}
-.xd-list .xd-grids .xd-grids-items.comment-grids {
-  width: 13%;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -webkit-flex-direction: row;
-          flex-direction: row;
-}
-.xd-list .xd-grids .xd-grids-items.love-grids {
-  width: 14%;
-}
-.xd-list .xd-grids .xd-grids-items.sponsor-grids {
-  width: 20%;
-}
-.xd-list .xd-grids .xd-grids-items.sponsor-grids .xd-tbr-large {
-  background: #ffe66f;
-  color: #101010;
-}
-.xd-list .xd-grids .xd-grids-items.bond-grids {
-  width: 26%;
-}
-.xd-list .xd-grids .xd-grids-items.bond-grids .xd-tbr-large {
-  background: #f9ebe5;
-  color: #e17175;
-}
-.xd-list .xd-grids .xd-grids-items.bond-grids .xd-tbr-large .xd-tbr-txt-bold {
-  color: #ea030b;
-  font-size: 19rpx;
-}
-.xd-list .xd-grids .xd-grids-items.supervise-grids {
-  width: 23%;
-}
-.xd-list .xd-grids .xd-grids-items.supervise-grids .buttonShare {
-  background: #f9ebe5;
-  color: #e17175;
-  height: 40rpx;
-  border-radius: 20rpx;
-  font-size: 25rpx;
-  line-height: 1.7;
-  margin-top: 11rpx;
-}
-button::after {
-  border: none;
-}
-element.style {
-  height: none;
+.contentext {
+  margin-left: 50rpx;
 }
 

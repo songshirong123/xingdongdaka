@@ -5,7 +5,7 @@
 				<movable-area scale-area>
 					<block v-for="(item,index) in img " :key="index">
 						<movable-view v-if="index+1==nun" direction="all" @scale="onScale" scale="true" scale-min="1" scale-max="4" :scale-value="scale">
-							<image :src="item" mode="widthFix"></image>
+							<image :src="img[index]" mode="widthFix"></image>
 						</movable-view>
 					</block>	
 				</movable-area>
@@ -21,11 +21,13 @@ export default {
 			nun:1,
 			   img:[],
 			 scale:1,
+			 indexs:'',
 			 startData:{
 				clientX:'',
 				clientY:''
 			},
 			startTime:'',
+			
 		};
 	},
 	onLoad(option) {
@@ -34,10 +36,14 @@ export default {
 	methods: {
 		index(option){
 			var url=JSON.parse(decodeURIComponent(option.url)).toString();
+			if(option.indexs){
+			 this.indexs=option.indexs
+			}
 			var notS = url.split(':')[0];
 			var a = notS.indexOf('ps') > -1;
 			if(a){
 				var ig=[];
+				console.log(url)
 				ig=url.split(",")
 				this.img=ig;
 			}else{

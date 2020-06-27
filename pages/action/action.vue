@@ -2,10 +2,10 @@
 	<view class="action">
 		<view class="actionInfo">
 			<view class="tabbar">
-				<view class="tab " :class="tab===0?'active':''" @click="tab=0">
+				<view class="tab " :class="tab===0?'active':''" @click="tabs(0)">
 					<text>行动 ({{total}})</text>
 				</view>
-				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
+				<view class="tab" :class="tab===1?'active':''" @click="tabs(1)">
 					<text>我围观行动({{looktotal}})</text>
 				</view>
 				<view class="tab" :class="tab===2?'active':''"  v-show="false">
@@ -97,26 +97,34 @@ export default {
 		that.setSaveShareInfo(res);
 		return {
 			title: that.cardList[res.target.id].content,
-			path: '/pages/index/action/action?pushId='+ that.cardList[res.target.id].id+'&share='+uni.getStorageSync('id'),
+			path: '/pages/index/action/action?pushId='+ that.cardList[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.cardList[res.target.id].isopen,
 			imageUrl:that.cardList[res.target.id].pictures?that.cardList[res.target.id].pictures:'../../static/images/icon/img/title1.png',
 		}
 				
 	},
 	methods: {
+		tabs(e){
+			this.tab=e
+			if(e==0){
+				this.inDada();
+			}else if(e==1){
+				this.inDada();
+			}
+		},
 		setSaveShareInfo(res){
 			this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
 				pushId:this.cardList[res.target.id].id,
 				shareUserId:uni.getStorageSync('id'),
 			},true
 			   ).then(res => {
-				   console.log(res)
+				 
 				   })
 		},
 		creatXd(e){
 			var that=this;
 			var id=that.pushId;
 			var i=that.index;
-			if(e==1){
+			if(e==1 && that.cardList[i].btn!=2){
 				uni.showModal({
 				    title: '重新编辑行动',
 				    content: '将删除原行动及打卡信息，在重新发布新行动',
@@ -147,14 +155,14 @@ export default {
 				        }
 				    }
 				});
-			}else if(e==2){
+			}else if(e==2&& that.cardList[i].btn!=2){
 				uni.showModal({
 				    title: '删除行动',
 				    content: '删除后无法恢复，相关打卡也会被删除',
 				    success: function (res) {
 				        if (res.confirm) {
 				           that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:id},true).then(res => {
-							   console.log(res)
+							  
 				            	if (res.resultCode == 0) {
 				            		uni.showToast({
 				            		    title: '删除成功',
@@ -182,7 +190,6 @@ export default {
 			}, timer)
 		},
 		toAction(e){
-			console.log(e)
 			uni.navigateTo({
 				url: '../index/action/action?pushId='+e
 			});
@@ -293,9 +300,9 @@ export default {
 					 	title: '加载中..',
 					 	mask:true
 					 })
-					 this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,
+					 this.xd_request_post(this.xdServerUrls.xd_getLookerByUserId,
 					 {
-					 	token:uni.getStorageSync('token'),
+					 	userId:uni.getStorageSync("id"),
 					 	pageNum:this.nextPageTwo,
 					 	pageSize:10,
 					 },

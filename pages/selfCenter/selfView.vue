@@ -1,6 +1,6 @@
 <template>
 	<view class="selfCenter">
-		<!-- <button @click="clickMe">支付</button> -->
+		
 		<view class="personContent">
 			<view class="personHead" >
 				<image class="imgHead" :src="userInfo.userHead" ></image>
@@ -10,12 +10,10 @@
 				<view class="xd-list-title-text name ">
 					<text>{{userInfo.userName}}</text>
 				</view>
-				<!-- <view class="subInfo">
-					<text>健身狂魔</text>
-				</view> -->
+				
 			</view>
 			<view class="personOpt">
-				<!-- <button @click="clickMe" class="pay">支付</button> -->
+				
 			</view>
 		</view>
 		<view class="moreInfo">
@@ -28,56 +26,15 @@
 					<text v-if="userInfo.sex==1" class="boy">♂</text>
 					<text v-else-if="userInfo.sex==0" class="gender">♀</text>
 					<text v-else class="boy">密</text>
-					<!-- <text>20</text> -->
+					
 				</view>
 			
 				<view class="moreInfoIn flex1" v-if="userInfo.schoolName">
 					<text>{{userInfo.schoolName}}</text>
 				</view>
-				<!-- <view class="moreInfoIn">
-					<text>  &nbsp;</text>
-				</view> -->
-			</view>
-		<!-- 	<view class="moreInfoRow">
-				<view class="moreInfoIn">
-					<text>行业</text>
-				</view>
-				<view class="moreInfoIn">
-					<text>公司</text>
-				</view>
-				<view class="moreInfoIn">
-					<text>职业</text>
-				</view>
-				<view class="moreInfoIn link">
-					<text>产品服务</text>
-				</view>
-			</view> -->
-		<!-- 	<view class="moreInfoRow">
-				<view class="moreInfoIn personAction">
-					<text>关注：0</text>
-				</view>
-				<view class="moreInfoIn personAction">
-					<text>粉丝：0</text>
-				</view>
-				<view class="moreInfoIn personAction">
-					<text>获赞：0</text>
-				</view>
-				<view class="moreInfoIn personAction">
-					<text>获同行：0</text>
-				</view>
-			</view> -->
-			<!-- <view class="moreInfoRow rowaction">
-				<view class="moreInfoIn link" v-if="getRole()">
-					<text>订单详情</text>
-				</view>
-				<view class="moreInfoIn">
-					<text>积分：1</text>
-				</view>
-				<view class="moreInfoIn link" @click="goPage('/pages/selfCenter/income')" v-if="getRole()">
-					<text>收益：1999</text>
-				</view>
-			</view> -->
 			
+			</view>
+		
 		</view>
 		
 		<view class="actionInfo">
@@ -89,9 +46,7 @@
 					<text v-if="userId==user">围观的行动({{lookTotal}})</text>
 					<text v-else>TA围观的行动({{lookTotal}})</text>
 				</view>
-				<!-- <view class="tab" :class="tab===2?'active':''" @click="tab=2">
-					<text>收藏 (128)</text>
-				</view> -->
+				->
 			</view>
 			<view class="actionTabList">
 				<view class="actionMy" v-show="tab===0">
@@ -205,6 +160,7 @@
 			getCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,{
 					token:uni.getStorageSync('token'),
+					lookUserId:uni.getStorageSync('id'),
 					userId:this.userId,
 				},true)
 				.then(res=>{

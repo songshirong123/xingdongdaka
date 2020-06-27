@@ -1,87 +1,60 @@
 <template name='indexList'>
-	<!-- <view >
-		<view class="cu-card case" :class="list?'no-card':''">
+	<view >
+		<view class="cu-card dynamic " :class="list.pushCardList[0].pictures.length>1?'no-card':''">
 			<view class="cu-item shadow">
-				<view class="image">
-					<image :src="list.pictures"
-					 mode="aspectFill"></image>
-					<view class="cu-tag bg-blue">{{list.label}}</view>
-					<view class="cu-bar bg-shadeBottom"> <text class="text-cut">{{list.content}}</text></view>
-				</view>
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
-						<image class="cu-avatar round lg" :src="list.userHead"
-						 mode="aspectFill"></image>
-						<view class="content flex-sub">
-							<view class="text-grey">{{list.userName}}</view>
+						<view class="cu-avatar round lg" :style="{backgroundImage: 'url(' +list.userHead + ')'}" @tap="goPage(list)"></view>
+						<view class="content flex-sub" @tap="goPage(list)">
+							<view>{{list.userName}}</view>
 							<view class="text-gray text-sm flex justify-between">
-								{{list.createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})
-								<view class="text-gray text-sm">
-									<text class="cuIcon-attentionfill margin-lr-xs"></text> {{list.lookerCount}}
-									<text class="cuIcon-appreciatefill margin-lr-xs"></text> {{list.giveLike}}
-									<text class="cuIcon-messagefill margin-lr-xs"></text> 0
-								</view>
+								{{list.pushCardList[0].createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})
+							</view>
+						</view>
+						<view v-if="list.challengeRmb>0">
+							<view class="cu-tag light bg-red radius" >
+								保证金￥{{list.challengeRmb}}
 							</view>
 						</view>
 					</view>
 				</view>
-			</view>
-		</view>
-	</view> -->
-	<view class="xd-list xd-border-b-color">
-		<view class="xd-list-items">	
-			<view class="xd-list-image xd-relative">				
-					<image class="xd-list-image xd-box-shadow" v-if="list.pictures!=''" :src="list.pictures" mode="aspectFill" @tap="goPageImg(list.pictures)" ></image>	
-					<image class="xd-list-image xd-box-shadow" v-else :src="audioPlaySrc" @tap="goPageImg(audioPlaySrc)" @error="error"></image>
-				<view class="xd-list-head" @tap="goPage(list)">
-					<image class="xd-list-head-img xd-box-shadow" :src="list.userHead" mode="aspectFill"></image>
-				</view>
-			</view>
-			<view class="xd-list-body xd-border-b-black">
-				<view class="xd-list-title" @tap="goPage(list)">
-					<text class="xd-list-title-text">{{list.userName}}</text>
+				
+				<view class="text-content">
+					<view class="cu-tag bg-green radius sm" v-if="list.pushCardCount==0">行动</view>
+					<view class="cu-tag bg-pink radius sm" v-if="list.pushCardCount>0">打卡</view>
+					<text class="contentext" v-if="list.pushCardCount>0" @tap="goComentConten(list)">{{list.pushCardList[0].content}}</text>
+					<text class="contentext" v-if="list.pushCardCount==0" @tap="goPageCard(list)">{{list.content}}</text>
 				</view>
 				
-					<view class="xd-list-body-desc xd-ellipsis-line2" @tap="goPageCard(list)" >{{list.content}}</view>
+				<view class="grid flex-sub padding-lr" :class="list.pushCardList[0].pictures.length>1?'col-3 grid-square':'col-1'" v-if="list.pushCardCount>0">
+					<view class="bg-img" :class="list.pushCardList[0].pictures.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+					 v-for="(item,index) in list.pushCardList[0].pictures" :key="index" @tap="goPageImg(list.pushCardList[0].pictures)" v-if="list.pushCardList[0].pictures.length>0">
+					</view>
+					<image class="bg-img imgheit "  :src="audioPlaySrc" v-if="list.pushCardList[0].pictures.length==0" mode="aspectFill"
+					 @tap="goPageImg(audioPlaySrc)"  @error="error">
+					</image>
+				</view>
 				
-			</view>
-		</view>
-		<view class="xd-list-body-desc xd-list-time"><text>{{list.pushCardList[0].createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})</text></view>
-		
-			<view class="xd-list-desc" @tap="goComentConten(list)">{{list.pushCardList[0].content}}</view>
-			
-		
-		<view class="xd-grids">
-			<view class="xd-grids-items comment-grids">
-				<view class="xd-relative" >
-					<image class="xd-grids-icon-img" src="../static/images/icon/comment.png"  mode="widthFix" @tap="goComent(list)"></image>
-					<view class="xd-badge">{{list.comment}}</view>
+				<view class="grid flex-sub padding-lr"  v-if="list.pushCardCount==0">
+					<image class="bg-img imgheit"  :src="list.pictures" mode="aspectFill"
+					 @tap="goPageImg(list.pictures)" v-if="list.pictures!=''">
+					</image>
+					<image class="bg-img imgheit"  :src="audioPlaySrc" mode="aspectFill"
+					 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
+					</image>
 				</view>
-			</view>
-			<view class="xd-grids-items love-grids">
-				<view class="xd-relative">
-					<view v-show="!list.currentUserGiveLike">
-					  <image class="xd-grids-icon-img-love" src="../static/images/icon/love.png" mode="widthFix" v-on:click="loveClick(list,index)"></image>
+				<view class="flex padding justify-between">
+					<view class="text-xxl" @tap="goComent(list)">
+						<text class="text-gray cuIcon-comment "></text>
+						<text class="text-gray text-df"></text>
 					</view>
-					<view v-show="list.currentUserGiveLike">
-					  <image class="xd-grids-icon-img-love" src="../static/images/icon/love-on.png" mode="widthFix" v-on:click="loveClick(list,index)"></image>
+					<view>
+						<button class="cu-btn bg-pink sm round" v-if="list.userId==userId || list.onlooker "  :id="index" open-type="share">邀请围观</button>
+						<button class="cu-btn bg-pink sm round  " v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0"  @tap="lookerClick(list,index)">围观</button>
+						<button class="cu-btn bg-pink sm round  " v-else  @tap="lookerClick(list,index)">围观分钱</button>
+						<text class="text-gray text-df ">{{list.onlookerCount}}</text>
 					</view>
-					<view class="xd-badge">{{list.giveLike}}</view>
-				</view>
-			</view>
-			<view class="xd-grids-items bond-grids">
-				<view class="xd-relative">
-					<view class="xd-tbr-large" v-show="list.challengeRmb>0">保证金<text class="xd-tbr-txt-bold">￥{{list.challengeRmb}}</text></view>
-				</view>
-			</view>
-			<view class="xd-grids-items supervise-grids">
-				<view class="xd-relative">
-					
-					<button class="buttonShare" v-if="list.userId==userId || list.onlooker "  :id="index" open-type="share" >邀请围观</button>
-					<button class="buttonShare" v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0"  @tap="lookerClick(list,index)">围观</button>
-					<button class="buttonShare" v-else  @tap="lookerClick(list,index)">围观分钱</button>
-					
-					<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{list.lookerCount}}</view>
+				
 				</view>
 			</view>
 		</view>
@@ -112,18 +85,16 @@
 				this.$emit('loveclick',e,index);
 			},
 			goComent(e){
-				console.log(e)
-				var pushCard={
-					pushList:e,
-					pushCardList:e.pushCardList,
-				};
+				if(!e.pushCardList){
+					return false
+				}
 				uni.navigateTo({
-					url: '../index/cardDetails/cardDetails?pushCard='+encodeURIComponent(JSON.stringify(pushCard))
+					url: '../index/cardDetails/cardDetails?pushId='+e.id+'&cardId='+e.pushCardList[0].id+'&show=1'
 				});
 			},
 			goComentConten(e){
 				uni.navigateTo({
-					url: '../index/cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(e))
+					url: '../index/cardDetails/cardDetails?pushId='+e.id+'&cardId='+e.pushCardList[0].id+'&show=0'
 				});
 			}
 			,
@@ -154,73 +125,11 @@
 </script>
 
 <style lang="scss">
-			// 列表功能
-			.xd-list{
-				width: 100%;
-				padding-top: 25upx;
-				margin-bottom: 3upx;
-				
-				.xd-list-head{
-					position: absolute; top: -24rpx; right: -28rpx; z-index: 9;
-				}
-				.xd-list-time{
-					padding: 18upx 0 12upx 0;
-				}
-				.xd-list-desc{
-					height: 110upx;
-					overflow: hidden;
-					padding-bottom: 20upx;
-					text-indent: 50upx;
-					
-				}
-				
-				.xd-grids{
-					
-					.xd-grids-items.comment-grids{
-						width: 13%;
-						flex-direction:row
-					}
-					.xd-grids-items.love-grids{
-						width: 14%;
-					}
-					.xd-grids-items.sponsor-grids{
-						width: 20%;
-						.xd-tbr-large{
-							background: #ffe66f;
-							color: #101010;
-						}
-					}
-					.xd-grids-items.bond-grids{
-						width: 26%;
-						.xd-tbr-large{
-							background: #f9ebe5;
-							color: #e17175;
-							.xd-tbr-txt-bold{
-								color: #ea030b;
-								font-size: 19upx;
-							}
-						}
-					}
-					.xd-grids-items.supervise-grids{
-						width: 23%;
-						.buttonShare{
-							background: #f9ebe5;
-							color: #e17175;
-							height: 40upx;
-							border-radius: 20upx;
-							font-size: 25upx;
-							line-height: 1.7;
-							margin-top: 11upx;
-	
-						}
-					}
-				}
+			.imgheit{
+				height: 320upx;
 			}
-			button::after {
-				  border: none;
-				}
-				element.style{
-					height: none;
-				}
+			.contentext{
+				margin-left: 50upx;
+			}
 
 </style>

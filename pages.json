@@ -58,7 +58,7 @@
 		{
 			"path": "pages/action/step1",
 			"style": {
-				"navigationBarTitleText": "行动"
+				"navigationBarTitleText": "新建行动"
 			}
 		}, 
 		{
@@ -70,7 +70,7 @@
 		{
 			"path": "pages/action/finish",
 			"style": {
-				"navigationBarTitleText": "行动"
+				"navigationBarTitleText": "保证金"
 			}
 		}, {
 			"path": "pages/index/cardDetails/cardDetails",

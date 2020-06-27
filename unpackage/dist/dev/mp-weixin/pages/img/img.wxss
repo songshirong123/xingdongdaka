@@ -25,7 +25,7 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
-movable-view.data-v-a01de79c {
+movable-view.data-v-350af78e {
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
@@ -38,16 +38,16 @@ movable-view.data-v-a01de79c {
   width: 100%;
   height: 100%;
 }
-movable-area.data-v-a01de79c {
+movable-area.data-v-350af78e {
   height: 100%;
   width: 100%;
   position: fixed;
   overflow: hidden;
 }
-movable-view image.data-v-a01de79c {
+movable-view image.data-v-350af78e {
   width: 100%;
 }
-.img-num.data-v-a01de79c {
+.img-num.data-v-350af78e {
   position: absolute;
   z-index: 1;
   bottom: 40rpx;

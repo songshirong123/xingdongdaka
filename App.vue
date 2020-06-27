@@ -53,7 +53,7 @@
 		// @import './static/fonts/iconfont.css';
 		/* 引入 自定义公共样式 */
 		@import './common/xdCommon.css';
-		// @import "./colorui/main.css";
+		@import "./colorui/main.css";
 		@import "./colorui/icon.css";
 		
 	</style>

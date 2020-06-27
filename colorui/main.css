@@ -2188,7 +2188,8 @@ button.cuIcon.lg {
 	background-color: #ffffff;
 	overflow: hidden;
 	border-radius: 10upx;
-	margin: 30upx;
+	/* margin: 30upx; */
+	margin-bottom: 10upx;
 }
 
 .cu-card>.cu-item.shadow-blur {
@@ -2196,7 +2197,7 @@ button.cuIcon.lg {
 }
 
 .cu-card.no-card>.cu-item {
-	margin: 0upx;
+	/* margin: 0upx; */
 	border-radius: 0upx;
 }
 
@@ -3449,7 +3450,7 @@ scroll-view.cu-steps .cu-item {
 }
 
 .bg-pink {
-	background-color: #e03997;
+	background-color: #fd5107;
 	color: #ffffff;
 }
 

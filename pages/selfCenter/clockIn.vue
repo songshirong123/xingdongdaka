@@ -18,7 +18,7 @@
 				<view class="form-item timetr">
 					<text>时长：</text>
 					<text>{{dayData}}</text>
-					<button class="toMore" type="default" @tap="toMore">更多事项记录</button>
+					<!-- <button class="toMore" type="default" @tap="toMore">更多事项记录</button> -->
 				</view>
 			</view>
 			<view class="uni-form-item uni-column">
@@ -44,6 +44,9 @@
 						</view> 
 						
 					</view>
+				</view>
+				<view class="progress-box" v-if="progreessnum>0">
+				      <progress :percent="progreessnum" show-info stroke-width="3" />
 				</view>
 				<view class="form-item nobtm itembtns">
 					<button class="btn" @click="popUpImg">上传图片</button>
@@ -93,6 +96,9 @@ export default {
 			stTimes:'',
 			endTimes:'',
 			videodata:'',
+			progreessnum:'',
+			tempFilePaths:[],
+			j:0,
 			
 		};
 	},
@@ -204,27 +210,49 @@ export default {
 			    sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 			    sourceType: ['album'], //从相册选择
 			    success: function (res) {
-					
-					let tempFilePaths = res.tempFilePaths;
-					for(let k=0;k<tempFilePaths.length;k++){
-						that.xdUniUtils.xd_request_img(res.tempFilePaths[k]).then(res=>{
-							if(res){
-								uni.uploadFile({
-								           url: that.xdServerUrls.xd_uploadFile, 
-								           filePath: tempFilePaths[k],
-								           name: 'files',
-								           formData: {
-								               'userId': uni.getStorageSync('id'),
-								           },
-								           success: (uploadFileRes) => {
-																	
-											 that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);				
-								           }
-								       });
-							}
-						});
-					}
+					 that.tempFilePaths = res.tempFilePaths;
+					 that.j=0;
+					  that.getImg();
 			    }
+			});
+		},
+		getImg(){
+			const that = this;
+			if(that.j>=that.tempFilePaths.length){
+				return false
+			}
+			 that.xdUniUtils.xd_request_img(that.tempFilePaths[that.j]).then(res=>{
+				if(res){
+				const uploadTask =uni.uploadFile({
+							   url: that.xdServerUrls.xd_uploadFile, 
+							   filePath: that.tempFilePaths[that.j],
+							   name: 'files',
+							   formData: {
+								   'userId': uni.getStorageSync('id'),
+							   },
+							   success: (uploadFileRes) => {							   
+										if (JSON.parse(uploadFileRes.data).resultCode==0) {
+											that.param.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);
+											 that.j++
+									       that.getImg();
+								 }	
+							
+							   }
+						   });
+						 uploadTask.onProgressUpdate((res) => {
+									 that.progreessnum=res.progress
+									 if(that.progreessnum>=100){
+										 setTimeout(function(){
+											  that.progreessnum=0
+													},1000);
+									 }
+							
+									 // 测试条件，取消上传任务。
+									 // if (res.progress > 50) {
+									 //     uploadTask.abort();
+									 // }
+								 });  
+				}
 			});
 		},
 		popUpVideo(){
