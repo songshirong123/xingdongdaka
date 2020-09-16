@@ -1,0 +1,1 @@
+{"version":3,"sources":["uni-app:///main.js"],"names":["createPage","Page"],"mappings":";;;;;;;;;;kDAAA,wCAAmB;AACnB;AACA,mN;AACAA,UAAU,CAACC,eAAD,CAAV,C","file":"pages/selfCenter/myfans.js","sourcesContent":["import 'uni-pages';import '@dcloudio/uni-stat';\nimport Vue from 'vue'\nimport Page from './pages/selfCenter/myfans.vue'\ncreatePage(Page)"],"sourceRoot":""}

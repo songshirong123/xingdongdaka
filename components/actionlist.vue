@@ -1,46 +1,72 @@
 <template name='actionlist'>
-	<view class="actionLi">
-		<view class="ali-top">
-			<view class="ali-top-in">
-				<text>进度:{{item.pushCardCount}}/{{item.targetDay}}</text>
+	<view class="">
+		<view class="cu-item shadow margin-bottom-sm bg-white">
+			<view class="cu-list menu-avatar">
+				<view class="cu-item " v-if="tab==1">
+					<view @tap="goUser(item.userId)" class="cu-avatar round lg" :style="{backgroundImage: 'url(' +item.userHead + ')'}" ></view>
+					<view class="content flex-sub">
+						<view @tap="goUser(item.userId)">{{item.userName}}</view>
+					</view>
+					<view  v-if="tab>1">
+						<view class="cu-tag line-orange radius"  @tap="tags">
+							关注
+						</view>
+					</view>
+				</view>
+				<view class="flex flex-wrap padding justify-between">
+					<view class=" " >
+						<view class="flex flex-wrap">
+							<view class="" v-if="tab==0||tab==1">
+								<text class="text-orange" v-if="item.pushCardStatus==1">进行中...</text>
+								<text class="text-gray" v-else-if="item.pushCardStatus==2">未达成</text>
+								<text class="text-green" v-else-if="item.pushCardStatus==3">已达成</text>
+							</view>
+							<view class="cu-tag bg-grey radio margin-left-sm">{{item.label}}</view>
+							
+						</view>
+						<view class="text-gray text-sm ">
+							{{xdUniUtils.xd_timestampToTime(item.createTime,false,true,false) }}  ({{item.pushCardCount}}/{{item.targetDay}})
+						</view>
+					</view>
+					<view v-if="item.challengeRmb>0">
+						<view class="cu-tag light bg-red radius" >
+							保证金￥{{item.challengeRmb}}
+						</view>
+					</view>
+					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==0&&item.btn!=2">
+						<text class="cuIcon-moreandroid" ></text>
+					</view>
+					
+				</view>
 			</view>
-			<view class="ali-top-in">
-				<text>休假天数:{{item.holidayDay}}</text>
+			
+			<view class="text-content padding-lr textcen">
+				<text class="contentext" @tap="goPageCard(item)" >{{item.content}}</text>
 			</view>
-			<view class="ali_right" @click="toggleMask(item.id,index)">
-				<text class="cuIcon-moreandroid" ></text>
+			<view class="grid flex-sub  padding-lr"  >
+				<image class="imgheit"  :src="item.pictures" mode="aspectFill"
+				 @tap="goPageImg(item.pictures)" v-if="item.pictures!=''" >
+				</image>
+				<image class="imgheit"  :src="audioPlaySrc" mode="aspectFill"
+				 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
+				</image>
 			</view>
-		</view>
-		<view class="ali-main">
-			<view class="ali-main-img">
-				<img v-if="item.pictures!=''" :src="item.pictures" alt="" class="xd-list-image" mode="aspectFill" @tap="goPageImg(item.pictures)">
-				<img v-else :src="audioPlaySrc" alt="" class="xd-list-image" @error="error(index)" @tap="goPageImg(audioPlaySrc)">
-			</view>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
-			<view class="lli-main-content xd-list-body ">
-				<view class="xd-list-title-text" @tap="goPageCard(item)">
-					<text>{{item.content}}</text>
-				</view>	
+			<view class="flex padding justify-between" >
+				<view>
+					<button class="cu-btn bg-light-blue sm round" v-if="item.userId==userId "  :id="index" open-type="share">分享邀请</button>
+					<button class="cu-btn bg-orange sm round  " v-else-if="item.onlooker" :id="index" open-type="share">为TA打Call</button>
+					<button class="cu-btn bg-green sm round  " v-else-if="item.userId!=userId && !item.onlooker&&item.challengeRmb<=0" :id="index"  @tap="lookerClick(item,indexs)">围观</button>
+					<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(item,indexs)">围观分钱</button>
+					<text class="text-gray text-df ">{{item.onlookerCount}}</text>
+				</view>
+				<!-- <view class="text-xxl" @click="gothank(item)" v-if="userId==item.userId" >
+					<button class="cu-btn line-green sm round  "  >我要感谢</button>
+				</view> -->
+				<view class="text-xxl" @click="goPage(item)" v-if="userId==item.userId" >
+					<button class="cu-btn line-green sm round  "  >立即打卡</button>
+				</view>
+			
 			</view>
-		</view>
-		<view class="ali-footer">
-			<!-- <view class="actionBar xd-tbr-large">
-				<text>获赞助金</text>
-				<text class="price">￥{{item.giveReward}}</text>
-				<text class="sub xd-badge">{{item.onlookerCount}}</text>
-			</view> -->
-			<view class="actionBar xd-tbr-large">
-				<text>我的保证金</text>
-				<text class="price">￥{{item.challengeRmb}}</text>
-			</view>
-			<view class="actionBar xd-tbr-large" >
-				<button class="buttonShare"   :id="index" open-type="share" >邀请围观</button>
-
-			</view>
-		</view>
-		<view class="ali-btns" v-if="tab===0&&showBut!=1">
-			<button v-if="item.btn==0" class="btn"  @click="goPage(item.id)">立即打卡</button>
-			<button v-else-if="item.btn==1" class="btn"  style="background-color: #ff0000;">未达成</button>
-			<button v-else-if="item.btn==2" class="btn" style="background-color: #46ca5c;">已达成</button>
 		</view>
 	</view>
 </template>
@@ -52,112 +78,111 @@
 		
 		data(){
 			return {
-				audioPlaySrc:'../static/images/icon/img/title.png',
+				audioPlaySrc:"1"
 			}
 		},
 		methods:{
-			error: function(index) {
-				console.log(index)
-				var num=Math.floor(Math.random()*8+1);
-				this.audioPlaySrc='../static/images/icon/img/title'+num+'.png'
-			            }  ,
+			error: function() {
+				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();	
+			            } ,
 			goPage(item){
-				console.log(item)
-				uni.navigateTo({
-					url:'/pages/selfCenter/clockIn?pushId='+item
-				});
+				if(item.pushCardStatus==2||item.pushCardStatus==3){
+					uni.showModal({
+						 content: this.xdCommon.gzsm_clickCard,
+						 confirmText: '新建',
+						 success: (res) => {
+						   if (res.confirm) {
+							   uni.setStorageSync('pushData',item)
+							 uni.navigateTo({
+								 
+							 	url:'/pages/action/step1'
+							 });
+						   } else if (res.cancel) {
+							 
+						   }
+						 }
+					})
+				}else{
+					uni.navigateTo({
+						url:'/pages/selfCenter/clockIn?pushId='+item.id
+					});
+				}
+			},
+			gothank(item){
+				uni.showModal({
+				    content: '感谢金设置',
+					cancelText:'自定义',
+					confirmText:'智能分配',
+				    success: function (res) {
+				        if (res.confirm) {
+				//            that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:id},true).then(res => {
+							  
+				//             	if (res.resultCode == 0) {
+				//             		uni.showToast({
+				//             		    title: '删除成功',
+				// 						icon:'none',
+				//             		    duration: 1500
+				//             		});
+				// 					that.cardList.splice(i,1);
+				//             	}else{
+				// 					uni.showModal({
+				// 					    title: '该行动项发布已超过3天，不能删除，请继续',
+				// 						icon:'none',
+				
+				// 					});
+				// 				}
+								
+				//             })
+				        } else if (res.cancel) {
+				            uni.navigateTo({
+				            	url:'/pages/pageA/thankmoney/thankmoney?pushId='+item.id
+				            });
+				        }
+				    },
+				})
+				
 			},
 			goPageCard(e){
 				
 				uni.navigateTo({
-					url:'../index/action/action?pushId='+e.id
+					url:'../index/action/action?pushId='+e.id+'&isopen='+e.isopen
 				})
 			},
-			goPageImg(e){
-				console.log(e)
+			goUser(e){
 				uni.navigateTo({
-					url:'../img/img?url='+encodeURIComponent(JSON.stringify(e))
+					url:'../selfCenter/selfView?userId='+e
 				})
 			},
-			lookerClick(list,index){
-				
-				this.$emit('lookerClick',list,index);
+			
+			goPageImg(e){
+				this.xdUniUtils.xd_showImg(e)
 			},
-			toggleMask(e,index){
-				this.$emit('toggleMask',e,index);
+			lookerClick(list,indexs){
+				
+				this.$emit('lookerClick',list,indexs);
+			},
+			toggleMask(e,indexs){
+				this.$emit('toggleMask',e,indexs);
 			}
 		}
 	}
 </script>
 
-<style  lang="scss">
-	.actionLi{
-		.ali-top{
-			display: flex;
-			justify-content: space-between;
-			color:#888;
-			font-size: 24rpx;
-			line-height: 36rpx;
-			padding: 18rpx 0 12rpx 0;
-		}
-		.ali-main{
-			display: flex;
-			.ali-main-img{
-				img{
-					width: 236rpx;
-				}
-			}
-		}
-		.ali-footer{
-			display: flex;
-			justify-content: space-between;
-			padding:20rpx;
-			.actionBar{
-				position: relative;
-				background: #f9ebe5;
-				color: #e17175;
-				.price{
-					color: #ea030b;
-				}
-			}
-		}
-		.ali-btns{
-			display: flex;
-			justify-content: center;
-			.btn{
-				// display: block;
-				text-align: center;
-				padding:0;
-				font-size: 26rpx;
-				height: 66rpx;
-				 background: $xd-color-base;
-				width:200rpx;
-				margin:0 20rpx 0 0;
-			}
-		}
+<style lang="scss">
+
+	.imgheit{
+		height: 320upx;
+		width: 100%;
 	}
-	.buttclass{
-			background: #f9ebe5;
-			color: #e17175;
-			height: 40upx;
-			border-radius: 20upx;
-			font-size: 25upx;
-			margin-top: -4px;
-	
+	.textcen{
+		max-height: 6.4em;
+		overflow: hidden;
+		font-size: 30rpx;
+		margin-bottom: 20rpx;
+
 	}
-		button::after {
-			  border: none;
-			
-			}
-			.buttonShare{
-				background: #f9ebe5;
-				color: #e17175;
-				
-				border-radius: 20upx;
-				font-size: 25upx;
-				line-height: 1.4;
-			}
-			.ali_right{
-				font-size: 40upx;
-			}
+	.bg-light-blue{background-color: #007AFF;}
+	.moreandroidwhite{
+		width: 50upx;
+	}
 </style>

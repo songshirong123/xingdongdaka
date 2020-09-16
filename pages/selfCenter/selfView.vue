@@ -1,87 +1,8 @@
 <template>
 	<view class="selfCenter">
-		<!-- <button @click="clickMe">支付</button> -->
-		<view class="personContent">
-			<view class="personHead" >
-				<image class="imgHead" :src="userInfo.userHead" ></image>
-				
-			</view>
-			<view class="personInfo"  >
-				<view class="xd-list-title-text name ">
-					<text>{{userInfo.userName}}</text>
-				</view>
-				<!-- <view class="subInfo">
-					<text>健身狂魔</text>
-				</view> -->
-			</view>
-			<view class="personOpt">
-				<!-- <button @click="clickMe" class="pay">支付</button> -->
-			</view>
-		</view>
-		<view class="moreInfo">
-			<view class="moreInfoRow">
-				<view class="moreInfoIn">
-					<text>{{userInfo.province}}.{{userInfo.city}}</text>
-				</view>
-		
-				<view class="moreInfoIn" >
-					<text v-if="userInfo.sex==1" class="boy">♂</text>
-					<text v-else-if="userInfo.sex==0" class="gender">♀</text>
-					<text v-else class="boy">密</text>
-					<!-- <text>20</text> -->
-				</view>
-			
-				<view class="moreInfoIn flex1" v-if="userInfo.schoolName">
-					<text>{{userInfo.schoolName}}</text>
-				</view>
-				<!-- <view class="moreInfoIn">
-					<text>  &nbsp;</text>
-				</view> -->
-			</view>
-		<!-- 	<view class="moreInfoRow">
-				<view class="moreInfoIn">
-					<text>行业</text>
-				</view>
-				<view class="moreInfoIn">
-					<text>公司</text>
-				</view>
-				<view class="moreInfoIn">
-					<text>职业</text>
-				</view>
-				<view class="moreInfoIn link">
-					<text>产品服务</text>
-				</view>
-			</view> -->
-		<!-- 	<view class="moreInfoRow">
-				<view class="moreInfoIn personAction">
-					<text>关注：0</text>
-				</view>
-				<view class="moreInfoIn personAction">
-					<text>粉丝：0</text>
-				</view>
-				<view class="moreInfoIn personAction">
-					<text>获赞：0</text>
-				</view>
-				<view class="moreInfoIn personAction">
-					<text>获同行：0</text>
-				</view>
-			</view> -->
-			<!-- <view class="moreInfoRow rowaction">
-				<view class="moreInfoIn link" v-if="getRole()">
-					<text>订单详情</text>
-				</view>
-				<view class="moreInfoIn">
-					<text>积分：1</text>
-				</view>
-				<view class="moreInfoIn link" @click="goPage('/pages/selfCenter/income')" v-if="getRole()">
-					<text>收益：1999</text>
-				</view>
-			</view> -->
-			
-		</view>
-		
+		<usershow  :list="userInfo"  :guanzhu="guanzhu" :lookerCount="lookerCount" :likeCount="likeCount" v-on:clidtags='clidtags' :userId="userId" ></usershow>
 		<view class="actionInfo">
-			<view class="tabbar">
+			<view class="tabbar bg-white">
 				<view class="tab " :class="tab===0?'active':''" @click="tab=0" >
 					<text>行动 ({{total}})</text>
 				</view>
@@ -89,38 +10,13 @@
 					<text v-if="userId==user">围观的行动({{lookTotal}})</text>
 					<text v-else>TA围观的行动({{lookTotal}})</text>
 				</view>
-				<!-- <view class="tab" :class="tab===2?'active':''" @click="tab=2">
-					<text>收藏 (128)</text>
-				</view> -->
 			</view>
 			<view class="actionTabList">
 				<view class="actionMy" v-show="tab===0">
-					<actionlist v-for="(item,index) in list" :key="index" :tab="tab" :showBut='1' :item='item'></actionlist>
+					<actionlist v-for="(item,index) in list" :key="index" :tab="tab" :showBut='1' :item='item' :index='index' v-on:lookerClick="lookerClick" :userId="user"></actionlist>
 				</view>
 				<view class="actionLook" v-show="tab===1">
-					<block v-for="(attention, index) in lookerList" :key="index" >
-						<view class="actionLi" >
-							<view class="ali-main" @tap="goPush(attention.pushId)">
-								<view class="ali-main-img">
-									<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
-								</view>
-								<view class="lli-main-content xd-list-body ">
-									<view class="xd-list-title-text">
-										<text>{{attention.userName}}</text>
-									</view>
-									<view  >
-										<text v-if="attention.sex==1" class="boy">♂</text>
-										<text v-else-if="attention.sex==0" class="gender">♀</text>
-										<text v-else class="boy">密</text>
-										<!-- <text>20</text> -->
-									</view>
-								</view>
-							</view>
-						</view>
-					</block>
-				</view>
-				<view class="actionFavorite" v-show="tab===2">
-					<actionlist v-for="(item,index) in [1,2]" :key="index" :tab="tab"  :showBut='1' v-on:lookerClick="lookerClick"  :userId='userId'></actionlist>
+					<actionlist v-for="(item,index) in lookerList" :key="index" :tab="tab" :showBut='1' :item='item' :index='index' v-on:lookerClick="lookerClick" :userId="user"></actionlist>
 				</view>
 			</view>
 		</view>
@@ -129,30 +25,108 @@
 
 <script>
 	import actionlist from "@/components/actionlist.vue"
+	import usershow from "@/components/usershow.vue"
+	import {
+		mapState,
+		mapMutations
+	} from 'vuex'
 	export default {
+		components:{
+			usershow,
+			actionlist
+		},
 		data() {
 			return {
 				tab:0,//行动，围观，收藏
 				list:[],
-				userInfo:'',
 				userId:'',
 				user:uni.getStorageSync('id'),
 				total:'',
+				userInfo:'',
 				lookerList:[],
 				pushId:'',
 				lookTotal:0,
+				lookerCount: 0,
+				likeCount: 0,
+				guanzhu:'关注'
 			}
+		},
+		computed: {
+			...mapState(['hasLogin'])
+		},
+		onShareAppMessage(res) {
+			let that = this;
+			if(res.from=="menu"){
+			return	that.xdUniUtils.xd_onShare();
+			}else{
+				if(that.tab==0){
+					return {
+						
+						title:that.list[res.target.id].userId==that.user? '第'+that.list[res.target.id].pushCardCishuCount+'次打卡:'+that.list[res.target.id].content:'我为@'+that.list[res.target.id].userName+'打Call：'+that.list[res.target.id].content,
+						path: '/pages/index/action/action?pushId='+ that.list[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.list[res.target.id].isopen,
+						imageUrl:that.list[res.target.id].pictures?that.list[res.target.id].pictures:'../../static/images/icon/img/title1.png',
+					}
+				}else if(that.tab==1){
+					return {
+						
+						title:that.lookerList[res.target.id].userId==that.user? '第'+that.lookerList[res.target.id].pushCardCishuCount+'次打卡:'+that.lookerList[res.target.id].content:'我为@'+that.lookerList[res.target.id].userName+'打Call：'+that.lookerList[res.target.id].content,
+						path: '/pages/index/action/action?pushId='+ that.lookerList[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.lookerList[res.target.id].isopen,
+						imageUrl:that.lookerList[res.target.id].pictures?that.lookerList[res.target.id].pictures:'../../static/images/icon/img/title1.png',
+					}
+				}
+			}		
 		},
 		onShow() {
 			
 		},
 		onLoad(option) {
+			//#ifdef MP-WEIXIN
+			wx.showShareMenu({
+			  menus: ['shareAppMessage', 'shareTimeline']
+			})
+			//#endif
 			this.userId = option.userId;
 			this.getCardList();
 			this.getLookerList();
 			this.getUserInfo();
+			this.getIsAttention();
+			this.lookerCountData();
 		},
 		methods: {
+			lookerCountData() {
+				var that = this;
+				that.xd_request_post(that.xdServerUrls.xd_getLookerCountByUserId, {
+					userId: that.userId
+				}, true).then(res => {
+					if (res.resultCode == 0) {
+						that.lookerCount = res.obj.lookerCount
+						that.likeCount = res.obj.likeCount
+					} 
+				})
+			},
+			clidtags(e){
+				if(this.guanzhu=="已关注"){
+					return
+				}
+				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
+					userId:uni.getStorageSync('id'),
+					attentionUserId:e.id,		
+					
+				},true).then(res=>{
+					if(res.resultCode == 0){
+						 this.guanzhu="已关注"
+						 uni.showToast({
+						 	icon:'none',
+						   title: '关注成功',
+						 })
+					}else{
+						uni.showToast({
+							icon:'none',
+						  title: res.msg,
+						})
+					}
+				})
+			},
 			goPush(e){
 				uni.navigateTo({
 					url: '../index/action/action?pushId='+e
@@ -161,11 +135,11 @@
 			//围观
 			lookerClick:function(list,index){
 				var that=this ;
-				if(!that.hasLogin){
+				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
-						url: '../login/login' 
+						url: '../../login/login' 
 					});
-					return false;
+									return false
 				}
 				that.userId=uni.getStorageSync('id');
 				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
@@ -194,158 +168,85 @@
 					
 				})
 			},
+			getIsAttention(){
+				if(this.userId == uni.getStorageSync('id')){
+					this.guanzhu =''
+				}else{
+					this.xd_request_post(this.xdServerUrls.xd_iSAttention,{
+						userId:uni.getStorageSync('id'),
+						attentionUserId:this.userId,
+					},true)
+					.then(res=>{
+						var data =res.obj;
+						if(data){
+							this.guanzhu ='已关注'
+						}else{
+							this.guanzhu ='关注'
+						}
+						
+					})
+				}
+			},
+			
 			getUserInfo(){
 				this.xd_request_post(this.xdServerUrls.xd_getUserInfoByUserId,{
 					userId:this.userId,
 				},true)
 				.then(res=>{
 					this.userInfo=res.obj;
+					// this.$set(this.userInfo,res.obj)
 				})
 			},
 			getCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,{
 					token:uni.getStorageSync('token'),
+					lookUserId:uni.getStorageSync('id'),
 					userId:this.userId,
 				},true)
 				.then(res=>{
 					this.list=this.timeStamp(res);
-					
 					this.total=res.obj.total;
 				})
 			},
 			timeStamp(res){
 				let dataList=res.obj.list;
 				for(var i=0;i <res.obj.list.length;i++){
-				   var  time=this.xdUniUtils.xd_timestampToTime(res.obj.list[i].createTime);
-					dataList[i].createTime=time;
 					dataList[i].challengeRmb=Math.floor(dataList[i].challengeRmb/100);
 					
 				}
 				return dataList;
 			},
 			getLookerList(){
-				this.xd_request_post(this.xdServerUrls.xd_getLookerByUserId,{
+				this.xd_request_post(this.xdServerUrls.xd_lookerPushListByUserId,{
 					userId:this.userId,
 					pageNum:1,
 					pageSize:10,
 				},true)
 				.then(res=>{
-					
-					this.lookerList=res.obj.list;
+					this.lookerList=this.timeStamp(res);
 					this.lookTotal=res.obj.total
+					this.lookerList.forEach(function (item) {
+						if(typeof item.pictures ==='undefined' || item.pictures == ''){
+							item.pictures = '../../static/images/icon/img/title1.png'
+						}else{
+							if(item.pictures.indexOf(",")> -1){
+								item.pictures = item.pictures.split(",")[0]
+							}
+						}
+					})			
+					
 				})
 			},
 			
 			
 		},
-		components:{
-			actionlist
-		}
 	}
 </script>
 
 <style  lang="scss">
 	.selfCenter{
-		padding:30rpx;
+		padding:0 20rpx;
 	}
-.personContent{
-	padding:12rpx 0;
-	display: flex;
-	justify-content: flex-start;
-	.personHead{
-		padding: 6rpx;
-		.imgHead{
-			height: 104rpx;
-			width: 104rpx;
-			display: inline-block;
-			border-radius: 100%;
-		}
-	}
-	.personInfo{
-		margin:0 20rpx;
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		.subInfo{
-			font-size: 24rpx;
-			color:#888;
-		}
-	}
-	.personOpt{
-		flex: 1;
-		display: flex;
-		justify-content: flex-end;
-		padding:0;
-		.pay{
-			display: block;
-			font-size: 26rpx;
-			height: 66rpx;
-			background: $xd-color-base;
-			width:200rpx;
-			margin:0;
-		}
-	}
-}
-.moreInfo{
-	padding:20rpx 0;
-	border-bottom: 1px solid #d9d9d9;
-	border-top: 1px solid #d9d9d9;
-	font-size: 26rpx;
-	.link{
-		color:$xd-color-base;
-	}
-	.gender{
-		background:#fd5107;
-		color:#fff;
-		display: inline-block;
-		padding:0 6rpx;
-		border-radius: 100%;
-		font-size: 22rpx;
-		margin-right: 2rpx;
-		// height: 24rpx;
-		// line-height: 24rpx;
-	}
-	.moreInfoRow{
-		display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
-		margin:0 0 14rpx 0;
-		&.rowaction{
-			margin-top:18rpx;
-		}
-		.moreInfoIn{
-			width: 170rpx;
-			overflow: hidden;
-			
-			margin:0;
-			padding:0;
-			&.flex1{
-				flex: 1;
-			}
-			text-align: left;
-			.gender{
-				background:#fd5107;
-				color:#fff;
-				display: inline-block;
-				padding:0 6rpx;
-				border-radius: 100%;
-				font-size: 22rpx;
-				margin-right: 2rpx;
-				// height: 24rpx;
-				// line-height: 24rpx;
-			}
-			.boy{
-				background:#66CCFF;
-				color:#fff;
-				display: inline-block;
-				padding:0 6rpx;
-				border-radius: 100%;
-				font-size: 22rpx;
-				margin-right: 2rpx;
-			}
-		}
-	}
-}
 .actionInfo{
 	margin:24rpx 0;
 	.tabbar{
@@ -364,26 +265,5 @@
 		}
 	}
 }
-.actionLi{
-		padding-top: 20rpx;
-		border-bottom: 1upx solid #ffa700;
-		.ali-main{
-			display: flex;
-			}
-			.xd-mag{
-				height: 125rpx;
-				width: 125rpx;
-			}
-		}
-	.boy{
-		background:#66CCFF;
-		color:#fff;
-		display: inline-block;
-		padding:0 6rpx;
-		border-radius: 100%;
-		font-size: 22rpx;
-		margin-right: 2rpx;
-	}
-
 
 </style>

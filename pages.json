@@ -1,8 +1,6 @@
 {
 	"pages": [
 		
-
-		
 		{
 			"path": "pages/index/index",
 			"style": {
@@ -44,7 +42,8 @@
 		{
 			"path": "pages/selfCenter/income",
 			"style": {
-				"navigationBarTitleText": "我的收益"
+				"navigationBarTitleText": "账单",
+				"enablePullDownRefresh": true
 			}
 		},
 		
@@ -58,57 +57,111 @@
 		{
 			"path": "pages/action/step1",
 			"style": {
-				"navigationBarTitleText": "行动"
+				"navigationBarTitleText": "新建行动"
 			}
 		}, 
-		{
-			"path": "pages/action/step2",
-			"style": {
-				"navigationBarTitleText": "行动"
-			}
-		}, 
+		
 		{
 			"path": "pages/action/finish",
 			"style": {
-				"navigationBarTitleText": "行动"
+				"navigationBarTitleText": "保证金"
 			}
 		}, {
 			"path": "pages/index/cardDetails/cardDetails",
 			"style": {
-				"navigationBarTitleText": "行动打卡" //打卡详情
+				"navigationBarTitleText": "打卡详情" //打卡详情
 			}
 		}, {
 		    "path" : "pages/index/action/action",
 		    "style" : {
-				 "navigationBarTitleText": "行动打卡" //行动项
+				 "navigationBarTitleText": "行动详情" //行动项
 			 }
 		},
-		{
-			"path": "pages/selfCenter/editUserInfo",
-			"style": {
-				"navigationBarTitleText": "编辑信息"
-			}
-		},
+		
 		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "微信授权登录"
 			}
 		},
+		
 		{
-			"path": "pages/web/webShow",
+			"path": "pages/selfCenter/balanDrawal",
+			"style": {
+				"navigationBarTitleText": "提现"
+			}
+		},
+		{
+			"path" : "pages/sponsor/form",
+			"style" : {
+				"navigationBarTitleText": "赞助"
+			}
+		},
+		
+	//#ifdef APP-PLUS
+		
+		{
+		    "path" : "pages/sponsor/card",
+		    "style" : {
+				"navigationBarTitleText": "赞助"
+			}
+		},
+		
+		{
+			"path" : "pages/sponsor/index",
+			"style" : {
+				"navigationBarTitleText": "赞助"
+			}
+		},
+	//#endif
+		{
+		    "path" : "pages/sponsor/action",
+		    "style" : {
+				"navigationBarTitleText": "赞助详情"
+			}
+		}
+
+	],
+	"subPackages":[{
+		"root":"pages/pageA",
+		"pages":[{
+			"path":"thankmoney/thankmoney",
+			"style": {
+				"navigationBarTitleText": "设置感谢金"
+			}
+		},
+		{
+			"path": "web/webShow",
 			"style": {
 				"navigationBarTitleText": "网页"
 			}
 		},
 		{
-			"path": "pages/img/img",
+			"path": "web/richtext",
 			"style": {
-				"navigationBarTitleText": "图片"
+				"navigationBarTitleText": "网页"
 			}
-		}
-
-	],
+		},
+		{
+			"path": "user/myattention",
+			"style": {
+				"navigationBarTitleText": "关注"
+			}
+		},
+		{
+			"path": "user/myfans",
+			"style": {
+				"navigationBarTitleText": "粉丝"
+			}
+		},
+		{
+			"path": "user/editUserInfo",
+			"style": {
+				"navigationBarTitleText": "编辑信息"
+			}
+		 }
+		]
+	}],
 
 	"tabBar": {
 		"color": "#b8b9bb",
@@ -132,6 +185,12 @@
 		// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
 		// 	"text": "消息"
 		// }, 
+		// {
+		// 	"pagePath": "pages/sponsor/index",
+		// 	"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
+		// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
+		// 	"text": "赞助"
+		// },
 		{
 			"pagePath": "pages/selfCenter/selfCenter",
 			"iconPath": "static/images/icon/tabbar/tabbar3.png",

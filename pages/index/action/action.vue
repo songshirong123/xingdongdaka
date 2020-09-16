@@ -1,226 +1,174 @@
 <template>
 	<view >
-	<view class="content">
-		
-		<view class="xd-info-main">				
-			<view class="xd-list xd-border-b-black">
-				<view class="xd-list-items">
-					<view class="xd-list-image xd-relative">
-						<image class="xd-list-image" v-if="pushList.pictures!=''" :src="pushList.pictures" mode="aspectFill" @tap="goPageImg(pushList.pictures)"></image>
-						<image class="xd-list-image" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
-						<view class="xd-list-head">
-							<image class="xd-list-head-img" :src="pushList.userHead" mode="aspectFill" @tap="goUser(pushList.userId)"></image>
+		<lookerCountInfo ref="lookerCountInfo"></lookerCountInfo>
+		<view class="cu-card dynamic " :class="pushList.pictures!=''?'no-card':''">
+			<view class="cu-item shadow">
+				<view class="cu-list menu-avatar">
+					<view class="cu-item ">
+						<view @tap="goUser(pushList.userId)" class="cu-avatar round lg" :style="{backgroundImage: 'url(' +pushList.userHead + ')'}" ></view>
+						<view class="content flex-sub">
+							<view @tap="goUser(pushList.userId)">{{pushList.userName}}</view>
+						</view>
+						<view >
+							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
+								{{guanzhu}}
+							</view>
 						</view>
 					</view>
-					<view class="xd-list-body">
-						<view class="xd-list-title">
-								<text class="xd-list-title-text userName" @tap="goUser(pushList.userId)">{{pushList.userName}}</text>
-								<view class="xd-tags" v-show="userId!=pushList.userId" @tap="tags">关注</view>
-								
+					<view class="flex flex-wrap padding justify-between">
+						<view class="widthtext " >
+							<view class="flex flex-wrap justify-between">
+								<view class="">
+									<text class="text-orange" v-if="pushList.pushCardStatus==1">进行中...</text>
+									<text class="text-gray" v-else-if="pushList.pushCardStatus==2">未达成</text>
+									<text class="text-green" v-else-if="pushList.pushCardStatus==3">已达成</text>
+									<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
+								</view>
+								<view class="text-xl" v-if="pushList.isopen==1">
+									<text class="lg text-orange cuIcon-lock" ></text>
+								</view>
+							</view>
+							
+							<view class="text-gray text-sm ">
+								阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
+							</view>
+							<view class="text-gray text-sm  flex flex-wrap">
+								<view class="">
+									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
+								</view>
+								<view class="margin-left-sm"> 
+								    可休假天数：{{pushList.kholidayDay}}/{{pushList.holidayDay}}
+								</view>
+							</view>
 						</view>
-						<view class="xd-list-desc xd-ellipsis-line2">{{pushList.content}}</view>
+						<view v-if="pushList.challengeRmb>0">
+							<view class="cu-tag light bg-red radius" >
+								保证金￥{{pushList.challengeRmb}}
+							</view>
+						</view>
 					</view>
 				</view>
 				
-				<view class="xd-grids xd-flex-center">
-					<!-- <view class="xd-grids-items sponsor-grids">
-						<view class="xd-relative">
-							<view class="xd-tbr-large">赞助</view>
-							<view class="xd-badge">{{pushList.giveReward}}</view>
-						</view>
+				<view class="text-contents">
+					<text class="contentext" >{{pushList.content}}
+					</text>
+				</view>
+				<view class="grid flex-sub padding-lr"  >
+					<image class="bg-img imgheit"  :src="pushList.pictures" mode="aspectFill"
+					 @tap="goPageImg(pushList.pictures)" v-if="pushList.pictures!=''">
+					</image>
+					<image class="bg-img imgheit"  :src="audioPlaySrc" mode="aspectFill"
+					 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
+					</image>
+				</view>
+				<view class="flex padding justify-between" >
+					<view>
+						<button class="cu-btn bg-light-blue sm round" v-if="pushList.userId==userId"  :id="index" open-type="share">分享邀请</button>
+						<button class="cu-btn bg-orange sm round" v-else-if="pushList.onlooker"  :id="index" open-type="share">为TA打Call</button>
+						<button class="cu-btn bg-green sm round  " v-else-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0"  @tap="lookerClick(pushList,index)">围观</button>
+						<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(pushList,index)">围观分钱</button>
+						<text class="text-gray text-df ">{{pushList.onlookerCount}}</text>
+					</view>
+					<!-- <view class="text-xxl"  >
+						<button class="cu-btn line-green sm round  " @click="gothanl(pushList)" v-if="userId==pushList.userId" >我要感谢</button>
 					</view> -->
-					<view class="xd-grids-items bond-grids">
-						<view class="xd-relative">
-							<view class="xd-tbr-large">保证金<text class="xd-tbr-txt-bold">￥{{pushList.challengeRmb}}</text></view>
-						</view>
+					<view class="text-xxl"  >
+						<button class="cu-btn line-green sm round  " @click="goSteps" v-if="userId==pushList.userId" >立即打卡</button>
+						<button class="cu-btn line-green sm round  " @click="gostep" v-else>一起行动</button>
 					</view>
-					<view class="xd-grids-items supervise-grids">
-						<view class="xd-relative">
-							<!-- <view class="xd-tbr-large">邀请围观</view> -->
-							<!-- <button class="xd-tbr-large buttclass" type="default" open-type="share">邀请围观</button> -->
-							<button class="xd-tbr-large buttclass" v-if="pushList.userId==userId || pushList.onlooker "  :id="index" open-type="share" >邀请围观</button>
-							<button class="xd-tbr-large buttclass" v-else-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0"  @tap="lookerClick(pushList,index)">围观</button>
-							<button class="xd-tbr-large buttclass" v-else  @tap="lookerClick(pushList,index)">围观分钱</button>
-							<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">{{pushList.lookerCount}}</view>
-						</view>
-					</view>
+				
 				</view>
 			</view>
-		</view>
-		<!-- flag -->
-		<view class="flag-info">
-			<view class="flag-box top">
-				<view class="xd-list-title xd-border-b-black">
-					<text class="xd-list-title-text">阶段期限</text>
-					<text class="xd-list-desc">{{pushList.createTime }} - {{ pushList.endTime}}</text>
-				</view>
-				<view class="xd-list-title">
-					<view class="list-title-row xd-rows">
-						<text class="xd-list-title-text">坚持天数</text>
-						<text class="xd-list-desc">{{pushList.pushCardCount}}/{{pushList.targetDay}}</text>
-					</view>
-					<view class="list-title-row xd-rows">
-						<text class="xd-list-title-text">休假天数</text>
-						<text class="xd-list-desc">{{pushList.holidayDay}}</text>
+			<scroll-view scroll-x class="bg-white nav">
+				<view class="flex text-center">
+					<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(items,index) in ['打卡内容','围观排行']" :key="index" @tap="tabSelect" :id="index" >
+						{{items}}
 					</view>
 				</view>
-			</view>
-			<view class="flag-box bottom xd-border-b-black">
-				<view class="xd-list-title">
-					<text class="xd-list-title-text">动机目标：</text>
-					<text class="xd-list-desc extendContenttext">{{pushList.extendContent}}</text>
-				</view>
-				<view class="xd-list-title">
-					<text class="xd-list-title-text">打卡方式：</text>
-					<text class="xd-list-desc">{{pushList.punchCardWay}}</text>
-				</view>
-			</view>
-		</view>
-		<!-- 打卡列表 -->
-		<view class="xd-body">
-			<view class="pageNav xd-rows xd-border-b-black">
-				<view :class="['navbar', active == 0 ? 'active' : '']" @tap="cardFn">打卡</view>
-				<view :class="['navbar', active == 1 ? 'active' : '']" @tap="detailFn">详情</view>
-				<view :class="['navbar', active == 2 ? 'active' : '']" @tap="lookFn" v-if="userId==pushList.userId">围观的人</view>
-				<view :class="['navbar', active == 2 ? 'active' : '']" @tap="lookFn" v-else>围观TA的人</view>
-			</view>
-			<!-- 打卡 -->
-			<view class="xd-list-info" v-if="active==0">
-				<!-- 循环 xd-list -->
-				<view class="xd-list xd-border-b-black" v-for="(list,index) in pusCardList" :key="index" >
-					<view class="xd-list-items">
-						<view class="xd-comments-image xd_card_imgs">
-							<image :src="list.pictures[0]" class="xd-comments-img" v-if="list.pictures!=''" mode="aspectFill"  @tap="goPageImg(list.pictures)"></image>
-							<image class="xd-comments-img" v-else :src="audioPlaySrc" @error="error" @tap="goPageImg(audioPlaySrc)"></image>
-						</view>
-						<view class="xd-list-body"  @tap="gocardComentList(list)">
-							<view class="xd-list-body-desc">{{list.createTime}}</view>
-							<view class="xd-list-desc xd-ellipsis-line2">{{list.content}}</view>
-						</view>
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative" >
-								<image class="xd-grids-icon-img-comment comentimg" src="../../../static/images/icon/comment.png" mode="widthFix" @tap="cardComentList(list)"></image>
-								<view class="xd-badge" >{{list.commentCount}}</view>
+			</scroll-view>
+			<block v-for="(item,index) in pusCardList" :key="index" v-if="TabCur==0">
+				<view class="cu-timeline">
+					<view class="cu-time" v-if="index == 0 || compareDate(pusCardList[index-1],item)">{{item.createTime}}</view>
+					<view class="cu-item">
+						<view class="content">
+							<view class="">
+								<view class="cu-tag line-green">第{{pusCardList.length-index}}次打卡</view>
+							</view>
+							<view  class="margin-top-sm margin-bottom-sm margin-left-lg textcon" @tap="gocardComentList(item,0)">{{item.content}}</view>
+							<view class="videheit" v-if="item.videos!=''&&item.videos!=undefined &&item.videos!=null ">
+								<video class="videos"  :src="item.videos" controls></video>
+							</view>
+							<view v-else class="grid flex-sub padding-lr"   >
+								<image class="bg-img imgheit"  :src="item.pictures[0]" mode="aspectFill"
+								 @tap="goPageImg(item.pictures)" v-if="item.pictures.length!=''">
+								</image>
+							</view>
+							<view class="text-xxl flex flex-wrap justify-end " @tap="gocardComentList(item,1)">
+								<text class="text-gray cuIcon-comment  "></text>
+								<text class="text-gray text-df">{{item.commentCount}}</text>
 							</view>
 						</view>
 					</view>
-					<!-- <view class="xd-grids">
-						<view class="xd-grids-items comment-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-comment" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-								<view class="xd-badge">23</view>
+				</view>
+			</block>
+			<block v-for="(attention,index) in lookerList" :key="index" v-if="TabCur==1">
+				<view class="actionLi bg-white">
+					<view class="ali-main">
+						<view class="texticon" v-if="index==0">
+							<text class="lg cuIcon-crown"> </text>
+						</view>
+						<view class="textnum" v-if="index>0">
+							{{index+1}}
+						</view>
+						<view class="ali-main-img" @tap="goUser(attention.lookUserId)">
+							
+							<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
+							
+						</view>
+						<view class="lli-main-content xd-list-body" @tap="goUser(attention.lookUserId)">
+							<view class="xd-list-title-text">
+								<text>{{attention.userName}}</text>
+								<text v-if="attention.sex==1" class="boy">♂</text>
+								<text v-else-if="attention.sex==0" class="boy">♀</text>
+								<text v-else class="boy">密</text>
+							</view>
+							<view class="moreInfoIn">
+								<image class='address' src="/static/images/icon/address.png"></image>
+								<text class="province">{{attention.province}}.{{attention.city}}</text>
 							</view>
 						</view>
-						<view class="xd-grids-items love-grids">
-							<view class="xd-relative">
-								<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-								<view class="xd-badge">32</view>
-							</view>
+						<view class="ali-main-list" @tap="showBanner(attention.lookUserId,attention.pushId)">
+							<view class="ali-main-list-num">{{attention.lookerCount}}</view>
 						</view>
-					</view> -->
-				</view>
-			</view>
-			
-			<!-- 详情 -->
-			<view class="xd-list-info" v-else-if="active==1">
-				<view class="xd-list-extendContent">
-					<text class="xd-list-extendContentText">{{pushList.extendContent}}</text>
-				</view>
-			</view>
-			<!-- 围观的人 -->
-			<view class="xd-list-info" v-else-if="active==2">
-				<view class="actionLook" >
-					<block v-for="(attention, index) in lookerList" :key="index" >
-						<view class="actionLi" >
-							<view class="ali-main">
-								<view class="ali-main-img">
-									<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
-								</view>
-								<view class="lli-main-content xd-list-body ">
-									<view class="xd-list-title-text">
-										<text>{{attention.userName}}</text>
-									</view>
-									<view  >
-										<text v-if="attention.sex==1" class="boy">♂</text>
-										<text v-else-if="attention.sex==0" class="gender">♀</text>
-										<text v-else class="boy">密</text>
-										<!-- <text>20</text> -->
-									</view>
-								</view>
-							</view>
+						<!-- v-if="userId==pushList.userId" -->
+						<view class="defaultthank" @click="gothank(attention)" >
+							<button class="defaultbut" type="default">感谢</button>
 						</view>
-					</block>
+						
+					</view>
 				</view>
-			</view>
+			</block>
 		</view>
-		
-		<view style="height: 10upx;"></view>
-		<view class="btn_bar" v-if="userId==pushList.userId">
-			<view class="btns" v-if="pushList.pushCardCount<pushList.targetDay"><button class="btn" @click="goSteps">立即打卡</button></view>
+		<backTop :scrollTop="scrollTop"></backTop>
+		<!-- 开始行动-加号 -->
+		<view class="start-add" @tap="goPage('/pages/action/step1')" v-if="scrollTop<2000">
+			<image src="../../../static/images/icon/add.png" mode="widthFix"></image>
 		</view>
-		<!-- 底部 -->
-		<view class="footer">
-			
-			<view class="xd-grids xd-space-between xd-flex-v-center" >
-				<view class="xd-grids-items comment-grids" @tap='openAddr'>
-					<view class="xd-relative">
-						<image class="xd-grids-icon-img" src="../../../static/images/icon/comment.png" mode="widthFix"></image>
-						<view class="xd-badge">0</view>
-					</view>
-				</view>
-				<view class="xd-grids-items love-grids" >
-					<!-- <view class="xd-relative" v-show="!list.currentUserGiveLike">
-						<image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix"></image>
-						<view class="xd-badge">{{pushList.giveLike}}</view>
-					</view> -->
-					
-					<view class="xd-relative" v-show="!pushList.currentUserGiveLike">
-						  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love.png" mode="widthFix" @tap="loveClick" ></image>
-						  <view class="xd-badge">0</view>
-					</view>
-					<view class="xd-relative" v-show="pushList.currentUserGiveLike">
-						  <image class="xd-grids-icon-img-love" src="../../../static/images/icon/love-on.png" mode="widthFix" @tap="loveClick"></image>
-						  <view class="xd-badge">0</view>
-					</view>
-				</view>
-				<view class="xd-grids-items collect-grids">
-					<view class="xd-relative">
-						<image class="xd-grids-icon-img" src="../../../static/images/icon/collect.png" mode="widthFix"></image>
-						<view class="xd-badge">0</view>
-					</view>
-				</view>
-				<view class="xd-grids-items share-grids">
-					<view class="xd-relative">
-						<button  class="butShare" open-type="share" >
-						  <image class="xd-grids-icon-img" src="../../../static/images/icon/share.png" mode="widthFix"  ></image>
-						</button>
-						<view class="xd-badge">0</view>
-					</view>
-				</view>
-				<!-- <view class="xd-grids-items reward-grids">
-					<view class="xd-relative">
-						<view class="xd-tbr-large">打赏</view>
-						<view class="xd-badge">0</view>
-					</view>
-				</view> -->
-				<view class="xd-grids-items action-grids" @tap="goStep">
-					<view class="xd-relative">
-						<view class="xd-tbr-large" @tap="goStep">一起行动</view>
-						<view class="xd-badge xd-bg-red xd-badge-absolute xd-white">0</view>
-					</view>
-				</view>
-			</view>
-		</view>
-	</view>
 	</view>
 </template>
 
 <script>
+	import lookerCountInfo from "@/components/lookerCountInfo.vue"
 	import{ mapState,mapMutations} from 'vuex'
+	import backTop from "@/components/backTop.vue"
 	export default {
+		components:{
+			lookerCountInfo,
+			backTop
+		},
 		data() {
 			return {
-				active: 0,
+				TabCur: 0,
 				pushComentList:[],
 				pusCardList:[],
 				pushList:{},
@@ -228,54 +176,182 @@
 				addrAnimation:'',
 				audioPlaySrc:'../../../static/images/icon/img/titl.png',
 				userId:uni.getStorageSync('id'),
-				share:'',
+				
 				lookerList:[],
+				looktotal:'',
+				lookNextPageTwo:'',
 				pushId:'',
 				isShare:0,
+				guanzhu:'关注',
+				scrollTop:0,
+				
+				scrollTopinfo:true,
 				
 			};
+		},
+		onPageScroll(e) {
+			this.scrollTop = e.scrollTop;
+			// if(this.scrollTopinfo){
+			// 	this.scrollTopinfo=false;
+			// 	setTimeout(()=>{
+			// 		this.scrollTop=0
+			// 		this.scrollTopinfo=true;
+			// 	},3000)
+			// }
+			
 		},
 		computed: {
 		           ...mapState(['hasLogin'])  
 		       },  
-		onLoad(option) {			
+		onLoad(option) {
+			//#ifdef MP-WEIXIN
+			wx.showShareMenu({
+			  menus: ['shareAppMessage', 'shareTimeline']
+			})
+			//#endif
 			if(option.pushList==undefined){
+				
 				this.pushId=option.pushId;
+				this.isShare=option.isopen?option.isopen:0;
 				if(option.share!=undefined){
-					this.share=option.share;
-					this.isShare=1;
+					try{												
+					 uni.setStorageSync('share',option.share);
+					}catch(e){
+						console.log(Error)
+					};
 				}
 				this.getpushList();
+				this.getPushCardList();
+				this.clickSaveShareInfo();
 			}
+			
 		},
-		onShow() {	
-		this.clickSaveShareInfo();
-		},
+		/* watch: {
+			hasLogin() {
+				setTimeout(() => {
+					this.clickSaveShareInfo();
+
+				}, 100);
+			},
+		}, */
+	
 		onShareAppMessage(res) {
+			let that = this;
+			let tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
+			let path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
+			let img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+			
+		    let	tit2= that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
+		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
+		    let	img2=that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+			if(res.from=="menu"){
+				
+			if(that.pusCardList.length>0){
+				that.setSaveShareInfo();
+				return	that.xdUniUtils.xd_onShare(tit,path,img);
+				
+			}else{
+				that.setSaveShareInfo();
+				return	that.xdUniUtils.xd_onShare(tit2,path2,img2);	
+			}
+			}else{
+				if(that.pusCardList.length>0){
+					that.setSaveShareInfo();
+					return	that.xdUniUtils.xd_onShare(tit,path,img);
+					
+				}else{
+					that.setSaveShareInfo();
+					return	that.xdUniUtils.xd_onShare(tit2,path2,img2);	
+				}
+			}		
+		},
+		//#ifdef MP-WEIXIN
+		onShareTimeline(){
 			let that = this;
 			if(that.pusCardList.length>0){
 				that.setSaveShareInfo();
 				return {
-					title: that.pusCardList[0].content,
-					path: '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+userId,
-					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'../../../static/images/icon/img/title1.png',
+					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
+					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
+					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png',
 				}
 				
 			}else{
 				that.setSaveShareInfo();
 				return {
-					title: that.pushList.content,
-					path: '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+userId,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:'../../../static/images/icon/img/title1.png',
+					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
+					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
+					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png',
 				}
 				
 			}
-			
-					
 		},
+		//#endif
 		methods:{
-			isOpen(){
+			gothank(e){
+				if(!uni.getStorageSync('token')){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false
+				}
+				uni.navigateTo({
+				url:'/pages/pageA/thankmoney/thankmoney?userId='+e.lookUserId+"&pushId="+e.pushId
+			});
+			},
+			
+			goPage(url){
+				if(!this.hasLogin){
+					uni.switchTab({
+						url:'../index'
+					})
+					return false
+				}
+				uni.navigateTo({
+					url
+				});
+			},
+		    showBanner(lookUserId,pushId){
+				this.$refs.lookerCountInfo.showBanner(lookUserId,pushId);
+			},
+			compareDate (d1, d2) {
+				if(typeof d1 == 'undefined'){
+					return true
+				}
+				if(typeof d2 == 'undefined'){
+					return true
+				}
+				return this.xdUniUtils.xd_timestampToTime(d1.createTime,false,false,false) > this.xdUniUtils.xd_timestampToTime(d2.createTime,false,false,false)
+			},
+			gostep(){
+				if(!uni.getStorageSync('token')){
+					uni.switchTab({
+						url:'../index'
+					})
+				}else{
+					uni.showModal({
+						 content: '是否要创建相同行动项',
+						 confirmText: '新建',
+						 confirmText:'继续',
+						 success: (res) => {
+						   if (res.confirm) {
+							   uni.setStorageSync('pushData',this.pushList)
+							 uni.navigateTo({
+							 	url:'../../action/step1'
+							 });
+						   } else if (res.cancel) {
+							 
+						   }
+						 }
+					})
+				}
 				
+			},
+			tabSelect(e){
+				this.TabCur=e.target.id;
+				if(this.TabCur ==1){
+					this.getLookerList()
+				}
 			},
 			setSaveShareInfo(){
 				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
@@ -283,47 +359,27 @@
 					shareUserId:this.userId,
 				},true
 				   ).then(res => {
-					   console.log(res)
+					  
 					   })
 			},
 			clickSaveShareInfo(){
-				if(this.share!=''){
+				if(uni.getStorageSync('share') != '' && this.userId != undefined){
 					this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
 						pushId:this.pushId,
-						shareUserId:this.share,
+						shareUserId:uni.getStorageSync('share'),
 						clickUserId:this.userId,
 					},true
 					   ).then(res => {
-						   console.log(res)
+						  this.getpushList();
 						   })
 				}
 			},
-			getShareInfo(){
-				if(!this.hasLogin){
-					uni.navigateTo({
-						url: '../../login/login' 
-					});
-					return false;
-				}
-				if(this.share==''||this.share==undefined){
-					return false;
-				}
-				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
-					pushId:this.pushId,
-					shareUserId:this.share,
-					clickUserId:this.userId,
-				},true
-				   ).then(res => {
-					   console.log(res)
-					   })
-			},
 			goUser(e){
-				
-				if(!this.hasLogin){
+				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
 						url: '../../login/login' 
 					});
-					return false;
+									return false
 				}
 				uni.navigateTo({
 					url:'../../selfCenter/selfView?userId='+e
@@ -332,11 +388,11 @@
 			//围观
 			lookerClick:function(list,index){
 				var that=this ;
-				if(!that.hasLogin){
+				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
-						url: '../login/login' 
+						url: '../../login/login' 
 					});
-					return false;
+									return false
 				}
 				that.userId=uni.getStorageSync('id');
 				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
@@ -348,15 +404,30 @@
 				
 						   if(res.resultCode==0){
 							   that.pushList.onlooker=true
-							   that.pushList.lookerCount++;
+							   that.pushList.onlookerCount++;
+							  if(uni.getStorageSync(new Date().toLocaleDateString()+"dycwgKey") != 1){
+								   uni.showModal({
+										 content: that.xdCommon.gzsm_wgglts,
+										 showCancel: false,
+										 buttonText: '知道了',
+										 success: (res) => {
+										   if (res.confirm) {
+											 uni.setStorageSync(new Date().toLocaleDateString()+'dycwgKey',1);
+										   } else if (res.cancel) {
+											 uni.setStorageSync(new Date().toLocaleDateString()+'dycwgKey',1);
+										   }
+										 }
+									})
+							  }else{
+								  uni.showToast({
+										title:'围观成功',
+										 duration: 1000,
+										 icon:'none',
+								  }) 
+							  }
+						   }else{
 							   uni.showToast({
-								title:'围观成功',
-								 duration: 1000,
-								 icon:'none',
-							   })
-						   }else if(res.resultCode==10015){
-							   uni.showToast({
-								title:'您已经围观了',
+								title:res.msg,
 								 duration: 1000,
 								 icon:'none',
 							   })
@@ -365,46 +436,73 @@
 					
 				})
 			},
+			gothanl(item){
+				uni.showModal({
+				    content: '感谢金设置',
+					cancelText:'自定义',
+					confirmText:'智能分配',
+				    success: function (res) {
+				        if (res.confirm) {
+				
+				        } else if (res.cancel) {
+				            uni.navigateTo({
+				            	url:'/pages/pageA/thankmoney/thankmoney?pushId='+item.id
+				            });
+				        }
+				    },
+				})
+			},
 			goSteps(){
-				if(!this.hasLogin){
+				if(this.pushList.pushCardStatus==2||this.pushList.pushCardStatus==3){
+					uni.showModal({
+						 content: this.xdCommon.gzsm_clickCard,
+						 confirmText: '新建',
+						 success: (res) => {
+						   if (res.confirm) {
+							   uni.setStorageSync('pushData',this.pushList)
+							 uni.navigateTo({
+							 	url:'../../action/step1'
+							 });
+						   } else if (res.cancel) {
+							 
+						   }
+						 }
+					})
+				}else{
+					uni.navigateTo({
+						url: '../../selfCenter/clockIn?pushId='+this.pushList.id
+					});
+				}
+			},
+			goPageImg(e,index){
+				this.xdUniUtils.xd_showImg(e,index);
+			},
+			error: function() {
+				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
+			       }  ,
+						
+			gocardComentList(e,index){
+				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
 						url: '../../login/login' 
 					});
-					return false;
+									return false
 				}
 				uni.navigateTo({
-					url: '../../selfCenter/clockIn?pushId='+this.pushList.id
-				});
-			},
-			goPageImg(e){
-				uni.navigateTo({	
-					url:'../../img/img?url='+encodeURIComponent(JSON.stringify(e))
-				})
-			},
-			error: function() {
-				var num=Math.floor(Math.random()*8+1);
-				
-				this.audioPlaySrc='../../../static/images/icon/img/title'+num+'.png'
-				
-			            }  ,
-						
-			// goComent(){
-			// 	uni.navigateTo({
-			// 		url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
-			// 	});
-			// },
-			gocardComentList(e){
-				this.pushList.pushCardList[0].id=e.id;
-				this.pushList.pushCardList[0].userId=e.userId;
-				uni.navigateTo({
-					url: '../cardDetails/cardDetails?pushList='+encodeURIComponent(JSON.stringify(this.pushList))
+					url: '../cardDetails/cardDetails?pushId='+e.pushId+'&cardId='+e.id+'&show='+index
 				});
 			},
 			cardComentList(e){			
 				var data=[];
 				data.push(e);
-				this.pushList.pushCardList[0].id=e.id;
-				this.pushList.pushCardList[0].userId=e.userId;
+				if(this.pushList.pushCardList.length<=0){
+					var da={
+						id:e.id,
+						userId:e.userId
+					};
+					this.pushList.pushCardList.push(da);
+				}
+				
 				var pushCard={
 					pushList:this.pushList,
 					pushCardList:data,
@@ -412,43 +510,6 @@
 				uni.navigateTo({
 					url: '../cardDetails/cardDetails?pushCard='+encodeURIComponent(JSON.stringify(pushCard))
 				});
-			},
-			loveClick:function(e,index){
-				if(!this.hasLogin){
-					uni.navigateTo({
-						url: '../login/login' 
-					});
-					return false;
-				}
-				this.xd_request_post(this.xdServerUrls.xd_saveGiveLikeByPush,{
-					
-					pushId:this.pushList.id,
-					initiatorUserId:uni.getStorageSync('id'),
-					giveLikeUserId:this.pushList.userId,
-					token:uni.getStorageSync('token'),
-				},false
-				   ).then(res => {		
-						   if(!this.pushList.currentUserGiveLike){								   
-												this.pushList.currentUserGiveLike=true;
-												this.pushList.giveLike++;
-						   }else{
-						   uni.showToast({
-														title:'已经赞过了',
-														 duration: 1000,
-														 icon:'none',
-						   })}
-					  }).catch(err => {
-					  						   if(err=='操作失败'){
-					  							   uni.showToast({
-					  								title:'已经赞过了',
-					  								 duration: 1000,
-					  								 icon:'none',
-					  							   })
-					  						   }
-					
-				})
-				
-				
 			},
 			timeStamp(res){
 				let dataList=res.obj;
@@ -467,20 +528,41 @@
 			});
 			     
 			  },
-			  getpushList(){
+		async	getpushList(){
+				if(this.isShare==1){
+					if(!uni.getStorageSync('token')){
+						uni.navigateTo({
+							url: '../../login/login' 
+						});
+						return false
+					}
+				}
 			  	this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId,{
 			  		pushId:this.pushId,
 					isShare:this.isShare,
-			  		token:uni.getStorageSync('token')
+					lookUserId:uni.getStorageSync('id'),
 			  	},true).then(res=>{	
 					if(res.resultCode==0){
 						var data=res.obj;
-						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true)
+						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime)
+						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime)
 						data.challengeRmb=res.obj.challengeRmb/100;
-						this.endTime(data);
-						this.getPushCardList();
-						if(this.share!=''){
-							this.getShareInfo();
+						this.pushList=data;
+						if(this.pushList.userId == uni.getStorageSync('id')){
+							this.guanzhu =''
+						}else{
+							this.xd_request_post(this.xdServerUrls.xd_iSAttention,{
+								userId:uni.getStorageSync('id'),
+								attentionUserId:this.pushList.userId,
+							},true)
+							.then(res=>{
+								if(res.obj){
+									this.guanzhu ='已关注'
+								}else{
+									this.guanzhu ='关注'
+								}
+								
+							})
 						}
 					}else{
 						uni.showToast({
@@ -491,16 +573,6 @@
 					
 			  	})
 			  },
-			endTime(pushdata){
-				console.log(pushdata)
-				var da={id:'1'};
-				var pushListdata=pushdata
-				pushListdata['endTime']=0;
-				pushListdata.endTime=this.xdUniUtils.xd_daysAddSub(pushListdata.createTime,pushListdata.targetDay);
-				pushListdata.pushCardList.push(da)
-				this.pushList=pushListdata
-				
-			},
 			goStep(){
 				uni.navigateTo({
 					url: `/pages/action/step1`
@@ -512,18 +584,20 @@
 						token:uni.getStorageSync('token')
 				},false).then(res=>{
 					
-					
 					this.pushComentList=this.timeStamp(res);
 				})
 			},
-			getPushCardList(){
+		async	getPushCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId,{
 					pushId:this.pushId,		
 					
 				},true).then(res=>{
 					var data=res.obj.list;
 					for(let i=0;i<res.obj.list.length;i++){
-						data[i].pictures=res.obj.list[i].pictures.split(',')
+						data[i].createTime=this.xdUniUtils.xd_timestampToTime(data[i].createTime,false,false,false);
+						if(res.obj.list[i].pictures!=""){
+							data[i].pictures=res.obj.list[i].pictures.split(',')
+						}
 					}
 					this.pusCardList=data;
 				})
@@ -542,285 +616,175 @@
 				this.getLookerList();
 			},
 			tags(){
-				if(!this.hasLogin){
+				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
 						url: '../../login/login' 
 					});
-					return false;
+									return false
+				}
+				if(this.guanzhu =='已关注'){
+					return
 				}
 				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
 					userId:uni.getStorageSync('id'),
 					attentionUserId:this.pushList.userId,		
 					
-				},false).then(res=>{
-					
-					uni.showToast({
-						icon:'none',
-					  title: res.msg,
-					})
+				},true).then(res=>{
+					if(res.resultCode == 0){
+						 this.guanzhu="已关注"
+						 uni.showToast({
+						 	icon:'none',
+						   title: '关注成功',
+						 })
+					}else{
+						uni.showToast({
+							icon:'none',
+						  title: res.msg,
+						})
+					}
 				})
 			},
 			getLookerList(){
 				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
 					pushId:this.pushId,
-					pageNum:1,
+					pageNum: this.lookNextPageTwo,
 					pageSize:10,
 				},true)
 				.then(res=>{
-					
 					this.lookerList=res.obj.list;
-					this.lookTotal=res.obj.total
+					this.looktotal=res.obj.total;
+					this.lookNextPageTwo=res.obj.nextPage;
+					this.lookerList.forEach(item =>{
+						if(item.lookUserId == uni.getStorageSync('id')){
+							this.guanzhu ='已关注'
+						}
+					})
+					
 				})
-			},
+			}
 		}
 	}
 	
 </script>
-
-<style>
-	page{background: #fcfcfc;}
-</style>
 <style scoped lang="scss">
-	.xd-info-main{
-		width: 100%; box-sizing: border-box;
-		.xd-list{
-			width: 100%; box-sizing: border-box;
-			padding: 30upx 30upx 0 30upx;
-			
-			.xd-list-head{
-				position: absolute; top: -24rpx; right: -28rpx; z-index: 9;
+	page{background: #fcfcfc;}
+	.imgheit{
+		height: 320upx;
+		width: 100%;
+	}
+	.contentext{
+		
+	}
+	.cu-timeline .cu-time{
+		width: 160rpx;
+	}
+	.commentCount{
+		right: 0;
+	}
+	.actionLi{
+		padding-bottom: 10upx;
+	}
+	.ali-main{
+		display: flex;
+		padding: 20rpx;
+		.ali-main-list{
+			color: #f37b1d;
+			margin-left: 10%;
+			line-height: 130rpx;
+			width: 140rpx;
+			.ali-main-list-num{
+				margin-left: 40%;
 			}
-			.xd-list-title .xd-tags{
-				border: 1px solid #ffa700; border-radius:6upx; 
-				height: 40upx; line-height: 40upx; padding-top: 0; padding-bottom: 0;
-				color: #101010; font-size:30upx; 
-				margin-top: -4upx; margin-left: 28upx;
-			}
-			.xd-list-desc{
-				padding-top: 10upx;
-			}
-			
-			.xd-grids{
-				.xd-grids-items{
-					width: auto; margin:20upx 26upx 0 26upx;
-				}
+		}
+		.ali-main-img .xd-mag{
+			border-radius: 100%;
+			height: 125rpx;
+			width: 125rpx;
+		}
+		.lli-main-content {
+			.boy{
+				background:#66CCFF;
+				color:#fff;
+				display: inline-block;
+				padding:0 12upx;
+				border-radius: 100%;
+				font-size: 25rpx;
 				
-				.xd-grids-items.sponsor-grids{
-					.xd-tbr-large{
-						background: #ffe66f; color: #101010;
-					}
-				}
-				.xd-grids-items.bond-grids{
-					.xd-tbr-large{
-						background: #f9ebe5; color: #e17175;
-						.xd-tbr-txt-bold{
-							color: #ea030b;
-						}
-					}
-				}
-				.xd-grids-items.supervise-grids{
-					.xd-tbr-large{
-						background: #f9ebe5; color: #e17175;
-					}
-				}
+				margin-left: 14rpx;
 			}
-		}
-	}
-	
-	.flag-info{
-		width: 100%; box-sizing: border-box; margin-top: 20upx;
-		border-top-right-radius: 10upx; border-top-left-radius: 10upx;
-		
-		.top{
-			background: #f4f5f7; 
-			width: 100%;  box-sizing: border-box; 
-			padding: 0 30upx;
-			border: 1px solid #dbdcde; border-radius: 10upx; 
+			.lli-main-content-text{
+				line-height: 90rpx;
+				margin-right: 20rpx;
+			}
+			.moreInfoIn {
+				.address {
+					width: 30rpx;
+					height: 30rpx;
+				}
 			
-			.xd-list-title{padding: 10upx 0;}
-			.list-title-row{
-				width: 50%;
-			}
-			.xd-list-title-text{
-				font-weight: normal; color:#888888; margin-right: 20upx;
-			}
-			.xd-list-desc{
-				line-height: 40upx; font-size:30upx;
-			}
-		}
-		.bottom{
-			width: 100%;  box-sizing: border-box;
-			padding: 0 30upx;
-			.xd-list-title{padding: 10upx 0;}
-			.xd-list-title-text{
-				font-weight: normal; color:#575b5e; 
-			}
-		}
-	}
-	
-	.xd-body{
-		width: 100%; box-sizing: border-box; padding-bottom: 86upx;
-		.pageNav{
-			padding: 20upx 0; background: #ffffff;font-size: 28upx;
-			.navbar{
-				margin: 0 80upx;  line-height: 44upx;
-				border-bottom: 3px solid #ffffff;
-			}
-			.navbar.active{
-				border-color:#fd5107; font-weight:bold; color:#fd5107;
-			}
-		}
-		
-		.xd-list-info{
-			.xd-list{
-				width: 100%; box-sizing: border-box;
-				padding: 0 30upx; margin-top: 18upx;
-				.xd-list-body{
-					margin-left: 20upx;
-					.xd-list-body-desc{
-						padding-bottom: 10upx;
-					}
-				}
-				.xd-grids{
-					.xd-grids-items{
-						width: auto; margin:20upx 26upx 0 26upx;
-						.xd-grids-icon-img-comment{
-							width: 50upx; height:50upx
-						}
-						.xd-grids-icon-img-love{
-							width: 40upx; height:40upx
-						}
-					}
-				}
-			}
-			
-		}
-	}
-	
-	.footer{
-		background: #f8f8f8;
-		padding: 0 40upx 0 20upx; width: 100%; box-sizing: border-box;
-		position: fixed; bottom: 0; left: 0; z-index: 99;
-		
-		.xd-grids{
-			.xd-grids-items{
-				width: auto;
-			}
-			.xd-grids-items.reward-grids{
-				.xd-tbr-large{
-					color: #101010; font-size:30upx;
-				}
-			}
-			.xd-grids-items.action-grids{
-				.xd-tbr-large{
-					
-					background: #ffe66f;
-					color: #101010;
-					border:1px solid #ffa700;
-				}
-			}
-		}
-		
-	}
-	.buttclass{
-		height: 40upx;
-		margin-top: 5upx;
-		font-size: 28upx;
-}
-	button::after {
-		  border: none;
-		}
-		.butShare{
-			height: 70upx;
-			width: 90upx;
-		}
-		.love-click{
-			width: 50upx;
-			height:50upx ;
-		}
-		.love-click-num{
-			position: absolute;
-			font-size: 22rpx;
-			margin-left: 37%;
-			margin-top: -20rpx;
-		}
-		.text-coment-content{
-			padding-left: 10rpx;
-			display: flex;
-			align-items: flex-end;
-
-		}
-		
-		.comentimg{
-			width: 60upx;
-			height: 50upx;
-		}
-		.xd_card_imgs{
-			height: auto;
-		}
-		.xd-list-extendContentText{
-			font-size: 28upx;
-			color: #101010;
-		}
-		.xd-list-extendContent{
-			margin-left: 25upx;
-			margin-right: 10upx;
-			text-indent: 55upx;
-
-		}
-		.userName{
-			margin-top: -10upx;
-		}
-		.btn_bar{
-			position: fixed;
-			bottom: 0;
-			left:0;
-			width: 100%;
-			.btns {
-				display: flex;
-				align-items: center;
-				justify-content: space-between;
-				padding: 0 200rpx;
-				font-size: 28rpx;
-				margin-top: -170rpx;
-
-				.btn {
-					flex: 1;
-					height: 64rpx;
-					line-height: 64rpx;
-					background: #ffa700;
-					// color: #fff;
+				.province {
 					font-size: 28rpx;
-					border-radius: 40rpx;
-		
+					margin-left: 6rpx;
 				}
 			}
-			}
-			.extendContenttext{
-				width: 78%;
-			}
-			.actionLi{
-					padding-top: 20rpx;
-					border-bottom: 1upx solid #ffa700;
-					.ali-main{
-						display: flex;
-						}
-						.xd-mag{
-							height: 125rpx;
-							width: 125rpx;
-						}
-					}
-				.boy{
-					background:#66CCFF;
-					color:#fff;
-					display: inline-block;
-					padding:0 6rpx;
-					border-radius: 100%;
-					font-size: 22rpx;
-					margin-right: 2rpx;
-				}
-				.actionLook{
-					padding-left: 30upx;
-					width: 96%;
-				}
+		}
+	}
+
+	.textcon{
+		overflow: hidden;
+		text-overflow:ellipsis;
+		display:-webkit-box; 
+		-webkit-box-orient:vertical;
+		-webkit-line-clamp:2; ; 
+	}
+
+	.bg-light-blue{background-color: #007AFF;}
+	
+	.videos{
+		width: 500upx;
+		height: 325upx;
+	}
+	.widthtext{
+		width: 100%;
+	}
+	.texticon{
+		display: inline-flex;
+		position: absolute;
+		color: #f37b1d;
+		font-size: 35upx;
+		white-space: nowrap;
+		-webkit-transform:rotate(-50deg);
+		z-index: 10;
+
+	}
+	.textnum{
+		display: inline-flex;
+		position: absolute;
+		color: #FFFFFF;
+		background-color:#f37b1d;
+		white-space: nowrap;
+		z-index: 10;
+		border-radius: 200rpx;
+		padding: 0rpx 10rpx;
+		height: 28rpx;
+	}
+	.start-add{
+		width: 100upx; height:100upx;
+		display:flex; flex-direction:row; justify-content:center; align-items:center;
+		background: #ffe66f;
+		border: 2px solid #ffa700;
+		border-radius: 50%;
+		position: fixed; bottom: 100upx; right:30upx; z-index: 99;
+	}
+	.start-add image{
+		width: 48upx; height:48upx;
+	}
+	.defaultthank{
+		padding-top: 30upx;
+	}
+	.defaultbut{
+		height: 60upx;
+		line-height: 1.9;
+	}
+
 </style>

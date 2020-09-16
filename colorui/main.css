@@ -2188,7 +2188,8 @@ button.cuIcon.lg {
 	background-color: #ffffff;
 	overflow: hidden;
 	border-radius: 10upx;
-	margin: 30upx;
+	/* margin: 30upx; */
+	margin-bottom: 10upx;
 }
 
 .cu-card>.cu-item.shadow-blur {
@@ -2196,7 +2197,7 @@ button.cuIcon.lg {
 }
 
 .cu-card.no-card>.cu-item {
-	margin: 0upx;
+	/* margin: 0upx; */
 	border-radius: 0upx;
 }
 
@@ -2245,6 +2246,12 @@ button.cuIcon.lg {
 .cu-card.dynamic>.cu-item>.text-content {
 	padding: 0 30upx 0;
 	max-height: 6.4em;
+	overflow: hidden;
+	font-size: 30upx;
+	margin-bottom: 20upx;
+}
+.cu-card.dynamic>.cu-item>.text-contents {
+	padding: 0 30upx 0;
 	overflow: hidden;
 	font-size: 30upx;
 	margin-bottom: 20upx;
@@ -3434,8 +3441,8 @@ scroll-view.cu-steps .cu-item {
 }
 
 .bg-blue {
-	background-color: #0081ff;
-	color: #ffffff;
+	background-color:  rgb(235, 244, 255);;
+	color: #000000;
 }
 
 .bg-purple {
@@ -3449,7 +3456,7 @@ scroll-view.cu-steps .cu-item {
 }
 
 .bg-pink {
-	background-color: #e03997;
+	background-color: #fd5107;
 	color: #ffffff;
 }
 

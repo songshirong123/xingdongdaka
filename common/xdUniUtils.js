@@ -32,74 +32,75 @@ function xd_getAccessToken() {
 }
 /** *************** alert 相关 *********************** */
 // 弹出框
-function xd_showToast(title, icon, callbackFun) {
-	uni.showToast({
-		title: title,
-		icon: icon ? icon : "none",
-		success: function() {
-			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
-				callbackFun(); // 回调函数
-			}
-		}
-	});
-}
-// 弹出框:操作成功
-function xd_showToast_success(title, callbackFun) {
-	uni.showToast({
-		icon: "success",
-		success: function() {
-			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
-				callbackFun(); // 回调函数
-			}
-		}
-	});
-}
-// 弹出框:操作成功并跳转
-function xd_showToast_success_redirectTo(pageUrl) {
-	xd_showToast_success(null, function() {
-		uni.redirectTo({
-			url: pageUrl // 跳转到页面
-		});
-	});
-}
-// 弹出框:操作成功并返回上一级
-function xd_showToast_success_navigateBack() {
-	xd_showToast_success(null, function() {
-		uni.navigateBack({
-			delta: 1
-		});
-	});
-}
-// 弹窗，操作完成后返回上一级
-function xd_showToast_navigateBack(toastTitle) {
-	uni.showToast({
-		title: toastTitle,
-		success: function() {
-			uni.navigateBack({
-				delta: 1
-			})
-		}
-	});
-}
-// 确认操作
-function xd_showModal_confirm(title, message, showCancelBut, okCallbackFun, cancelCallbackFun) {
-	uni.showModal({
-		title: title || '操作确认',
-		content: message || '您确定要执行该操作吗？！',
-		showCancel: !showCancelBut ? showCancelBut : true,
-		success: function(res) {
-			if (res.confirm) {
-				if (typeof(okCallbackFun) != "undefined" && okCallbackFun != null) {
-					okCallbackFun();
-				}
-			} else if (res.cancel) {
-				if (typeof(cancelCallbackFun) != "undefined" && cancelCallbackFun != null) {
-					cancelCallbackFun();
-				}
-			}
-		}
-	});
-}
+// function xd_showToast(title, time,icon, callbackFun) {
+// 	uni.showToast({
+// 		title: title,
+// 		duration:time,
+// 		icon: icon ? icon : "none",
+// 		success: function(res) {
+// 			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
+// 				callbackFun(); // 回调函数
+// 			}
+// 		}
+// 	});
+// }
+// // 弹出框:操作成功
+// function xd_showToast_success(title, callbackFun) {
+// 	uni.showToast({
+// 		icon: "success",
+// 		success: function() {
+// 			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
+// 				callbackFun(); // 回调函数
+// 			}
+// 		}
+// 	});
+// }
+// // 弹出框:操作成功并跳转
+// function xd_showToast_success_redirectTo(pageUrl) {
+// 	xd_showToast_success(null, function() {
+// 		uni.redirectTo({
+// 			url: pageUrl // 跳转到页面
+// 		});
+// 	});
+// }
+// // 弹出框:操作成功并返回上一级
+// function xd_showToast_success_navigateBack() {
+// 	xd_showToast_success(null, function() {
+// 		uni.navigateBack({
+// 			delta: 1
+// 		});
+// 	});
+// }
+// // 弹窗，操作完成后返回上一级
+// function xd_showToast_navigateBack(toastTitle) {
+// 	uni.showToast({
+// 		title: toastTitle,
+// 		success: function() {
+// 			uni.navigateBack({
+// 				delta: 1
+// 			})
+// 		}
+// 	});
+// }
+// // 确认操作
+// function xd_showModal_confirm(title, message, showCancelBut, okCallbackFun, cancelCallbackFun) {
+// 	uni.showModal({
+// 		title: title || '操作确认',
+// 		content: message || '您确定要执行该操作吗？！',
+// 		showCancel: !showCancelBut ? showCancelBut : true,
+// 		success: function(res) {
+// 			if (res.confirm) {
+// 				if (typeof(okCallbackFun) != "undefined" && okCallbackFun != null) {
+// 					okCallbackFun();
+// 				}
+// 			} else if (res.cancel) {
+// 				if (typeof(cancelCallbackFun) != "undefined" && cancelCallbackFun != null) {
+// 					cancelCallbackFun();
+// 				}
+// 			}
+// 		}
+// 	});
+// }
 
 /** ***************request 相关*********************** */
 // 请求 url：请求路径，params请求参数，method：方法,请求header，
@@ -107,34 +108,36 @@ function xd_request(url, method, params, headers) {
 	return new Promise((resolve, reject) => {
 		uni.request({
 			url: url,
-			method: method || 'GET', // 默认get请求
+			method: method || 'POST', // 默认get请求
 			data: params || {},
 			header: headers || {},
 			dataType: "json",
+			
 			success: function(res) {
 				var d = res;
 				if (d.data.resultCode == 10002) {					
 					      // 清除登录相关内容
 						try {
-						  uni.removeStorageSync('userInfo');
-						  uni.removeStorageSync('id');
-						  uni.removeStorageSync('token');
+						  uni.removeStorage('userInfo');
+						  uni.removeStorage('id');
+						  uni.removeStorage('token');
 						} catch (e) {
 						}
 						// 切换到登录页面
 						uni.reLaunch({
-						  url: '../login/login'
+						  url: '/pages/login/login'
 						});
 							  
 				} else if(d.data.resultCode ==0||d.data.status==1){
 						resolve(d.data);
 				}else{
+					
 					resolve(d.data);
 				}
 			},
 			fail: function(err) {
 				uni.showToast({
-				  title: err
+				  title: err.errMsg
 				})
 				console.log(err)
 				reject(err);
@@ -247,27 +250,26 @@ function xd_navigateBack(delta) {
  function xd_timestampToTime(timestamp,times,times1,times2) {
   var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
   var Y = date.getFullYear() + '-';
-  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '-';
-  var D = date.getDate() + ' ';
+  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
+  var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
   if(times){
-	  var h = date.getHours() + ':';
-	  var m = date.getMinutes() + ':';
-	  // var m = date.getMinutes() ;
-	  var s = date.getSeconds();
-	   return M+D+h+m+s;
+	  var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+	  var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
+	  var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() ;
+	   return M+D+ ' '+h+m+s;
   }
   if(times1){
-  	  var h = date.getHours() + ':';
-  	  var m = date.getMinutes() + ':';
-  	  // var m = date.getMinutes() ;
-  	  var s = date.getSeconds();
-  	   return Y+M+D+h+m+s;
+  	
+	 var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+	 var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
+	 var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() ;
+  	  return Y+M+D+ ' ' + h+m+s;
   }
   if(times2){
-  	  var h = date.getHours() + ':';
-  	  var m = date.getMinutes() ;
-
-  	   return Y+M+D+h+m;
+  	
+	 var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+	 var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes() ;
+  	 return Y+M+D + ' '+ h+m;
   }
   return Y+M+D;
 }
@@ -295,19 +297,153 @@ function xd_isValidPhone(str) {
     return true;
   }
 }
+//大图浏览
+function xd_showImg(list,num) {
+	var ig=[];
+	if(Array.isArray(list)){
+		ig=list;
+	}else{
+		ig=list.split(",");
+	}
+	
+  uni.previewImage({
+  	current:num?num:0,
+	urls:ig,
+  })
+}
+//随机图片
+function xd_randomImg() {
+	var ig=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733487746.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733529495.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733539676.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733559484.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733565500.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733578216.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733591005.png",
+	];
+	var num=Math.floor(Math.random()*7+1);
+	return ig[num]
+}
+//分享
+function xd_onShare(title, path, imageUrl) {
+  //设置一个默认分享背景图片
+  let defaultImageUrl = 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+  let defaultTitle="行动打卡目标达成工具";
+  let defaultPath="/pages/index/index";
+ 
+  return {
+    title: title ?title: defaultTitle,
+    path: path ? path: defaultPath,
+    imageUrl: imageUrl ?imageUrl: defaultImageUrl,
+    success(res) { 
+      console.log("转发成功！");
+    },
+    fail: function (res) {
+      console.log("转发失败！");
+    }
+  };
+}
+/**
+ * 
+ *Tab红点提示
+ */
+const updateNumber = function(gnumber) {
+
+	if (gnumber < 1) {
+		uni.removeTabBarBadge({
+			index: 2
+		})
+	} else if (gnumber > 999) {
+		uni.setTabBarBadge({
+			index: 2,
+			text: "999+"
+		});
+	} else {
+		uni.setTabBarBadge({
+			index: 2,
+			text: gnumber + ""
+		});
+	}
+	// uni.setStorage({
+	// 	key: "gnumber",
+	// 	data: gnumber
+	// })
+};
+//登录检测
+function xd_login(e,nav){
+	if(!e){
+		
+		if(nav){
+			uni.reLaunch({
+			  url: '/pages/login/login'
+			});
+			
+		}else{
+			uni.navigateTo({
+				url:'/pages/login/login'
+			})
+			
+		}			
+		return false;
+	}
+}
+//广告组件
+function videoAdUtil(){
+	let videoAd = null;
+	
+	 if (wx.createRewardedVideoAd) {
+		 uni.showLoading({
+		 	title:"加载中...",
+		 });
+		 videoAd = wx.createRewardedVideoAd({ 
+			 adUnitId: 'adunit-d579021705423692',
+			 }) ;
+			
+			 videoAd.onError((err) => {
+				  videoAd.offClose();
+				 uni.hideLoading();	 
+				 
+			 }) ;
+			 return videoAd;
+	} ;
+}
+function  videoshowAd(videoAd) {
+    if (videoAd) {
+		videoAd.load()
+		      .then(() => {
+		        videoAd.show()
+		      })
+		      .catch(err => {
+		        // 视频加载失败重试,酌情添加
+		       videoAd.load()
+		        .then(() => {
+		         videoAd.show()
+		        })
+		        .catch(err => {
+					videoAd.offClose();
+		          wx.showToast({
+		            title: '视频加载失败！',
+		            icon: 'none'
+		          })
+		        })
+		      })
+	}
+   };
 
 export default {
+	updateNumber,
 	xd_setStorage,
 	xd_setStorageSync,
 	xd_getStorageSync,
 	xd_setAccessToken,
 	xd_getAccessToken,
-	xd_showToast,
-	xd_showToast_success,
-	xd_showToast_success_redirectTo,
-	xd_showToast_success_navigateBack,
-	xd_showToast_navigateBack,
-	xd_showModal_confirm,
+	// xd_showToast,
+	// xd_showToast_success,
+	// xd_showToast_success_redirectTo,
+	// xd_showToast_success_navigateBack,
+	// xd_showToast_navigateBack,
+	// xd_showModal_confirm,
 	xd_request,
 	xd_request_get,
 	xd_request_post,
@@ -318,5 +454,11 @@ export default {
 	xd_timestampToTime,
 	xd_daysAddSub,
 	xd_request_img,
-	xd_request_text
+	xd_request_text,
+	xd_showImg,
+	xd_randomImg,
+	xd_onShare,
+	xd_login,
+	videoAdUtil,
+	videoshowAd,
 }

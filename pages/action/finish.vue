@@ -1,36 +1,10 @@
 <template>
 	<view class="formAction">
 		<form @submit="formSubmit">
-			<!-- <view class="uni-form-item uni-column">
-				<view class="title">是否公开</view>
-				<view class="form-item nobtm">
-					<label class="radio">
-						<radio value="r1" checked="true" color="#ffa700" />
-						是
-					</label>
-					<label class="radio">
-						<radio value="r2" color="#ffa700" />
-						否
-					</label>
-				</view>
-			</view>
 			<view class="uni-form-item uni-column">
-				<view class="title">所属分类</view>
-				<view class="sb-box">
-					<view class="select">
-						<picker @change="bindPickerChange" :value="dateList[index]" :range="dateList" :range-key="'str'">
-							<view class="uni-input">{{ dateList[index]['showStr'] }}</view>
-						</picker>
-					</view>
-					<view class="sb-icon"><view class="triangle"></view></view>
-				</view>
-			</view> -->
-			<view class="uni-form-item uni-column">
-				<view class="title">设置保障金</view>
-				
-				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="50" /></view>
+				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="5" /></view>
 				<view class="pricelis">
-					<view class="priceli" @click="priceRmb(1)"><text>1元</text></view>
+					<view class="priceli" @click="priceRmb(2)"><text>2元</text></view>
 					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
 					<view class="priceli" @click="priceRmb(18)"><text>18元</text></view>
 					<view class="priceli" @click="priceRmb(66)"><text>66元</text></view>
@@ -39,11 +13,11 @@
 				</view>
 			</view>
 			<view class="uni-form-item uni-content">
-				<text>说明：目标达成则原额退回。否则将全部扣除，分配30%给平台；剩余的70%平均分配给有效围观者，或在24小时内进行自定义特别感谢。</text>
+				<text>{{gzsm_wxfk}}</text>
 			</view>
 			<!--  #ifdef  MP-WEIXIN -->
 			<view class="btn_bar">
-				<view class="btns"><button class="btn" form-type="submit" >提交</button></view>
+				<button class="bg-orange " form-type="submit">提交</button>
 			</view>
 			<!--  #endif -->
 		</form>
@@ -56,14 +30,14 @@ export default {
 	data() {
 		return {
 			rmb:{
-				challengeRmb:'',
+				challengeRmb:5,
 			},
 			formData:{},
 			saveData:{},
 			pushData:'',
 			payNum:0,
-				
-			
+			mony:0,
+			gzsm_wxfk: this.xdCommon.gzsm_wxfk
 		};
 	},
 	computed: {
@@ -84,33 +58,42 @@ export default {
 				return data;
 		},
 		formSubmit(e) {
-			if(!this.hasLogin){
-				uni.navigateTo({
-					url: '../login/login' 
-				});
-				return false;
-			}
-			var that = this;
 			
+			var that = this;
+			if(!that.hasLogin){
+				return that.xdUniUtils.xd_login(that.hasLogin);
+			}
 			let userData={
 				token:'',
 				userId:'',
-			}
+			}	
+			
 			try{
 				userData.token=uni.getStorageSync('token');
 				userData.userId=uni.getStorageSync('id');
 			}catch(e){
 				//TODO handle the exception
 			}
-			if(that.rmb.challengeRmb!=''){
-				that.saveData=Object.assign(that.formData,that.rmb,userData);	
-			}else{
+			if(that.rmb.challengeRmb==5 ){
+				if( e.detail.value.challengeRmb<0|| isNaN(e.detail.value.challengeRmb)){
+					uni.showToast({
+					    title: '输入保证金有误',
+						mask:true,
+					    duration: 2000,
+						icon:'none'
+					});
+					return false
+					
+				}
 				that.saveData=Object.assign(that.formData,e.detail.value,userData);
-				
-			};
-			if(that.rmb.challengeRmb==''){
+			}else{
+				that.saveData=Object.assign(that.formData,that.rmb,userData);	
+			}
+			
+			if(that.saveData.challengeRmb==0 ||that.saveData.challengeRmb=='' ){
 				if(e.detail.value.challengeRmb==''||e.detail.value.challengeRmb<=0){
 					that.saveData.challengeRmb=0;
+					console.log('formSubmit------33333 that.saveData',that.saveData);
 					that.xd_request_post(that.xdServerUrls.xd_savePush,that.saveData,true).then( res=>{
 						if(res.resultCode==0){
 							uni.showToast({
@@ -128,7 +111,7 @@ export default {
 						}else{
 							
 							uni.showToast({
-								title: res.obj,
+								title: res,
 								icon: 'none',
 								duration: 3000,
 								success:function(){
@@ -140,40 +123,63 @@ export default {
 						}
 					})
 				}else{
-					that.saveData.challengeRmb=that.saveData.challengeRmb*100;
+					that.mony=that.saveData.challengeRmb*100;
+					//that.saveData.challengeRmb=0;
 					
 						that.getPushId();		  		
 				}
 			}
 			else{
-				that.saveData.challengeRmb=that.saveData.challengeRmb*100;
+				that.mony=that.saveData.challengeRmb*100;
+				//that.saveData.challengeRmb=0;
 				
-					that.getPushId();		
+				that.getPushId();		
 			
 			}		
 		},
 		updataPushId(){
+			console.log('updataPushId------');
+			//取消支付调用修改金额为0
 			var that=this;
-			that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:that.pushData.obj.id}
+			that.xd_request_post(that.xdServerUrls.xd_updatePushDataByPushId,{
+				id:that.pushData.obj.id,
+				challengeRmb:0,
+			}
 			,true).then( res=>{
-				     that.saveData.challengeRmb=0;
-					 
-						return false	
-					
 				
 			})
 		},
 		getPushId(){
-			console.log(this.saveData)
+			
+			var that=this;
+			that.saveData.challengeRmb=that.saveData.challengeRmb*100;
+			console.log('getPushId----------',that.saveData);
 			this.xd_request_post(this.xdServerUrls.xd_savePush,this.saveData,true).then( res=>{
+				console.log('xd_request_post----------',res);
+				
 				if(res.resultCode==0){
 					this.pushData=res;
-					this.goPay();
+					if(res.obj.payWay != 1){
+						this.goPay();
+					}else{
+						uni.showToast({
+							title: '发布成功',
+							icon: 'success',
+							duration: 2000,
+							success:function(){
+								//that.updataPushId();
+								uni.setStorageSync('pushData','' );
+								uni.reLaunch({
+									url: '../index/action/action?pushId='+res.obj.id
+								})
+							}
+						});
+					}
+					
 					
 				}else{
-					
 					uni.showToast({
-						title: res.obj,
+						title: res.status,
 						icon: 'none',
 						duration: 3000,
 						success:function(){
@@ -213,15 +219,17 @@ export default {
 			};
 			data.id=that.saveData.userId;
 			data.token=that.saveData.token;
-			data.city=userInfo.city;
-			data.userName=userInfo.nickName;
-			data.province=userInfo.province;
+			// data.city=userInfo.city;
+			// data.userName=userInfo.nickName;
+			// data.province=userInfo.province;
 			data.unionId=userInfo.unionId;
 			data.openid=userInfo.openId;
-			data.payRmb=that.saveData.challengeRmb
+			data.payRmb=that.mony;
 			data.pushId=that.pushData.obj.id;
 			wx.getSetting({
 			  success: res => {
+				  console.log('wx.getSetting----',res,data);
+				  
 			    if (res.authSetting['scope.userInfo']) {
 					that.xd_request_post(that.xdServerUrls.xd_pay,data,false).then(res=>{
 						uni.requestPayment({
@@ -237,6 +245,7 @@ export default {
 									icon: 'success',
 									duration: 2000,
 									success:function(){
+										//that.updataPushId();
 										uni.setStorageSync('pushData','' );
 										uni.reLaunch({
 											url: '../index/action/action?pushId='+that.pushData.obj.id
@@ -246,6 +255,7 @@ export default {
 							},
 							fail: function (err) {
 								// 支付失败的回调中 用户未付款
+								that.updataPushId();
 								uni.showModal({
 									content:'支付取消',
 									confirmText:'重新填写',
@@ -254,12 +264,12 @@ export default {
 									success:function(ress) {
 										 if (ress.confirm) {
 											 uni.setStorageSync('pushData',that.pushData.obj );
-											 that.updataPushId();
+											
 											 uni.reLaunch({
 												url: 'step1'
 												  })
 														}else if (ress.cancel) {
-											that.updataPushId();				
+										
 											uni.setStorageSync('pushData',that.pushData.obj );
 											uni.reLaunch({
 												url: '../index/index'
@@ -289,6 +299,10 @@ export default {
 </script>
 
 <style lang="scss">
+	page{
+		height: 100%;
+		background-color: #FFFFFF;
+	}
 .formAction {
 	padding: 0 30rpx 150rpx 30rpx;
 	font-size: 30rpx;
@@ -300,8 +314,9 @@ export default {
 	}
 	.form-item {
 		&:not(.nobtm) {
-			border-bottom: 1px solid #ffa700;
+			border: 1px solid #ffa700;
 		}
+		margin-top: 50upx;
 		height: 68rpx;
 		line-height: 68rpx;
 		margin-bottom: 12rpx;
@@ -309,30 +324,17 @@ export default {
 		.radio {
 			margin-right: 20rpx;
 		}
-	}
-}
-.btn_bar {
-	position: fixed;
-	bottom: 0;
-	left: 0;
-	width: 100%;
-	.btns {
-		height: 120rpx;
-
-		display: flex;
-		align-items: center;
-		justify-content: space-between;
-		padding: 0 30rpx;
-		font-size: 28rpx;
-		.btn {
-			flex: 1;
-			height: 64rpx;
-			line-height: 64rpx;
-			background: #ffa700;
-			// color: #fff;
-			font-size: 28rpx;
+		.digit{
+			height: 100%;
 		}
 	}
+	
+}
+.btn_bar {
+	position: absolute;
+	bottom: 0;
+	width: 92%;
+	margin-bottom: 10upx;
 }
 .pricelis {
 	display: flex;

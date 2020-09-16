@@ -1,16 +1,18 @@
 <template>
- <view>
+ <view class="bg-white">
 	<!-- #ifdef MP-WEIXIN -->
-	<view v-if="!hasLogin"><!--  -->
-		<view>
-			<view class='header'>
+	<view ><!--  -->
+		<view class="bg-white">
+			<view class='header bg-white' >
 				<image src='../../static/images/icon/img/xddak.jpg'></image>
 			</view>
 			<view class='content'>
 				<view>申请获取以下权限</view>
 				<text>获得你的公开信息(昵称，头像、地区等)</text>
 			</view>
-
+			<button class='bottom bg-gray'  @tap="noLogin">
+				取消
+			</button>
 			<button class='bottom' type='primary' open-type="getUserInfo" withCredentials="true" lang="zh_CN" @getuserinfo="wxGetUserInfo">
 				授权登录
 			</button>
@@ -40,122 +42,115 @@ export default {
 		       },  
         methods: {
 			...mapMutations(['logIn'])  ,
+			noLogin(){
+				
+				let pages = getCurrentPages()
+				if(pages.length<=1){
+					  uni.switchTab({
+							url:'../index/index'
+						 })
+				 }else{
+					  uni.navigateBack({
+							delta:1
+						 })
+				 }
+			},
 			
             //第一授权获取用户信息===》按钮触发
             wxGetUserInfo() {
                 let _this = this;
 				uni.login({
-						   provider: 'weixin',
-						   success: function(loginRes) {
-								_this.code=loginRes.code;
-								uni.getUserInfo({
-											   provider: 'weixin',
-											   lang:'zh_CN',
-											   success: function(infoRes) {
-				　　　　　　　　　　　　　　　　　　　　　　//获取用户信息后向调用信息更新方法
-													 _this.iv=infoRes.iv;
-													 _this.encryptedData=encodeURIComponent(infoRes.encryptedData);
+				   provider: 'weixin',
+				   success: function(loginRes) {
+					   _this.code=loginRes.code;
+						uni.getUserInfo({
+							   provider: 'weixin',
+							   lang:'zh_CN',
+							   success: function(infoRes) {
+								     _this.iv=infoRes.iv
+									 _this.encryptedData=encodeURIComponent(infoRes.encryptedData);
+									 wx.getSetting({
+									        success(res) {
+											if(res.authSetting["scope.userInfo"]){
 												
-													 _this.getOpenId();
-											   },
-											
-										   });
-				                   },
-				               });
+											_this.isLogin();
+													
+									 		   }
+									        },
+									        fail() {
+									         
+									        }
+									    }) 
+							   },
+							
+						   });
+						   },
+					   });
             },
 			
 			isLogin(){
 				let _this = this;
-				   _this.xd_request(_this.xdServerUrls.xd_weiXinLogin,"POST",
-				   {
-					   userName: _this.userInfo.nickName,
-					   userHead: _this.userInfo.avatarUrl,
-					   city:_this.userInfo.city,
-					   province:_this.userInfo.province,
-				   encryptedData:_this.encryptedData,
-				   iv:_this.iv,
-				   code:_this.code,
-				   },
-				   {'content-type': 'application/x-www-form-urlencoded'} 
-				   
-				       ).then(res=>{
-						   if(res.resultCode == 0){
-							   try{
-							   		 uni.setStorageSync('token',res.obj.token);
-							   		 uni.setStorageSync('id',res.obj.id);
-							   }catch(e){
-							   								   console.log(Error)
-							   };
-								_this.xd_request_post(_this.xdServerUrls.xd_getUserInfoByUserId,
-								{
-								userId:	res.obj.id		
-								}, true ).then(res=>{
-									_this.userInfo.nickName=res.obj.userName;
-									_this.userInfo.avatarUrl=res.obj.userHead;
-									_this.userInfo.province=res.obj.province;
-									_this.userInfo.city=res.obj.city;
-									_this.userInfo.gender=res.obj.sex?res.obj.sex:'2';
-									_this.userInfo.schoolName=res.obj.schoolName?res.obj.schoolName:'无';
-									
-									 _this.logIn(_this.userInfo);
-								   })
-								   uni.navigateBack({
-								   	delta:1
-								   })
-						   }
-					 
-				   	}).catch(Error=>{
-				   		console.log(Error)
-				   	})
-				   
+				uni.login({
+				   provider: 'weixin',
+				   success: function(loginRes) {
+					   _this.xd_request(_this.xdServerUrls.xd_weiXinLogin,"POST",
+					   {
+					   encryptedData:_this.encryptedData,
+					   iv:_this.iv,
+					   code:loginRes.code,
+					   shareUserId:uni.getStorageSync('share')?uni.getStorageSync('share'):'',
+					   },
+					   {'content-type': 'application/x-www-form-urlencoded'} 
+					   
+						   ).then(res=>{
+									   if(res.resultCode == 0){
+										   try{
+												 uni.setStorageSync('token',res.obj.token);
+												 uni.setStorageSync('id',res.obj.id);
+										   }catch(e){
+												console.log(Error)
+										   };
+											_this.userInfo.userName=res.obj.userName;
+											_this.userInfo.userHead=res.obj.userHead;
+											_this.userInfo.province=res.obj.province;
+											_this.userInfo.city=res.obj.city;
+											_this.userInfo.gender=res.obj.sex?res.obj.sex:'2';
+											_this.userInfo.schoolName=res.obj.schoolName?res.obj.schoolName:'';
+											_this.userInfo.userMobile=res.obj.userMobile;
+											_this.userInfo.openId=res.obj.openId;
+											_this.userInfo.id=res.obj.id;
+											_this.userInfo.unionId=res.obj.unionId;
+											
+											
+											 _this.logIn(_this.userInfo);
+											 let pages = getCurrentPages()
+											 if(pages.length<=1){
+												  uni.switchTab({
+														url:'../index/index'
+													 })
+											  }else{
+												  uni.navigateBack({
+														delta:1
+													 })
+											  }
+									   }
+										 
+						}).catch(Error=>{
+							console.log(Error)
+						})
+						}
+						}) 
 				    
-				},
-			
-			getOpenId(){
-				 let _this = this;
-				 let co='';
-				 uni.login({
-						   provider: 'weixin',
-						   success: function(loginRes) {
-								 co=loginRes.code;
-							
-								_this.xd_request_post(_this.xdServerUrls.xd_decodeUserInfo,
-								{
-								code:co,
-								encryptedData:_this.encryptedData,
-								iv:_this.iv,							
-								}, false ).then(res=>{
-								
-									_this.userInfo=res.userInfo;
-									wx.getSetting({
-									       success(res) {
-										  
-											   if(res.authSetting["scope.userInfo"]){
-											   
-													_this.isLogin();
-												
-											   }
-									       },
-									       fail() {
-									        
-									       }
-									   })
-								}
-								).catch(Error=>{
-               		console.log(Error)
-               	})
-								}
-								})
-				
-					}
-		
-        },
-        onLoad() {
+				},	
         }
+      
     }
 </script>
 
 <style>
+	page{
+		background-color: #FFFFFF;
+	}
   .header {
 		margin: 90rpx 0 90rpx 50rpx;
 		border-bottom: 1px solid #ccc;
