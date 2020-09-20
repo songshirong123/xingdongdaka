@@ -45,6 +45,15 @@
 							<view class="cu-tag light bg-red radius" >
 								保证金￥{{pushList.challengeRmb}}
 							</view>
+							<view style="display:inline-block; padding-left:5px;">
+								<view v-if="!pushList.belongOwn "  @tap="goTOSponsor(0,pushList.id)" class="cu-tag light bg-yellow radius" >
+									赞助 
+								</view>{{!pushList.belongOwn && pushList.sponsorCount>0?pushList.sponsorCount:''}}
+								<view v-if="pushList.belongOwn" @tap="goTOSponsor(0,pushList.id)" class="cu-tag light bg-yellow radius" >
+									获赞助金 ￥{{pushList.challengeRmb}}
+								</view>
+							</view>
+							
 						</view>
 					</view>
 				</view>
@@ -642,6 +651,13 @@
 						  title: res.msg,
 						})
 					}
+				})
+			},
+			goTOSponsor(index,pushId){
+				console.log('goTOSponsor',index,pushId);
+				uni.setStorageSync("pushId",pushId);
+				uni.navigateTo({
+					url:'../../sponsor/form'
 				})
 			},
 			getLookerList(){

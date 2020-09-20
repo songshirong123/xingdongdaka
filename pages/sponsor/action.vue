@@ -92,34 +92,37 @@
 										{{xdUniUtils.xd_timestampToTime(ite.createTime,false,true,false)}}
 								</view>
 								<view class="text-gray text-content text-df">
+									<view v-if="!!ite.sponsorCondition.contact"> 联系方式：<span style="color:#fbbd08">{{ite.sponsorCondition.contact}}</span> </view>
 									<view v-if="ite.zanzhujinRmb>0"> 赞助金：<span style="color:#e54d42;font-weight:600"> ￥ {{Math.round(ite.zanzhujinRmb/100)}}</span> </view>
 									<!-- <view v-if="!!ite.createTime"> 赞助时间： <span style="color:#fbbd08"> {{xdUniUtils.xd_timestampToTime(ite.createTime,false,true,false)}} </span></view> -->
-									<view v-if="!!ite.location"> 赞助场地：<span style="color:#fbbd08">{{ite.location}}</span> </view>
-									<view v-if="!!ite.sponsorCondition.location"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.location}} </span></view> 
+									<view v-if="ite.zanzhujinRmb>0 &&  !!ite.sponsorCondition.money"> 赞助说明：<span style="color:#fbbd08">{{ite.sponsorCondition.money}}</span> </view>
 									
-									<view v-if="!!ite.pictures.location" class="grid flex-sub padding-lr" :class="ite.pictures.location.length>1?'col-3 grid-square':'col-1'">
+									<view v-if="!!ite.location"> 赞助场地：<span style="color:#fbbd08">{{ite.location}}</span> </view>
+									<view v-if="!!ite.location && !!ite.sponsorCondition.location"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.location}} </span></view> 
+									
+									<view v-if="!!ite.location && !!ite.pictures.location" class="grid flex-sub padding-lr" :class="ite.pictures.location.length>1?'col-3 grid-square':'col-1'">
 										<view v-for="(item,index) in ite.pictures.location" :key="index" class="bg-img" :class="ite.pictures.location.length>1?'':'only-img'" 
 										   @tap="goPageImg(ite.pictures.location,index)" :style="{backgroundImage:'url('+item+')'}" >
 										</view>
 									</view>
 									
 									<view v-if="!!ite.daiJinQuan"> 代金券：<span style="color:#fbbd08">{{ite.daiJinQuan}} </span></view>
-									<view v-if="!!ite.sponsorCondition.daiJinQuan"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.daiJinQuan}} </span></view> 
-									<view v-if="!!ite.pictures.daiJinQuan" class="grid flex-sub padding-lr" :class="ite.pictures.daiJinQuan.length>1?'col-3 grid-square':'col-1'">
+									<view v-if="!!ite.daiJinQuan && !!ite.sponsorCondition.daiJinQuan"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.daiJinQuan}} </span></view> 
+									<view v-if="!!ite.daiJinQuan && !!ite.pictures.daiJinQuan" class="grid flex-sub padding-lr" :class="ite.pictures.daiJinQuan.length>1?'col-3 grid-square':'col-1'">
 										<view v-for="(item,index) in ite.pictures.daiJinQuan" :key="index" class="bg-img" :class="ite.pictures.daiJinQuan.length>1?'':'only-img'" 
 										   @tap="goPageImg(ite.pictures.daiJinQuan,index)" :style="{backgroundImage:'url('+item+')'}" >
 										</view>
 									</view>
 									<view v-if="!!ite.zheKouQuan"> 折扣权：<span style="color:#fbbd08">{{ite.zheKouQuan}} </span></view>
-									<view v-if="!!ite.sponsorCondition.zheKouQuan"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.zheKouQuan}} </span></view> 
-									<view v-if="!!ite.pictures.zheKouQuan" class="grid flex-sub padding-lr" :class="ite.pictures.zheKouQuan.length>1?'col-3 grid-square':'col-1'">
+									<view v-if="!!ite.zheKouQuan && !!ite.sponsorCondition.zheKouQuan"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.zheKouQuan}} </span></view> 
+									<view v-if="!!ite.zheKouQuan && !!ite.pictures.zheKouQuan" class="grid flex-sub padding-lr" :class="ite.pictures.zheKouQuan.length>1?'col-3 grid-square':'col-1'">
 										<view v-for="(item,index) in ite.pictures.zheKouQuan" :key="index" class="bg-img" :class="ite.pictures.zheKouQuan.length>1?'':'only-img'" 
 										   @tap="goPageImg(ite.pictures.zheKouQuan,index)" :style="{backgroundImage:'url('+item+')'}" >
 										</view>
 									</view>
 									<view v-if="!!ite.other"> 其他： <span style="color:#fbbd08">{{ite.other}} </span></view> 
-									<view v-if="!!ite.sponsorCondition.other"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.other}} </span></view> 
-									<view v-if="!!ite.pictures.other" class="grid flex-sub padding-lr" :class="ite.pictures.other.length>1?'col-3 grid-square':'col-1'">
+									<view v-if="!!ite.other && !!ite.sponsorCondition.other"> 获取条件：<span style="color:#fbbd08">{{ite.sponsorCondition.other}} </span></view> 
+									<view v-if="!!ite.other && !!ite.pictures.other" class="grid flex-sub padding-lr" :class="ite.pictures.other.length>1?'col-3 grid-square':'col-1'">
 										<view v-for="(item,index) in ite.pictures.other" :key="index" class="bg-img" :class="ite.pictures.other.length>1?'':'only-img'" 
 										   @tap="goPageImg(ite.pictures.other,index)" :style="{backgroundImage:'url('+item+')'}" >
 										</view>
@@ -194,7 +197,9 @@
 					location:'',
 					daiJinQuan:'',
 					zheKouQuan:'',
-					other:''
+					other:'',
+					money:'',
+					contact:''
 				},
 				pictures:{
 					location:[],
@@ -240,7 +245,7 @@
 			
 			that.setSaveShareInfo();
 			return {
-					title: '我为'+that.pushList.userName+'拉赞助：'+that.pushList.content,
+					title: '我为@'+that.pushList.userName+'拉赞助：'+that.pushList.content,
 					path: '/pages/sponsor/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
 					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png',
 			}

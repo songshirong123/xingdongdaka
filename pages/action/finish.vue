@@ -2,7 +2,9 @@
 	<view class="formAction">
 		<form @submit="formSubmit">
 			<view class="uni-form-item uni-column">
-				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="5" /></view>
+				<view class="form-item">
+					<input v-model.number="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" @blur="validRmb(rmb.challengeRmb)" placeholder="请输入保障金数额" maxlength="5" />
+				</view>
 				<view class="pricelis">
 					<view class="priceli" @click="priceRmb(2)"><text>2元</text></view>
 					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
@@ -56,6 +58,20 @@ export default {
 			    data.createTime=time;
 				data.challengeRmb=Math.trunc(data.challengeRmb/100);
 				return data;
+		},
+		validRmb(p){
+			console.log('validRmb',p,   Number(p)!==0 && Number(p)%1 !== 0 );
+			
+			if( Number(p)!==0 && Number(p)%1 !== 0 ){
+				uni.showToast({
+					title: '输入整数!',
+					icon: 'none',
+					duration: 3000,
+					success:function() {
+						return false;
+					}
+				})
+			}
 		},
 		formSubmit(e) {
 			
