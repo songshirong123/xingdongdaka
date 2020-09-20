@@ -58,7 +58,7 @@
 							<text class="text-gray text-df"></text>
 						</view>
 						<view style="padding-left:6px">
-							<button class="cu-btn bg-yellow sm round" @tap="gotoSponsor(list,index)">赞助</button>
+							<button class="cu-btn bg-yellow sm" @tap="gotoSponsor(list,index)">赞助</button>
 							<text v-if="list.sponsorCount>0" class="text-gray text-df ">{{list.sponsorCount}}</text>
 						</view>
 					</view>
