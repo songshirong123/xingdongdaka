@@ -41,7 +41,7 @@
 					<wyb-noticeBar type="vert" :text="listnotice" v-on:showMore="showMore"  font-weight="bold"  />
 				</view>
 				<view class="swiper-banner" v-if="active == 1 || active ==3">
-				  <swiper class="swiper"  autoplay="true" circular="true" v-if="adOff">
+				  <swiper class="swiper"  autoplay="true" circular="true" v-if="adOff" interval="20000">
 					<swiper-item v-for="item  in adid" :key="item">	
 
 					<!-- #ifdef MP-WEIXIN -->
@@ -226,7 +226,7 @@
 						   	this.listnotice.push(item.title)
 						   })
 						   this.listnoticedata=data;
-						   console.log(this.listnoticedata)
+						   
 					   }
 					   })
 			},
@@ -264,7 +264,7 @@
 				}
 			},
 			binderror(e){
-				console.log('2')
+				
 				this.adOff=false;
 			},
 			goUser(e){
@@ -344,7 +344,7 @@
 			},
 			// 赞助
 			gotoSponsor(list,index){
-				console.log('gotoSponsor',index,list)
+				
 				uni.setStorageSync("pushId",list.id);
 				uni.setStorageSync("cardId",list.pushCardList[0].id);
 				uni.navigateTo({
@@ -556,7 +556,7 @@
 			
 			// 推荐内容切换
 			navChange: function (e) {
-				console.log(e)
+				
 				this.pageNum=1;
 				this.listsTab=[];
 				this.active=3;

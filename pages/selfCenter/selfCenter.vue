@@ -65,7 +65,6 @@
 			...mapState(['hasLogin','userInfo'])
 		},
 		onShow() {
-			
 			if(!this.hasLogin){
 				return this.xdUniUtils.xd_login(this.hasLogin);
 			}

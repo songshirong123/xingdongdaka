@@ -32,18 +32,18 @@ function xd_getAccessToken() {
 }
 /** *************** alert 相关 *********************** */
 // 弹出框
-// function xd_showToast(title, time,icon, callbackFun) {
-// 	uni.showToast({
-// 		title: title,
-// 		duration:time,
-// 		icon: icon ? icon : "none",
-// 		success: function(res) {
-// 			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
-// 				callbackFun(); // 回调函数
-// 			}
-// 		}
-// 	});
-// }
+function xd_showToast(title, time,icon, callbackFun) {
+	uni.showToast({
+		title: title,
+		duration:time,
+		icon: icon ? icon : "none",
+		success: function(res) {
+			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
+				callbackFun(); // 回调函数
+			}
+		}
+	});
+}
 // // 弹出框:操作成功
 // function xd_showToast_success(title, callbackFun) {
 // 	uni.showToast({
@@ -424,7 +424,12 @@ function  videoshowAd(videoAd) {
 					videoAd.offClose();
 		          wx.showToast({
 		            title: '视频加载失败！',
-		            icon: 'none'
+		            icon: 'none',
+					success: () => {
+						uni.navigateBack({
+							delta:1,
+						})
+					}
 		          })
 		        })
 		      })
@@ -438,7 +443,7 @@ export default {
 	xd_getStorageSync,
 	xd_setAccessToken,
 	xd_getAccessToken,
-	// xd_showToast,
+	xd_showToast,
 	// xd_showToast_success,
 	// xd_showToast_success_redirectTo,
 	// xd_showToast_success_navigateBack,

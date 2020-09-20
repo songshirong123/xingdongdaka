@@ -1,1 +1,1 @@
-<rich-text nodes="{{strings}}"></rich-text>
+<view class="padding-xs"><rich-text nodes="{{strings}}"></rich-text></view>

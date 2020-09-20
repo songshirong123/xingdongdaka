@@ -386,7 +386,7 @@ export default {
 					sourceType: ['album'],
 					success: (responent) => {
 						let videoFile =  responent.tempFilePath;
-						
+						console.log(videoFile)
 						if(responent.size>100*1024*1024){
 							uni.showModal({
 								title:'观看视频广告免费上传大于100M视频',
@@ -403,6 +403,7 @@ export default {
 											}) ;
 										  that.videoAd.onClose((res) => {
 													 if (res && res.isEnded || res === undefined) {
+														 console.log(videoFile)
 														const uploadTask = uni.uploadFile({
 															url:that.xdServerUrls.xd_uploadFile,
 															method:"POST",

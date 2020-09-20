@@ -24,9 +24,6 @@
 									<text class="text-green" v-else-if="pushList.pushCardStatus==3">已达成</text>
 									<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
 								</view>
-								<view class="text-xl" v-if="pushList.isopen==1">
-									<text class="lg text-orange cuIcon-lock" ></text>
-								</view>
 							</view>
 							
 							<view class="text-gray text-sm ">
@@ -38,6 +35,9 @@
 								</view>
 								<view class="margin-left-sm"> 
 								    可休假天数：{{pushList.kholidayDay}}/{{pushList.holidayDay}}
+								</view>
+								<view class="margin-left-sm text-red" v-if="pushList.surpassHolidayDay<0">
+								    超期天数：{{pushList.surpassHolidayDay}}
 								</view>
 							</view>
 						</view>
