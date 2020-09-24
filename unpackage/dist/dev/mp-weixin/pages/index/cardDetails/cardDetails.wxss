@@ -70,4 +70,13 @@
 .thanktext.data-v-085dabaf {
   float: right;
 }
+.textareawhit.data-v-085dabaf {
+  padding-top: 10rpx;
+  width: 70%;
+  height: 100rpx;
+  font-size: 30rpx;
+}
+.textplo.data-v-085dabaf {
+  color: #007AFF;
+}
 

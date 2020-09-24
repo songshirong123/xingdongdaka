@@ -69,7 +69,7 @@ export default {
 			index:'',
 			scrollTop:0,
 			scrollTopinfo:true,
-			
+			showlogin:true,
 			videoAd:'',
 		};
 	},
@@ -97,13 +97,10 @@ export default {
 	},
 	onShow() {	
 		if(!this.hasLogin){
-			return this.xdUniUtils.xd_login(this.hasLogin);
+			return this.xdUniUtils.xd_login(this.hasLogin,true);
 		}
 	},
 	onLoad() {
-		if(!this.hasLogin){
-			return this.xdUniUtils.xd_login(this.hasLogin);
-		}
 		this.inDada(this.tab);
 		//#ifdef MP-WEIXIN
 		wx.showShareMenu({

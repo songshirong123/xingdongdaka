@@ -264,6 +264,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 var _default =
 {
   data: function data() {
@@ -335,12 +337,12 @@ var _default =
     },
     //选择标签
     RadioChange: function RadioChange(e) {
-
-      var values = e.detail.value;
+      var values = [];
+      values = e.detail.value;
       var labeldatas = [];
       for (var i = 0; i < this.pickerlabel.length; ++i) {
-        var item = this.pickerlabel[i];
-        if (values.toString().includes(item.id)) {
+        var item = this.pickerlabel[i].id;
+        if (values.includes(item.toString())) {
           this.pickerlabel[i].checked = true;
           labeldatas.push(this.pickerlabel[i].labelName);
         } else {
@@ -557,11 +559,6 @@ var _default =
     tabs: function tabs() {var _this = this;
       this.xd_request_post(this.xdServerUrls.xd_label, {}, false).
       then(function (res) {
-        // var data=[];
-        //     res.obj.forEach(function(item){
-        //   data.push(item.labelName)
-        //  })
-        // res.obj[0].checked=true;
         _this.pickerlabel = res.obj;
       }).catch(function (err) {
 

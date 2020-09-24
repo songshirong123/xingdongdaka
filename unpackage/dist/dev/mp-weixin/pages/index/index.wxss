@@ -47,6 +47,7 @@
 .swiper-banner.data-v-57280228 {
   width: 100%;
   height: auto;
+  padding-top: 10rpx;
 }
 .swiper-banner .swiper.data-v-57280228 {
   width: 100%;
@@ -176,5 +177,8 @@
 }
 .notice-area.data-v-57280228 {
   padding-top: 20rpx;
+}
+.pading-top-ss.data-v-57280228 {
+  padding-top: 10rpx;
 }
 

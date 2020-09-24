@@ -201,7 +201,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
       index: '',
       scrollTop: 0,
       scrollTopinfo: true,
-
+      showlogin: true,
       videoAd: '' };
 
   },
@@ -229,13 +229,10 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
 
   onShow: function onShow() {
     if (!this.hasLogin) {
-      return this.xdUniUtils.xd_login(this.hasLogin);
+      return this.xdUniUtils.xd_login(this.hasLogin, true);
     }
   },
   onLoad: function onLoad() {
-    if (!this.hasLogin) {
-      return this.xdUniUtils.xd_login(this.hasLogin);
-    }
     this.inDada(this.tab);
 
     wx.showShareMenu({

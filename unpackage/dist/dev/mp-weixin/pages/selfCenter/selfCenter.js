@@ -198,7 +198,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
   onShow: function onShow() {
     if (!this.hasLogin) {
-      return this.xdUniUtils.xd_login(this.hasLogin);
+      return this.xdUniUtils.xd_login(this.hasLogin, true);
     }
     if (this.userInfos == '' || this.userInfos == undefined || this.userInfos == null) {
       try {
@@ -215,9 +215,6 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
   },
 
   onLoad: function onLoad() {
-    if (!this.hasLogin) {
-      return this.xdUniUtils.xd_login(this.hasLogin);
-    }
     this.onToOff();
 
   },

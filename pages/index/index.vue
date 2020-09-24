@@ -37,20 +37,19 @@
 						<button class="cu-btn shadow-blur round coletext">搜索</button>
 					</view>
 				</view>
-				<view class="">
+				<view class="pading-top-ss">
 					<wyb-noticeBar type="vert" :text="listnotice" v-on:showMore="showMore"  font-weight="bold"  />
 				</view>
-				<view class="swiper-banner" v-if="active == 1 || active ==3">
-				  <swiper class="swiper"  autoplay="true" circular="true" v-if="adOff" interval="20000">
-					<swiper-item v-for="item  in adid" :key="item">	
-
+				<view class="swiper-banner " v-if="active == 1 || active ==3">
+				  <swiper class="swiper"  autoplay="true" circular="true" v-if="adOff" interval="20000" :style="{'height':adHeight+'px'}">
+					<swiper-item v-for="(item,index) in adid" :key="item">	
 					<!-- #ifdef MP-WEIXIN -->
-					   <ad-custom :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror" ></ad-custom>	
-					<!-- #endif -->
-							
+					   <ad-custom v-if="index<3" id="ads" :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror" ></ad-custom>
+					   <image v-else class="swiper-item" :src="item.bannerImage"  v-model="aspectFit" @tap="bannerListtap(index)"></image>
+					<!-- #endif -->	
 					</swiper-item>
 				  </swiper>
-				  <swiper class="swiper"  autoplay="true" circular="true" v-else>
+				  <swiper class="swiper"  autoplay="true" circular="true" v-else >
 				  		<swiper-item v-for="(item ,index)  in bannerList" :key="item">	
 				  				<image class="swiper-item" :src="item.bannerImage"  v-model="aspectFit" @tap="bannerListtap(index)"></image>
 				  		</swiper-item>
@@ -151,13 +150,13 @@
 				pageSize:10,//每页条数
 				userId:uni.getStorageSync('id'),
 				searchValue:'',
-				adswiper:'',
 				num:3,
 				Off:'',
 				scrollTop:0,
 				adOff:true,
 				scrollTopinfo:true,
 				listnoticedata:'',
+				adHeight:'',
 					
 			};
 		},
@@ -212,7 +211,11 @@
 		methods:{
 			...mapMutations(['logIn','logOut','IndexlogIn'])  ,
 			bindload(){
-				
+				var that=this;
+		　　    let info = uni.createSelectorQuery().select("#ads");
+		　　　  　info.boundingClientRect(function(data) { //data - 各种参数
+		          that.adHeight=data.height;
+		　　    }).exec()  
 			},
 			//获取通知
 		getnotic(){
@@ -222,10 +225,12 @@
 				   ).then(res => {
 					   if(res.resultCode==0){					  
 						   var data= JSON.parse(res.obj);
+						   
 						   data.forEach(item=>{
 						   	this.listnotice.push(item.title)
 						   })
 						   this.listnoticedata=data;
+						    
 						   
 					   }
 					   })
@@ -252,16 +257,25 @@
 				
 			},
 			bannerListtap(e){
-				if(this.bannerList[e].bannerUrl==" "){
+				if(e>=this.bannerList.length){
+					e=e-3;
+				}
+				
+				if(this.bannerList[e].type==1){
 					uni.navigateTo({
 						url:this.bannerList.bannerUrl
 					});
-				}else{
+				}else if(this.bannerList[e].type==2){
 				 var url = encodeURIComponent(this.bannerList[e].bannerUrl);
 					uni.navigateTo({
 						url: '../pageA/web/webShow?url=' + url
 					});
-				}
+				}else{
+				var url=encodeURIComponent(this.bannerList[e].content);
+					uni.navigateTo({
+						url: '../pageA/web/richtext?url=' + url,
+					
+				});}
 			},
 			binderror(e){
 				
@@ -324,8 +338,9 @@
 			indexData:function(){
 				this.xd_request_post(this.xdServerUrls.xd_bannerList,{},true
 				 ).then((res) => {
-														   this.bannerList=res.obj
-														   this.adswiper=(res.obj.length)+3
+														   this.bannerList=res.obj;
+															this.adid.push(...res.obj);
+															console.log(this.adid)
 													   
 													   }).catch(err => {						
 													});
@@ -764,8 +779,9 @@
 	
 	.swiper-banner{
 		width: 100%;
-		// min-height: 208upx;max-height:270upx;
+		
 		height: auto;
+		padding-top: 10upx;
 		
 		.swiper{
 			width: 100%;
@@ -880,5 +896,8 @@
 	}
 	.notice-area{
 		padding-top: 20upx;
+	}
+	.pading-top-ss{
+		padding-top: 10upx;
 	}
 </style>

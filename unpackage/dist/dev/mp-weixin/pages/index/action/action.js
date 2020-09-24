@@ -97,6 +97,10 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var g0 = !(_vm.pushList.surpassHolidayDay >= 0)
+    ? Math.abs(_vm.pushList.surpassHolidayDay)
+    : null
+
   var l0 = _vm.__map(_vm.pusCardList, function(item, index) {
     var $orig = _vm.__get_orig(item)
 
@@ -112,6 +116,7 @@ var render = function() {
     {},
     {
       $root: {
+        g0: g0,
         l0: l0
       }
     }
@@ -150,6 +155,14 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@vue/babel-preset-app/node_modules/@babel/runtime/regenerator */ 45));
+
+
+
+
+
+
+
+
 
 
 

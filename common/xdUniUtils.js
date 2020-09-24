@@ -143,7 +143,9 @@ function xd_request(url, method, params, headers) {
 				reject(err);
 			}
 		});
-	});
+	}).catch((e)=>{
+		
+	})
 }
 // 简单request get
 function xd_request_get(url, params, withToken) {

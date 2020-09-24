@@ -32,7 +32,7 @@
 								{{xdUniUtils.xd_timestampToTime(item.createTime,false,true,false) }}  ({{item.pushCardCount}}/{{item.targetDay}})
 							</view>
 							<view class="margin-left-sm text-red" v-if="tab==0&&item.surpassHolidayDay<0&&userId==item.userId">
-							    超期天数：{{item.surpassHolidayDay}}
+							    超期:{{Math.abs(item.surpassHolidayDay)}}天
 							</view>
 						</view>
 						

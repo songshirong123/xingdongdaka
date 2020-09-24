@@ -87,11 +87,18 @@ var render = function() {
     true,
     false
   )
+  var g1 =
+    _vm.tab == 0 &&
+    _vm.item.surpassHolidayDay < 0 &&
+    _vm.userId == _vm.item.userId
+      ? Math.abs(_vm.item.surpassHolidayDay)
+      : null
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
-        g0: g0
+        g0: g0,
+        g1: g1
       }
     }
   )

@@ -33,12 +33,20 @@
 								<view class="">
 									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
 								</view>
-								<view class="margin-left-sm"> 
-								    可休假天数：{{pushList.kholidayDay}}/{{pushList.holidayDay}}
+								<view class="margin-left-sm flex flex-wrap text-sm align-center"> 
+								    可休假天数：
+									<view class="text-sm" v-if="pushList.surpassHolidayDay>=0">
+										{{pushList.kholidayDay}}
+									</view>
+									<view class="text-sm text-red" v-else>
+										超期{{Math.abs(pushList.surpassHolidayDay)}}
+									</view>
+									<view class="text-sm">
+										/{{pushList.holidayDay}}
+									</view>
+									
 								</view>
-								<view class="margin-left-sm text-red" v-if="pushList.surpassHolidayDay<0">
-								    超期天数：{{pushList.surpassHolidayDay}}
-								</view>
+								
 							</view>
 						</view>
 						<view v-if="pushList.challengeRmb>0">
