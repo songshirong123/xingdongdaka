@@ -481,7 +481,6 @@ export default {
 	}
 	
 }
-
 .menues{
 	overflow: hidden;
 	display: flex;

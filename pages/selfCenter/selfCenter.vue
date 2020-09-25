@@ -66,7 +66,7 @@
 		},
 		onShow() {
 			if(!this.hasLogin){
-				return this.xdUniUtils.xd_login(this.hasLogin,true);
+				return this.xdUniUtils.xd_login(this.hasLogin);
 			}
 			if (this.userInfos == '' || this.userInfos == undefined || this.userInfos == null) {
 				try {
@@ -84,7 +84,6 @@
 
 		onLoad() {
 			this.onToOff();
-			
 		},
 		watch: {
 			userInfo() {
@@ -93,6 +92,7 @@
 					this.userInfos=this.xdUniUtils.xd_getStorageSync('userInfo');
 				}, 100);
 			},
+			
 		},
 		methods: {
 			...mapMutations(['logOut']),

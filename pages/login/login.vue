@@ -43,17 +43,19 @@ export default {
         methods: {
 			...mapMutations(['logIn'])  ,
 			noLogin(){
-				
-				let pages = getCurrentPages()
-				if(pages.length<=1){
-					  uni.switchTab({
-							url:'../index/index'
-						 })
-				 }else{
-					  uni.navigateBack({
-							delta:1
-						 })
-				 }
+				uni.switchTab({
+						url:'../index/index'
+					 })
+				// let pages = getCurrentPages()
+				// if(pages.length<=1){
+				// 	  uni.switchTab({
+				// 			url:'../index/index'
+				// 		 })
+				//  }else{
+				// 	  uni.navigateBack({
+				// 			delta:1
+				// 		 })
+				//  }
 			},
 			
             //第一授权获取用户信息===》按钮触发

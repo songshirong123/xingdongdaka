@@ -476,7 +476,6 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _toConsumableArray(arr)
       then(function (res) {var _this4$adid;
         _this4.bannerList = res.obj;
         (_this4$adid = _this4.adid).push.apply(_this4$adid, _toConsumableArray(res.obj));
-        console.log(_this4.adid);
 
       }).catch(function (err) {
       });

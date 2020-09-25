@@ -229,11 +229,12 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
 
   onShow: function onShow() {
     if (!this.hasLogin) {
-      return this.xdUniUtils.xd_login(this.hasLogin, true);
+      this.xdUniUtils.xd_login(this.hasLogin);
+      return false;
     }
+    this.inDada(this.tab);
   },
   onLoad: function onLoad() {
-    this.inDada(this.tab);
 
     wx.showShareMenu({
       menus: ['shareAppMessage', 'shareTimeline'] });

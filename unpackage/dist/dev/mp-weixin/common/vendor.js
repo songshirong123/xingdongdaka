@@ -10377,7 +10377,7 @@ function xd_login(e, nav) {
       uni.navigateTo({
         url: '/pages/login/login' });
 
-
+      return false;
     }
     return false;
   }

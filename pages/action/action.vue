@@ -97,11 +97,12 @@ export default {
 	},
 	onShow() {	
 		if(!this.hasLogin){
-			return this.xdUniUtils.xd_login(this.hasLogin,true);
+			 this.xdUniUtils.xd_login(this.hasLogin);
+			 return false
 		}
+		this.inDada(this.tab);
 	},
 	onLoad() {
-		this.inDada(this.tab);
 		//#ifdef MP-WEIXIN
 		wx.showShareMenu({
 		  menus: ['shareAppMessage', 'shareTimeline']

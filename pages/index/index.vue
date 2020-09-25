@@ -38,14 +38,14 @@
 					</view>
 				</view>
 				<view class="pading-top-ss">
-					<wyb-noticeBar type="vert" :text="listnotice" v-on:showMore="showMore"  font-weight="bold"  />
+					<wyb-noticeBar type="vert" :text="listnotice" v-on:showMore="showMore"  font-weight="bold"  height="80" />
 				</view>
 				<view class="swiper-banner " v-if="active == 1 || active ==3">
 				  <swiper class="swiper"  autoplay="true" circular="true" v-if="adOff" interval="20000" :style="{'height':adHeight+'px'}">
 					<swiper-item v-for="(item,index) in adid" :key="item">	
 					<!-- #ifdef MP-WEIXIN -->
 					   <ad-custom v-if="index<3" id="ads" :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror" ></ad-custom>
-					   <image v-else class="swiper-item" :src="item.bannerImage"  v-model="aspectFit" @tap="bannerListtap(index)"></image>
+					   <image id="ads"  v-else class="swiper-item" :src="item.bannerImage"  v-model="aspectFit" @tap="bannerListtap(index)"></image>
 					<!-- #endif -->	
 					</swiper-item>
 				  </swiper>
@@ -338,23 +338,22 @@
 			indexData:function(){
 				this.xd_request_post(this.xdServerUrls.xd_bannerList,{},true
 				 ).then((res) => {
-														   this.bannerList=res.obj;
-															this.adid.push(...res.obj);
-															console.log(this.adid)
-													   
-													   }).catch(err => {						
-													});
-													this.getimg();
-													this.xd_request_post(this.xdServerUrls.xd_label,{},false
-														   ).then((res) => {
-															   var da =[{
-																   id:-1,
-																   labelName:"全部"
-															   },...res.obj];
-															   this.tabs=da;										   
-														   }).catch(err => {									
-													});
-													this.getShowRecommend();
+							   this.bannerList=res.obj;
+								this.adid.push(...res.obj);
+						   
+						   }).catch(err => {						
+						});
+						this.getimg();
+						this.xd_request_post(this.xdServerUrls.xd_label,{},false
+							   ).then((res) => {
+								   var da =[{
+									   id:-1,
+									   labelName:"全部"
+								   },...res.obj];
+								   this.tabs=da;										   
+							   }).catch(err => {									
+						});
+						this.getShowRecommend();
 				
 			},
 			// 赞助
