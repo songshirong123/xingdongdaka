@@ -125,8 +125,7 @@
 					<view class="action">
 						<text >评论</text>
 					</view>
-					<input  @input="InputBlur" :adjust-position="true" class="solid-bottom" :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"></input>
-
+					<textarea placeholder-class="textplo"   @input="InputBlur" :adjust-position="true" class="solid-bottom textareawhit" :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"></textarea>
 					<button class="cu-btn bg-green shadow-blur" @tap="inputComent">发送</button>
 				</view>
 			</view>
@@ -185,6 +184,7 @@
 		       },  
 		onShareAppMessage(res) {
 			
+
 			let that = this;
 			if(!that.hasLogin){
 				return that.xdUniUtils.xd_login(that.hasLogin);
@@ -559,4 +559,14 @@
 	.thanktext{
 		float: right;
 	}
+	.textareawhit{
+		padding-top: 10upx;
+		width: 70%;
+		height: 100upx;
+		font-size:30upx
+	}
+	.textplo{
+		color: #007AFF;
+	}
+	
 </style>

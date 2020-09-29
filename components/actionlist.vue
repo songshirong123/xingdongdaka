@@ -16,6 +16,9 @@
 				<view class="flex flex-wrap padding justify-between">
 					<view class=" " >
 						<view class="flex flex-wrap">
+							<view class="text-xl margin-right-xs" v-if="item.isopen==1">
+								<text class="lg text-orange cuIcon-lock" ></text>
+							</view>
 							<view class="" v-if="tab==0||tab==1">
 								<text class="text-orange" v-if="item.pushCardStatus==1">进行中...</text>
 								<text class="text-gray" v-else-if="item.pushCardStatus==2">未达成</text>
@@ -24,16 +27,22 @@
 							<view class="cu-tag bg-grey radio margin-left-sm">{{item.label}}</view>
 							
 						</view>
-						<view class="text-gray text-sm ">
-							{{xdUniUtils.xd_timestampToTime(item.createTime,false,true,false) }}  ({{item.pushCardCount}}/{{item.targetDay}})
+						<view class="flex flex-wrap text-sm ">
+							<view class="text-gray ">
+								{{xdUniUtils.xd_timestampToTime(item.createTime,false,true,false) }}  ({{item.pushCardCount}}/{{item.targetDay}})
+							</view>
+							<view class="margin-left-sm text-red" v-if="tab==0&&item.surpassHolidayDay<0&&userId==item.userId">
+							    超期:{{Math.abs(item.surpassHolidayDay)}}天
+							</view>
 						</view>
+						
 					</view>
 					<view v-if="item.challengeRmb>0">
 						<view class="cu-tag light bg-red radius" >
 							保证金￥{{item.challengeRmb}}
 						</view>
 					</view>
-					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==0&&item.btn!=2">
+					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==0">
 						<text class="cuIcon-moreandroid" ></text>
 					</view>
 					
@@ -108,40 +117,40 @@
 					});
 				}
 			},
-			gothank(item){
-				uni.showModal({
-				    content: '感谢金设置',
-					cancelText:'自定义',
-					confirmText:'智能分配',
-				    success: function (res) {
-				        if (res.confirm) {
-				//            that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:id},true).then(res => {
+			// gothank(item){
+			// 	uni.showModal({
+			// 	    content: '感谢金设置',
+			// 		cancelText:'自定义',
+			// 		confirmText:'智能分配',
+			// 	    success: function (res) {
+			// 	        if (res.confirm) {
+			// 	//            that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:id},true).then(res => {
 							  
-				//             	if (res.resultCode == 0) {
-				//             		uni.showToast({
-				//             		    title: '删除成功',
-				// 						icon:'none',
-				//             		    duration: 1500
-				//             		});
-				// 					that.cardList.splice(i,1);
-				//             	}else{
-				// 					uni.showModal({
-				// 					    title: '该行动项发布已超过3天，不能删除，请继续',
-				// 						icon:'none',
+			// 	//             	if (res.resultCode == 0) {
+			// 	//             		uni.showToast({
+			// 	//             		    title: '删除成功',
+			// 	// 						icon:'none',
+			// 	//             		    duration: 1500
+			// 	//             		});
+			// 	// 					that.cardList.splice(i,1);
+			// 	//             	}else{
+			// 	// 					uni.showModal({
+			// 	// 					    title: '该行动项发布已超过3天，不能删除，请继续',
+			// 	// 						icon:'none',
 				
-				// 					});
-				// 				}
+			// 	// 					});
+			// 	// 				}
 								
-				//             })
-				        } else if (res.cancel) {
-				            uni.navigateTo({
-				            	url:'/pages/pageA/thankmoney/thankmoney?pushId='+item.id
-				            });
-				        }
-				    },
-				})
+			// 	//             })
+			// 	        } else if (res.cancel) {
+			// 	            uni.navigateTo({
+			// 	            	url:'/pages/pageA/thankmoney/thankmoney?pushId='+item.id
+			// 	            });
+			// 	        }
+			// 	    },
+			// 	})
 				
-			},
+			// },
 			goPageCard(e){
 				
 				uni.navigateTo({

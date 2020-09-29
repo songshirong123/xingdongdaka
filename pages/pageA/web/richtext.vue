@@ -1,6 +1,8 @@
 <template>
-	<rich-text :nodes="strings">
+	<view class="padding-xs">
+		<rich-text :nodes="strings">
 		</rich-text>
+	</view>
 </template>
 
 <script>
@@ -11,7 +13,6 @@
 				};
 			},
 			onLoad(val) {
-				console.log(val);
 				this.strings = decodeURIComponent(val.url) //解码网址
 			},
 		}

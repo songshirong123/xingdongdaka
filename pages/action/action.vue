@@ -50,7 +50,7 @@ export default {
 			index:'',
 			scrollTop:0,
 			scrollTopinfo:true,
-			
+			showlogin:true,
 			videoAd:'',
 		};
 	},
@@ -78,14 +78,12 @@ export default {
 	},
 	onShow() {	
 		if(!this.hasLogin){
-			return this.xdUniUtils.xd_login(this.hasLogin);
-		}
-	},
-	onLoad() {
-		if(!this.hasLogin){
-			return this.xdUniUtils.xd_login(this.hasLogin);
+			 this.xdUniUtils.xd_login(this.hasLogin);
+			 return false
 		}
 		this.inDada(this.tab);
+	},
+	onLoad() {
 		//#ifdef MP-WEIXIN
 		wx.showShareMenu({
 		  menus: ['shareAppMessage', 'shareTimeline']

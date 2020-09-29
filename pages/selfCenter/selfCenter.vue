@@ -71,7 +71,6 @@
 			...mapState(['hasLogin','userInfo'])
 		},
 		onShow() {
-			
 			if(!this.hasLogin){
 				return this.xdUniUtils.xd_login(this.hasLogin);
 			}
@@ -90,11 +89,7 @@
 		},
 
 		onLoad() {
-			if(!this.hasLogin){
-				return this.xdUniUtils.xd_login(this.hasLogin);
-			}
 			this.onToOff();
-			
 		},
 		watch: {
 			userInfo() {
@@ -103,6 +98,7 @@
 					this.userInfos=this.xdUniUtils.xd_getStorageSync('userInfo');
 				}, 100);
 			},
+			
 		},
 		methods: {
 			...mapMutations(['logOut']),
