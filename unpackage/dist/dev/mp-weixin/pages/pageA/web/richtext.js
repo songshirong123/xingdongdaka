@@ -133,6 +133,8 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 //
 //
 //
+//
+//
 var _default =
 {
   data: function data() {
@@ -141,7 +143,6 @@ var _default =
 
   },
   onLoad: function onLoad(val) {
-    console.log(val);
     this.strings = decodeURIComponent(val.url); //解码网址
   } };exports.default = _default;
 

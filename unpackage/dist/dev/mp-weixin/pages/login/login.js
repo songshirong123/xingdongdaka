@@ -175,17 +175,19 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
   methods: _objectSpread(_objectSpread({},
   (0, _vuex.mapMutations)(['logIn'])), {}, {
     noLogin: function noLogin() {
+      uni.switchTab({
+        url: '../index/index' });
 
-      var pages = getCurrentPages();
-      if (pages.length <= 1) {
-        uni.switchTab({
-          url: '../index/index' });
-
-      } else {
-        uni.navigateBack({
-          delta: 1 });
-
-      }
+      // let pages = getCurrentPages()
+      // if(pages.length<=1){
+      // 	  uni.switchTab({
+      // 			url:'../index/index'
+      // 		 })
+      //  }else{
+      // 	  uni.navigateBack({
+      // 			delta:1
+      // 		 })
+      //  }
     },
 
     //第一授权获取用户信息===》按钮触发

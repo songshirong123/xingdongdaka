@@ -87,11 +87,18 @@ var render = function() {
     true,
     false
   )
+  var g1 =
+    _vm.tab == 0 &&
+    _vm.item.surpassHolidayDay < 0 &&
+    _vm.userId == _vm.item.userId
+      ? Math.abs(_vm.item.surpassHolidayDay)
+      : null
   _vm.$mp.data = Object.assign(
     {},
     {
       $root: {
-        g0: g0
+        g0: g0,
+        g1: g1
       }
     }
   )
@@ -201,6 +208,15 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   name: "actionlist",
@@ -238,40 +254,40 @@ var _default =
 
       }
     },
-    gothank: function gothank(item) {
-      uni.showModal({
-        content: '感谢金设置',
-        cancelText: '自定义',
-        confirmText: '智能分配',
-        success: function success(res) {
-          if (res.confirm) {
-            //            that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:id},true).then(res => {
+    // gothank(item){
+    // 	uni.showModal({
+    // 	    content: '感谢金设置',
+    // 		cancelText:'自定义',
+    // 		confirmText:'智能分配',
+    // 	    success: function (res) {
+    // 	        if (res.confirm) {
+    // 	//            that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId,{pushid:id},true).then(res => {
 
-            //             	if (res.resultCode == 0) {
-            //             		uni.showToast({
-            //             		    title: '删除成功',
-            // 						icon:'none',
-            //             		    duration: 1500
-            //             		});
-            // 					that.cardList.splice(i,1);
-            //             	}else{
-            // 					uni.showModal({
-            // 					    title: '该行动项发布已超过3天，不能删除，请继续',
-            // 						icon:'none',
+    // 	//             	if (res.resultCode == 0) {
+    // 	//             		uni.showToast({
+    // 	//             		    title: '删除成功',
+    // 	// 						icon:'none',
+    // 	//             		    duration: 1500
+    // 	//             		});
+    // 	// 					that.cardList.splice(i,1);
+    // 	//             	}else{
+    // 	// 					uni.showModal({
+    // 	// 					    title: '该行动项发布已超过3天，不能删除，请继续',
+    // 	// 						icon:'none',
 
-            // 					});
-            // 				}
+    // 	// 					});
+    // 	// 				}
 
-            //             })
-          } else if (res.cancel) {
-            uni.navigateTo({
-              url: '/pages/pageA/thankmoney/thankmoney?pushId=' + item.id });
+    // 	//             })
+    // 	        } else if (res.cancel) {
+    // 	            uni.navigateTo({
+    // 	            	url:'/pages/pageA/thankmoney/thankmoney?pushId='+item.id
+    // 	            });
+    // 	        }
+    // 	    },
+    // 	})
 
-          }
-        } });
-
-
-    },
+    // },
     goPageCard: function goPageCard(e) {
 
       uni.navigateTo({

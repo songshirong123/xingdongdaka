@@ -43,7 +43,9 @@
 		methods: {
 			//标签选择
 			tabs(e) {
-				this.tab = e
+				this.tab = e;
+				this.pageNum =1;
+				this.getGroupList();
 			},
 
 			//添加小组
@@ -54,26 +56,24 @@
 			},
 			selectGroup(group){
 				uni.navigateTo({
-					url:"./groupMsg?group="+JSON.stringify(group)
+					url:"./groupMsg?group="+encodeURIComponent(JSON.stringify(group))
 				})
 			},
 			
 			getGroupList(){
 				let info={
+					type:this.tab,
 					pageNum:this.pageNum,
 					pageSize:10
 				}
 				let _this =this;
-				this.xd_request_post(this.xdServerUrls.xd_selectList, info, true).then((res) => {
+				this.xd_request_post(this.xdServerUrls.xd_myRoomByType, info, true).then((res) => {
 					console.log("群列表信息",res);
-					if(!_this.xdUniUtils.IsNullOrEmpty(res.obj.list)){
-						let list = res.obj.list;
-						for (let i in list) {
-							list[i].createTime =_this.xdUniUtils.xd_timestampToTime(list[i].createTime,false,true,false);
-						}
-						_this.groupList= _this.pageNum==1?list:_this.groupList.concat(list);
-						
+					let list = res.obj.list;
+					for (let i in list) {
+						list[i].createTime =_this.xdUniUtils.xd_timestampToTime(list[i].createTime,false,true,false);
 					}
+					_this.groupList= _this.pageNum==1?list:_this.groupList.concat(list);
 				}).catch(err => {});
 			}
 		},

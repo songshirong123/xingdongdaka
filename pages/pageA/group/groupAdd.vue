@@ -160,9 +160,10 @@
 		},
 		onLoad(options) {
 			let group = options.group; //如果是编辑的 传过来 需要编辑的群信息
-			this.Group = group;
-			if (this.xdUniUtils.IsNullOrEmpty(group)) {
-				this.lableId = group.id;
+			if (!this.xdUniUtils.IsNullOrEmpty(group)) {
+				let lable = JSON.parse(group);
+				this.lableId = lable.id;
+				this.lable = lable;
 			}
 			this.IsAdd = options.isadd; //是否是新添的
 			if (!this.IsAdd) {

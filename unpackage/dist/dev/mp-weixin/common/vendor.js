@@ -10346,7 +10346,8 @@ serverBaseUrl + '/gratitude/saveGratitude'), _defineProperty(_serverUrls, "xd_sa
 serverBaseUrl + '/room/saveRoom'), _defineProperty(_serverUrls, "xd_selectList",
 serverBaseUrl + '/room/selectList'), _defineProperty(_serverUrls, "xd_selectMsgList",
 serverBaseUrl + '/room/selectMsgList'), _defineProperty(_serverUrls, "xd_sendRoomMsg",
-serverBaseUrl + '/room/sendRoomMsg'), _serverUrls);var _default =
+serverBaseUrl + '/room/sendRoomMsg'), _defineProperty(_serverUrls, "xd_myRoomByType",
+serverBaseUrl + '/room/myRoomByType'), _serverUrls);var _default =
 
 
 {
@@ -10396,18 +10397,18 @@ function xd_getAccessToken() {
 }
 /** *************** alert 相关 *********************** */
 // 弹出框
-// function xd_showToast(title, time,icon, callbackFun) {
-// 	uni.showToast({
-// 		title: title,
-// 		duration:time,
-// 		icon: icon ? icon : "none",
-// 		success: function(res) {
-// 			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
-// 				callbackFun(); // 回调函数
-// 			}
-// 		}
-// 	});
-// }
+function xd_showToast(title, time, icon, callbackFun) {
+  uni.showToast({
+    title: title,
+    duration: time,
+    icon: icon ? icon : "none",
+    success: function success(res) {
+      if (typeof callbackFun != "undefined" && callbackFun != null) {
+        callbackFun(); // 回调函数
+      }
+    } });
+
+}
 // // 弹出框:操作成功
 // function xd_showToast_success(title, callbackFun) {
 // 	uni.showToast({
@@ -10506,6 +10507,8 @@ function xd_request(url, method, params, headers) {
         console.log(err);
         reject(err);
       } });
+
+  }).catch(function (e) {
 
   });
 }
@@ -10747,7 +10750,7 @@ function xd_login(e, nav) {
       uni.navigateTo({
         url: '/pages/login/login' });
 
-
+      return false;
     }
     return false;
   }
@@ -10788,7 +10791,12 @@ function videoshowAd(videoAd) {
         videoAd.offClose();
         wx.showToast({
           title: '视频加载失败！',
-          icon: 'none' });
+          icon: 'none',
+          success: function success() {
+            uni.navigateBack({
+              delta: 1 });
+
+          } });
 
       });
     });
@@ -10835,7 +10843,7 @@ function showToast(isSuccess, content, methodes) {
   xd_getStorageSync: xd_getStorageSync,
   xd_setAccessToken: xd_setAccessToken,
   xd_getAccessToken: xd_getAccessToken,
-  // xd_showToast,
+  xd_showToast: xd_showToast,
   // xd_showToast_success,
   // xd_showToast_success_redirectTo,
   // xd_showToast_success_navigateBack,

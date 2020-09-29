@@ -203,7 +203,6 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
   (0, _vuex.mapState)(['hasLogin', 'userInfo'])),
 
   onShow: function onShow() {
-
     if (!this.hasLogin) {
       return this.xdUniUtils.xd_login(this.hasLogin);
     }
@@ -222,11 +221,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
   },
 
   onLoad: function onLoad() {
-    if (!this.hasLogin) {
-      return this.xdUniUtils.xd_login(this.hasLogin);
-    }
     this.onToOff();
-
   },
   watch: {
     userInfo: function userInfo() {var _this = this;
@@ -235,6 +230,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         _this.userInfos = _this.xdUniUtils.xd_getStorageSync('userInfo');
       }, 100);
     } },
+
 
   methods: _objectSpread(_objectSpread({},
   (0, _vuex.mapMutations)(['logOut'])), {}, {

@@ -103,6 +103,7 @@ const serverUrls = { //根据接口具体配置
 	xd_selectList: serverBaseUrl + '/room/selectList' ,//群组列表信息
 	xd_selectMsgList: serverBaseUrl + '/room/selectMsgList' ,//获取群消息
 	xd_sendRoomMsg: serverBaseUrl + '/room/sendRoomMsg' ,//发送消息
+	xd_myRoomByType: serverBaseUrl + '/room/myRoomByType' ,//我加入的和我创建的
 	
 }
 export default {

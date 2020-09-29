@@ -25,6 +25,30 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
+.group-lable.data-v-57280228 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  text-align: center;
+  margin: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  background: #FFFFFF;
+  -webkit-border-radius: 30rpx;
+          border-radius: 30rpx;
+  border: 1px solid #626466;
+  font-size: 12px;
+}
+.group-active.data-v-57280228 {
+  border: 1px solid #fd5107;
+  color: #fd5107;
+}
 .xd-body.data-v-57280228 {
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
@@ -48,6 +72,7 @@
 .swiper-banner.data-v-57280228 {
   width: 100%;
   height: auto;
+  padding-top: 10rpx;
 }
 .swiper-banner .swiper.data-v-57280228 {
   width: 100%;
@@ -66,7 +91,7 @@
   -webkit-box-sizing: border-box;
           box-sizing: border-box;
   border-bottom: 1px solid #efe5e8;
-  padding: 10rpx 0 16rpx 0;
+  padding: 10rpx 0 upx 0;
   margin-bottom: 12rpx;
   background-color: #FFFFFF;
   margin-top: 10rpx;
@@ -183,5 +208,8 @@
 }
 .notice-area.data-v-57280228 {
   padding-top: 20rpx;
+}
+.pading-top-ss.data-v-57280228 {
+  padding-top: 10rpx;
 }
 

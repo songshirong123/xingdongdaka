@@ -518,7 +518,7 @@ var innerAudioContext = uni.createInnerAudioContext();var _default =
                   sourceType: ['album'],
                   success: function success(responent) {
                     var videoFile = responent.tempFilePath;
-
+                    console.log(videoFile);
                     if (responent.size > 100 * 1024 * 1024) {
                       uni.showModal({
                         title: '观看视频广告免费上传大于100M视频',
@@ -535,6 +535,7 @@ var innerAudioContext = uni.createInnerAudioContext();var _default =
                               });
                               that.videoAd.onClose(function (res) {
                                 if (res && res.isEnded || res === undefined) {
+                                  console.log(videoFile);
                                   var uploadTask = uni.uploadFile({
                                     url: that.xdServerUrls.xd_uploadFile,
                                     method: "POST",
