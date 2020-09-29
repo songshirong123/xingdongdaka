@@ -30,8 +30,8 @@
 						<text v-if="item.type==104">交易方式:微信支付</text>
 						<text v-if="item.type==105">交易方式:余额支付</text>
 						<text v-if="item.type==106">交易方式:余额支付</text>
-						<text v-if="item.type==107">交易方式:余额提现</text>
-						<text v-if="item.type==000">交易方式:微信支付</text>
+						<!-- <text v-if="item.type==107">交易方式:余额提现</text>
+						<text v-if="item.type==000">交易方式:微信支付</text> -->
 						<text class="text-blue" v-if="item.type==103" @tap="gopush(item.pushId)">说明:{{item.cause}}</text>
 						<text  v-else >说明:{{item.cause}}</text>
 					</view>

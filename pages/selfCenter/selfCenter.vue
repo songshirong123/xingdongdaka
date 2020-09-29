@@ -1,10 +1,10 @@
 <template>
-	<view class="selfCenter ">	
+	<view class="selfCenter">	
 		<usershow  :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals"  :lookerCount="lookerCount" :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe"></usershow>
 		<view class="moreInfo">
 			<view class="moreInfoRow2">
-				<view class="user_column_item">
-					<button class='content cu-btn' @tap="gomoney">
+				<view class="user_column_item" @tap="gomoney">
+					<button class='content cu-btn' >
 					      <text class="lg text-gray cuIcon-moneybag"></text>
 					      <text class='thin'>钱包</text>
 						  <text class="lg text-orange cuIcon-pay margin-left-lg">{{rmb}}元</text>
@@ -25,6 +25,12 @@
 						</view>
 						<text class="thin">联系客服</text>
 					</button>
+				</view>
+				<view class="user_column_item"  @tap="gogroup">
+				    <button class='content cu-btn'>
+				      <text class="lg text-gray cuIcon-group"></text>
+				      <text class='thin'>互助小组</text>
+				    </button>
 				</view>
 			</view> 
 		</view>
@@ -147,6 +153,15 @@
 				this.onOff = (env != 'release' ? true : false)
 				
 			},
+			
+			//去互助小组列表
+			gogroup(){
+				uni.navigateTo({
+					url:'../pageA/group/groupList'
+				});
+			},
+			
+			//去提现
 			gomoney(){
 				
 				uni.navigateTo({

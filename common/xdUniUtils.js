@@ -430,8 +430,41 @@ function  videoshowAd(videoAd) {
 		      })
 	}
    };
+   
+/**
+ * 检测是否为空
+ * @param rst
+ * @returns {boolean}
+ * @constructor
+ */
+function IsNullOrEmpty(rst) {
+	if (rst != null && rst != "" && rst != undefined && Rst != "null") {
+		var Rst = JSON.stringify(rst);
+		if (Rst != "[]" && Rst != "null" && Rst != "{}" && Rst != "undefined") {
+			return false;
+		} else {
+			return true;
+		}
+	} else {
+		return true;
+	}
+}
+/**
+ * 显示弹框
+ */
+function  showToast(isSuccess, content, methodes) {
+	var msg = methodes + content;
+	if (!IsNullOrEmpty(msg)) {
+		uni.showToast({
+			title: msg,
+			icon: isSuccess ? "/static/images/suc.png" : "none"
+		})
+	}
+}
 
 export default {
+	showToast,
+	IsNullOrEmpty,
 	updateNumber,
 	xd_setStorage,
 	xd_setStorageSync,

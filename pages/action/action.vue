@@ -1,24 +1,5 @@
 <template>
 	<view class="action">
-		<view class="actionInfo">
-			<view class="tabbar bg-white">
-				<view class="tab " :class="tab===0?'active':''" @click="tabs(0)">
-					<text>行动 ({{total}})</text>
-				</view>
-				<view class="tab" :class="tab===1?'active':''" @click="tabs(1)">
-					<text v-if="looktotal != ''">我围观行动({{looktotal}})</text>
-					<text v-if="looktotal == ''">我围观行动</text>
-				</view>
-			</view>
-			<view class="actionTabList">
-				<view class="actionMy" v-show="tab===0">
-					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab" :index='index' v-on:toggleMask="toggleMask" :userId="userId"></actionlist>
-				</view>
-				<view class="actionLook" v-show="tab===1">
-					<actionlist v-for="(item,index) in lookerList" :item="item" :key="index" :tab="tab" :index='index' v-on:toggleMask="toggleMask" :userId="userId"></actionlist>
-				</view>
-			</view>
-		</view>	
 		<!-- <view class="btn_bar">
 			<view class="btns"><button class="btn" @click="goStep">制定新的行动项</button></view>
 		</view> -->

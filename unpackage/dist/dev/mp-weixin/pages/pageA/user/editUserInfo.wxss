@@ -108,7 +108,8 @@
 .f-lists .f-list.f-headInfo .h-headInfo-imgbar .h-headInfo-img {
   width: 100rpx;
   height: 100rpx;
-  border-radius: 100%;
+  -webkit-border-radius: 100%;
+          border-radius: 100%;
 }
 .f-lists .f-list.f-headInfo .user-contact {
   display: -webkit-box;

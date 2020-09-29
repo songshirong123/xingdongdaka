@@ -47,7 +47,8 @@
   padding: 0 16rpx;
 }
 .moreInfo .tag-text1 {
-  border-radius: 200rpx;
+  -webkit-border-radius: 200rpx;
+          border-radius: 200rpx;
   font-size: 20rpx;
   padding: 0rpx 10rpx;
   height: 28rpx;
