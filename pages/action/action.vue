@@ -97,8 +97,8 @@ export default {
 	},
 	onShow() {	
 		if(!this.hasLogin){
-			 this.xdUniUtils.xd_login(this.hasLogin);
-			 return false
+			return this.xdUniUtils.xd_login(this.hasLogin);
+			
 		}
 		this.inDada(this.tab);
 	},
