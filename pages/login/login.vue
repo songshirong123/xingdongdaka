@@ -65,11 +65,15 @@ export default {
 				   provider: 'weixin',
 				   success: function(loginRes) {
 					   _this.code=loginRes.code;
+					   console.log("********** " + loginRes.code + " **********");
+					   console.log(loginRes.code);
 						uni.getUserInfo({
 							   provider: 'weixin',
 							   lang:'zh_CN',
 							   success: function(infoRes) {
 								     _this.iv=infoRes.iv
+									 console.log("********** " + infoRes.iv + " **********");
+									 console.log(infoRes.iv+",encryptedData:"+infoRes.encryptedData);
 									 _this.encryptedData=encodeURIComponent(infoRes.encryptedData);
 									 wx.getSetting({
 									        success(res) {

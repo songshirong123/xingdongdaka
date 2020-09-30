@@ -1,13 +1,13 @@
 {
 	"pages": [
-		
+
 		{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "圈子",
 				"enablePullDownRefresh": true
 			}
-		}, 
+		},
 		// {
 		// 	"path": "pages/msg/msg",
 		// 	"style": {
@@ -38,7 +38,7 @@
 				"navigationBarTitleText": "查看信息"
 			}
 		},
-		
+
 		{
 			"path": "pages/selfCenter/income",
 			"style": {
@@ -46,21 +46,21 @@
 				"enablePullDownRefresh": true
 			}
 		},
-		
+
 		{
 			"path": "pages/action/action",
 			"style": {
 				"navigationBarTitleText": "行动",
 				"enablePullDownRefresh": true
 			}
-		}, 
+		},
 		{
 			"path": "pages/action/step1",
 			"style": {
 				"navigationBarTitleText": "新建行动"
 			}
-		}, 
-		
+		},
+
 		{
 			"path": "pages/action/finish",
 			"style": {
@@ -72,19 +72,19 @@
 				"navigationBarTitleText": "打卡详情" //打卡详情
 			}
 		}, {
-		    "path" : "pages/index/action/action",
-		    "style" : {
-				 "navigationBarTitleText": "行动详情" //行动项
-			 }
+			"path": "pages/index/action/action",
+			"style": {
+				"navigationBarTitleText": "行动详情" //行动项
+			}
 		},
-		
+
 		{
 			"path": "pages/login/login",
 			"style": {
 				"navigationBarTitleText": "微信授权登录"
 			}
 		},
-		
+
 		{
 			"path": "pages/selfCenter/balanDrawal",
 			"style": {
@@ -92,74 +92,94 @@
 			}
 		},
 		{
-			"path" : "pages/sponsor/form",
-			"style" : {
+			"path": "pages/sponsor/form",
+			"style": {
 				"navigationBarTitleText": "赞助"
 			}
 		},
-		
-	//#ifdef APP-PLUS
-		
+
+		//#ifdef APP-PLUS
+
 		{
-		    "path" : "pages/sponsor/card",
-		    "style" : {
+			"path": "pages/sponsor/card",
+			"style": {
 				"navigationBarTitleText": "赞助"
 			}
 		},
-		
+
 		{
-			"path" : "pages/sponsor/index",
-			"style" : {
+			"path": "pages/sponsor/index",
+			"style": {
 				"navigationBarTitleText": "赞助"
 			}
 		},
-	//#endif
+		//#endif
 		{
-		    "path" : "pages/sponsor/action",
-		    "style" : {
+			"path": "pages/sponsor/action",
+			"style": {
 				"navigationBarTitleText": "赞助详情"
 			}
 		}
-
 	],
-	"subPackages":[{
-		"root":"pages/pageA",
-		"pages":[{
-			"path":"thankmoney/thankmoney",
-			"style": {
-				"navigationBarTitleText": "设置感谢金"
+	"subPackages": [{
+		"root": "pages/pageA",
+		"pages": [{
+				"path": "thankmoney/thankmoney",
+				"style": {
+					"navigationBarTitleText": "设置感谢金"
+				}
+			},
+			{
+				"path": "web/webShow",
+				"style": {
+					"navigationBarTitleText": "网页"
+				}
+			},
+			{
+				"path": "web/richtext",
+				"style": {
+					"navigationBarTitleText": "网页"
+				}
+			},
+			{
+				"path": "user/myattention",
+				"style": {
+					"navigationBarTitleText": "关注"
+				}
+			},
+			{
+				"path": "user/myfans",
+				"style": {
+					"navigationBarTitleText": "粉丝"
+				}
+			},
+			{
+				"path": "user/editUserInfo",
+				"style": {
+					"navigationBarTitleText": "编辑信息"
+				}
+			}, {
+				"path": "group/groupList",
+				"style": {
+					"navigationBarTitleText": "互助小组",
+					"enablePullDownRefresh": true
+				}
+			}, {
+				"path": "group/groupAdd",
+				"style": {
+					"navigationBarTitleText": "添加小组"
+				}
+			}, {
+				"path": "group/groupMsg",
+				"style": {
+					"navigationBarTitleText": "群组"
+				}
+			}, {
+				"path": "group/addLable",
+				"style": {
+					"navigationBarTitleText": "添加标签"
+				}
 			}
-		},
-		{
-			"path": "web/webShow",
-			"style": {
-				"navigationBarTitleText": "网页"
-			}
-		},
-		{
-			"path": "web/richtext",
-			"style": {
-				"navigationBarTitleText": "网页"
-			}
-		},
-		{
-			"path": "user/myattention",
-			"style": {
-				"navigationBarTitleText": "关注"
-			}
-		},
-		{
-			"path": "user/myfans",
-			"style": {
-				"navigationBarTitleText": "粉丝"
-			}
-		},
-		{
-			"path": "user/editUserInfo",
-			"style": {
-				"navigationBarTitleText": "编辑信息"
-			}
-		 }
 		]
 	}],
 
@@ -169,34 +189,35 @@
 		"borderStyle": "black",
 		"backgroundColor": "#ffffff",
 		"list": [{
-			"pagePath": "pages/index/index",
-			"iconPath": "static/images/icon/tabbar/tabbar1.png",
-			"selectedIconPath": "static/images/icon/tabbar/tabbar1-on.png",
-			"text": "圈子"
-		}, {
-			"pagePath": "pages/action/action",
-			"iconPath": "static/images/icon/tabbar/tabbar2.png",
-			"selectedIconPath": "static/images/icon/tabbar/tabbar2-on.png",
-			"text": "行动"
-		}, 
-		// {
-		// 	"pagePath": "pages/msg/msg",
-		// 	"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
-		// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
-		// 	"text": "消息"
-		// }, 
-		// {
-		// 	"pagePath": "pages/sponsor/index",
-		// 	"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
-		// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
-		// 	"text": "赞助"
-		// },
-		{
-			"pagePath": "pages/selfCenter/selfCenter",
-			"iconPath": "static/images/icon/tabbar/tabbar3.png",
-			"selectedIconPath": "static/images/icon/tabbar/tabbar3-on.png",
-			"text": "我的"
-		}]
+				"pagePath": "pages/index/index",
+				"iconPath": "static/images/icon/tabbar/tabbar1.png",
+				"selectedIconPath": "static/images/icon/tabbar/tabbar1-on.png",
+				"text": "圈子"
+			}, {
+				"pagePath": "pages/action/action",
+				"iconPath": "static/images/icon/tabbar/tabbar2.png",
+				"selectedIconPath": "static/images/icon/tabbar/tabbar2-on.png",
+				"text": "行动"
+			},
+			// {
+			// 	"pagePath": "pages/msg/msg",
+			// 	"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
+			// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
+			// 	"text": "消息"
+			// }, 
+			// {
+			// 	"pagePath": "pages/sponsor/index",
+			// 	"iconPath": "static/images/icon/tabbar/tabbarMsg.png",
+			// 	"selectedIconPath": "static/images/icon/tabbar/tabbarMsg-on.png",
+			// 	"text": "赞助"
+			// },
+			{
+				"pagePath": "pages/selfCenter/selfCenter",
+				"iconPath": "static/images/icon/tabbar/tabbar3.png",
+				"selectedIconPath": "static/images/icon/tabbar/tabbar3-on.png",
+				"text": "我的"
+			}
+		]
 	},
 
 	"globalStyle": {
@@ -204,5 +225,13 @@
 		"navigationBarTitleText": "行动打卡",
 		"navigationBarBackgroundColor": "#F8F8F8",
 		"backgroundColor": "#F8F8F8"
+	},
+	"condition": { //模式配置，仅开发期间生效
+		"current": 0, //当前激活的模式(list 的索引项)
+		"list": [{
+			"name": "", //模式名称
+			"path": "", //启动页面，必选
+			"query": "" //启动参数，在页面的onLoad函数里面得到
+		}]
 	}
 }

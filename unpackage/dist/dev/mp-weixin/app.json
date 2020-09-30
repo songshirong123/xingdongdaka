@@ -25,7 +25,11 @@
         "web/richtext",
         "user/myattention",
         "user/myfans",
-        "user/editUserInfo"
+        "user/editUserInfo",
+        "group/groupList",
+        "group/groupAdd",
+        "group/groupMsg",
+        "group/addLable"
       ]
     }
   ],
@@ -72,5 +76,5 @@
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
   },
-  "sitemapLocation": "sitemap66.json"
+  "sitemapLocation": "sitemap8.json"
 }

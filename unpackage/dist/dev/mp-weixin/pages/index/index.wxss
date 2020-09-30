@@ -25,8 +25,33 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
+.group-lable.data-v-57280228 {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  text-align: center;
+  margin: 5px;
+  padding-left: 10px;
+  padding-right: 10px;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  background: #FFFFFF;
+  -webkit-border-radius: 30rpx;
+          border-radius: 30rpx;
+  border: 1px solid #626466;
+  font-size: 12px;
+}
+.group-active.data-v-57280228 {
+  border: 1px solid #fd5107;
+  color: #fd5107;
+}
 .xd-body.data-v-57280228 {
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   padding: 15% 15rpx;
   width: 100%;
 }
@@ -55,16 +80,18 @@
 .swiper-banner .swiper swiper-item image.data-v-57280228 {
   width: 100%;
   height: 100%;
-  border-radius: 10rpx;
+  -webkit-border-radius: 10rpx;
+          border-radius: 10rpx;
 }
 .xd-info-main.data-v-57280228 {
   width: 100%;
 }
 .xd-info-main .main-tabbar.data-v-57280228 {
   width: 100%;
-  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
   border-bottom: 1px solid #efe5e8;
-  padding: 10rpx 0 16rpx 0;
+  padding: 10rpx 0 upx 0;
   margin-bottom: 12rpx;
   background-color: #FFFFFF;
   margin-top: 10rpx;
@@ -90,7 +117,8 @@
   margin: 0 0.6%;
   padding: 8rpx 0;
   background: #fbf3e6;
-  border-radius: 10rpx;
+  -webkit-border-radius: 10rpx;
+          border-radius: 10rpx;
 }
 .xd-info-main .main-tabbar .xd-nav-bar .nav-item .nav-item-title.data-v-57280228 {
   font-size: 26rpx;
@@ -131,7 +159,8 @@
           align-items: center;
   background: #ffe66f;
   border: 2px solid #ffa700;
-  border-radius: 50%;
+  -webkit-border-radius: 50%;
+          border-radius: 50%;
   position: fixed;
   bottom: 100rpx;
   right: 30rpx;
@@ -159,7 +188,8 @@
   color: #fff;
   display: inline-block;
   padding: 0 6rpx;
-  border-radius: 100%;
+  -webkit-border-radius: 100%;
+          border-radius: 100%;
   font-size: 22rpx;
   margin-right: 2rpx;
 }
@@ -168,7 +198,8 @@
   color: #fff;
   display: inline-block;
   padding: 0 6rpx;
-  border-radius: 100%;
+  -webkit-border-radius: 100%;
+          border-radius: 100%;
   font-size: 22rpx;
   margin-right: 2rpx;
 }
