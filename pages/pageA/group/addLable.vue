@@ -9,12 +9,12 @@
 				</view>
 			</view>
 		</view>
-		<view style="width: 100%;padding: 5px;margin-top: 20px;">
-			<button class="bg-orange" @tap="labletake">完成</button>
-		</view>
+		
 	</view>
 </template>
-
+<view style="width: 100%;padding: 5px;margin-top: 20px;">
+			<button class="bg-orange" @tap="labletake">完成</button>
+		</view>
 <script>
 	export default {
 		data() {

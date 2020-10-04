@@ -4662,6 +4662,20 @@ scroll-view.cu-steps .cu-item {
 }
 /* xiaofang:20191224 */
 /* 自定义全局css */
+.xd-common-bottom-ly {
+	display: -webkit-box;
+	display: -webkit-flex;
+	display: flex;
+	bottom: 0;
+	left: 0;
+	position: fixed;
+	border-top: 1px solid #EDE1D9;
+	background-color: #F0F0F0;
+	width: 100%;
+}
+.xd-but-active{
+opacity: 0.7;
+}
 .content {
 }
 /* flex 布局 */
