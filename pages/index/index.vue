@@ -71,7 +71,7 @@
 						</scroll-view>
 					</view>
 					<view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
-						<view>项目小组</view>
+						<view>互助小组</view>
 					</view>
 
 					<!-- 互助小组对应内容 -->

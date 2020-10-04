@@ -172,12 +172,18 @@
 			}, {
 				"path": "group/groupMsg",
 				"style": {
-					"navigationBarTitleText": "群组"
+					"navigationBarTitleText": "群组",
+					"enablePullDownRefresh": true
 				}
 			}, {
 				"path": "group/addLable",
 				"style": {
 					"navigationBarTitleText": "添加标签"
+				}
+			}, {
+				"path": "group/userAddGroup",
+				"style": {
+					"navigationBarTitleText": "申请加入"
 				}
 			}
 		]

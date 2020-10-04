@@ -99,12 +99,12 @@ const serverUrls = { //根据接口具体配置
 	xd_getVal: serverBaseUrl + '/sys/getVal' ,//获取通知
 	xd_saveGratitude: serverBaseUrl + '/gratitude/saveGratitude' ,//感谢金分配
 	
-	xd_saveRoom: serverBaseUrl + '/room/saveRoom' ,//保存群组信息
-	xd_selectList: serverBaseUrl + '/room/selectList' ,//群组列表信息
-	xd_selectMsgList: serverBaseUrl + '/room/selectMsgList' ,//获取群消息
-	xd_sendRoomMsg: serverBaseUrl + '/room/sendRoomMsg' ,//发送消息
-	xd_myRoomByType: serverBaseUrl + '/room/myRoomByType' ,//我加入的和我创建的
-	
+	xd_saveRoom: serverBaseUrl + '/room/saveRoom',//保存群组信息
+	xd_selectList: serverBaseUrl + '/room/selectList',//群组列表信息
+	xd_selectMsgList: serverBaseUrl + '/room/selectMsgList',//获取群消息
+	xd_sendRoomMsg: serverBaseUrl + '/room/sendRoomMsg',//发送消息
+	xd_myRoomByType: serverBaseUrl + '/room/myRoomByType',//我加入的和我创建的
+	xd_saveRoomJoin: serverBaseUrl + '/room/saveRoomJoin',//加入群组	
 }
 export default {
 	serverUrls,
