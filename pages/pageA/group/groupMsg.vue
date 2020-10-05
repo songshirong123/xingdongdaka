@@ -40,7 +40,10 @@
 			<view style="flex: 1;margin-left: 5px;border-radius: 5px;">
 				<input class="input-msg" @input="sendMsgInput" :value="inputMsg" />
 			</view>
-			<button class="send-but" :disabled="inputdisabled" @tap="sendGroupMsg" hover-class="xd-but-active">发送</button>
+			<button class="send-but" :disabled="inputdisabled" @tap="sendPublicGroupMsg" hover-class="xd-but-active">发送</button>
+		</view>
+		<view  v-if="showPrivteBut" class="start-add">
+		    <button class="privite-send-but"  @tap="sendGroupMsg" hover-class="xd-but-active">私发</button>
 		</view>
 	</view>
 </template>
@@ -55,7 +58,8 @@
 				pageNum: 1,
 				inputMsg: "",
 				lookUser:"",
-				inputdisabled:true
+				inputdisabled:true,
+				showPrivteBut:false
 			}
 		},
 		methods: {
@@ -64,6 +68,7 @@
 				this.lookUser = user;
 				this.inputMsg = "@"+user.userName+" ";
 				this.inputdisabled=false;
+				this.showPrivteBut=true;
 			},
 			//消息输入
 			sendMsgInput(e) {
@@ -73,6 +78,7 @@
 				if(this.xdUniUtils.IsNullOrEmpty(inpus)){
 					this.lookUser = "";
 					this.inputdisabled=true;
+					this.showPrivteBut=false;
 				}
 			},
 			//用户申请加入组
@@ -105,6 +111,10 @@
 					
 				}).catch(err => {});
 			},
+			sendPublicGroupMsg(){
+				this.lookUser="";
+				this.sendGroupMsg();
+			},
 			//发消息
 			sendGroupMsg() {
 
@@ -134,6 +144,7 @@
 					_this.pageNum=1;
 					_this.lookUser = "";
 					_this.inputdisabled=true;
+					_this.showPrivteBut=false;
 					_this.getGroupMsg();
 				}).catch(err => {});
 			},
@@ -151,6 +162,18 @@
 </script>
 
 <style lang="scss">
+	.start-add {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		position: fixed;
+		height: 30px;
+		font-size: 12px;
+		bottom: 40px;
+		right: 0px;
+		z-index: 99;
+	}
 	.msg-msg {
 		margin-left: 5px;
 		margin-right: 40px;
@@ -178,6 +201,16 @@
 		padding-left: 5px;
 		padding-right: 5px;
 		vertical-align: text-top
+	}
+	.privite-send-but{
+		height: 30px;
+		margin: 3px;
+		font-size: 13px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		color: #FFFFFF;
+		background-color: #FFA700;
 	}
 
 	.send-but {

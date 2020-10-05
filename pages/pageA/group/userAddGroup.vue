@@ -12,10 +12,10 @@
 				<image :src="group.userHead" style="width: 25px;height: 25px;border-radius: 50%;border: 1px solid #f0f0f0;"></image>
 				<text style="margin-left: 10px;margin-top: 7px;font-size: 12px;">{{group.userName}} {{group.createTime}}</text>
 			</view>
-			<view class="label-hint"  style="margin-top: 10px;">诚意金</view>
-			<view class="label-hint infos">{{group.rmb}}</view>
+			<!-- <view class="label-hint"  style="margin-top: 10px;">诚意金</view>
+			<view class="label-hint infos">{{group.rmb}}</view> -->
 			<!-- 标签选择 -->
-			<view class="label-hint">标签</view>
+			<view class="label-hint" style="margin-top: 10px;">标签</view>
 			<view class="nav-item">
 				<view class="nav-item-title">{{lableName}}</view>
 			</view>
