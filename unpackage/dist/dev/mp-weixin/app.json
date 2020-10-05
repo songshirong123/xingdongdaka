@@ -29,7 +29,8 @@
         "group/groupList",
         "group/groupAdd",
         "group/groupMsg",
-        "group/addLable"
+        "group/addLable",
+        "group/userAddGroup"
       ]
     }
   ],
@@ -75,6 +76,5 @@
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
-  },
-  "sitemapLocation": "sitemap51.json"
+  }
 }
