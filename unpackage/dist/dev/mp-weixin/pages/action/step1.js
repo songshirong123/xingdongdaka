@@ -358,6 +358,10 @@ var _default =
     holidayDayinput: function holidayDayinput(e) {
       this.holidayDay = e.detail.value;
     },
+    //打卡天数
+    targetDayinput: function targetDayinput(e) {
+      this.targetDay = e.detail.value;
+    },
     //休息天数
     PickerChangeholiday: function PickerChangeholiday(e) {
       switch (e.detail.value) {
@@ -400,10 +404,7 @@ var _default =
           break;}
 
     },
-    //打卡天数
-    targetDayinput: function targetDayinput(e) {
-      this.targetDay = e.detail.value;
-    },
+
     PickerChange: function PickerChange(e) {
 
       var that = this;

@@ -12,6 +12,15 @@
 					strings: '',
 				};
 			},
+			onShareAppMessage(res) {
+				
+					// return {
+					// 	title: 
+					// 	path: 
+					// 	imageUrl: ,
+					// }
+				
+			},
 			onLoad(val) {
 				this.strings = decodeURIComponent(val.url) //解码网址
 			},

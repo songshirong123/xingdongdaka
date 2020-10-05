@@ -10,8 +10,17 @@
 					url: '',
 				};
 			},
+			onShareAppMessage(res) {
+				
+					// return {
+					// 	title: 
+					// 	path: 
+					// 	imageUrl: ,
+					// }
+				
+			},
 			onLoad(val) {
-				console.log(val);
+				
 				this.url = decodeURIComponent(val.url) //解码网址
 			},
 		}

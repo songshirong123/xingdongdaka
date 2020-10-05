@@ -208,7 +208,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _toConsumableArray(arr)
     } else {
       that.setSaveShareInfo(res);
       return {
-        title: '我为' + that.listsTab[res.target.id].userName + '拉赞助：' + that.listsTab[res.target.id].pushCardList[0].content,
+        title: '我为@' + that.listsTab[res.target.id].userName + '拉赞助：' + that.listsTab[res.target.id].pushCardList[0].content,
         path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.listsTab[res.target.id].isopen,
         imageUrl: that.listsTab[res.target.id].pictures ? that.listsTab[res.target.id].pictures : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png' };
 

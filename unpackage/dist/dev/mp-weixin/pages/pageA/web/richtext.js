@@ -142,6 +142,15 @@ var _default =
       strings: '' };
 
   },
+  onShareAppMessage: function onShareAppMessage(res) {
+
+    // return {
+    // 	title: 
+    // 	path: 
+    // 	imageUrl: ,
+    // }
+
+  },
   onLoad: function onLoad(val) {
     this.strings = decodeURIComponent(val.url); //解码网址
   } };exports.default = _default;

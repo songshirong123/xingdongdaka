@@ -97,7 +97,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  var m0 = Number(_vm.pickedIndex)
+  var m0 = Number(_vm.rmb.challengeRmb)
   var m1 = Number(_vm.pickedIndex)
   var m2 = Number(_vm.pickedIndex)
   var m3 = Number(_vm.pickedIndex)
@@ -113,6 +113,7 @@ var render = function() {
   var m13 = Number(_vm.pickedIndex)
   var m14 = Number(_vm.pickedIndex)
   var m15 = Number(_vm.pickedIndex)
+  var m16 = Number(_vm.pickedIndex)
   _vm.$mp.data = Object.assign(
     {},
     {
@@ -132,7 +133,8 @@ var render = function() {
         m12: m12,
         m13: m13,
         m14: m14,
-        m15: m15
+        m15: m15,
+        m16: m16
       }
     }
   )
@@ -356,6 +358,17 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function _toConsumableArray(arr) {return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();}function _nonIterableSpread() {throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");}function _unsupportedIterableToArray(o, minLen) {if (!o) return;if (typeof o === "string") return _arrayLikeToArray(o, minLen);var n = Object.prototype.toString.call(o).slice(8, -1);if (n === "Object" && o.constructor) n = o.constructor.name;if (n === "Map" || n === "Set") return Array.from(o);if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);}function _iterableToArray(iter) {if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);}function _arrayWithoutHoles(arr) {if (Array.isArray(arr)) return _arrayLikeToArray(arr);}function _arrayLikeToArray(arr, len) {if (len == null || len > arr.length) len = arr.length;for (var i = 0, arr2 = new Array(len); i < len; i++) {arr2[i] = arr[i];}return arr2;}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var _default =
 
 {
@@ -376,7 +389,9 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         location: '',
         daiJinQuan: '',
         zheKouQuan: '',
-        other: '' },
+        other: '',
+        money: '',
+        contact: '' },
 
       pictures: {
         location: [],
@@ -522,7 +537,20 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
     },
 
+    validRmb: function validRmb(p) {
+      console.log('validRmb', p, Number(p) !== 0 && Number(p) % 1 !== 0);
 
+      if (Number(p) !== 0 && Number(p) % 1 !== 0) {
+        uni.showToast({
+          title: '输入整数!',
+          icon: 'none',
+          duration: 3000,
+          success: function success() {
+            return false;
+          } });
+
+      }
+    },
     validCondition: function validCondition(p) {
       var xdToast = function xdToast(msg) {
         uni.showToast({
@@ -535,11 +563,10 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
         return false;
       };
-      if (Number(p.rmb) === 0 && !p.location && !p.daiJinQuan && !p.zheKouQuan && !p.other) {
+      var math = Number(p.rmb) === 0 && !p.location && !p.daiJinQuan && !p.zheKouQuan && !p.other;
+      if (math) {
         return xdToast('请输入大于0元的赞助金或填写赞助项目');
-      }
-
-      if (p.location && !this.sponsorCondition.location) {
+      } else if (p.location && !this.sponsorCondition.location) {
         return xdToast('请输入场地获取条件');
       } else if (p.daiJinQuan && !this.sponsorCondition.daiJinQuan) {
         return xdToast('请输入代金券获取条件');
@@ -570,7 +597,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
                   finishCondition: '', // 完成条件
                   status: 0, //   状态:0有效,1无效
                   pushId: uni.getStorageSync('pushId'), // 行动项id
-                  cardId: uni.getStorageSync('cardId'), // 打卡id
+                  cardId: uni.getStorageSync('cardId') || '', // 打卡id
                   createTime: new Date(), //	创建时间
                   updateTime: new Date(), //   更新时间
                   pictures: JSON.stringify(_this2.pictures)
@@ -663,6 +690,9 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
                 },
                 fail: function fail(err) {
                   // 支付失败的回调中 用户未付款
+                  this.xd_request_post(this.xdServerUrls.xd_delSponsorCount, { pushId: uni.getStorageSync('pushId') });
+
+
                   uni.showModal({
                     content: '支付取消',
                     confirmText: '重新填写',

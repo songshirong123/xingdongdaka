@@ -166,7 +166,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
   data: function data() {
     return {
       rmb: {
-        challengeRmb: 5 },
+        challengeRmb: 9 },
 
       formData: {},
       saveData: {},
@@ -210,7 +210,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
       } catch (e) {
         //TODO handle the exception
       }
-      if (that.rmb.challengeRmb == 5) {
+      if (that.rmb.challengeRmb == 9) {
         if (e.detail.value.challengeRmb < 0 || isNaN(e.detail.value.challengeRmb)) {
           uni.showToast({
             title: '输入保证金有误',

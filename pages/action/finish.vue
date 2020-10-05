@@ -5,8 +5,8 @@
 				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb"
 					 placeholder="请输入保障金数额" maxlength="5" /></view>
 				<view class="pricelis">
-					<view class="priceli" @click="priceRmb(2)"><text>2元</text></view>
-					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
+					<view class="priceli" @click="priceRmb(2)"><text>6元</text></view>
+					<view class="priceli" @click="priceRmb(6)"><text>10元</text></view>
 					<view class="priceli" @click="priceRmb(18)"><text>18元</text></view>
 					<view class="priceli" @click="priceRmb(66)"><text>66元</text></view>
 					<view class="priceli" @click="priceRmb(188)"><text>188元</text></view>
@@ -34,7 +34,7 @@
 		data() {
 			return {
 				rmb: {
-					challengeRmb: 5,
+					challengeRmb: 9,
 				},
 				formData: {},
 				saveData: {},
@@ -78,7 +78,7 @@
 				} catch (e) {
 					//TODO handle the exception
 				}
-				if (that.rmb.challengeRmb == 5) {
+				if (that.rmb.challengeRmb == 9) {
 					if (e.detail.value.challengeRmb < 0 || isNaN(e.detail.value.challengeRmb)) {
 						uni.showToast({
 							title: '输入保证金有误',

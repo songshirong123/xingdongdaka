@@ -226,6 +226,10 @@ export default {
 		holidayDayinput(e){
 			this.holidayDay=e.detail.value;
 		},
+		//打卡天数
+		targetDayinput(e){
+			this.targetDay=e.detail.value;
+		},
 		//休息天数
 		PickerChangeholiday(e){
 			switch(e.detail.value){
@@ -268,10 +272,7 @@ export default {
 				break;
 				}
 		},
-		//打卡天数
-		targetDayinput(e){
-			this.targetDay=e.detail.value;
-		},
+		
 		PickerChange(e){
 			
 			var that=this;
@@ -325,7 +326,7 @@ export default {
 			}
 		},
 		formSubmit(e){
-		
+			
 			if(e.detail.value.content==''){
 				uni.showToast({
 				    title: '请输入行动内容',

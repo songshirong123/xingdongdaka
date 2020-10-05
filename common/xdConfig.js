@@ -1,7 +1,5 @@
 // 获取当前小程序信息（要求小程序版本2.10.0）
 const accountInfo = uni.getAccountInfoSync();
-console.log("**********  小程序信息 **********");
-console.log(accountInfo);
 // env类型
 export const env = accountInfo.miniProgram.envVersion;
  uni.setStorageSync("env",env);
