@@ -7879,9 +7879,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!****************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json ***!
-  \****************************************************************************/
+/*!***************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/pages.json ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8884,9 +8884,9 @@ module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@d
 
 /***/ }),
 /* 7 */
-/*!********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"stat"} ***!
-  \********************************************************************************************/
+/*!*******************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8895,9 +8895,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 /* 8 */
-/*!*********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"style"} ***!
-  \*********************************************************************************************/
+/*!********************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8909,9 +8909,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /* 10 */,
 /* 11 */,
 /* 12 */
-/*!************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdConfig.js ***!
-  \************************************************************************************/
+/*!***********************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10185,9 +10185,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 17 */
-/*!********************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/store/index.js ***!
-  \********************************************************************************/
+/*!*******************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/store/index.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10233,9 +10233,9 @@ store;exports.default = _default;
 
 /***/ }),
 /* 18 */
-/*!****************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdServerUrls.js ***!
-  \****************************************************************************************/
+/*!***************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10332,7 +10332,9 @@ serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_saveSponsor",
 
 
 serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_getActSponsor",
-serverBaseUrl + '/sponsor/getList'), _defineProperty(_serverUrls, "xd_getInviteList",
+serverBaseUrl + '/sponsor/getList'), _defineProperty(_serverUrls, "xd_delSponsorCount",
+serverBaseUrl + '/sponsor/delSponsorCount'), _defineProperty(_serverUrls, "xd_getInviteList",
+
 
 serverBaseUrl + '/invite/getInviteList'), _defineProperty(_serverUrls, "xd_saveRedisByFree",
 serverBaseUrl + '/uploadFile/saveRedisByFree'), _defineProperty(_serverUrls, "xd_getVal",
@@ -10354,9 +10356,9 @@ serverBaseUrl + '/room/saveRoomJoin'), _serverUrls);var _default =
 
 /***/ }),
 /* 19 */
-/*!**************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdUniUtils.js ***!
-  \**************************************************************************************/
+/*!*************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10868,9 +10870,9 @@ function showToast(isSuccess, content, methodes) {
 
 /***/ }),
 /* 20 */
-/*!************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdCommon.js ***!
-  \************************************************************************************/
+/*!***********************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10904,9 +10906,9 @@ var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动�
 /* 31 */,
 /* 32 */,
 /* 33 */
-/*!*********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/left.png ***!
-  \*********************************************************************************************/
+/*!********************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10914,9 +10916,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 
 /***/ }),
 /* 34 */
-/*!**********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/right.png ***!
-  \**********************************************************************************************/
+/*!*********************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 

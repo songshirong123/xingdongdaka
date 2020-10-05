@@ -7,10 +7,10 @@
 		</view>
 
 		<!-- 诚意金 -->
-		<view class="label-hint">诚意金</view>
+		<!-- <view class="label-hint">诚意金</view>
 		<view class="label-hint infos">
 			<input type="number" placeholder="请输入诚意金额" @input="inputGroupAmout" />
-		</view>
+		</view> -->
 
 		<!-- 标签选择 -->
 		<view class="label-hint">标签</view>
