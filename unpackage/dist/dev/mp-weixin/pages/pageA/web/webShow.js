@@ -140,8 +140,17 @@ var _default =
       url: '' };
 
   },
+  onShareAppMessage: function onShareAppMessage(res) {
+
+    // return {
+    // 	title: 
+    // 	path: 
+    // 	imageUrl: ,
+    // }
+
+  },
   onLoad: function onLoad(val) {
-    console.log(val);
+
     this.url = decodeURIComponent(val.url); //解码网址
   } };exports.default = _default;
 

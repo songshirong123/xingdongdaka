@@ -8918,8 +8918,6 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.env = void 0; // 获取当前小程序信息（要求小程序版本2.10.0）
 var accountInfo = uni.getAccountInfoSync();
-console.log("**********  小程序信息 **********");
-console.log(accountInfo);
 // env类型
 var env = accountInfo.miniProgram.envVersion;exports.env = env;
 uni.setStorageSync("env", env);
