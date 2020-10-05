@@ -6,9 +6,15 @@
 			</view>
 		</view>
 		<form>
+			<view class="cu-form-group  align-start">
+				<view class="title">
+					<text>联系方式:</text>
+				</view>
+				<textarea v-model="sponsorCondition.contact"  maxlength="-1"  placeholder="请输入联系方式"></textarea>
+			</view>
 			<view class="cu-form-group margin-top">
 				<view class="title"><span class='form-label'>赞助金</span></view>
-				<input v-model="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" placeholder="请输入保障金数额" maxlength="5" />
+				<input v-model.number="rmb.challengeRmb" type="number" class="digit" name="challengeRmb" @blur="validRmb(rmb.challengeRmb)" placeholder="请输入赞助金额" maxlength="5" />
 			</view>
 			<view>
 				<view class="pricelis">
@@ -20,7 +26,12 @@
 					<view class="priceli" @click="priceRmb(888)"><text>888元</text></view>
 				</view>
 			</view>
-			
+			<view  v-if="Number(rmb.challengeRmb) >0" class="cu-form-group  align-start">
+				<view class="title">
+					<text>赞助说明:</text>
+				</view>
+				<textarea v-model="sponsorCondition.money"  maxlength="-1"  placeholder="请输入获取条件"></textarea>
+			</view>
 			<view class="cu-form-group margin-top">
 				<view class="title">赞助其他</view>
 				<view class="flex flex-wrap  radius align-center data-time-left">
@@ -205,7 +216,9 @@
 					location:'',
 					daiJinQuan:'',
 					zheKouQuan:'',
-					other:''
+					other:'',
+					money:'',
+					contact:''
 				},
 				pictures:{
 					location:[],
@@ -350,8 +363,21 @@
 					}
 				})
 			},
-			
 
+			validRmb(p){
+				console.log('validRmb',p,   Number(p)!==0 && Number(p)%1 !== 0 );
+				
+				if( Number(p)!==0 && Number(p)%1 !== 0 ){
+					uni.showToast({
+						title: '输入整数!',
+						icon: 'none',
+						duration: 3000,
+						success:function() {
+							return false;
+						}
+					})
+				}
+			},
 			validCondition(p){
 				const xdToast = (msg)=>{
 					uni.showToast({
@@ -364,11 +390,10 @@
 					})
 					return false
 				}
-				if(Number(p.rmb)===0 && !p.location && !p.daiJinQuan && !p.zheKouQuan  && !p.other){
+				const math = Number(p.rmb)===0 && !p.location && !p.daiJinQuan && !p.zheKouQuan  && !p.other
+				if(math){
 					return xdToast('请输入大于0元的赞助金或填写赞助项目')
-				}
-				
-				if(p.location && !this.sponsorCondition.location){
+				}else if(p.location && !this.sponsorCondition.location){
 					return xdToast('请输入场地获取条件')
 				}else if(p.daiJinQuan && !this.sponsorCondition.daiJinQuan){
 					return xdToast('请输入代金券获取条件')
@@ -399,7 +424,7 @@
 					finishCondition: '' ,  // 完成条件
 					status: 0 ,           //   状态:0有效,1无效
 					pushId: uni.getStorageSync('pushId') ,       // 行动项id
-					cardId: uni.getStorageSync('cardId'),	     // 打卡id
+					cardId: uni.getStorageSync('cardId') || '',	     // 打卡id
 					createTime: new Date()    , //	创建时间
 					updateTime : new Date(),    //   更新时间
 					pictures: JSON.stringify(this.pictures),
@@ -492,6 +517,9 @@
 								},
 								fail: function (err) {
 									// 支付失败的回调中 用户未付款
+									this.xd_request_post(this.xdServerUrls.xd_delSponsorCount,{pushId: uni.getStorageSync('pushId')})
+									
+									
 									uni.showModal({
 										content:'支付取消',
 										confirmText:'重新填写',
