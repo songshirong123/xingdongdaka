@@ -904,7 +904,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -7329,7 +7329,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7350,14 +7350,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7442,7 +7442,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -7879,9 +7879,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!*************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json ***!
-  \*************************************************************/
+/*!****************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8884,9 +8884,9 @@ module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@d
 
 /***/ }),
 /* 7 */
-/*!*****************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
-  \*****************************************************************************/
+/*!********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"stat"} ***!
+  \********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8895,9 +8895,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 /* 8 */
-/*!******************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
-  \******************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"style"} ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8909,9 +8909,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /* 10 */,
 /* 11 */,
 /* 12 */
-/*!*********************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
-  \*********************************************************************/
+/*!************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdConfig.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10187,9 +10187,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 17 */
-/*!*****************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/store/index.js ***!
-  \*****************************************************************/
+/*!********************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/store/index.js ***!
+  \********************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10235,9 +10235,9 @@ store;exports.default = _default;
 
 /***/ }),
 /* 18 */
-/*!*************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
-  \*************************************************************************/
+/*!****************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdServerUrls.js ***!
+  \****************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10356,9 +10356,9 @@ serverBaseUrl + '/room/myRoomByType'), _serverUrls);var _default =
 
 /***/ }),
 /* 19 */
-/*!***********************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
-  \***********************************************************************/
+/*!**************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdUniUtils.js ***!
+  \**************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10870,9 +10870,9 @@ function showToast(isSuccess, content, methodes) {
 
 /***/ }),
 /* 20 */
-/*!*********************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
-  \*********************************************************************/
+/*!************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdCommon.js ***!
+  \************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10906,9 +10906,9 @@ var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动�
 /* 31 */,
 /* 32 */,
 /* 33 */
-/*!******************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
-  \******************************************************************************/
+/*!*********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/left.png ***!
+  \*********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10916,9 +10916,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 
 /***/ }),
 /* 34 */
-/*!*******************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
-  \*******************************************************************************/
+/*!**********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/right.png ***!
+  \**********************************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
