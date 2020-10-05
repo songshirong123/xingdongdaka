@@ -90,7 +90,9 @@ const serverUrls = { //根据接口具体配置
 
 
 	xd_saveSponsor: serverBaseUrl + '/sponsor/save' ,//保存赞助金
-	xd_getActSponsor: serverBaseUrl + '/sponsor/getList' ,//保存赞助金
+	xd_getActSponsor: serverBaseUrl + '/sponsor/getList' ,//获取赞助金列表
+	xd_delSponsorCount: serverBaseUrl + '/sponsor/delSponsorCount' ,//支付无效删除sponsor
+
 
 	xd_getInviteList: serverBaseUrl + '/invite/getInviteList' ,//查看埋点数据后删除
 	xd_saveRedisByFree: serverBaseUrl + '/uploadFile/saveRedisByFree' ,//看激励视频免一次上传超100M

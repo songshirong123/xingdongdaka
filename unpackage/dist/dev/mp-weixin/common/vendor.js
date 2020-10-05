@@ -10332,7 +10332,9 @@ serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_saveSponsor",
 
 
 serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_getActSponsor",
-serverBaseUrl + '/sponsor/getList'), _defineProperty(_serverUrls, "xd_getInviteList",
+serverBaseUrl + '/sponsor/getList'), _defineProperty(_serverUrls, "xd_delSponsorCount",
+serverBaseUrl + '/sponsor/delSponsorCount'), _defineProperty(_serverUrls, "xd_getInviteList",
+
 
 serverBaseUrl + '/invite/getInviteList'), _defineProperty(_serverUrls, "xd_saveRedisByFree",
 serverBaseUrl + '/uploadFile/saveRedisByFree'), _defineProperty(_serverUrls, "xd_getVal",
