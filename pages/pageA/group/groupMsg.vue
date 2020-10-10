@@ -24,13 +24,15 @@
 		<!-- 消息列表  别人的左边展示  自己的右边展示-->
 		<view style="padding: 10px;margin-bottom: 60px;">
 			<view v-for="(item,index) in msgList" :key="index">
-				<view v-if="item.sendUserId==userId" class="xd-rows" style="text-align: end;align-items: flex-end;justify-content: flex-end;margin-top: 10px;">
-					<text class="msg-msg" style="margin-right: 5px;margin-left: 40px;background-color: #ff9800;">{{item.msg}}</text>
+				<view v-if="item.sendUserId==userId" class="xd-rows" style="text-align: end;align-items: flex-end;justify-content: flex-end;margin-top: 10px;align-items: flex-start;">					
+					<image @tap="goPageImg(item.img)" v-if="item.img!=''" :src="item.img" class="msg-send-img" style="margin-right: 5px;margin-left: 40px;" mode="widthFix"></image>
+					<text v-else class="msg-msg" style="margin-right: 5px;margin-left: 40px;background-color: #ff9800;">{{item.msg}}</text>
 					<image :src="item.userHead" class="msg-img"></image>
 				</view>
-				<view v-else class="xd-rows" style="margin-top: 10px;">
+				<view v-else class="xd-rows" style="margin-top: 10px;align-items: flex-start;">
 					<image :src="item.userHead" class="msg-img" @longpress="lookSendUser(item)"></image>
-					<text class="msg-msg">{{item.msg}}</text>
+					<image @tap="goPageImg(item.img)" v-if="item.img!=''" :src="item.img" class="msg-send-img" mode="widthFix"></image>
+					<text v-else class="msg-msg">{{item.msg}}</text>
 				</view>
 
 			</view>
@@ -40,11 +42,18 @@
 			<view style="flex: 1;margin-left: 5px;border-radius: 5px;">
 				<input class="input-msg" @input="sendMsgInput" :value="inputMsg" />
 			</view>
-			<button class="send-but" :disabled="inputdisabled" @tap="sendPublicGroupMsg" hover-class="xd-but-active">发送</button>
+			<view v-if="sendImg">
+				<button class="send-img-but" @tap="sendPublicGroupImg" hover-class="xd-but-active">+</button>
+			</view>
+			<view v-else>
+				<button class="send-but" :disabled="inputdisabled" @tap="sendPublicGroupMsg" hover-class="xd-but-active">发送</button>
+				<view v-if="showPrivteBut" class="start-add">
+					<button class="privite-send-but" @tap="sendGroupMsg" hover-class="xd-but-active">私发</button>
+				</view>
+			</view>
+
 		</view>
-		<view  v-if="showPrivteBut" class="start-add">
-		    <button class="privite-send-but"  @tap="sendGroupMsg" hover-class="xd-but-active">私发</button>
-		</view>
+
 	</view>
 </template>
 
@@ -57,35 +66,39 @@
 				group: {},
 				pageNum: 1,
 				inputMsg: "",
-				lookUser:"",
-				inputdisabled:true,
-				showPrivteBut:false
+				lookUser: "",
+				inputdisabled: true,
+				showPrivteBut: false,
+				sendImg: true
 			}
 		},
 		methods: {
-			lookSendUser(user){
+			lookSendUser(user) {
 				console.log("lookSendUser", user);
 				this.lookUser = user;
-				this.inputMsg = "@"+user.userName+" ";
-				this.inputdisabled=false;
-				this.showPrivteBut=true;
+				this.inputMsg = "@" + user.userName + " ";
+				this.inputdisabled = false;
+				this.showPrivteBut = true;
+				this.sendImg = false;
 			},
 			//消息输入
 			sendMsgInput(e) {
-				let inpus =e.detail.value;
+				let inpus = e.detail.value;
 				this.inputMsg = inpus;
-				this.inputdisabled=false;
-				if(this.xdUniUtils.IsNullOrEmpty(inpus)){
+				this.inputdisabled = false;
+				this.sendImg = false;
+				if (this.xdUniUtils.IsNullOrEmpty(inpus)) {
 					this.lookUser = "";
-					this.inputdisabled=true;
-					this.showPrivteBut=false;
+					this.inputdisabled = true;
+					this.showPrivteBut = false;
+					this.sendImg = true;
 				}
 			},
 			//用户申请加入组
-			userAdd(){
+			userAdd() {
 				let group = this.group;
 				uni.navigateTo({
-					url:"./userAddGroup?group="+encodeURIComponent(JSON.stringify(group))
+					url: "./userAddGroup?group=" + encodeURIComponent(JSON.stringify(group))
 				})
 			},
 			//获取消息
@@ -99,21 +112,99 @@
 				this.xd_request_post(this.xdServerUrls.xd_selectMsgList, info, true).then((res) => {
 					console.log("群消息列表信息", res);
 					let list = res.obj.list;
-					if(!this.xdUniUtils.IsNullOrEmpty(list)){
+					if (!this.xdUniUtils.IsNullOrEmpty(list)) {
 						for (let i in list) {
+							list[i].img = _this.equals(list[i].msg,"http")?list[i].msg:"";
 							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 						}
 						list.sort(function(a, b) {
-							return a.time< b.time? 1 : -1
+							return a.time < b.time ? 1 : -1
 						});
-						_this.msgList = _this.pageNum == 1 ? list : list.concat(_this.msgList);					
+						_this.msgList = _this.pageNum == 1 ? list : list.concat(_this.msgList);
 					}
-					
+
 				}).catch(err => {});
 			},
-			sendPublicGroupMsg(){
-				this.lookUser="";
+			/**
+			 * 判断字符创包含另一个字符串
+			 */
+			equals(rst, rut) {
+			  if (rst.indexOf(rut) != -1) {
+			    return true;
+			  } else {
+			    return false;
+			  }
+			},
+			//发送图片
+			sendPublicGroupImg() {
+				const that = this;
+				uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: function(res) {
+						let tempFilePaths = res.tempFilePaths;
+						that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res => {
+							if (res) {
+								uni.uploadFile({
+									url: that.xdServerUrls.xd_uploadFile,
+									filePath: tempFilePaths[0],
+									name: 'files',
+									formData: {
+										'userId': uni.getStorageSync('id'),
+									},
+									success: (uploadFileRes) => {
+										console.log(uploadFileRes.data)
+										let photo = JSON.parse(uploadFileRes.data).obj[0];
+										that.sendGroupImg(photo);
+										// console.log(that.photo)
+									}
+								});
+							} else {
+								uni.showToast({
+									title: '内容包含敏感内容',
+									mask: true,
+									duration: 2000,
+
+								});
+								return false
+							}
+						});
+
+					}
+				});
+
+			},
+
+			//发送消息
+			sendPublicGroupMsg() {
+				this.lookUser = "";
 				this.sendGroupMsg();
+			},
+			goPageImg(e){
+				this.xdUniUtils.xd_showImg(e)
+			},
+			
+			//往群里面发送图片
+			sendGroupImg(imgurl){
+				//私发 lookUserId 传值 接收人的userid
+				let userInfos = uni.getStorageSync('userInfo');
+				let info = {
+					roomId: this.group.id,
+					sendUserId: this.userId,
+					userHead: this.group.userHead, //创建人的头像
+					userName: this.group.userName,
+					sendUserHead: userInfos.userHead, //发消息人的头像
+					msg: imgurl,
+				}
+				console.log("发消息", info);
+				let _this = this;
+				this.xd_request_post(this.xdServerUrls.xd_sendRoomMsg, info, true).then((res) => {
+					_this.inputMsg = "";
+					_this.pageNum = 1;
+					_this.lookUser = "";
+					_this.getGroupMsg();
+				}).catch(err => {});
 			},
 			//发消息
 			sendGroupMsg() {
@@ -133,18 +224,19 @@
 					msg: msg,
 				}
 				let user = this.lookUser;
-				if (!this.xdUniUtils.IsNullOrEmpty(user)) {	
+				if (!this.xdUniUtils.IsNullOrEmpty(user)) {
 					info["lookUserId"] = user.sendUserId;
 				}
-				
+
 				console.log("发消息", info);
 				let _this = this;
 				this.xd_request_post(this.xdServerUrls.xd_sendRoomMsg, info, true).then((res) => {
 					_this.inputMsg = "";
-					_this.pageNum=1;
+					_this.sendImg=true;
+					_this.pageNum = 1;
 					_this.lookUser = "";
-					_this.inputdisabled=true;
-					_this.showPrivteBut=false;
+					_this.inputdisabled = true;
+					_this.showPrivteBut = false;
 					_this.getGroupMsg();
 				}).catch(err => {});
 			},
@@ -154,7 +246,7 @@
 			this.getGroupMsg();
 		},
 		onPullDownRefresh() {
-			this.pageNum+=1;
+			this.pageNum += 1;
 			this.getGroupMsg();
 			uni.stopPullDownRefresh();
 		},
@@ -174,6 +266,7 @@
 		right: 0px;
 		z-index: 99;
 	}
+
 	.msg-msg {
 		margin-left: 5px;
 		margin-right: 40px;
@@ -186,6 +279,12 @@
 		word-break: break-all;
 		word-wrap: break-word;
 		text-align: left;
+	}
+	.msg-send-img{
+		border-radius: 10px;
+		border: 1px solid #f0f0f0;
+		max-width:80px;
+		min-width: 40px;
 	}
 
 	.msg-img {
@@ -202,7 +301,8 @@
 		padding-right: 5px;
 		vertical-align: text-top
 	}
-	.privite-send-but{
+
+	.privite-send-but {
 		height: 30px;
 		margin: 3px;
 		font-size: 13px;
@@ -213,6 +313,23 @@
 		background-color: #FFA700;
 	}
 
+	.send-img-but {
+		height: 30px;
+		width: 30px;
+		margin-right: 10px;
+		margin-left: 10px;
+		margin-top: 3px;
+		border: 1px solid #000000;
+		border-radius: 50%;
+		font-size: 18px;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		text-align: center;
+		align-self: center;
+		align-items: center;
+	}
+
 	.send-but {
 		height: 30px;
 		margin: 3px;
@@ -221,7 +338,7 @@
 		flex-direction: column;
 		justify-content: center;
 		color: #FFFFFF;
-		background-color: #39B54A;		
+		background-color: #39B54A;
 	}
 
 	.add-but-ly {

@@ -7879,9 +7879,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!***************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/pages.json ***!
-  \***************************************************/
+/*!*************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8884,9 +8884,9 @@ module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@d
 
 /***/ }),
 /* 7 */
-/*!*******************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
-  \*******************************************************************/
+/*!*****************************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8895,23 +8895,23 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 /* 8 */
-/*!********************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
-  \********************************************************************/
+/*!******************************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "申请加入" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "申请加入" }, "pages/pageA/group/userInfo": { "navigationBarTitleText": "申请加入" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 9 */,
 /* 10 */,
 /* 11 */,
 /* 12 */
-/*!***********************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
-  \***********************************************************/
+/*!*********************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10185,9 +10185,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 17 */
-/*!*******************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/store/index.js ***!
-  \*******************************************************/
+/*!*****************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/store/index.js ***!
+  \*****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10233,9 +10233,9 @@ store;exports.default = _default;
 
 /***/ }),
 /* 18 */
-/*!***************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
-  \***************************************************************/
+/*!*************************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
+  \*************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10356,9 +10356,9 @@ serverBaseUrl + '/room/saveRoomJoin'), _serverUrls);var _default =
 
 /***/ }),
 /* 19 */
-/*!*************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
-  \*************************************************************/
+/*!***********************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10870,9 +10870,9 @@ function showToast(isSuccess, content, methodes) {
 
 /***/ }),
 /* 20 */
-/*!***********************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
-  \***********************************************************/
+/*!*********************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10906,9 +10906,9 @@ var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动�
 /* 31 */,
 /* 32 */,
 /* 33 */
-/*!********************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
-  \********************************************************************/
+/*!******************************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
+  \******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10916,9 +10916,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 
 /***/ }),
 /* 34 */
-/*!*********************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
-  \*********************************************************************/
+/*!*******************************************************************************!*\
+  !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
+  \*******************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 

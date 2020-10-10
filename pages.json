@@ -185,6 +185,9 @@
 				"style": {
 					"navigationBarTitleText": "申请加入"
 				}
+			}, {
+				"path": "group/userInfo",
+				"style": {"navigationBarTitleText": "申请加入"}
 			}
 		]
 	}],
