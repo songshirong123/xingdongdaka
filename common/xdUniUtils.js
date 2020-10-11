@@ -163,7 +163,7 @@ function xd_request_post(url, params, withToken) {
 	var headers = {
 		'content-type': 'application/x-www-form-urlencoded',
 	};
-	if (withToken !== false) {
+	// if (withToken !== false) {
 		var token = uni.getStorageSync('token'); // token
 		if(token==undefined){
 			uni.reLaunch({
@@ -171,7 +171,7 @@ function xd_request_post(url, params, withToken) {
 			});
 		}
 		headers.token = token; // accessToken
-	}
+	// }
 	return xd_request(url, 'POST', params, headers);
 }
 // 上传
@@ -179,7 +179,7 @@ function xd_request_upload(url, params, withToken) {
 	var headers = {
 		'content-type': "multipart/form-data",
 	};
-	if (withToken !== false) {
+	// if (withToken !== false) {
 		
 		var token = uni.getStorageSync('token');// token
 		if(token==undefined){
@@ -188,7 +188,7 @@ function xd_request_upload(url, params, withToken) {
 			});
 		}
 		headers.session_token = token; // accessToken
-	}
+	// }
 	return xd_request(url, 'POST', params, headers);
 }
 //图片检查

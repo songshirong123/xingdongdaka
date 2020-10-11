@@ -185,6 +185,7 @@
 				"style": {
 					"navigationBarTitleText": "申请加入"
 				}
+<<<<<<< HEAD
 			},
 			{
 				"path": "ranking/rangkinDet",
@@ -210,6 +211,11 @@
 				"style": {
 					"navigationBarTitleText": "我的挑战赛"
 				}
+=======
+			}, {
+				"path": "group/userInfo",
+				"style": {"navigationBarTitleText": "申请加入"}
+>>>>>>> 1cdee00f75353d7ac4a08ccfc1c328909be67211
 			}
 		]
 	}],
