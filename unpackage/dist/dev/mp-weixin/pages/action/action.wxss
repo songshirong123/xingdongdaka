@@ -126,8 +126,7 @@
           align-items: center;
   background: #ffe66f;
   border: 2px solid #ffa700;
-  -webkit-border-radius: 50%;
-          border-radius: 50%;
+  border-radius: 50%;
   position: fixed;
   bottom: 100rpx;
   right: 30rpx;
