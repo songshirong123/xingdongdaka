@@ -97,23 +97,26 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
+  var g0 = !(_vm.pushList.surpassHolidayDay >= 0)
+    ? Math.abs(_vm.pushList.surpassHolidayDay)
+    : null
   var l0 =
     _vm.sponsorList.length > 0
       ? _vm.__map(_vm.sponsorList, function(ite, ind) {
           var $orig = _vm.__get_orig(ite)
 
-          var g0 = _vm.xdUniUtils.xd_timestampToTime(
+          var g1 = _vm.xdUniUtils.xd_timestampToTime(
             ite.createTime,
             false,
             true,
             false
           )
-          var g1 =
+          var g2 =
             ite.zanzhujinRmb > 0 ? Math.round(ite.zanzhujinRmb / 100) : null
           return {
             $orig: $orig,
-            g0: g0,
-            g1: g1
+            g1: g1,
+            g2: g2
           }
         })
       : null
@@ -121,6 +124,7 @@ var render = function() {
     {},
     {
       $root: {
+        g0: g0,
         l0: l0
       }
     }
@@ -159,6 +163,15 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _regenerator = _interopRequireDefault(__webpack_require__(/*! ./node_modules/@babel/runtime/regenerator */ 45));
+
+
+
+
+
+
+
+
+
 
 
 
