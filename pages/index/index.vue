@@ -73,6 +73,9 @@
 					<view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
 					</view>
+					<view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
+						<view>挑战赛</view>
+					</view>
 
 					<!-- 互助小组对应内容 -->
 					<view class="xd-line"></view>
@@ -90,16 +93,45 @@
 							</view>
 						</view>
 					</view>
+					<!-- 挑战赛 -->
+					<view class="cu-card case " v-else-if="isRankingLable" v-for="(rankinItem,rangkingindex) in listsTab" :key="rangkingindex">
+						<view class="cu-item shadow">
+							<view class=" flex justify-center " @tap="rankingGoDet()">
+								<view class="image cu-item-imggs ">
+									<image :src="rankinItem.pictures"
+									 mode="aspectFill"></image>
+									<view class="cu-tag bg-orange text-bold">挑战赛</view>
+									<view class="cu-bar bg-shadeBottom"> <text class="text-cut">{{rankinItem.label}}</text></view>
+								</view>
+							</view>
+							<view class="cu-list menu-avatar rankinglist">
+								<view class=" flex flex-wrap justify-between align-center rankinglist">
+									<view class="flex flex-wrap align-center margin-left-sm">
+										<view style="font-size: 30px;">
+											<text class="lg text-orange cuIcon-upstage"></text>
+										</view>
+										<text >￥123</text>
+									</view>
+									<view class="cu-capsule round margin-right-sm">
+										<view class='cu-tag bg-orange '>
+											加入
+										</view>
+										
+										<view class="cu-tag line-orange">
+											999+
+										</view>
+									</view>
+									
+								</view>
+							</view>
+						</view>
+					</view>
 					<view v-else>
 						<block v-for="(list, index) in listsTab" :key="index">
 							<indexList id="indexList" :list="list" :index="index" @gotoSponsor='gotoSponsor' v-on:loveclick='loveClick'
 							 v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' :inimg='inimg'></indexList>
 						</block>
 					</view>
-
-
-
-
 				</view>
 			</view>
 
@@ -135,6 +167,7 @@
 		<!-- 开始行动-加号 -->
 		<view class="start-add" v-if="scrollTop<2000">
 			<text v-if="isGroupLable" class="cuIcon-friendadd" @tap="groupAdd()" style="font-size: 20px;"></text>
+			<image v-else-if="isRankingLable"src="../../static/images/Body.png" @tap="rankingAdd" mode="widthFix"></image>
 			<image v-else src="../../static/images/icon/add.png" @tap="goPage('/pages/action/step1')" mode="widthFix"></image>
 		</view>
 	</view>
@@ -166,6 +199,7 @@
 				adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
 				currentIndex: -1,
 				isGroupLable: false,
+				isRankingLable:false,
 				labelId: 1,
 				bannerList: [],
 				groupList: [],
@@ -266,6 +300,16 @@
 				}
 				uni.navigateTo({
 					url: "../pageA/group/groupAdd?isadd=true&group=" + group
+				})
+			},
+			rankingAdd(){
+				uni.navigateTo({
+					url:'../pageA/ranking/rankingUp'
+				})
+			},
+			rankingGoDet(e){
+				uni.navigateTo({
+					url:'../pageA/ranking/rangkinDet?rangkinId='+encodeURIComponent(JSON.stringify(e))
 				})
 			},
 			//选择互助小组
@@ -497,42 +541,7 @@
 
 				})
 			},
-			// //点赞
-			// loveClick:function(e,index){
-			// 	let list=e;
-			// 	this.xdUniUtils.xd_login(this.hasLogin);
-			// 	this.xd_request_post(this.xdServerUrls.xd_saveGiveLikeByPush,{
-
-			// 		pushId:list.id,
-			// 		initiatorUserId:uni.getStorageSync('id'),
-			// 		giveLikeUserId:list.userId,
-			// 	},true
-			// 	   ).then(res => {	
-
-			// 			   if(!this.listsTab[index].currentUserGiveLike){								   
-			// 									this.listsTab[index].currentUserGiveLike=true;
-			// 									this.listsTab[index].giveLike++;
-			// 			   }else{
-			// 			   uni.showToast({
-			// 			   								title:'已经赞过了',
-			// 			   								 duration: 1000,
-			// 			   								 icon:'none',
-			// 			   })}
-
-			// 		   }).catch(err => {
-			// 			   if(err=='操作失败'){
-			// 				   uni.showToast({
-			// 					title:'已经赞过了',
-			// 					 duration: 1000,
-			// 					 icon:'none',
-			// 				   })
-			// 			   }
-
-			// 	})
-
-
-			// },
-			// 最新
+			
 			showNew: function() {
 				this.active = 0;
 				this.pageNum = 1;
@@ -639,10 +648,18 @@
 				}).catch(err => {});
 
 			},
-			lebleTab() {
-				this.isGroupLable = true;
-				this.pageNum = 1;
-				this.getGroupList();
+			lebleTab(e) {
+				if(e==1){
+					this.isRankingLable=!this.isRankingLable;
+					this.isGroupLable = false;
+					this.pageNum = 1;
+				}else{
+					this.isGroupLable = !this.isGroupLable;
+					this.isRankingLable=false;
+					this.pageNum = 1;
+					this.getGroupList();
+				}
+				
 			},
 			// 推荐内容切换
 			navChange: function(e) {
@@ -653,6 +670,7 @@
 				let id = e.currentTarget.dataset.id
 				this.currentIndex = id;
 				this.isGroupLable = false;
+				this.isRankingLable=false;
 				if (e.currentTarget.dataset.id == -1) {
 					this.currentIndex = -1;
 					this.getShowRecommend();
@@ -1030,5 +1048,15 @@
 
 	.pading-top-ss {
 		padding-top: 10upx;
+	}
+	.rankinglist{
+		
+		height: 90upx;
+	}
+	.cu-item-imggs{
+		
+		width: 93%;
+		margin-top: 20upx;
+		
 	}
 </style>

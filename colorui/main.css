@@ -3491,7 +3491,7 @@ scroll-view.cu-steps .cu-item {
 }
 
 .bg-shadeBottom {
-	background-image: linear-gradient(rgba(0, 0, 0, 0.01), rgba(0, 0, 0, 1));
+	background-image: linear-gradient(rgba(0, 0, 0, 0.01), rgba(255, 170, 0, 1.0));
 	color: #ffffff;
 }
 

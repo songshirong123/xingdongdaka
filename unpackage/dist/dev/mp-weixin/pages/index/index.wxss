@@ -212,4 +212,11 @@
 .pading-top-ss.data-v-57280228 {
   padding-top: 10rpx;
 }
+.rankinglist.data-v-57280228 {
+  height: 90rpx;
+}
+.cu-item-imggs.data-v-57280228 {
+  width: 93%;
+  margin-top: 20rpx;
+}
 

@@ -185,6 +185,31 @@
 				"style": {
 					"navigationBarTitleText": "申请加入"
 				}
+			},
+			{
+				"path": "ranking/rangkinDet",
+				"style": {
+					"navigationBarTitleText": "挑战赛详情"
+					
+				}
+			},
+			{
+				"path": "ranking/rankinAdd",
+				"style": {
+					"navigationBarTitleText": "加入挑战"
+				}
+			},
+			{
+				"path": "ranking/rankingUp",
+				"style": {
+					"navigationBarTitleText": "新建挑战"
+				}
+			},
+			{
+				"path": "ranking/rankinglist",
+				"style": {
+					"navigationBarTitleText": "我的挑战赛"
+				}
 			}
 		]
 	}],

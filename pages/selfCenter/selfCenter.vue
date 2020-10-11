@@ -32,6 +32,12 @@
 				      <text class='thin'>互助信息</text>
 				    </button>
 				</view>
+				<view class="user_column_item"  @tap="goranking">
+				    <button class='content cu-btn'>
+				      <text class="lg text-gray cuIcon-group"></text>
+				      <text class='thin'>挑战赛</text>
+				    </button>
+				</view>
 			</view> 
 		</view>
 	</view>
@@ -156,7 +162,12 @@
 					url:'../pageA/group/groupList'
 				});
 			},
-			
+			//我的挑战赛页面
+			goranking(){
+				uni.navigateTo({
+					url:'../pageA/ranking/rankinglist'
+				});
+			},
 			//去提现
 			gomoney(){
 				
