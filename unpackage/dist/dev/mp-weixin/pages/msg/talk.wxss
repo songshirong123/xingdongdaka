@@ -37,8 +37,7 @@
 }
 .talkInput .uni-input {
   border: 1px solid #d9d9d9;
-  -webkit-border-radius: 5px;
-          border-radius: 5px;
+  border-radius: 5px;
   height: 50rpx;
   width: 90%;
   display: inline-block;
@@ -58,8 +57,7 @@
 }
 .talkli .talkInfo {
   border: 1px solid #d9d9d9;
-  -webkit-border-radius: 5px;
-          border-radius: 5px;
+  border-radius: 5px;
   padding: 12rpx;
   position: relative;
 }

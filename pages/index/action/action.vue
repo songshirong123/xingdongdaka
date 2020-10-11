@@ -29,30 +29,48 @@
 							<view class="text-gray text-sm ">
 								阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
 							</view>
-							<view class="text-gray text-sm  flex flex-wrap">
-								<view class="">
-									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
-								</view>
-								<view class="margin-left-sm flex flex-wrap text-sm align-center"> 
-								    可休假天数：
-									<view class="text-sm" v-if="pushList.surpassHolidayDay>=0">
+							<view class="text-gray text-sm ">
+								已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
+							</view>
+							<view class="text-gray text-sm ">
+								可休假天数： 
+									<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
 										{{pushList.kholidayDay}}
 									</view>
-									<view class="text-sm text-red" v-else>
-										超期{{Math.abs(pushList.surpassHolidayDay)}}
+									<view class="text-sm text-red display-inline" v-else>
+										超期{{surpassHolidayDay}}
 									</view>
-									<view class="text-sm">
+									<view class="text-sm display-inline">
 										/{{pushList.holidayDay}}
 									</view>
-									
-								</view>
-								
 							</view>
 						</view>
-						<view v-if="pushList.challengeRmb>0">
-							<view class="cu-tag light bg-red radius" >
-								保证金￥{{pushList.challengeRmb}}
+						
+						<view class='xd-flex'>
+							<view v-if="userId==pushList.userId && pushList.challengeRmb>0">
+								<view class="cu-tag light bg-red radius" >
+									保证金￥{{pushList.challengeRmb}}
+								</view>
 							</view>
+							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0">
+								<view class="cu-tag light bg-red radius" >
+									保证金￥{{pushList.challengeRmb+sponsorRmb}}
+								</view>
+							</view>
+							<view style="padding-left:6px"  v-if="userId==pushList.userId && sponsorRmb>0">
+								<view class="cu-tag radius bg-yellow " >
+									获赞助金￥{{sponsorRmb}} 
+								</view>
+								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+							</view>
+
+							<view style="padding-left:6px"  v-if="userId!=pushList.userId && sponsorCnt>0">
+								<view class="cu-tag radius bg-yellow" >
+									赞助 
+								</view>
+								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+							</view>
+						</view>	
 						</view>
 					</view>
 				</view>
@@ -184,6 +202,9 @@
 				addrAnimation:'',
 				audioPlaySrc:'../../../static/images/icon/img/titl.png',
 				userId:uni.getStorageSync('id'),
+				sponsorRmb:0,  //赞助金额
+				sponsorCnt:0,  //赞助笔数
+				surpassHolidayDay:0,
 				
 				lookerList:[],
 				looktotal:'',
@@ -212,6 +233,7 @@
 		           ...mapState(['hasLogin'])  
 		       },  
 		onLoad(option) {
+			this.getActSponsor()
 			//#ifdef MP-WEIXIN
 			wx.showShareMenu({
 			  menus: ['shareAppMessage', 'shareTimeline']
@@ -307,7 +329,46 @@
 				url:'/pages/pageA/thankmoney/thankmoney?userId='+e.lookUserId+"&pushId="+e.pushId
 			});
 			},
-			
+			async getActSponsor(){	
+				
+				const that = this
+				const parm = {
+					token: uni.getStorageSync('token'), 
+					pageSize: 99 , 
+					pageNum: 0 , 
+					pushId: uni.getStorageSync('pushId') ,       // 行动项id
+				} 
+				const {resultCode,obj,msg} = await that.xd_request_post(that.xdServerUrls.xd_getActSponsor,parm)
+				
+				if(resultCode==='0'){
+					
+					if(obj.pageInfo && obj.pageInfo.list &&  Array.isArray(obj.pageInfo.list) && obj.pageInfo.list.length>0 ) {
+						 this.sponsorList = obj.pageInfo.list.map(item=> {
+							 return {
+								...item,
+								 ...{sponsorCondition: item.sponsorCondition? JSON.parse(item.sponsorCondition):this.sponsorCondition,
+								 	pictures: item.pictures? JSON.parse(item.pictures):this.pictures,
+								 }
+							 }
+						 })
+						
+						 this.sponsorCnt = this.sponsorList.length
+						 this.sponsorRmb = Math.round(this.sponsorList.reduce((t,v)=> t+=v.zanzhujinRmb,0)/100)
+						
+					}
+					this.sponsorShare = obj.pushTarget
+				} else {
+					uni.showToast({
+						title: msg,
+						icon: 'none',
+						duration: 3000,
+						success:function() {
+							return false;
+						}
+					})
+				}
+
+			},
 			goPage(url){
 				if(!this.hasLogin){
 					uni.switchTab({
@@ -556,6 +617,9 @@
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime)
 						data.challengeRmb=res.obj.challengeRmb/100;
 						this.pushList=data;
+						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
+						console.log('this.pushList-----------------------',this.pushList,Math.abs(this.pushList.surpassHolidayDay))
+						
 						if(this.pushList.userId == uni.getStorageSync('id')){
 							this.guanzhu =''
 						}else{

@@ -54,10 +54,10 @@
 			</view>
 			<view class="grid flex-sub  padding-lr"  >
 				<image class="imgheit"  :src="item.pictures" mode="aspectFill"
-				 @tap="goPageImg(item.pictures)" v-if="item.pictures!=''" >
+				 @tap="goPageCard(item)" v-if="item.pictures!=''" >
 				</image>
 				<image class="imgheit"  :src="audioPlaySrc" mode="aspectFill"
-				 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
+				 @tap="goPageCard(item)" v-else @error="error">
 				</image>
 			</view>
 			<view class="flex padding justify-between" >

@@ -904,7 +904,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -7329,7 +7329,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7350,14 +7350,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7442,7 +7442,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -7879,9 +7879,9 @@ module.exports = g;
 
 /***/ }),
 /* 4 */
-/*!***************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/pages.json ***!
-  \***************************************************/
+/*!***********************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/pages.json ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -8880,13 +8880,13 @@ main();
 /*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-28920200923001\",\"_inBundle\":false,\"_integrity\":\"sha512-VajbPlCUcWQNKT114irqeXzch1Q1huyENvkmXzwiS/U1K3B03/oia4YSbmCulMENX9Ykl+QkhdHzu2myEFkA1g==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-28920200923001.tgz\",\"_shasum\":\"a40d5775c6635b8fcc14f2218b67c9471b6625f2\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"59d53ac1e48d8d2a3dd7c622e07f6553b8c8a0c6\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-28920200923001\"}");
+module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-28920200907001\",\"_inBundle\":false,\"_integrity\":\"sha512-AFKRFzMJDKa0IWyPtRHxUw79WJxlTFUPZMv4veCKsNubBm7Nxo1JYa4S4UubFs623mFEw9UGpJAU0uWSwuAwNg==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-28920200907001.tgz\",\"_shasum\":\"529372676359ab63f23a56df4c35d638c35ccede\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"f3c987005a645cea90787e5f1ea2c96a92905bb2\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-28920200907001\"}");
 
 /***/ }),
 /* 7 */
-/*!*******************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
-  \*******************************************************************/
+/*!***************************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/pages.json?{"type":"stat"} ***!
+  \***************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -8895,23 +8895,23 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 
 /***/ }),
 /* 8 */
-/*!********************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
-  \********************************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/pages.json?{"type":"style"} ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "申请加入" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "申请加入" }, "pages/pageA/group/userInfo": { "navigationBarTitleText": "申请加入" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 9 */,
 /* 10 */,
 /* 11 */,
 /* 12 */
-/*!***********************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
-  \***********************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/common/xdConfig.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10185,9 +10185,9 @@ function normalizeComponent (
 
 /***/ }),
 /* 17 */
-/*!*******************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/store/index.js ***!
-  \*******************************************************/
+/*!***************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/store/index.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10233,9 +10233,9 @@ store;exports.default = _default;
 
 /***/ }),
 /* 18 */
-/*!***************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
-  \***************************************************************/
+/*!***********************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/common/xdServerUrls.js ***!
+  \***********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10356,9 +10356,9 @@ serverBaseUrl + '/room/saveRoomJoin'), _serverUrls);var _default =
 
 /***/ }),
 /* 19 */
-/*!*************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
-  \*************************************************************/
+/*!*********************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/common/xdUniUtils.js ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10870,9 +10870,9 @@ function showToast(isSuccess, content, methodes) {
 
 /***/ }),
 /* 20 */
-/*!***********************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
-  \***********************************************************/
+/*!*******************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/common/xdCommon.js ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10906,9 +10906,9 @@ var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动�
 /* 31 */,
 /* 32 */,
 /* 33 */
-/*!********************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
-  \********************************************************************/
+/*!****************************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/static/images/icon/left.png ***!
+  \****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -10916,9 +10916,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 
 /***/ }),
 /* 34 */
-/*!*********************************************************************!*\
-  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
-  \*********************************************************************/
+/*!*****************************************************************************!*\
+  !*** /Users/wangyao/Desktop/code/xingdongdaka/static/images/icon/right.png ***!
+  \*****************************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
