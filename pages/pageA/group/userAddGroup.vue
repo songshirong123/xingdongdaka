@@ -73,7 +73,7 @@
 					roomId: this.group.id
 				}
 				let _this = this;
-				this.xd_request_post(this.xdServerUrls.xd_saveRoomJoin, info, false).then((res) => {
+				this.xd_request_post(this.xdServerUrls.xd_saveRoomJoin, info, true).then((res) => {
 					_this.xdUniUtils.showToast(false, "已申请加入！", "");
 					_this.xdUniUtils.xd_navigateBack(1);
 				}).catch(err => {});

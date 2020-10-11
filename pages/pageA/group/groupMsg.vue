@@ -30,7 +30,7 @@
 					<image :src="item.userHead" class="msg-img"></image>
 				</view>
 				<view v-else class="xd-rows" style="margin-top: 10px;align-items: flex-start;">
-					<image :src="item.userHead" class="msg-img" @longpress="lookSendUser(item)"></image>
+					<image :src="item.userHead" class="msg-img" @longpress="lookSendUser(item)" @tap="goUserInfo(item)"></image>
 					<image @tap="goPageImg(item.img)" v-if="item.img!=''" :src="item.img" class="msg-send-img" mode="widthFix"></image>
 					<text v-else class="msg-msg">{{item.msg}}</text>
 				</view>
@@ -73,6 +73,14 @@
 			}
 		},
 		methods: {
+			//用户信息
+			goUserInfo(user){
+				// uni.navigateTo({
+				// 	url:'./userInfo?userId='+user.userId
+				// })
+			},
+			
+			//长按可@用户发送消息
 			lookSendUser(user) {
 				console.log("lookSendUser", user);
 				this.lookUser = user;

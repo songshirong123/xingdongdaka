@@ -66,6 +66,7 @@
 					pageNum:this.pageNum,
 					pageSize:10
 				}
+				console.log("群列表参数",info);
 				let _this =this;
 				this.xd_request_post(this.xdServerUrls.xd_myRoomByType, info, true).then((res) => {
 					console.log("群列表信息",res);

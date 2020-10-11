@@ -96,10 +96,6 @@
 							 v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' :inimg='inimg'></indexList>
 						</block>
 					</view>
-
-
-
-
 				</view>
 			</view>
 
@@ -129,7 +125,6 @@
 					</view>
 				</block>
 			</view>
-
 		</view>
 		<backTop :scrollTop="scrollTop"></backTop>
 		<!-- 开始行动-加号 -->
