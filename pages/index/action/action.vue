@@ -45,7 +45,6 @@
 									</view>
 							</view>
 						</view>
-						
 						<view class='xd-flex'>
 							<view v-if="userId==pushList.userId && pushList.challengeRmb>0">
 								<view class="cu-tag light bg-red radius" >
@@ -71,10 +70,9 @@
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
 						</view>	
-						</view>
 					</view>
 				</view>
-				
+			</view>
 				<view class="text-contents">
 					<text class="contentext" >{{pushList.content}}
 					</text>
@@ -95,9 +93,7 @@
 						<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(pushList,index)">围观分钱</button>
 						<text class="text-gray text-df ">{{pushList.onlookerCount}}</text>
 					</view>
-					<!-- <view class="text-xxl"  >
-						<button class="cu-btn line-green sm round  " @click="gothanl(pushList)" v-if="userId==pushList.userId" >我要感谢</button>
-					</view> -->
+					
 					<view class="text-xxl"  >
 						<button class="cu-btn line-green sm round  " @click="goSteps" v-if="userId==pushList.userId" >立即打卡</button>
 						<button class="cu-btn line-green sm round  " @click="gostep" v-else>一起行动</button>
@@ -166,7 +162,7 @@
 						<view class="ali-main-list" @tap="showBanner(attention.lookUserId,attention.pushId)">
 							<view class="ali-main-list-num">{{attention.lookerCount}}</view>
 						</view>
-						<!-- v-if="userId==pushList.userId" -->
+						
 						<view class="defaultthank" @click="gothank(attention)" >
 							<button class="defaultbut" type="default">感谢</button>
 						</view>
@@ -174,11 +170,11 @@
 					</view>
 				</view>
 			</block>
-		</view>
-		<backTop :scrollTop="scrollTop"></backTop>
-		<!-- 开始行动-加号 -->
-		<view class="start-add" @tap="goPage('/pages/action/step1')" v-if="scrollTop<2000">
-			<image src="../../../static/images/icon/add.png" mode="widthFix"></image>
+			<backTop :scrollTop="scrollTop"></backTop>
+			<!-- 开始行动-加号 -->
+			<view class="start-add" @tap="goPage('/pages/action/step1')" v-if="scrollTop<2000">
+				<image src="../../../static/images/icon/add.png" mode="widthFix"></image>
+			</view>
 		</view>
 	</view>
 </template>

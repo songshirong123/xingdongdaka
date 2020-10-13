@@ -31,14 +31,11 @@
         "group/groupMsg",
         "group/addLable",
         "group/userAddGroup",
-<<<<<<< HEAD
         "ranking/rangkinDet",
         "ranking/rankinAdd",
         "ranking/rankingUp",
-        "ranking/rankinglist"
-=======
+        "ranking/rankinglist",
         "group/userInfo"
->>>>>>> 1cdee00f75353d7ac4a08ccfc1c328909be67211
       ]
     }
   ],
@@ -84,10 +81,5 @@
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
-<<<<<<< HEAD
-  },
-  "sitemapLocation": "sitemap90.json"
-=======
   }
->>>>>>> 1cdee00f75353d7ac4a08ccfc1c328909be67211
 }
