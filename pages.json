@@ -185,7 +185,10 @@
 				"style": {
 					"navigationBarTitleText": "申请加入"
 				}
+<<<<<<< HEAD
 
+=======
+>>>>>>> 4f97ab63bd6603049e35b9e2fe5a86fc03749e9e
 			},
 			{
 				"path": "ranking/rangkinDet",

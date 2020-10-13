@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "打卡详情",
-  "usingComponents": {
-    "imt-audio": "/components/imt-audio/imt-audio"
-  }
-}

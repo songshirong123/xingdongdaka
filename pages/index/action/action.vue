@@ -46,30 +46,34 @@
 							</view>
 						</view>
 						<view class='xd-flex'>
-							<view v-if="userId==pushList.userId && pushList.challengeRmb>0">
-								<view class="cu-tag light bg-red radius" >
+							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" >
+								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
 									保证金￥{{pushList.challengeRmb}}
-								</view>
+								</view> 
 							</view>
 							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0">
-								<view class="cu-tag light bg-red radius" >
+								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
 									保证金￥{{pushList.challengeRmb+sponsorRmb}}
 								</view>
 							</view>
-							<view style="padding-left:6px"  v-if="userId==pushList.userId && sponsorRmb>0">
-								<view class="cu-tag radius bg-yellow " >
+							<view style="padding-left:6px"  v-if="userId==pushList.userId && sponsorRmb>0" >
+								<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)" >
 									获赞助金￥{{sponsorRmb}} 
 								</view>
-								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df " >{{sponsorCnt}}</text>
 							</view>
 
-							<view style="padding-left:6px"  v-if="userId!=pushList.userId && sponsorCnt>0">
-								<view class="cu-tag radius bg-yellow" >
+							<view style="padding-left:6px"  v-if="userId!=pushList.userId && sponsorCnt>0"  >
+								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)"  >
 									赞助 
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
 						</view>	
+<<<<<<< HEAD
+=======
+						
+>>>>>>> 4f97ab63bd6603049e35b9e2fe5a86fc03749e9e
 					</view>
 				</view>
 			</view>
@@ -314,6 +318,16 @@
 		},
 		//#endif
 		methods:{
+			// 赞助
+			gotoSponsor(list) {
+				console.log('aaaaa',list)
+				uni.setStorageSync("pushId", list.id);
+				uni.setStorageSync("cardId", list.pushCardList[0].id);
+				uni.navigateTo({
+					url: '../../sponsor/action'
+
+				})
+			},
 			gothank(e){
 				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
@@ -614,8 +628,6 @@
 						data.challengeRmb=res.obj.challengeRmb/100;
 						this.pushList=data;
 						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
-						console.log('this.pushList-----------------------',this.pushList,Math.abs(this.pushList.surpassHolidayDay))
-						
 						if(this.pushList.userId == uni.getStorageSync('id')){
 							this.guanzhu =''
 						}else{

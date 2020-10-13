@@ -1,1 +1,0 @@
-{"version":3,"sources":["uni-app:///main.js"],"names":["createPage","Page"],"mappings":";;;;;;;;;;kDAAA,wCAAmB;AACnB;AACA,6N;AACAA,UAAU,CAACC,oBAAD,CAAV,C","file":"pages/selfCenter/myattention.js","sourcesContent":["import 'uni-pages';import '@dcloudio/uni-stat';\nimport Vue from 'vue'\nimport Page from './pages/selfCenter/myattention.vue'\ncreatePage(Page)"],"sourceRoot":""}
