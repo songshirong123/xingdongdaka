@@ -190,7 +190,7 @@
 				"path": "ranking/rangkinDet",
 				"style": {
 					"navigationBarTitleText": "挑战赛详情"
-					
+
 				}
 			},
 			{
@@ -213,7 +213,9 @@
 			},
 			{
 				"path": "group/userEditInfo",
-				"style": {"navigationBarTitleText": ""}
+				"style": {
+					"navigationBarTitleText": ""
+				}
 			}
 		]
 	}],
