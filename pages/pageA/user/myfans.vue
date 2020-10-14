@@ -298,14 +298,16 @@
 		width: 48upx; height:48upx;
 	}
 	.actionLi{
-		padding-top: 20rpx;
-		border-bottom: 1upx solid #ffa700;
+		padding: 20rpx;
+		// border-bottom: 1upx solid #ffa700;
+		background-color: #FFFFFF;
+		margin-top: 5px;
 		.ali-main{
 			display: flex;
 			}
 			.xd-mag{
-				height: 125rpx;
-				width: 125rpx;
+				height: 100rpx;
+				width: 100rpx;
 			}
 		}
 	

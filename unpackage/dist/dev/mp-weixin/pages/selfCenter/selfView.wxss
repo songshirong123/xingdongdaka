@@ -28,8 +28,21 @@
 .selfCenter {
   padding: 0 20rpx;
 }
+.userInfo-ly {
+  background-color: #FFFFFF;
+}
+.userInfo-ly .label-hint {
+  font-size: 12px;
+  padding: 10px;
+  width: 100%;
+}
+.userInfo-ly .infos {
+  background-color: #FFFFFF;
+  width: 100%;
+  font-size: 14px;
+}
 .actionInfo {
-  margin: 24rpx 0;
+  margin: 15rpx 0;
 }
 .actionInfo .tabbar {
   font-size: 28rpx;

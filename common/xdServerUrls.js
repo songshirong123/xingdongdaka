@@ -107,6 +107,7 @@ const serverUrls = { //根据接口具体配置
 	xd_sendRoomMsg: serverBaseUrl + '/room/sendRoomMsg',//发送消息
 	xd_myRoomByType: serverBaseUrl + '/room/myRoomByType',//我加入的和我创建的
 	xd_saveRoomJoin: serverBaseUrl + '/room/saveRoomJoin',//加入群组	
+	xd_currentStatusByRoom: serverBaseUrl + '/room/currentStatusByRoom',//查看用户在群状态	1群主 2群成员 3游客
 }
 export default {
 	serverUrls,

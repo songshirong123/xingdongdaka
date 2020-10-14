@@ -43,7 +43,6 @@
 						_this.lable = res.obj[0];
 					}
 					_this.tabsList = res.obj;
-					console.log("获取标签", _this.tabsList);
 				}).catch(err => {});
 			},
 		},

@@ -15,8 +15,9 @@
 					<image :src="group.userHead" style="width: 25px;height: 25px;border-radius: 50%;border: 1px solid #f0f0f0;"></image>
 					<text style="margin-left: 10px;margin-top: 7px;font-size: 12px;">{{group.userName}} {{group.createTime}}</text>
 				</view>
-				<view class="add-but-ly">
-					<text class="add-but" hover-class="xd-but-active" @tap="userAdd">加入</text>
+				<view class="add-but-ly" @tap="userAdd">
+					<text style="font-size: 25px;margin-top: 8px;" class="lg text-gray cuIcon-more"></text>
+					<!-- <text class="add-but" hover-class="xd-but-active" @tap="userAdd">更多</text> -->
 				</view>
 			</view>
 		</view>
@@ -24,8 +25,9 @@
 		<!-- 消息列表  别人的左边展示  自己的右边展示-->
 		<view style="padding: 10px;margin-bottom: 60px;">
 			<view v-for="(item,index) in msgList" :key="index">
-				<view v-if="item.sendUserId==userId" class="xd-rows" style="text-align: end;align-items: flex-end;justify-content: flex-end;margin-top: 10px;align-items: flex-start;">					
-					<image @tap="goPageImg(item.img)" v-if="item.img!=''" :src="item.img" class="msg-send-img" style="margin-right: 5px;margin-left: 40px;" mode="widthFix"></image>
+				<view v-if="item.sendUserId==userId" class="xd-rows" style="text-align: end;align-items: flex-end;justify-content: flex-end;margin-top: 10px;align-items: flex-start;">
+					<image @tap="goPageImg(item.img)" v-if="item.img!=''" :src="item.img" class="msg-send-img" style="margin-right: 5px;margin-left: 40px;"
+					 mode="widthFix"></image>
 					<text v-else class="msg-msg" style="margin-right: 5px;margin-left: 40px;background-color: #ff9800;">{{item.msg}}</text>
 					<image :src="item.userHead" class="msg-img"></image>
 				</view>
@@ -40,7 +42,7 @@
 
 		<view class="xd-common-bottom-ly xd-rows" style="padding-top: 5px;padding-bottom: 5px;">
 			<view style="flex: 1;margin-left: 5px;border-radius: 5px;">
-				<input class="input-msg" @input="sendMsgInput" :value="inputMsg" />
+				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg" />
 			</view>
 			<view v-if="sendImg">
 				<button class="send-img-but" @tap="sendPublicGroupImg" hover-class="xd-but-active">+</button>
@@ -68,21 +70,22 @@
 				inputMsg: "",
 				lookUser: "",
 				inputdisabled: true,
+				sendMsgPrims: true,
 				showPrivteBut: false,
-				sendImg: true
+				sendImg: true,
+				custState: 3,
 			}
 		},
 		methods: {
 			//用户信息
-			goUserInfo(user){
-				// uni.navigateTo({
-				// 	url:'./userInfo?userId='+user.userId
-				// })
+			goUserInfo(user) {
+				uni.navigateTo({
+					url: '../../selfCenter/selfView?showInfo=true&userId=' + user.sendUserId
+				})
 			},
-			
+
 			//长按可@用户发送消息
 			lookSendUser(user) {
-				console.log("lookSendUser", user);
 				this.lookUser = user;
 				this.inputMsg = "@" + user.userName + " ";
 				this.inputdisabled = false;
@@ -122,7 +125,7 @@
 					let list = res.obj.list;
 					if (!this.xdUniUtils.IsNullOrEmpty(list)) {
 						for (let i in list) {
-							list[i].img = _this.equals(list[i].msg,"http")?list[i].msg:"";
+							list[i].img = _this.equals(list[i].msg, "http") ? list[i].msg : "";
 							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 						}
 						list.sort(function(a, b) {
@@ -133,18 +136,33 @@
 
 				}).catch(err => {});
 			},
+			//获取用户在这个小组的状态
+			getCustomerGroupState() {
+				let info = {
+					roomId: this.group.id
+				}
+				let _this = this;
+				this.xd_request_post(this.xdServerUrls.xd_currentStatusByRoom, info, true).then((res) => {
+					console.log("用户在群状态", res); //1群主 2群成员 3游客
+					_this.custState =  res.obj;
+					_this.sendMsgPrims = res.obj == 3 ? true : false;
+				}).catch(err => {});
+			},
 			/**
 			 * 判断字符创包含另一个字符串
 			 */
 			equals(rst, rut) {
-			  if (rst.indexOf(rut) != -1) {
-			    return true;
-			  } else {
-			    return false;
-			  }
+				if (rst.indexOf(rut) != -1) {
+					return true;
+				} else {
+					return false;
+				}
 			},
 			//发送图片
 			sendPublicGroupImg() {
+				if (this.custState == 3)
+					return this.xdUniUtils.showToast(false, "无权限发言！", "");
+
 				const that = this;
 				uni.chooseImage({
 					count: 1, //默认9
@@ -189,12 +207,12 @@
 				this.lookUser = "";
 				this.sendGroupMsg();
 			},
-			goPageImg(e){
+			goPageImg(e) {
 				this.xdUniUtils.xd_showImg(e)
 			},
-			
+
 			//往群里面发送图片
-			sendGroupImg(imgurl){
+			sendGroupImg(imgurl) {
 				//私发 lookUserId 传值 接收人的userid
 				let userInfos = uni.getStorageSync('userInfo');
 				let info = {
@@ -236,11 +254,10 @@
 					info["lookUserId"] = user.sendUserId;
 				}
 
-				console.log("发消息", info);
 				let _this = this;
 				this.xd_request_post(this.xdServerUrls.xd_sendRoomMsg, info, true).then((res) => {
 					_this.inputMsg = "";
-					_this.sendImg=true;
+					_this.sendImg = true;
 					_this.pageNum = 1;
 					_this.lookUser = "";
 					_this.inputdisabled = true;
@@ -252,6 +269,9 @@
 		onLoad(option) {
 			this.group = JSON.parse(decodeURIComponent(option.group));
 			this.getGroupMsg();
+		},
+		onShow() {
+			this.getCustomerGroupState();
 		},
 		onPullDownRefresh() {
 			this.pageNum += 1;
@@ -288,10 +308,11 @@
 		word-wrap: break-word;
 		text-align: left;
 	}
-	.msg-send-img{
+
+	.msg-send-img {
 		border-radius: 10px;
 		border: 1px solid #f0f0f0;
-		max-width:80px;
+		max-width: 80px;
 		min-width: 40px;
 	}
 
@@ -366,10 +387,10 @@
 		padding-right: 7px;
 		padding-top: 3px;
 		padding-bottom: 3px;
-		border-radius: 20upx;
-		background-color: #fd5107;
+		// border-radius: 20upx;
+		// background-color: #fd5107;
 		font-size: 10px;
-		color: #FFFFFF;
+		// color: #FFFFFF;
 		margin-top: 5px;
 	}
 </style>

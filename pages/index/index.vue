@@ -920,11 +920,9 @@
 			width: 100%;
 			box-sizing: border-box;
 			border-bottom: 1px solid #efe5e8;
-			padding: 10upx 0 upx 0;
-			margin-bottom: 12upx;
+			padding: 10upx 3upx 10upx 3upx;
 			background-color: #FFFFFF;
 			margin-top: 10upx;
-			height: 76upx;
 
 			.xd-nav-bar {
 				width: 100%;

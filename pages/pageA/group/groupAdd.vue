@@ -96,7 +96,9 @@
 				}
 				
 				let groupDescribe = this.groupDescribe;//群描述
-				if(this.xdUniUtils.IsNullOrEmpty(groupDescribe)){}
+				if(this.xdUniUtils.IsNullOrEmpty(groupDescribe)){
+					return this.xdUniUtils.showToast(false,"群描述不能为空！","");
+				}
 				
 				let info ={
 					id:"",
@@ -105,11 +107,11 @@
 					roomName:groupName,
 					roomType:this.lable.id,
 					roomHead:photo,
-					status:0
+					status:0,
+					roomDesc:groupDescribe
 				}
 				let _this = this;
 				this.xd_request_post(this.xdServerUrls.xd_saveRoom, info, false).then((res) => {
-					console.log("保存房间",res);
 					_this.xdUniUtils.xd_navigateBack(1);
 				}).catch(err => {});
 				

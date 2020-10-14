@@ -210,9 +210,10 @@
 				"style": {
 					"navigationBarTitleText": "我的挑战赛"
 				}
-			}, {
-				"path": "group/userInfo",
-				"style": {"navigationBarTitleText": "申请加入"}
+			},
+			{
+				"path": "group/userEditInfo",
+				"style": {"navigationBarTitleText": ""}
 			}
 		]
 	}],
