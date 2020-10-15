@@ -78,7 +78,9 @@
 		methods: {
 			//投票
 			editVoteInfo() {
+				let styates = this.custState; //1群主 2群成员 3游客
 				let group = this.group;
+				group.custState = styates;
 				uni.navigateTo({
 					url: "./usersVote?group=" + encodeURIComponent(JSON.stringify(group))
 				})
