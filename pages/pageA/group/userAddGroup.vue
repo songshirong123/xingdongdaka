@@ -49,10 +49,10 @@
 				<!-- <text v-if="custState==1" class="text-cuIcon-right cuIcon-right"></text> -->
 			</view>
 			
-			<view v-if="custState!=3" class="label-hint infos xd-rows" style="margin-top: 1px;" @tap="editVoteInfo">
+			<!-- <view v-if="custState!=3" class="label-hint infos xd-rows" style="margin-top: 1px;" @tap="editVoteInfo">
 				<input disabled="true"  value="投票" style="width: 100%;" />
 				<text  class="text-cuIcon-right cuIcon-right"></text>
-			</view>
+			</view> -->
 
 			<view v-if="custState!=1" class="label-hint" style="padding: 5px;margin-top: 15px;">
 				<button class="bg-orange" hover-class="xd-but-active" @tap="userSubmit">{{butName}}</button>

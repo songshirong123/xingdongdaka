@@ -4,7 +4,7 @@
 			<text style="font-size: 16px;font-weight: 700;">{{group.editInfo}}</text>
 		</view>
 		<view class="infos xd-rows">
-			<image :src="group.userHead" style="width: 30px;height: 30px;"></image>
+			<image :src="group.roomHead" style="width: 30px;height: 30px;"></image>
 			<input style="width: 100%;padding-left: 10px;margin-top: 5px;" :value="group.showInfo" placeholder="请输入" @input="inputInfo" />
 		</view>
 		<text style="padding: 5px;">小组名称：{{group.roomName}}</text>
