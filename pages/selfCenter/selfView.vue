@@ -6,13 +6,15 @@
 		<view v-if="showInfo" class="userInfo-ly">
 			<!-- 组名称 -->
 			<view class="label-hint">提供</view>
-			<view class="label-hint infos">
-				<input disabled="true" placeholder="为本群提供的信息" @input="inputGroupName" />
+			<view class="label-hint infos xd-rows">
+				<input disabled="true" placeholder="为本群提供的信息" style="width: 100%;" :value="postInfo" />
+				<text v-if="editInfo" class="text-cuIcon-right cuIcon-right"></text>
 			</view>
 			<!-- 组名称 -->
 			<view class="label-hint" style="border-top: 1px solid #f0f0f0;">需要</view>
-			<view class="label-hint infos">
-				<input disabled="true" placeholder="从本群获取到的信息" @input="inputGroupName" />
+			<view class="label-hint infos xd-rows">
+				<input disabled="true" placeholder="从本群获取到的信息" style="width: 100%;" :value="getInfo" />
+				<text v-if="editInfo" class="text-cuIcon-right cuIcon-right"></text>
 			</view>
 		</view>
 
@@ -57,6 +59,10 @@
 				tab: 0, //行动，围观，收藏
 				list: [],
 				userId: '',
+				roomId: "",
+				postInfo: "",
+				getInfo: "",
+				editInfo: false,
 				showInfo: false, //显示用户群信息
 				user: uni.getStorageSync('id'),
 				total: '',
@@ -101,7 +107,9 @@
 			}
 		},
 		onShow() {
-
+			if (this.showInfo) {
+				this.getGroupUserInfo();
+			}
 		},
 		onLoad(option) {
 			//#ifdef MP-WEIXIN
@@ -110,6 +118,7 @@
 			})
 			//#endif
 			this.userId = option.userId;
+			this.roomId = option.roomId;
 			this.showInfo = this.xdUniUtils.IsNullOrEmpty(option.showInfo) ? false : option.showInfo;
 			this.getCardList();
 			this.getLookerList();
@@ -261,24 +270,48 @@
 
 					})
 			},
-
+			//查询用户在本群的提供和需要信息
+			getGroupUserInfo() {
+				let info = {
+					type: 2,
+					roomId: this.roomId,
+					userId: this.userId
+				}
+				if (uni.getStorageSync('id') == this.userId) {
+					this.editInfo = true;
+				}
+				let _this = this;
+				this.xd_request_post(this.xdServerUrls.xd_myRoomByType, info, true).then((res) => {
+					console.log("这个人小组信息", res);
+					let userGroupInfo = res.obj.list[0];
+					_this.postInfo = _this.xdUniUtils.IsNullOrEmpty(userGroupInfo.offer) ? "" : userGroupInfo.offer;
+					_this.getInfo = _this.xdUniUtils.IsNullOrEmpty(userGroupInfo.need) ? "" : userGroupInfo.need;
+				}).catch(err => {});
+			},
 
 		},
 	}
 </script>
 
 <style lang="scss">
-	
 	.selfCenter {
 		padding: 0 20rpx;
 	}
-	.userInfo-ly{
+
+	.text-cuIcon-right {
+		font-size: 10px;
+		margin-top: 6px;
+	}
+
+	.userInfo-ly {
 		background-color: #FFFFFF;
+
 		.label-hint {
 			font-size: 12px;
 			padding: 10px;
 			width: 100%;
 		}
+
 		.infos {
 			background-color: #FFFFFF;
 			width: 100%;

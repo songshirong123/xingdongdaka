@@ -334,18 +334,15 @@
 					title: '加载中..',
 				})
 				let _this = this;
+				console.log("群列表信息参数", info);
 				this.xd_request_post(this.xdServerUrls.xd_selectList, info, true).then((res) => {
 					uni.hideLoading();
 					console.log("群列表信息", res);
-
-					if (!_this.xdUniUtils.IsNullOrEmpty(res.obj.list)) {
-						let list = res.obj.list;
-						for (let i in list) {
-							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
-						}
-						_this.groupList = _this.pageNum == 1 ? list : _this.groupList.concat(list);
-
+					let list = res.obj.list;
+					for (let i in list) {
+						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 					}
+					_this.groupList = _this.pageNum == 1 ? list : _this.groupList.concat(list);
 					that.pageNum = res.obj.nextPage;
 				}).catch(err => {});
 			},

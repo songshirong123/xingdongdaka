@@ -5,7 +5,7 @@
 		</view>
 		<view class="infos xd-rows">
 			<image :src="group.userHead" style="width: 30px;height: 30px;"></image>
-			<input style="width: 100%;padding-left: 10px;margin-top: 5px;" placeholder="请输入" @input="inputInfo" />
+			<input style="width: 100%;padding-left: 10px;margin-top: 5px;" :value="group.showInfo" placeholder="请输入" @input="inputInfo" />
 		</view>
 		<text style="padding: 5px;">小组名称：{{group.roomName}}</text>
 		<view style="padding: 5px;">
@@ -20,30 +20,32 @@
 		data() {
 			return {
 				group: '',
-				inputMsg:""
+				inputMsg: ""
 			}
 		},
 		methods: {
 			inputInfo(e) {
 				this.inputMsg = e.detail.value;
 			},
-			userSubmit(){
+			userSubmit() {
 				let msg = this.inputMsg;
-				if (this.xdUniUtils.IsNullOrEmpty(msg)) 
+				if (this.xdUniUtils.IsNullOrEmpty(msg))
 					return this.xdUniUtils.showToast(false, "不能为空！", "");
-					
+
 				//1群主 2群成员 3游客
 				let styates = this.group.custState;
-				if(styates==3){//返回填写的数据
-				 this.xdUniUtils.xd_setStorageSync("editInfo",msg);
-				 this.xdUniUtils.xd_navigateBack(1);
-				}else{//直接编辑
+				if (styates == 3) { //返回填写的数据
+					this.xdUniUtils.xd_setStorageSync("editInfo", msg);
 					this.xdUniUtils.xd_navigateBack(1);
+				} else { //直接编辑
+					return this.xdUniUtils.showToast(false, "暂不能修改！", "");
+					// this.xdUniUtils.xd_navigateBack(1);
 				}
 			}
 		},
 		onLoad(option) {
 			this.group = JSON.parse(decodeURIComponent(option.group));
+			this.inputMsg = this.group.showInfo;
 		}
 	}
 </script>

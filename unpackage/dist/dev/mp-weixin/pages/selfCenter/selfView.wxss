@@ -28,6 +28,10 @@
 .selfCenter {
   padding: 0 20rpx;
 }
+.text-cuIcon-right {
+  font-size: 10px;
+  margin-top: 6px;
+}
 .userInfo-ly {
   background-color: #FFFFFF;
 }

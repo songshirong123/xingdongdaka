@@ -183,7 +183,7 @@
 			}, {
 				"path": "group/userAddGroup",
 				"style": {
-					"navigationBarTitleText": "申请加入"
+					"navigationBarTitleText": ""
 				}
 			},
 			{
@@ -215,6 +215,11 @@
 				"path": "group/userEditInfo",
 				"style": {
 					"navigationBarTitleText": ""
+				}
+			}, {
+				"path": "group/usersVote",
+				"style": {
+					"navigationBarTitleText": "投票"
 				}
 			}
 		]

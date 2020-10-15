@@ -42,7 +42,7 @@
 
 		<view class="xd-common-bottom-ly xd-rows" style="padding-top: 5px;padding-bottom: 5px;">
 			<view style="flex: 1;margin-left: 5px;border-radius: 5px;">
-				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg" />
+				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg"  :placeholder="inputHintMsg"/>
 			</view>
 			<view v-if="sendImg">
 				<button class="send-img-but" @tap="sendPublicGroupImg" hover-class="xd-but-active">+</button>
@@ -68,6 +68,7 @@
 				group: {},
 				pageNum: 1,
 				inputMsg: "",
+				inputHintMsg:"",
 				lookUser: "",
 				inputdisabled: true,
 				sendMsgPrims: true,
@@ -80,7 +81,7 @@
 			//用户信息
 			goUserInfo(user) {
 				uni.navigateTo({
-					url: '../../selfCenter/selfView?showInfo=true&userId=' + user.sendUserId
+					url: '../../selfCenter/selfView?showInfo=true&userId=' + user.sendUserId+"&roomId="+this.group.id
 				})
 			},
 
@@ -146,6 +147,7 @@
 					console.log("用户在群状态", res); //1群主 2群成员 3游客
 					_this.custState =  res.obj;
 					_this.sendMsgPrims = res.obj == 3 ? true : false;
+					_this.inputHintMsg = res.obj == 3 ? "无权限发言" : "";
 				}).catch(err => {});
 			},
 			/**
@@ -268,7 +270,20 @@
 		},
 		onLoad(option) {
 			this.group = JSON.parse(decodeURIComponent(option.group));
+			console.log("组信息", this.group);
 			this.getGroupMsg();
+		},
+		onShareAppMessage(res) {
+			let that = this;
+			if (res.from == "menu") {
+				return that.xdUniUtils.xd_onShare();
+			} else {
+				return {
+					title: that.group.roomName,
+					path: '/pages/pageA/group/groupMsg?group='+encodeURIComponent(JSON.stringify(that.group)),
+					imageUrl: that.group.roomHead,
+				}
+			}
 		},
 		onShow() {
 			this.getCustomerGroupState();
