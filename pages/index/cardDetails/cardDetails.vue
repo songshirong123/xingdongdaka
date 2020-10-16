@@ -12,9 +12,8 @@
 							</view>
 						</view>
 						<view >
-							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
-								{{guanzhu}}
-							</view>
+							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(pusCardLists.userId)" >互助小组</view>
+							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">{{guanzhu}}</view>
 						</view>
 					</view>
 				</view>				
@@ -310,6 +309,12 @@
 				}
 				uni.navigateTo({
 					url:'../../selfCenter/selfView?userId='+e
+				})
+			},
+			//互助小组点击事件
+			clickGroup(userid){
+				uni.navigateTo({
+					url:'../../pageA/group/groupList?userId='+userid
 				})
 			},
 			goSteps(){
