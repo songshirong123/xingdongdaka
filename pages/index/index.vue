@@ -261,17 +261,26 @@
 
 		},
 
-		onLoad() {
+		onLoad(option) {
 			//#ifdef MP-WEIXIN
 			wx.showShareMenu({
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
+			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)){
+				this.isGroupLable = option.isGroupLable;
+			}
 			this.indexData();
 			this.burieInit();
 			this.getnotic();
 
 		},
+		onShow(option) {	
+			// this.currentIndex=-1;
+			// this.active=1;
+			// this.indexData();
+		},
+		
 		computed: {
 			...mapState(['hasLogin'])
 		},
@@ -476,8 +485,14 @@
 					}, ...res.obj];
 					this.tabs = da;
 				}).catch(err => {});
-				this.getShowRecommend();
-
+				
+				if(this.isGroupLable){//加载互助小组
+					this.isRankingLable=false;
+					this.pageNum = 1;
+					this.getGroupList();
+				}else{//加载打卡列表
+					this.getShowRecommend();
+				}
 			},
 			// 赞助
 			gotoSponsor(list, index) {
@@ -802,11 +817,7 @@
 
 			},
 		},
-		// onShow() {
-		// 	this.currentIndex=-1;
-		// 	this.active=1;
-		// 	this.indexData();
-		// },
+		
 		// 下拉刷新
 		onPullDownRefresh() {
 			switch (this.active) {

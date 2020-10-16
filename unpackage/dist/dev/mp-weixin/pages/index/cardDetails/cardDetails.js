@@ -392,9 +392,12 @@ var _default = {
     },
     //互助小组点击事件
     clickGroup: function clickGroup(userid) {
-      uni.navigateTo({
-        url: '../../pageA/group/groupList?userId=' + userid });
+      uni.reLaunch({
+        url: '../index?isGroupLable=true' });
 
+      // uni.navigateTo({
+      // 	url:'../../pageA/group/groupList?userId='+userid
+      // })
     },
     goSteps: function goSteps() {
 

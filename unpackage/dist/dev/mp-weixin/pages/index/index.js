@@ -397,17 +397,26 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _toConsumableArray(arr)
 
   },
 
-  onLoad: function onLoad() {
+  onLoad: function onLoad(option) {
 
     wx.showShareMenu({
       menus: ['shareAppMessage', 'shareTimeline'] });
 
 
+    if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)) {
+      this.isGroupLable = option.isGroupLable;
+    }
     this.indexData();
     this.burieInit();
     this.getnotic();
 
   },
+  onShow: function onShow(option) {
+    // this.currentIndex=-1;
+    // this.active=1;
+    // this.indexData();
+  },
+
   computed: _objectSpread({},
   (0, _vuex.mapState)(['hasLogin'])),
 
@@ -612,8 +621,14 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _toConsumableArray(arr)
         res.obj));
         _this5.tabs = da;
       }).catch(function (err) {});
-      this.getShowRecommend();
 
+      if (this.isGroupLable) {//加载互助小组
+        this.isRankingLable = false;
+        this.pageNum = 1;
+        this.getGroupList();
+      } else {//加载打卡列表
+        this.getShowRecommend();
+      }
     },
     // 赞助
     gotoSponsor: function gotoSponsor(list, index) {
@@ -938,11 +953,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _toConsumableArray(arr)
 
     } }),
 
-  // onShow() {
-  // 	this.currentIndex=-1;
-  // 	this.active=1;
-  // 	this.indexData();
-  // },
+
   // 下拉刷新
   onPullDownRefresh: function onPullDownRefresh() {
     switch (this.active) {

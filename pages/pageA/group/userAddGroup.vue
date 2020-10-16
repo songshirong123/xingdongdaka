@@ -118,6 +118,7 @@
 				group.custState = styates;
 				group.editInfo = infst + ifs;
 				group.showInfo = shoifs;
+				group.eType=eType;
 				uni.navigateTo({
 					url: "./userEditInfo?group=" + encodeURIComponent(JSON.stringify(group))
 				})
