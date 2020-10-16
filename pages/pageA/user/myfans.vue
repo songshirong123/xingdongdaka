@@ -96,7 +96,7 @@
 			},
 			goUser(e){
 				uni.navigateTo({
-					url:'selfView?userId='+e
+					url:'../../selfCenter/selfView?userId='+e
 				})
 			},
 			getInviteList(){
