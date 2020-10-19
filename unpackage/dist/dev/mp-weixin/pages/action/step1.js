@@ -272,6 +272,19 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 var _default =
 {
   data: function data() {
@@ -506,7 +519,9 @@ var _default =
       e.detail.value.targetDay = this.targetDay;
       e.detail.value.holidayDay = this.holidayDay == '' ? 0 : this.holidayDay;
       e.detail.value.pictures = this.param.pictures;
-      this.xdUniUtils.xd_request_text({ content: e.detail.value }).then(function (res) {
+      this.xdUniUtils.xd_request_text({
+        content: e.detail.value }).
+      then(function (res) {
         if (res.obj.errcode == 0) {
           uni.navigateTo({
             url: '/pages/action/finish?data=' + encodeURIComponent(JSON.stringify(e.detail.value)) });
@@ -564,8 +579,7 @@ var _default =
       this.param.pictures = '';
     },
     tabs: function tabs() {var _this = this;
-      this.xd_request_post(this.xdServerUrls.xd_label, {}, false).
-      then(function (res) {
+      this.xd_request_post(this.xdServerUrls.xd_label, {}, false).then(function (res) {
         _this.pickerlabel = res.obj;
       }).catch(function (err) {
 

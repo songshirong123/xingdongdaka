@@ -943,7 +943,7 @@
 					flex-direction: column;
 					text-align: center;
 					margin: 0 0.6%;
-					padding: 8upx 0;
+					padding: 12upx 0;
 					background: #fbf3e6;
 					border-radius: 10upx;
 

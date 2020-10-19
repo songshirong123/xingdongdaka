@@ -109,7 +109,7 @@
           flex-direction: column;
   text-align: center;
   margin: 0 0.6%;
-  padding: 8rpx 0;
+  padding: 12rpx 0;
   background: #fbf3e6;
   border-radius: 10rpx;
 }
