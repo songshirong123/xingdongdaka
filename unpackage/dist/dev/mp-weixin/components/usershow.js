@@ -180,9 +180,18 @@ var _default =
   methods: {
     //互助小组点击事件
     clickGroup: function clickGroup(userid) {
-      uni.navigateTo({
-        url: '../pageA/group/groupList?userId=' + userid });
+      if (userid == uni.getStorageSync('id')) {
+        uni.navigateTo({
+          url: '../pageA/group/groupList?userId=' + userid });
 
+      } else {
+        uni.reLaunch({
+          url: '../pages/index?isGroupLable=true' });
+
+      }
+      // uni.navigateTo({
+      // 	url:'../pageA/group/groupList?userId='+userid
+      // })
     },
 
     clidtags: function clidtags(e) {

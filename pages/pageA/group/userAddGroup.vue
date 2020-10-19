@@ -162,11 +162,27 @@
 					if (this.xdUniUtils.IsNullOrEmpty(getinfo))
 						return this.xdUniUtils.showToast(false, "需要获取的内容不能为空！", "");
 					if (this.group.rmb > 0) {
-						this.wxChartPay();
+						this.getBalance();
 					} else {
 						this.userAddGroup();
 					}
 				}
+			},
+			//获取余额 如果没有余额或者余额不够支付 用微信支付否则用余额支付
+			getBalance(){
+				let _this =this;
+				this.xd_request_post(this.xdServerUrls.xd_inquireBalance,{token:uni.getStorageSync('token')},true).then((res) => {
+					if(typeof res.obj.rmb !== undefined){
+						// this.rmb=res.obj.rmb/100;
+						if(_this.group.rmb >res.obj.rmb){//如果余额不足以支付用微信支付
+							_this.wxChartPay();
+						}else{//用余额支付
+							
+						}
+					}else{
+						_this.wxChartPay();
+					}
+				})
 			},
 
 			//支付诚意金

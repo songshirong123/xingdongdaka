@@ -26,12 +26,14 @@
 						<text class="thin">联系客服</text>
 					</button>
 				</view>
-				<view class="user_column_item"  @tap="gogroup">
+				
+				<!-- <view class="user_column_item"  @tap="gogroup">
 				    <button class='content cu-btn'>
 				      <text class="lg text-gray cuIcon-group"></text>
 				      <text class='thin'>互助小组</text>
 				    </button>
-				</view>
+				</view> -->
+				
 				<!-- <view class="user_column_item"  @tap="goranking">
 				    <button class='content cu-btn'>
 				      <text class="lg text-gray cuIcon-group"></text>

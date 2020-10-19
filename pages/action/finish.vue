@@ -5,8 +5,8 @@
 				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb"
 					 placeholder="请输入保障金数额" maxlength="5" /></view>
 				<view class="pricelis">
-					<view class="priceli" @click="priceRmb(2)"><text>6元</text></view>
-					<view class="priceli" @click="priceRmb(6)"><text>10元</text></view>
+					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
+					<view class="priceli" @click="priceRmb(10)"><text>10元</text></view>
 					<view class="priceli" @click="priceRmb(18)"><text>18元</text></view>
 					<view class="priceli" @click="priceRmb(66)"><text>66元</text></view>
 					<view class="priceli" @click="priceRmb(188)"><text>188元</text></view>
@@ -267,9 +267,12 @@
 												if (ress.confirm) {
 													uni.setStorageSync('pushData', that.pushData.obj);
 
-													uni.reLaunch({
-														url: 'step1'
+													uni.navigateBack({
+														delta: 1
 													})
+													// uni.reLaunch({
+													// 	url: 'step1'
+													// })
 												} else if (ress.cancel) {
 
 													uni.setStorageSync('pushData', that.pushData.obj);
@@ -292,7 +295,7 @@
 
 					}
 
-				})			
+				})
 			}
 			//#endif
 		},

@@ -12,7 +12,7 @@
 							</view>
 						</view>
 						<view >
-							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(pusCardLists.userId)" >互助小组</view>
+							<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(pusCardLists.userId)" >互助小组</view> -->
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">{{guanzhu}}</view>
 						</view>
 					</view>
@@ -313,12 +313,15 @@
 			},
 			//互助小组点击事件
 			clickGroup(userid){
-				uni.reLaunch({
-					url:'../index?isGroupLable=true'
-				})
-				// uni.navigateTo({
-				// 	url:'../../pageA/group/groupList?userId='+userid
-				// })
+				if(userid == uni.getStorageSync('id')){
+					uni.navigateTo({
+						url:'../../pageA/group/groupList?userId='+userid
+					})
+				}else{
+					uni.reLaunch({
+						url:'../index?isGroupLable=true'
+					})
+				}
 			},
 			goSteps(){
 				

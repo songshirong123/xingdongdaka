@@ -399,9 +399,12 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
                       if (ress.confirm) {
                         uni.setStorageSync('pushData', that.pushData.obj);
 
-                        uni.reLaunch({
-                          url: 'step1' });
+                        uni.navigateBack({
+                          delta: 1 });
 
+                        // uni.reLaunch({
+                        // 	url: 'step1'
+                        // })
                       } else if (ress.cancel) {
 
                         uni.setStorageSync('pushData', that.pushData.obj);

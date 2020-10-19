@@ -42,19 +42,19 @@
 					<wyb-noticeBar type="vert" :text="listnotice" v-on:showMore="showMore" font-weight="bold" height="80" />
 				</view>
 				<view class="swiper-banner " v-if="active == 1 || active ==3">
-					<swiper class="swiper" autoplay="true" circular="true" v-if="adOff" interval="20000" :style="{'height':adHeight+'px'}">
-						<swiper-item v-for="(item,index) in adid" :key="item">
+					<!-- <swiper class="swiper" autoplay="true" circular="true" v-if="adOff" interval="20000" :style="{'height':adHeight+'px'}"> -->
+						<!-- <swiper-item v-for="(item,index) in adid" :key="item"> -->
 							<!-- #ifdef MP-WEIXIN -->
-							<ad-custom v-if="index<3" id="ads" :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror"></ad-custom>
-							<image id="ads" v-else class="swiper-item" :src="item.bannerImage" v-model="aspectFit" @tap="bannerListtap(index)"></image>
+							<!-- <ad-custom v-if="index<3" id="ads" :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror"></ad-custom> -->
+							<!-- <image id="ads" v-else class="swiper-item" :src="item.bannerImage" v-model="aspectFit" @tap="bannerListtap(index)"></image> -->
 							<!-- #endif -->
-						</swiper-item>
-					</swiper>
-					<swiper class="swiper" autoplay="true" circular="true" v-else>
+						<!-- </swiper-item> -->
+					<!-- </swiper> -->
+					<!-- <swiper class="swiper" autoplay="true" circular="true" v-else>
 						<swiper-item v-for="(item ,index)  in bannerList" :key="item">
 							<image class="swiper-item" :src="item.bannerImage" v-model="aspectFit" @tap="bannerListtap(index)"></image>
 						</swiper-item>
-					</swiper>
+					</swiper> -->
 				</view>
 				<!-- 推荐内容 -->
 				<view class="xd-info-main">
@@ -70,9 +70,9 @@
 							</view>
 						</scroll-view>
 					</view>
-					<view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
+					<!-- <view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
-					</view>
+					</view> -->
 					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
 					</view> -->

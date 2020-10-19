@@ -18,7 +18,7 @@
 					</view>
 				</view>
 				<view >
-					<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(userId)" >互助小组</view>
+					<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(userId)" >互助小组</view> -->
 					<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clidtags(newList)" >{{guanzhu}}</view>
 					<view class="personOpt" v-if="guanzhu.length== ''">
 						<button @click="clickMe" class="pay" v-if="env!='release'">支付</button>
@@ -64,9 +64,18 @@
 		methods: {
 			//互助小组点击事件
 			clickGroup(userid){
-				uni.navigateTo({
-					url:'../pageA/group/groupList?userId='+userid
-				})
+				if(userid == uni.getStorageSync('id')){
+					uni.navigateTo({
+						url:'../pageA/group/groupList?userId='+userid
+					})
+				}else{
+					uni.reLaunch({
+						url:'../pages/index?isGroupLable=true'
+					})
+				}
+				// uni.navigateTo({
+				// 	url:'../pageA/group/groupList?userId='+userid
+				// })
 			},
 			
 			clidtags(e){

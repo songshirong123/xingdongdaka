@@ -392,12 +392,15 @@ var _default = {
     },
     //互助小组点击事件
     clickGroup: function clickGroup(userid) {
-      uni.reLaunch({
-        url: '../index?isGroupLable=true' });
+      if (userid == uni.getStorageSync('id')) {
+        uni.navigateTo({
+          url: '../../pageA/group/groupList?userId=' + userid });
 
-      // uni.navigateTo({
-      // 	url:'../../pageA/group/groupList?userId='+userid
-      // })
+      } else {
+        uni.reLaunch({
+          url: '../index?isGroupLable=true' });
+
+      }
     },
     goSteps: function goSteps() {
 

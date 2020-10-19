@@ -42,7 +42,7 @@
 
 		<view class="xd-common-bottom-ly xd-rows" style="padding-top: 5px;padding-bottom: 5px;">
 			<view style="flex: 1;margin-left: 5px;border-radius: 5px;">
-				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg"  :placeholder="inputHintMsg"/>
+				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg"  :placeholder="inputHintMsg" @click="clickAddHint"/>
 			</view>
 			<view v-if="sendImg">
 				<button class="send-img-but" @tap="sendPublicGroupImg" hover-class="xd-but-active">+</button>
@@ -106,6 +106,24 @@
 					this.sendImg = true;
 				}
 			},
+			//申请加入
+			clickAddHint(){
+				if (this.custState == 3){
+					let _this =this;
+					uni.showModal({
+						title: '温馨提示',
+						content: "申请加入获取发言权限",
+						showCancel: true,
+						cancelText:"暂不",
+						confirmText:"申请",
+						success: function(res) {
+							if (res.confirm) {
+								_this.userAdd();
+							}
+						}
+					});
+				}
+			},
 			//用户申请加入组
 			userAdd() {
 				let group = this.group;
@@ -147,7 +165,7 @@
 					console.log("用户在群状态", res); //1群主 2群成员 3游客
 					_this.custState =  res.obj;
 					_this.sendMsgPrims = res.obj == 3 ? true : false;
-					_this.inputHintMsg = res.obj == 3 ? "无权限发言" : "";
+					_this.inputHintMsg = res.obj == 3 ? "申请加入获取发言权限" : "";
 				}).catch(err => {});
 			},
 			/**
@@ -162,8 +180,11 @@
 			},
 			//发送图片
 			sendPublicGroupImg() {
-				if (this.custState == 3)
-					return this.xdUniUtils.showToast(false, "无权限发言！", "");
+				if (this.custState == 3){
+					this.clickAddHint();
+					return;
+				}
+	
 
 				const that = this;
 				uni.chooseImage({
