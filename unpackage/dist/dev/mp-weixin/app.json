@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/login/login",
     "pages/msg/talk",
     "pages/selfCenter/clockIn",
     "pages/selfCenter/selfCenter",
@@ -11,7 +12,6 @@
     "pages/action/finish",
     "pages/index/cardDetails/cardDetails",
     "pages/index/action/action",
-    "pages/login/login",
     "pages/selfCenter/balanDrawal",
     "pages/sponsor/form",
     "pages/sponsor/action"
@@ -83,5 +83,5 @@
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
   },
-  "sitemapLocation": "sitemap48.json"
+  "sitemapLocation": "sitemap95.json"
 }

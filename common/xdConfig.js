@@ -5,10 +5,11 @@ export const env = accountInfo.miniProgram.envVersion;
  uni.setStorageSync("env",env);
 const baseApi = {
   // 开发版
-  develop: "http://testxingdongdaka.zhidashixun.com",
    // develop: "https://xingdongdaka.zhidashixun.com",
+  develop: "http://testxingdongdaka.zhidashixun.com",
   // 体验版
-  trial: "http://testxingdongdaka.zhidashixun.com",
+  // trial: "http://testxingdongdaka.zhidashixun.com",
+  trial: "https://testxingdongdaka.zhidashixun.com",
   // 正式版
   release: "https://xingdongdaka.zhidashixun.com"
 };

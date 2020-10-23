@@ -904,7 +904,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -7331,7 +7331,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7352,14 +7352,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7445,7 +7445,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8905,7 +8905,7 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "" }, "pages/pageA/ranking/rangkinDet": { "navigationBarTitleText": "挑战赛详情" }, "pages/pageA/ranking/rankinAdd": { "navigationBarTitleText": "加入挑战" }, "pages/pageA/ranking/rankingUp": { "navigationBarTitleText": "新建挑战" }, "pages/pageA/ranking/rankinglist": { "navigationBarTitleText": "我的挑战赛" }, "pages/pageA/group/userEditInfo": { "navigationBarTitleText": "" }, "pages/pageA/group/usersVote": { "navigationBarTitleText": "投票" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "" }, "pages/pageA/ranking/rangkinDet": { "navigationBarTitleText": "挑战赛详情" }, "pages/pageA/ranking/rankinAdd": { "navigationBarTitleText": "加入挑战" }, "pages/pageA/ranking/rankingUp": { "navigationBarTitleText": "新建挑战" }, "pages/pageA/ranking/rankinglist": { "navigationBarTitleText": "我的挑战赛" }, "pages/pageA/group/userEditInfo": { "navigationBarTitleText": "" }, "pages/pageA/group/usersVote": { "navigationBarTitleText": "投票" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 9 */,
@@ -8926,10 +8926,11 @@ var env = accountInfo.miniProgram.envVersion;exports.env = env;
 uni.setStorageSync("env", env);
 var baseApi = {
   // 开发版
-  develop: "http://testxingdongdaka.zhidashixun.com",
   // develop: "https://xingdongdaka.zhidashixun.com",
+  develop: "http://testxingdongdaka.zhidashixun.com",
   // 体验版
-  trial: "http://testxingdongdaka.zhidashixun.com",
+  // trial: "http://testxingdongdaka.zhidashixun.com",
+  trial: "https://testxingdongdaka.zhidashixun.com",
   // 正式版
   release: "https://xingdongdaka.zhidashixun.com" };
 
@@ -10910,7 +10911,15 @@ var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动�
 /* 30 */,
 /* 31 */,
 /* 32 */,
-/* 33 */
+/* 33 */,
+/* 34 */,
+/* 35 */,
+/* 36 */,
+/* 37 */,
+/* 38 */,
+/* 39 */,
+/* 40 */,
+/* 41 */
 /*!******************************************************************************!*\
   !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
   \******************************************************************************/
@@ -10920,7 +10929,7 @@ var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动�
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABdklEQVRoQ9XYPUrEQBTA8TdVMK2VzWLrBTxDupkU5gCeQC+iR7CPkK8qd9hLWAk2y4IgjM3IFEJYFPZN3sck9SPz/yUQeDGw8ctsvB+yAPR9f13X9VvKw1QHjON4BwAtAOyttbdYhCpgER+7jwCws9Z+YhBqgJP42NxYa18x8XFWBUAVrwKgjBcHUMeLAjjixQBc8SIAznh2AHc8K0Aing0gFc8CkIwnB0jHkwI04skAWvEkAM341QDt+FWAHOKTAbnEJwHmeb7y3r8vNqekTQq7ef03j97I2ra9KIri6/eGIYR759wLVRD2PmhAPGAYhkdjzFMOiCRATohkQC6IVYAcEKsB2ggSgCaCDBAR0zQ9hBCeJb9OpAANBDlAGsECkESwAaQQrAAJBDuAGyEC4ESIAbgQogAOhDiAGqECoESoAf5CeO+Lpmm+MWulKmCJCCEcnHOXmPikvxLYA86Z77rupizLj6qqDufML2fU3wA2+HR+84AfKQ5IQBdVHA4AAAAASUVORK5CYII="
 
 /***/ }),
-/* 34 */
+/* 42 */
 /*!*******************************************************************************!*\
   !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
   \*******************************************************************************/
@@ -10930,27 +10939,27 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAELUlEQVRoQ9WZSYicRRSA3+txpgfSFxdQcBmGdNdiH4wEIkJA9OJyiEzPgBoDJqCJgmZQiFFwieAeFUlE1LghGDUb6MElp3gzMgdnwtB/1d+MJxUGYl9EAmPXkzdUN3Xsv7v+v5N36Ut1ve+rV++vf0HIGMaYexBxHxEdlFJ+n/Hv0Ydj1hmTJDmPiFcAgCOiGaXUd1nniDk+s4C1doGINjMEIv6LiDO1Wu10TKgsc2UWMMbcBAAnAWAjJyKiNldCa/1zlsSxxmYW4MTW2luIiCWu9SB/cSWEEGdjgfU7z0ACPHmaprc551jiSp/sdwCYkVIu9ps8xriBBTh5s9m8ExFPIuIGD5N4Cf4tJIYSYMIkSe5lCQAY88S/EVFDKcUVyT2GFmBCY8x9APB1QPsLEc0qpf7M2yCKgJd4CAA+7wIj4plOpzOntT6fp0Q0Ad8Te0ql0gddYCL6iSXq9fo/eUlEFfA9MY+I7wbA3woh5hDxvzwkogt4if2I+HoA/I2U8v5LRsD3xIsAcCCA/kJKyX0SNXKpQJfQGPMqADwbEH8kpdwT0yBXAV+JdwDgyQD6sJRybyyJ3AUY1Fr7PhE9Flyd3lJK7YshUYiAl/iUiHYFEq8opZ4bVqIwAS9xlIgeCA6754UQLw8jUagAEV1mrT3GN3yBxNNCiIODShQqwJCrq6uVdrvNEncHEvNCiEODSBQu4K9MVwEAS9weSDwqhPgwq8RIBBgyTdPriOgYEd3ahXbO7dJa924I+5EZmQDDtVqtqnOOJW4OJLZrrb/qB57HjFTAb6cXAOClQOBBrfXRS0LAGPMMALwWnA0PK6U+6Rd+pBUwxjwFAG8HsE9IKd/LAj8yAWPM4wBwOMZZUHgPWGt3E1F4uTwgpez1wEVdAWvtTiL6LFj5N4QQ3AcDR2EVsNZuJ6Ivg4Y9pJSaH5jc/7EQgTRN55xzxwPYI1LK3cPCF9LEaZpu8/ATnJCroJTaEQM+d4EkSe4CgOOIWPHAp6SUs7HgcxVIkuQOD88fQzh+mJiYaExPT1+46AWMMVuJiFf+mvVVQjxTLpcbU1NT7ZjwuVTAGLPFw9/g4c/ye1Ip5R+x4aMLWGs3MTwAVH3Dnut0Oo16vd7KAz6qgLVWE9EJALjRw7accw2t9bm84KMJpGm60TnH8Js8LG+XhpTy1zzhowi0Wq3rO50Ow2/xsH+XSqVGrVYr5KPfUCfxysrK1Wtrawy/1cNfGBsbm6lWqz/mvfLd+QcWWFpaurxcLjM8X+/Xwzk3q7U+VRT8wFtocXFxw+TkJMPzSbseRLRDKdW7WStKInMFFhYWxiuVyglE3BZAPiKl/Lgo6DBPZoEkSfiEnevtQcS9Qoje01XREpkEms3mzlKpFD6Q7BdCvFk09MAVWF5eroyPj/ML2s3OuSNa6/ALzEg8/gewF5ZA7hIE8AAAAABJRU5ErkJggg=="
 
 /***/ }),
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
 /* 43 */,
 /* 44 */,
-/* 45 */
+/* 45 */,
+/* 46 */,
+/* 47 */,
+/* 48 */,
+/* 49 */,
+/* 50 */,
+/* 51 */,
+/* 52 */,
+/* 53 */
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
   \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! regenerator-runtime */ 46);
+module.exports = __webpack_require__(/*! regenerator-runtime */ 54);
 
 /***/ }),
-/* 46 */
+/* 54 */
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -10981,7 +10990,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ 47);
+module.exports = __webpack_require__(/*! ./runtime */ 55);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -10997,7 +11006,7 @@ if (hadRuntime) {
 
 
 /***/ }),
-/* 47 */
+/* 55 */
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/

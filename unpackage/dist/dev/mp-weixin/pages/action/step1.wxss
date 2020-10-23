@@ -54,6 +54,7 @@
 }
 .data-time-left-whint {
   width: 115rpx;
+  text-align: center;
 }
 .pading-time {
   margin-bottom: 20%;

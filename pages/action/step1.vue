@@ -135,7 +135,7 @@
 					<view class="title margin-left-xs">选择提醒时间</view>
 					<view class="xd-flex-end label-left  radius " style="flex: 1;">
 						<view class="flex flex-wrap  bg-gray radius align-center card-time-left ">
-							<picker mode="time" class="data-time-left-whint" @change="bindTimeChange">
+							<picker mode="time" class="data-time-left-whint" style="padding-top: 3px;padding-bottom: 3px;" @change="bindTimeChange">
 								<view class="picker">
 									{{time}}
 								</view>
@@ -495,6 +495,9 @@
 
 	.data-time-left-whint {
 		width: 115upx;
+		text-align: center;
+		// padding-left: 5px;
+		// padding-right: 5px;
 	}
 
 	.pading-time {

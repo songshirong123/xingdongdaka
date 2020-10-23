@@ -20,9 +20,9 @@
 				<view >
 					<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(userId)" >互助小组</view> -->
 					<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clidtags(newList)" >{{guanzhu}}</view>
-					<view class="personOpt" v-if="guanzhu.length== ''">
+					<!-- <view class="personOpt" v-if="guanzhu.length== ''">
 						<button @click="clickMe" class="pay" v-if="env!='release'">支付</button>
-					</view>
+					</view> -->
 				</view>
 			</view>
 			
