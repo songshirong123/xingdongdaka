@@ -36,8 +36,8 @@
   margin-bottom: 10rpx;
 }
 .textare-heght {
-  min-height: 250rpx;
-  max-height: 400rpx;
+  min-height: 200rpx;
+  max-height: 300rpx;
 }
 .mp3img {
   position: absolute;
@@ -75,5 +75,17 @@
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+}
+.label-hint {
+  font-size: 12px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-top: 1px solid #f0f0f0;
+  border-bottom: 1px solid #f0f0f0;
+  width: 100%;
+}
+.infos {
+  width: 100%;
+  font-size: 12px;
 }
 

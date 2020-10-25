@@ -1,6 +1,6 @@
 <template>
 	<view class="selfCenter">	
-		<usershow  :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals"  :lookerCount="lookerCount" :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe"></usershow>
+		<usershow  :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals"  :lookerCount="lookerCount" :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe" :isEditInfo='true'></usershow>
 		<view class="moreInfo">
 			<view class="moreInfoRow2">
 				<view class="user_column_item" @tap="gomoney">
@@ -27,12 +27,12 @@
 					</button>
 				</view>
 				
-				<!-- <view class="user_column_item"  @tap="gogroup">
+				<view class="user_column_item"  @tap="gogroup">
 				    <button class='content cu-btn'>
 				      <text class="lg text-gray cuIcon-group"></text>
 				      <text class='thin'>互助小组</text>
 				    </button>
-				</view> -->
+				</view>
 				
 				<!-- <view class="user_column_item"  @tap="goranking">
 				    <button class='content cu-btn'>

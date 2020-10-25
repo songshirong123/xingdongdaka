@@ -4,11 +4,16 @@
 			<view class="cu-item shadow">
 				<view class="cu-list menu-avatar">
 					<view class="cu-item">
-						<view class="cu-avatar round lg" :style="{backgroundImage: 'url(' +list.userHead + ')'}" @tap="goPageImg(list.userHead)"></view>
-						<view class="content flex-sub" @tap="goPage(list)">
+						<view class="cu-avatar round lg"  :style="{backgroundImage: 'url(' +list.userHead + ')'}" @tap="goPageImg(list.userHead)"></view>
+						<!-- class="content flex-sub" -->
+						<view class="xd-columns" style="position: absolute;left: 146upx;"  @tap="goPage(list)">
 							<view>{{list.userName}}</view>
-							<view class="text-gray text-sm flex justify-between">
+							<view class="text-gray text-sm flex justify-between" style="margin-top: 3px;">
 								{{list.pushCardList[0].createTime }}  ({{list.pushCardCount}}/{{list.targetDay}})
+							</view>
+							<!-- 打卡地址 -->
+							<view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
+								
 							</view>
 						</view>
 						<view v-if="list.challengeRmb>0">

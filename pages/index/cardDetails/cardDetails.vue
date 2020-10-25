@@ -5,11 +5,24 @@
 				<view class="cu-list menu-avatar">
 					<view class="cu-item ">
 						<view @tap="goUser(pusCardLists.userId)" class="cu-avatar round lg" :style="{backgroundImage: 'url(' +pusCardLists.userHead + ')'}" ></view>
-						<view class="content flex-sub">
+						<!-- class="content flex-sub" -->
+						<view  class="xd-columns" style="position: absolute;left: 146upx;" >
 							<view @tap="goUser(pusCardLists.userId)">{{pusCardLists.userName}}</view>
-							<view class="text-gray text-sm flex justify-between">
+							<view class="text-gray text-sm flex justify-between" style="margin-top: 3px;">{{pushCardCreateTime}}</view>
+							<!-- 打卡地址 -->
+							<view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
+								
+							</view>
+							
+							
+							
+							<!-- <view class="text-gray text-sm flex justify-between">
 								{{pushCardCreateTime }} 
 							</view>
+							<!-- 打卡地址 -->
+							<!-- <view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
+								北京市
+							</view> --> 
 						</view>
 						<view >
 							<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(pusCardLists.userId)" >互助小组</view> -->

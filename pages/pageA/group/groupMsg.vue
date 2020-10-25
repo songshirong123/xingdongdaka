@@ -15,9 +15,9 @@
 					<image :src="group.userHead" style="width: 25px;height: 25px;border-radius: 50%;border: 1px solid #f0f0f0;"></image>
 					<text style="margin-left: 10px;margin-top: 7px;font-size: 12px;">{{group.userName}} {{group.createTime}}</text>
 				</view>
-				<view class="add-but-ly" @tap="userAdd">
-					<text style="font-size: 25px;margin-top: 8px;" class="lg text-gray cuIcon-more"></text>
-					<!-- <text class="add-but" hover-class="xd-but-active" @tap="userAdd">更多</text> -->
+				<view class="add-but-ly">
+					<text v-if="custState==3" class="add-but" hover-class="xd-but-active" @tap="userAdd">加入</text>
+					<text v-else style="font-size: 25px;margin-top: 8px;" class="lg text-gray cuIcon-more" @tap="userAdd"></text>
 				</view>
 			</view>
 		</view>
@@ -42,7 +42,8 @@
 
 		<view class="xd-common-bottom-ly xd-rows" style="padding-top: 5px;padding-bottom: 5px;">
 			<view style="flex: 1;margin-left: 5px;border-radius: 5px;">
-				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg"  :placeholder="inputHintMsg" @click="clickAddHint"/>
+				<input :disabled="sendMsgPrims" class="input-msg" @input="sendMsgInput" :value="inputMsg" :placeholder="inputHintMsg"
+				 @click="clickAddHint" />
 			</view>
 			<view v-if="sendImg">
 				<button class="send-img-but" @tap="sendPublicGroupImg" hover-class="xd-but-active">+</button>
@@ -68,7 +69,7 @@
 				group: {},
 				pageNum: 1,
 				inputMsg: "",
-				inputHintMsg:"",
+				inputHintMsg: "",
 				lookUser: "",
 				inputdisabled: true,
 				sendMsgPrims: true,
@@ -81,7 +82,7 @@
 			//用户信息
 			goUserInfo(user) {
 				uni.navigateTo({
-					url: '../../selfCenter/selfView?showInfo=true&userId=' + user.sendUserId+"&roomId="+this.group.id
+					url: '../../selfCenter/selfView?showInfo=true&userId=' + user.sendUserId + "&roomId=" + this.group.id
 				})
 			},
 
@@ -107,15 +108,15 @@
 				}
 			},
 			//申请加入
-			clickAddHint(){
-				if (this.custState == 3){
-					let _this =this;
+			clickAddHint() {
+				if (this.custState == 3) {
+					let _this = this;
 					uni.showModal({
 						title: '温馨提示',
 						content: "申请加入获取发言权限",
 						showCancel: true,
-						cancelText:"暂不",
-						confirmText:"申请",
+						cancelText: "暂不",
+						confirmText: "申请",
 						success: function(res) {
 							if (res.confirm) {
 								_this.userAdd();
@@ -163,7 +164,7 @@
 				let _this = this;
 				this.xd_request_post(this.xdServerUrls.xd_currentStatusByRoom, info, true).then((res) => {
 					console.log("用户在群状态", res); //1群主 2群成员 3游客
-					_this.custState =  res.obj;
+					_this.custState = res.obj;
 					_this.sendMsgPrims = res.obj == 3 ? true : false;
 					_this.inputHintMsg = res.obj == 3 ? "申请加入获取发言权限" : "";
 				}).catch(err => {});
@@ -180,11 +181,11 @@
 			},
 			//发送图片
 			sendPublicGroupImg() {
-				if (this.custState == 3){
+				if (this.custState == 3) {
 					this.clickAddHint();
 					return;
 				}
-	
+
 
 				const that = this;
 				uni.chooseImage({
@@ -301,7 +302,7 @@
 			} else {
 				return {
 					title: that.group.roomName,
-					path: '/pages/pageA/group/groupMsg?group='+encodeURIComponent(JSON.stringify(that.group)),
+					path: '/pages/pageA/group/groupMsg?group=' + encodeURIComponent(JSON.stringify(that.group)),
 					imageUrl: that.group.roomHead,
 				}
 			}
@@ -423,10 +424,10 @@
 		padding-right: 7px;
 		padding-top: 3px;
 		padding-bottom: 3px;
-		// border-radius: 20upx;
-		// background-color: #fd5107;
+		border-radius: 20upx;
+		background-color: #fd5107;
 		font-size: 10px;
-		// color: #FFFFFF;
+		color: #FFFFFF;
 		margin-top: 5px;
 	}
 </style>

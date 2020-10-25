@@ -32,6 +32,10 @@ page.data-v-455ed5c9 {
   height: 320rpx;
   width: 100%;
 }
+.contentext.data-v-455ed5c9 {
+  font-size: 13px;
+  padding: 10px;
+}
 .cu-timeline .cu-time.data-v-455ed5c9 {
   width: 160rpx;
 }
