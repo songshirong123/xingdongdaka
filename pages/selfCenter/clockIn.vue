@@ -207,25 +207,24 @@
 		methods: {
 			//打开地图选择地址
 			openLocation(){
-				let that =this;
-				uni.getLocation({
-				 type: 'gcj02', //返回可以用于wx.openLocation的经纬度
-				 success (res) {
-				   const latitude = res.latitude
-				   const longitude = res.longitude
-				   uni.chooseLocation({
-				     latitude,
-				     longitude,
-					 success:function(res){
-						 that.pushAddress = res.name;
-						 // res.name;
-						 // res.address;
-						 // res.latitude;
-						 // res.longitude;
-					 }
-				   })
-				 }
+				uni.navigateTo({
+					url:'./addressList'
 				})
+				// let that =this;
+				// uni.getLocation({
+				//  type: 'gcj02', //返回可以用于wx.openLocation的经纬度
+				//  success (res) {
+				//    const latitude = res.latitude
+				//    const longitude = res.longitude
+				//    uni.chooseLocation({
+				//      latitude,
+				//      longitude,
+				// 	 success:function(res){
+				// 		 that.pushAddress = res.name;
+				// 	 }
+				//    })
+				//  }
+				// })
 			},
 			showAd() {
 				if (this._isLoaded) {

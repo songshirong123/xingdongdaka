@@ -114,8 +114,16 @@
 			"style": {
 				"navigationBarTitleText": "赞助详情"
 			}
-		}
-	],
+		},{
+            "path" : "pages/selfCenter/addressList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"subPackages": [{
 		"root": "pages/pageA",
 		"pages": [{
