@@ -1,19 +1,25 @@
 <template name='usershow'>
 
-	<view class="cu-list  bg-blue ">
+<!-- bg-blue  -->
+	<view class="cu-list bg-white">
 		<view class="cu-item flex padding flex-wrap align-center solid-bottom">
-			<view class="cu-avatar round lg" :style="{backgroundImage: 'url(' +newList.userHead + ')'}" @click="clidgoPage(0)">
-				<view v-if="newList.gender==2" class="cu-tag badge cuIcon-female bg-pink"></view>
-				<view v-if="newList.gender==1" class="cu-tag badge cuIcon-male bg-cyan"></view>
+			<view class="cu-avatar round ll" :style="{backgroundImage: 'url(' +newList.userHead + ')'}" @click="clidgoPage(0)">
+				<!-- <view v-if="newList.gender==2" class="cu-tag badge cuIcon-female bg-pink"></view>
+				<view v-if="newList.gender==1" class="cu-tag badge cuIcon-male bg-cyan"></view> -->
 			</view>
 			<view class="content flex-sub margin-left-sm" @click="clidgoPage(1)">
-				<view>{{newList.userName}}</view>
+				<view class="text-lg flex align-center" style="padding-bottom: 5px;">
+					<text style="font-weight: 700;color: #000000;">{{newList.userName}}</text>
+					<text v-if="newList.gender==2" class="cuIcon-female" style="color: #fd5107;margin-left: 5px;font-size: 12px;"></text>
+					<text v-if="newList.gender==1" class="cuIcon-male" style="color: #1cbbb4;margin-left: 5px;font-size: 12px;"></text>
+				</view>
+				
 				<view class=" text-lg flex align-center">
-					<text class="lg text-orange cuIcon-location"></text>
+					<!-- <text class="lg text-orange cuIcon-location"></text> -->
 					<text class="text-gray text-sm ">{{newList.province}}{{newList.city}}</text>
 				</view>
 				<view class=" text-lg flex align-center" v-if="newList.schoolName">
-					<text class="lg text-orange cuIcon-home"></text>
+					<!-- <text class="lg text-orange cuIcon-home"></text> -->
 					<text class="text-gray text-sm ">{{newList.schoolName}}</text>
 				</view>
 			</view>
@@ -26,16 +32,34 @@
 			</view>
 		</view>
 
-		<view class="moreInfoRow">
+<!-- moreInfoRow -->
+		<view class="xd-rows">
 
-			<view class="moreInfoIn flex flex-wrap justify-around">
-				<text @click="clidgoPage(2,userId)">关注 {{lookerCount}}</text>
-				<text v-if="looktotals!=null &&guanzhu== ''" class="moreInfoIn_text" @click="clidgoPage(3)">分享量 {{looktotals}}</text>
+           <!-- moreInfoIn flex flex-wrap justify-around-->
+			<view  class="xd-rows" style="flex: 1;border-top: 1px solid #F0F0F0;">
+				<view @click="clidgoPage(2,userId)" class="div-info">
+					<text>{{lookerCount}}</text>
+					<text>关注</text>
+				</view>
+				<view  @click="clidgoPage(3)"  v-if="looktotals!=null &&guanzhu== ''" style="flex: 1;" class="div-info">
+					<text>{{looktotals}}</text>
+					<text>分享量</text>
+				</view>
+				<view @click="clidgoPage(4,userId)" style="flex: 1;" class="div-info">
+					
+					<text>{{likeCount}}</text>
+					<text>粉丝</text>
+					<!-- <view class="cu-tag  tag-text bg-red" v-if="num>0&&num<100">{{num}}</view>
+					<view class="cu-tag  tag-text bg-red" v-if="num>=100">99+</view> -->
+				</view>
+				
+				<!-- <text  @click="clidgoPage(2,userId)">关注{{lookerCount}} </text>
+				<text v-if="looktotals!=null &&guanzhu== ''" class="moreInfoIn_text" @click="clidgoPage(3)">分享量{{looktotals}} </text>
 				<view class="flex flex-wrap">
-					<text class="moreInfoIn_text" @click="clidgoPage(4,userId)">粉丝 {{likeCount}}</text>
+					<text class="moreInfoIn_text" @click="clidgoPage(4,userId)">粉丝 {{likeCount}} </text>
 					<view class="cu-tag  tag-text bg-red" v-if="num>0&&num<100">{{num}}</view>
 					<view class="cu-tag  tag-text bg-red" v-if="num>=100">99+</view>
-				</view>
+				</view> -->
 
 			</view>
 
@@ -126,6 +150,19 @@
 </script>
 
 <style lang="scss">
+	.gender-type{
+		border-radius: 200upx;font-size: 20upx;padding: 0upx 10upx;color: #ffffff;
+	}
+	.div-info{
+		display:flex;
+		flex-direction: column;
+		flex: 1;
+		justify-content: center;
+		justify-items: center;
+		text-align: center;
+		padding-top: 10px;
+		padding-bottom: 10px;
+	}
 	.moreInfoRow {
 		display: flex;
 		justify-content: space-between;

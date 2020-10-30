@@ -854,6 +854,11 @@ button.cuIcon.lg {
 	height: 96rpx;
 	font-size: 2em;
 }
+.cu-avatar.ll {
+	width: 115rpx;
+	height: 115rpx;
+	font-size: 2em;
+}
 .cu-avatar.xl {
 	width: 128rpx;
 	height: 128rpx;

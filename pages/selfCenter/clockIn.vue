@@ -187,6 +187,7 @@
 			...mapState(['hasLogin'])
 		},
 		onLoad(option) {
+			this.xdUniUtils.xd_setStorageSync("selectAddress", null);
 			this.pushId = option.pushId;
 			this.getpushList();
 		},
@@ -204,9 +205,18 @@
 			//   console.log('onClose event', res)
 			// })
 		},
+		onShow() {
+			let address = this.xdUniUtils.xd_getStorageSync("selectAddress");
+			if(!this.xdUniUtils.IsNullOrEmpty(address)){
+				this.pushAddress = address.ad_info.city+" . "+address.title;
+			}else{
+				this.pushAddress = "";
+			}
+		},
 		methods: {
 			//打开地图选择地址
 			openLocation(){
+				this.xdUniUtils.xd_setStorageSync("selectCity",null);
 				uni.navigateTo({
 					url:'./addressList'
 				})

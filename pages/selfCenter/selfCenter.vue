@@ -1,5 +1,5 @@
 <template>
-	<view class="selfCenter">	
+	<view>	
 		<usershow  :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals"  :lookerCount="lookerCount" :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe" :isEditInfo='true'></usershow>
 		<view class="moreInfo">
 			<view class="moreInfoRow2">
@@ -287,18 +287,15 @@
 	.moreInfo {
 		padding: 6rpx 0;
 		font-size: 26rpx;
-
-
 		.user_column_item {
-			background-color: #e2e2e2;
-			height: 80rpx;
-			line-height: 80rpx;
-			padding-left: 20px;
-			margin: 10rpx 0;
-
+			background-color: #FFFFFF;
+			height: 100rpx;
+			line-height: 100rpx;
+			padding-left: 20rpx;
+			border-bottom: 1px solid #F0F0F0;
 		}
 		.user_column_item .cu-btn {
-			background-color: #e2e2e2;
+			background-color: #FFFFFF;
 			padding: 0;
 		}
 

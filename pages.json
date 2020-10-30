@@ -118,7 +118,16 @@
             "path" : "pages/selfCenter/addressList",
             "style" :                                                                                    
             {
-                "navigationBarTitleText": "",
+                "navigationBarTitleText": "我的地址",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/selfCenter/cityList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的城市",
                 "enablePullDownRefresh": false
             }
             

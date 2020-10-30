@@ -15,7 +15,8 @@
     "pages/selfCenter/balanDrawal",
     "pages/sponsor/form",
     "pages/sponsor/action",
-    "pages/selfCenter/addressList"
+    "pages/selfCenter/addressList",
+    "pages/selfCenter/cityList"
   ],
   "subPackages": [
     {
@@ -88,5 +89,5 @@
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
   },
-  "sitemapLocation": "sitemap17.json"
+  "sitemapLocation": "sitemap72.json"
 }
