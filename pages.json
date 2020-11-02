@@ -1,11 +1,15 @@
 {
-	"pages": [
-
-		{
+	"pages": [{
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "圈子",
 				"enablePullDownRefresh": true
+			}
+		},
+		{
+			"path": "pages/login/login",
+			"style": {
+				"navigationBarTitleText": "微信授权登录"
 			}
 		},
 		// {
@@ -35,7 +39,7 @@
 		{
 			"path": "pages/selfCenter/selfView",
 			"style": {
-				"navigationBarTitleText": "查看信息"
+				"navigationBarTitleText": "个人主页"
 			}
 		},
 
@@ -76,16 +80,7 @@
 			"style": {
 				"navigationBarTitleText": "行动详情" //行动项
 			}
-		},
-
-		{
-			"path": "pages/login/login",
-			"style": {
-				"navigationBarTitleText": "微信授权登录"
-			}
-		},
-
-		{
+		}, {
 			"path": "pages/selfCenter/balanDrawal",
 			"style": {
 				"navigationBarTitleText": "提现"
@@ -119,8 +114,25 @@
 			"style": {
 				"navigationBarTitleText": "赞助详情"
 			}
-		}
-	],
+		},{
+            "path" : "pages/selfCenter/addressList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的地址",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+        ,{
+            "path" : "pages/selfCenter/cityList",
+            "style" :                                                                                    
+            {
+                "navigationBarTitleText": "我的城市",
+                "enablePullDownRefresh": false
+            }
+            
+        }
+    ],
 	"subPackages": [{
 		"root": "pages/pageA",
 		"pages": [{

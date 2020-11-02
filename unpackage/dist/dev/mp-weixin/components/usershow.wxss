@@ -25,6 +25,31 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
+.gender-type {
+  border-radius: 200rpx;
+  font-size: 20rpx;
+  padding: 0rpx 10rpx;
+  color: #ffffff;
+}
+.div-info {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -webkit-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-flex: 1;
+  -webkit-flex: 1;
+          flex: 1;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+          justify-content: center;
+  justify-items: center;
+  text-align: center;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
 .moreInfoRow {
   display: -webkit-box;
   display: -webkit-flex;
@@ -60,8 +85,7 @@
   padding: 0 16rpx;
 }
 .tag-text {
-  -webkit-border-radius: 200rpx;
-          border-radius: 200rpx;
+  border-radius: 200rpx;
   font-size: 20rpx;
   padding: 0rpx 10rpx;
   height: 28rpx;

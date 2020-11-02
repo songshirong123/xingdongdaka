@@ -50,11 +50,17 @@
 					<switch :class="switchA==0?'checked':''" :checked="switchA==0?true:false" @change="isOpenswitch"></switch>
 				</view>
 			</view>
-			<view v-if="!modalNamecheckbox">
-				<!-- textare-heght -->
-				<view class="cu-form-group align-start ">
-					<textarea :value="content" name="content" maxlength="500" :disabled="modalName!=null" placeholder="减肥,锻炼意志力,提高耐性,提升魅力..."></textarea>
-				</view>
+			<view class="cu-form-group align-start">
+				<view class="title">动力:</view>
+				<textarea maxlength="500" :value="dongLi" :disabled="modalName!=null"   placeholder="填写意义目的、危机后果、榜样等动机原因" name="dongLi"></textarea>
+			</view>
+			<view class="cu-form-group align-start">
+				<view class="title">信心:</view>
+				<textarea maxlength="500" :value="xinXin" :disabled="modalName!=null"   placeholder="填写进步总结和认识面对困难、围观鼓励等" name="xinXin"></textarea>
+			</view>
+			<view class="cu-form-group align-start " v-if="!modalNamecheckbox">
+				<view class="title">内容:</view>
+				<textarea :value="content" name="content" maxlength="500" :disabled="modalName!=null" placeholder="减肥,锻炼意志力,提高耐性,提升魅力..."></textarea>
 			</view>
 			<view class="padding solid-top">
 				<view class="flex flex-wrap">
@@ -135,7 +141,7 @@
 					<view class="title margin-left-xs">选择提醒时间</view>
 					<view class="xd-flex-end label-left  radius " style="flex: 1;">
 						<view class="flex flex-wrap  bg-gray radius align-center card-time-left ">
-							<picker mode="time" class="data-time-left-whint" @change="bindTimeChange">
+							<picker mode="time" class="data-time-left-whint" style="padding-top: 3px;padding-bottom: 3px;" @change="bindTimeChange">
 								<view class="picker">
 									{{time}}
 								</view>
@@ -160,6 +166,8 @@
 				switchA: 0,
 				switchB: 0,
 				content: '',
+				xinXin:'',
+				dongLi:'',
 				holidayf: false,
 				targetDayf: false,
 				extendContent: '',
@@ -202,7 +210,10 @@
 				this.content = data.content;
 				this.punchCardWay = data.punchCardWay;
 				this.param.pictures = data.pictures;
+				this.xinXin= data.xinXin;
+				this.dongLi= data.dongLi;
 			}
+			
 			this.tabs();
 		},
 		methods: {
@@ -453,6 +464,31 @@
 
 				});
 			},
+			//获取定位
+			addLocat(){
+				uni.authorize({
+				    scope: 'scope.userLocation',
+				    success() {
+				        uni.getLocation({
+				        	// #ifdef APP-PLUS
+				        	type: ' gcj02',
+				        	// #endif
+				        	// #ifdef MP
+				        	type: ' wgs84',
+				        	// #endif
+				        	altitude: true,
+				        	geocode: true,
+				        	success: res => {
+								console.log(res)
+								
+				        	},
+				        	fail: res => {
+				        		console.log('获取定位失败', res.errMsg);
+				        	}
+				        });
+				    }
+				})
+			}
 
 		}
 	};
@@ -495,6 +531,9 @@
 
 	.data-time-left-whint {
 		width: 115upx;
+		text-align: center;
+		// padding-left: 5px;
+		// padding-right: 5px;
 	}
 
 	.pading-time {

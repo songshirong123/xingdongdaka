@@ -10,6 +10,7 @@
 							<view @tap="goUser(pushList.userId)">{{pushList.userName}}</view>
 						</view>
 						<view >
+							<!-- <view class="cu-tag line-orange radius"   @tap="clickGroup" >互助小组</view> -->
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
@@ -29,21 +30,24 @@
 							<view class="text-gray text-sm ">
 								阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
 							</view>
-							<view class="text-gray text-sm ">
-								已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
+							<view class="xd-rows">
+								<view class="text-gray text-sm ">
+									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}  
+								</view>
+								<view class="text-gray text-sm " style="margin-left: 10px;">
+									可休假天数： 
+										<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
+											{{pushList.kholidayDay}}
+										</view>
+										<view class="text-sm text-red display-inline" v-else>
+											超期{{surpassHolidayDay}}
+										</view>
+										<view class="text-sm display-inline">
+											/{{pushList.holidayDay}}
+										</view>
+								</view>
 							</view>
-							<view class="text-gray text-sm ">
-								可休假天数： 
-									<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
-										{{pushList.kholidayDay}}
-									</view>
-									<view class="text-sm text-red display-inline" v-else>
-										超期{{surpassHolidayDay}}
-									</view>
-									<view class="text-sm display-inline">
-										/{{pushList.holidayDay}}
-									</view>
-							</view>
+							
 						</view>
 						<view class='xd-flex'>
 							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" >
@@ -70,14 +74,21 @@
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
 						</view>	
+						<view class="widthtext margin-top-sm" >
+							<view class="text-gray text-sm " v-if="pushList.xinXin">
+								动力：{{pushList.xinXin}}
+							</view>
+							<view class="text-gray text-sm margin-top-sm" v-if="pushList.dongLi">
+								信心：{{pushList.dongLi}}
+							</view>
+						</view>
 					</view>
 				</view>
 			</view>
-				<view class="text-contents">
-					<text class="contentext" >{{pushList.content}}
-					</text>
+				<view class="text-contents contentext">
+					<text >{{pushList.content}}</text>
 				</view>
-				<view class="grid flex-sub padding-lr"  >
+				<view class="grid flex-sub padding-lr" style="margin-top: 5px;" >
 					<image class="bg-img imgheit"  :src="pushList.pictures" mode="aspectFill"
 					 @tap="goPageImg(pushList.pictures)" v-if="pushList.pictures!=''">
 					</image>
@@ -619,6 +630,8 @@
 			  	},true).then(res=>{	
 					if(res.resultCode==0){
 						var data=res.obj;
+						console.log("行动详情")
+						console.log(data)
 						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime)
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime)
 						data.challengeRmb=res.obj.challengeRmb/100;
@@ -641,10 +654,10 @@
 							})
 						}
 					}else{
-						uni.showToast({
-							title:res.msg,
-							icon:'none',
-						})
+						// uni.showToast({
+						// 	title:res.msg,
+						// 	icon:'none',
+						// })
 					}
 					
 			  	})
@@ -749,7 +762,8 @@
 		width: 100%;
 	}
 	.contentext{
-		
+		font-size: 13px;
+		padding: 10px;
 	}
 	.cu-timeline .cu-time{
 		width: 160rpx;

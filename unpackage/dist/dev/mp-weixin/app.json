@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/login/login",
     "pages/msg/talk",
     "pages/selfCenter/clockIn",
     "pages/selfCenter/selfCenter",
@@ -11,10 +12,11 @@
     "pages/action/finish",
     "pages/index/cardDetails/cardDetails",
     "pages/index/action/action",
-    "pages/login/login",
     "pages/selfCenter/balanDrawal",
     "pages/sponsor/form",
-    "pages/sponsor/action"
+    "pages/sponsor/action",
+    "pages/selfCenter/addressList",
+    "pages/selfCenter/cityList"
   ],
   "subPackages": [
     {
@@ -75,7 +77,11 @@
   "navigateToMiniProgramAppIdList": [
     "wxf9286c35b3f9d0d0"
   ],
-  "permission": {},
+  "permission": {
+    "scope.userLocation": {
+      "desc": "你的位置信息将用于小程序位置接口的效果展示"
+    }
+  },
   "uniStatistics": {
     "enable": true
   },
@@ -83,5 +89,5 @@
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
   },
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap57.json"
 }

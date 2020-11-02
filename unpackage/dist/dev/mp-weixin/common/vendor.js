@@ -1,6 +1,6 @@
-(global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],[
-/* 0 */,
-/* 1 */
+(global["webpackJsonp"] = global["webpackJsonp"] || []).push([["common/vendor"],{
+
+/***/ 1:
 /*!************************************************************!*\
   !*** ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js ***!
   \************************************************************/
@@ -904,7 +904,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1805,7 +1805,3109 @@ var uni$1 = uni;var _default =
 uni$1;exports.default = _default;
 
 /***/ }),
-/* 2 */
+
+/***/ 12:
+/*!************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdConfig.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.env = void 0; // 获取当前小程序信息（要求小程序版本2.10.0）
+var accountInfo = uni.getAccountInfoSync();
+// env类型
+var env = accountInfo.miniProgram.envVersion;exports.env = env;
+uni.setStorageSync("env", env);
+var baseApi = {
+  // 开发版
+  // develop: "https://xingdongdaka.zhidashixun.com",
+  develop: "http://testxingdongdaka.zhidashixun.com",
+  // 体验版
+  // trial: "http://testxingdongdaka.zhidashixun.com",
+  trial: "https://testxingdongdaka.zhidashixun.com",
+  // 正式版
+  release: "https://xingdongdaka.zhidashixun.com" };
+
+// 系统配置
+var appConfig = {
+  enableDebug: true, // 设置是否打开调试开关。此开关对正式版也能生效。
+  // server 配置
+  serverIp: baseApi[env] // server IP
+};var _default =
+
+{
+  appConfig: appConfig };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 13:
+/*!********************************************!*\
+  !*** ./node_modules/vuex/dist/vuex.esm.js ***!
+  \********************************************/
+/*! exports provided: default, Store, createNamespacedHelpers, install, mapActions, mapGetters, mapMutations, mapState */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return Store; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNamespacedHelpers", function() { return createNamespacedHelpers; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapGetters", function() { return mapGetters; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
+/*!
+ * vuex v3.4.0
+ * (c) 2020 Evan You
+ * @license MIT
+ */
+function applyMixin (Vue) {
+  var version = Number(Vue.version.split('.')[0]);
+
+  if (version >= 2) {
+    Vue.mixin({ beforeCreate: vuexInit });
+  } else {
+    // override init and inject vuex init procedure
+    // for 1.x backwards compatibility.
+    var _init = Vue.prototype._init;
+    Vue.prototype._init = function (options) {
+      if ( options === void 0 ) options = {};
+
+      options.init = options.init
+        ? [vuexInit].concat(options.init)
+        : vuexInit;
+      _init.call(this, options);
+    };
+  }
+
+  /**
+   * Vuex init hook, injected into each instances init hooks list.
+   */
+
+  function vuexInit () {
+    var options = this.$options;
+    // store injection
+    if (options.store) {
+      this.$store = typeof options.store === 'function'
+        ? options.store()
+        : options.store;
+    } else if (options.parent && options.parent.$store) {
+      this.$store = options.parent.$store;
+    }
+  }
+}
+
+var target = typeof window !== 'undefined'
+  ? window
+  : typeof global !== 'undefined'
+    ? global
+    : {};
+var devtoolHook = target.__VUE_DEVTOOLS_GLOBAL_HOOK__;
+
+function devtoolPlugin (store) {
+  if (!devtoolHook) { return }
+
+  store._devtoolHook = devtoolHook;
+
+  devtoolHook.emit('vuex:init', store);
+
+  devtoolHook.on('vuex:travel-to-state', function (targetState) {
+    store.replaceState(targetState);
+  });
+
+  store.subscribe(function (mutation, state) {
+    devtoolHook.emit('vuex:mutation', mutation, state);
+  }, { prepend: true });
+
+  store.subscribeAction(function (action, state) {
+    devtoolHook.emit('vuex:action', action, state);
+  }, { prepend: true });
+}
+
+/**
+ * Get the first item that pass the test
+ * by second argument function
+ *
+ * @param {Array} list
+ * @param {Function} f
+ * @return {*}
+ */
+
+/**
+ * forEach for object
+ */
+function forEachValue (obj, fn) {
+  Object.keys(obj).forEach(function (key) { return fn(obj[key], key); });
+}
+
+function isObject (obj) {
+  return obj !== null && typeof obj === 'object'
+}
+
+function isPromise (val) {
+  return val && typeof val.then === 'function'
+}
+
+function assert (condition, msg) {
+  if (!condition) { throw new Error(("[vuex] " + msg)) }
+}
+
+function partial (fn, arg) {
+  return function () {
+    return fn(arg)
+  }
+}
+
+// Base data struct for store's module, package with some attribute and method
+var Module = function Module (rawModule, runtime) {
+  this.runtime = runtime;
+  // Store some children item
+  this._children = Object.create(null);
+  // Store the origin module object which passed by programmer
+  this._rawModule = rawModule;
+  var rawState = rawModule.state;
+
+  // Store the origin module's state
+  this.state = (typeof rawState === 'function' ? rawState() : rawState) || {};
+};
+
+var prototypeAccessors = { namespaced: { configurable: true } };
+
+prototypeAccessors.namespaced.get = function () {
+  return !!this._rawModule.namespaced
+};
+
+Module.prototype.addChild = function addChild (key, module) {
+  this._children[key] = module;
+};
+
+Module.prototype.removeChild = function removeChild (key) {
+  delete this._children[key];
+};
+
+Module.prototype.getChild = function getChild (key) {
+  return this._children[key]
+};
+
+Module.prototype.hasChild = function hasChild (key) {
+  return key in this._children
+};
+
+Module.prototype.update = function update (rawModule) {
+  this._rawModule.namespaced = rawModule.namespaced;
+  if (rawModule.actions) {
+    this._rawModule.actions = rawModule.actions;
+  }
+  if (rawModule.mutations) {
+    this._rawModule.mutations = rawModule.mutations;
+  }
+  if (rawModule.getters) {
+    this._rawModule.getters = rawModule.getters;
+  }
+};
+
+Module.prototype.forEachChild = function forEachChild (fn) {
+  forEachValue(this._children, fn);
+};
+
+Module.prototype.forEachGetter = function forEachGetter (fn) {
+  if (this._rawModule.getters) {
+    forEachValue(this._rawModule.getters, fn);
+  }
+};
+
+Module.prototype.forEachAction = function forEachAction (fn) {
+  if (this._rawModule.actions) {
+    forEachValue(this._rawModule.actions, fn);
+  }
+};
+
+Module.prototype.forEachMutation = function forEachMutation (fn) {
+  if (this._rawModule.mutations) {
+    forEachValue(this._rawModule.mutations, fn);
+  }
+};
+
+Object.defineProperties( Module.prototype, prototypeAccessors );
+
+var ModuleCollection = function ModuleCollection (rawRootModule) {
+  // register root module (Vuex.Store options)
+  this.register([], rawRootModule, false);
+};
+
+ModuleCollection.prototype.get = function get (path) {
+  return path.reduce(function (module, key) {
+    return module.getChild(key)
+  }, this.root)
+};
+
+ModuleCollection.prototype.getNamespace = function getNamespace (path) {
+  var module = this.root;
+  return path.reduce(function (namespace, key) {
+    module = module.getChild(key);
+    return namespace + (module.namespaced ? key + '/' : '')
+  }, '')
+};
+
+ModuleCollection.prototype.update = function update$1 (rawRootModule) {
+  update([], this.root, rawRootModule);
+};
+
+ModuleCollection.prototype.register = function register (path, rawModule, runtime) {
+    var this$1 = this;
+    if ( runtime === void 0 ) runtime = true;
+
+  if ((true)) {
+    assertRawModule(path, rawModule);
+  }
+
+  var newModule = new Module(rawModule, runtime);
+  if (path.length === 0) {
+    this.root = newModule;
+  } else {
+    var parent = this.get(path.slice(0, -1));
+    parent.addChild(path[path.length - 1], newModule);
+  }
+
+  // register nested modules
+  if (rawModule.modules) {
+    forEachValue(rawModule.modules, function (rawChildModule, key) {
+      this$1.register(path.concat(key), rawChildModule, runtime);
+    });
+  }
+};
+
+ModuleCollection.prototype.unregister = function unregister (path) {
+  var parent = this.get(path.slice(0, -1));
+  var key = path[path.length - 1];
+  if (!parent.getChild(key).runtime) { return }
+
+  parent.removeChild(key);
+};
+
+ModuleCollection.prototype.isRegistered = function isRegistered (path) {
+  var parent = this.get(path.slice(0, -1));
+  var key = path[path.length - 1];
+
+  return parent.hasChild(key)
+};
+
+function update (path, targetModule, newModule) {
+  if ((true)) {
+    assertRawModule(path, newModule);
+  }
+
+  // update target module
+  targetModule.update(newModule);
+
+  // update nested modules
+  if (newModule.modules) {
+    for (var key in newModule.modules) {
+      if (!targetModule.getChild(key)) {
+        if ((true)) {
+          console.warn(
+            "[vuex] trying to add a new module '" + key + "' on hot reloading, " +
+            'manual reload is needed'
+          );
+        }
+        return
+      }
+      update(
+        path.concat(key),
+        targetModule.getChild(key),
+        newModule.modules[key]
+      );
+    }
+  }
+}
+
+var functionAssert = {
+  assert: function (value) { return typeof value === 'function'; },
+  expected: 'function'
+};
+
+var objectAssert = {
+  assert: function (value) { return typeof value === 'function' ||
+    (typeof value === 'object' && typeof value.handler === 'function'); },
+  expected: 'function or object with "handler" function'
+};
+
+var assertTypes = {
+  getters: functionAssert,
+  mutations: functionAssert,
+  actions: objectAssert
+};
+
+function assertRawModule (path, rawModule) {
+  Object.keys(assertTypes).forEach(function (key) {
+    if (!rawModule[key]) { return }
+
+    var assertOptions = assertTypes[key];
+
+    forEachValue(rawModule[key], function (value, type) {
+      assert(
+        assertOptions.assert(value),
+        makeAssertionMessage(path, key, type, value, assertOptions.expected)
+      );
+    });
+  });
+}
+
+function makeAssertionMessage (path, key, type, value, expected) {
+  var buf = key + " should be " + expected + " but \"" + key + "." + type + "\"";
+  if (path.length > 0) {
+    buf += " in module \"" + (path.join('.')) + "\"";
+  }
+  buf += " is " + (JSON.stringify(value)) + ".";
+  return buf
+}
+
+var Vue; // bind on install
+
+var Store = function Store (options) {
+  var this$1 = this;
+  if ( options === void 0 ) options = {};
+
+  // Auto install if it is not done yet and `window` has `Vue`.
+  // To allow users to avoid auto-installation in some cases,
+  // this code should be placed here. See #731
+  if (!Vue && typeof window !== 'undefined' && window.Vue) {
+    install(window.Vue);
+  }
+
+  if ((true)) {
+    assert(Vue, "must call Vue.use(Vuex) before creating a store instance.");
+    assert(typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser.");
+    assert(this instanceof Store, "store must be called with the new operator.");
+  }
+
+  var plugins = options.plugins; if ( plugins === void 0 ) plugins = [];
+  var strict = options.strict; if ( strict === void 0 ) strict = false;
+
+  // store internal state
+  this._committing = false;
+  this._actions = Object.create(null);
+  this._actionSubscribers = [];
+  this._mutations = Object.create(null);
+  this._wrappedGetters = Object.create(null);
+  this._modules = new ModuleCollection(options);
+  this._modulesNamespaceMap = Object.create(null);
+  this._subscribers = [];
+  this._watcherVM = new Vue();
+  this._makeLocalGettersCache = Object.create(null);
+
+  // bind commit and dispatch to self
+  var store = this;
+  var ref = this;
+  var dispatch = ref.dispatch;
+  var commit = ref.commit;
+  this.dispatch = function boundDispatch (type, payload) {
+    return dispatch.call(store, type, payload)
+  };
+  this.commit = function boundCommit (type, payload, options) {
+    return commit.call(store, type, payload, options)
+  };
+
+  // strict mode
+  this.strict = strict;
+
+  var state = this._modules.root.state;
+
+  // init root module.
+  // this also recursively registers all sub-modules
+  // and collects all module getters inside this._wrappedGetters
+  installModule(this, state, [], this._modules.root);
+
+  // initialize the store vm, which is responsible for the reactivity
+  // (also registers _wrappedGetters as computed properties)
+  resetStoreVM(this, state);
+
+  // apply plugins
+  plugins.forEach(function (plugin) { return plugin(this$1); });
+
+  var useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools;
+  if (useDevtools) {
+    devtoolPlugin(this);
+  }
+};
+
+var prototypeAccessors$1 = { state: { configurable: true } };
+
+prototypeAccessors$1.state.get = function () {
+  return this._vm._data.$$state
+};
+
+prototypeAccessors$1.state.set = function (v) {
+  if ((true)) {
+    assert(false, "use store.replaceState() to explicit replace store state.");
+  }
+};
+
+Store.prototype.commit = function commit (_type, _payload, _options) {
+    var this$1 = this;
+
+  // check object-style commit
+  var ref = unifyObjectStyle(_type, _payload, _options);
+    var type = ref.type;
+    var payload = ref.payload;
+    var options = ref.options;
+
+  var mutation = { type: type, payload: payload };
+  var entry = this._mutations[type];
+  if (!entry) {
+    if ((true)) {
+      console.error(("[vuex] unknown mutation type: " + type));
+    }
+    return
+  }
+  this._withCommit(function () {
+    entry.forEach(function commitIterator (handler) {
+      handler(payload);
+    });
+  });
+
+  this._subscribers
+    .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
+    .forEach(function (sub) { return sub(mutation, this$1.state); });
+
+  if (
+    ( true) &&
+    options && options.silent
+  ) {
+    console.warn(
+      "[vuex] mutation type: " + type + ". Silent option has been removed. " +
+      'Use the filter functionality in the vue-devtools'
+    );
+  }
+};
+
+Store.prototype.dispatch = function dispatch (_type, _payload) {
+    var this$1 = this;
+
+  // check object-style dispatch
+  var ref = unifyObjectStyle(_type, _payload);
+    var type = ref.type;
+    var payload = ref.payload;
+
+  var action = { type: type, payload: payload };
+  var entry = this._actions[type];
+  if (!entry) {
+    if ((true)) {
+      console.error(("[vuex] unknown action type: " + type));
+    }
+    return
+  }
+
+  try {
+    this._actionSubscribers
+      .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
+      .filter(function (sub) { return sub.before; })
+      .forEach(function (sub) { return sub.before(action, this$1.state); });
+  } catch (e) {
+    if ((true)) {
+      console.warn("[vuex] error in before action subscribers: ");
+      console.error(e);
+    }
+  }
+
+  var result = entry.length > 1
+    ? Promise.all(entry.map(function (handler) { return handler(payload); }))
+    : entry[0](payload);
+
+  return new Promise(function (resolve, reject) {
+    result.then(function (res) {
+      try {
+        this$1._actionSubscribers
+          .filter(function (sub) { return sub.after; })
+          .forEach(function (sub) { return sub.after(action, this$1.state); });
+      } catch (e) {
+        if ((true)) {
+          console.warn("[vuex] error in after action subscribers: ");
+          console.error(e);
+        }
+      }
+      resolve(res);
+    }, function (error) {
+      try {
+        this$1._actionSubscribers
+          .filter(function (sub) { return sub.error; })
+          .forEach(function (sub) { return sub.error(action, this$1.state, error); });
+      } catch (e) {
+        if ((true)) {
+          console.warn("[vuex] error in error action subscribers: ");
+          console.error(e);
+        }
+      }
+      reject(error);
+    });
+  })
+};
+
+Store.prototype.subscribe = function subscribe (fn, options) {
+  return genericSubscribe(fn, this._subscribers, options)
+};
+
+Store.prototype.subscribeAction = function subscribeAction (fn, options) {
+  var subs = typeof fn === 'function' ? { before: fn } : fn;
+  return genericSubscribe(subs, this._actionSubscribers, options)
+};
+
+Store.prototype.watch = function watch (getter, cb, options) {
+    var this$1 = this;
+
+  if ((true)) {
+    assert(typeof getter === 'function', "store.watch only accepts a function.");
+  }
+  return this._watcherVM.$watch(function () { return getter(this$1.state, this$1.getters); }, cb, options)
+};
+
+Store.prototype.replaceState = function replaceState (state) {
+    var this$1 = this;
+
+  this._withCommit(function () {
+    this$1._vm._data.$$state = state;
+  });
+};
+
+Store.prototype.registerModule = function registerModule (path, rawModule, options) {
+    if ( options === void 0 ) options = {};
+
+  if (typeof path === 'string') { path = [path]; }
+
+  if ((true)) {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+    assert(path.length > 0, 'cannot register the root module by using registerModule.');
+  }
+
+  this._modules.register(path, rawModule);
+  installModule(this, this.state, path, this._modules.get(path), options.preserveState);
+  // reset store to update getters...
+  resetStoreVM(this, this.state);
+};
+
+Store.prototype.unregisterModule = function unregisterModule (path) {
+    var this$1 = this;
+
+  if (typeof path === 'string') { path = [path]; }
+
+  if ((true)) {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+  }
+
+  this._modules.unregister(path);
+  this._withCommit(function () {
+    var parentState = getNestedState(this$1.state, path.slice(0, -1));
+    Vue.delete(parentState, path[path.length - 1]);
+  });
+  resetStore(this);
+};
+
+Store.prototype.hasModule = function hasModule (path) {
+  if (typeof path === 'string') { path = [path]; }
+
+  if ((true)) {
+    assert(Array.isArray(path), "module path must be a string or an Array.");
+  }
+
+  return this._modules.isRegistered(path)
+};
+
+Store.prototype.hotUpdate = function hotUpdate (newOptions) {
+  this._modules.update(newOptions);
+  resetStore(this, true);
+};
+
+Store.prototype._withCommit = function _withCommit (fn) {
+  var committing = this._committing;
+  this._committing = true;
+  fn();
+  this._committing = committing;
+};
+
+Object.defineProperties( Store.prototype, prototypeAccessors$1 );
+
+function genericSubscribe (fn, subs, options) {
+  if (subs.indexOf(fn) < 0) {
+    options && options.prepend
+      ? subs.unshift(fn)
+      : subs.push(fn);
+  }
+  return function () {
+    var i = subs.indexOf(fn);
+    if (i > -1) {
+      subs.splice(i, 1);
+    }
+  }
+}
+
+function resetStore (store, hot) {
+  store._actions = Object.create(null);
+  store._mutations = Object.create(null);
+  store._wrappedGetters = Object.create(null);
+  store._modulesNamespaceMap = Object.create(null);
+  var state = store.state;
+  // init all modules
+  installModule(store, state, [], store._modules.root, true);
+  // reset vm
+  resetStoreVM(store, state, hot);
+}
+
+function resetStoreVM (store, state, hot) {
+  var oldVm = store._vm;
+
+  // bind store public getters
+  store.getters = {};
+  // reset local getters cache
+  store._makeLocalGettersCache = Object.create(null);
+  var wrappedGetters = store._wrappedGetters;
+  var computed = {};
+  forEachValue(wrappedGetters, function (fn, key) {
+    // use computed to leverage its lazy-caching mechanism
+    // direct inline function use will lead to closure preserving oldVm.
+    // using partial to return function with only arguments preserved in closure environment.
+    computed[key] = partial(fn, store);
+    Object.defineProperty(store.getters, key, {
+      get: function () { return store._vm[key]; },
+      enumerable: true // for local getters
+    });
+  });
+
+  // use a Vue instance to store the state tree
+  // suppress warnings just in case the user has added
+  // some funky global mixins
+  var silent = Vue.config.silent;
+  Vue.config.silent = true;
+  store._vm = new Vue({
+    data: {
+      $$state: state
+    },
+    computed: computed
+  });
+  Vue.config.silent = silent;
+
+  // enable strict mode for new vm
+  if (store.strict) {
+    enableStrictMode(store);
+  }
+
+  if (oldVm) {
+    if (hot) {
+      // dispatch changes in all subscribed watchers
+      // to force getter re-evaluation for hot reloading.
+      store._withCommit(function () {
+        oldVm._data.$$state = null;
+      });
+    }
+    Vue.nextTick(function () { return oldVm.$destroy(); });
+  }
+}
+
+function installModule (store, rootState, path, module, hot) {
+  var isRoot = !path.length;
+  var namespace = store._modules.getNamespace(path);
+
+  // register in namespace map
+  if (module.namespaced) {
+    if (store._modulesNamespaceMap[namespace] && ("development" !== 'production')) {
+      console.error(("[vuex] duplicate namespace " + namespace + " for the namespaced module " + (path.join('/'))));
+    }
+    store._modulesNamespaceMap[namespace] = module;
+  }
+
+  // set state
+  if (!isRoot && !hot) {
+    var parentState = getNestedState(rootState, path.slice(0, -1));
+    var moduleName = path[path.length - 1];
+    store._withCommit(function () {
+      if ((true)) {
+        if (moduleName in parentState) {
+          console.warn(
+            ("[vuex] state field \"" + moduleName + "\" was overridden by a module with the same name at \"" + (path.join('.')) + "\"")
+          );
+        }
+      }
+      Vue.set(parentState, moduleName, module.state);
+    });
+  }
+
+  var local = module.context = makeLocalContext(store, namespace, path);
+
+  module.forEachMutation(function (mutation, key) {
+    var namespacedType = namespace + key;
+    registerMutation(store, namespacedType, mutation, local);
+  });
+
+  module.forEachAction(function (action, key) {
+    var type = action.root ? key : namespace + key;
+    var handler = action.handler || action;
+    registerAction(store, type, handler, local);
+  });
+
+  module.forEachGetter(function (getter, key) {
+    var namespacedType = namespace + key;
+    registerGetter(store, namespacedType, getter, local);
+  });
+
+  module.forEachChild(function (child, key) {
+    installModule(store, rootState, path.concat(key), child, hot);
+  });
+}
+
+/**
+ * make localized dispatch, commit, getters and state
+ * if there is no namespace, just use root ones
+ */
+function makeLocalContext (store, namespace, path) {
+  var noNamespace = namespace === '';
+
+  var local = {
+    dispatch: noNamespace ? store.dispatch : function (_type, _payload, _options) {
+      var args = unifyObjectStyle(_type, _payload, _options);
+      var payload = args.payload;
+      var options = args.options;
+      var type = args.type;
+
+      if (!options || !options.root) {
+        type = namespace + type;
+        if (( true) && !store._actions[type]) {
+          console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
+          return
+        }
+      }
+
+      return store.dispatch(type, payload)
+    },
+
+    commit: noNamespace ? store.commit : function (_type, _payload, _options) {
+      var args = unifyObjectStyle(_type, _payload, _options);
+      var payload = args.payload;
+      var options = args.options;
+      var type = args.type;
+
+      if (!options || !options.root) {
+        type = namespace + type;
+        if (( true) && !store._mutations[type]) {
+          console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
+          return
+        }
+      }
+
+      store.commit(type, payload, options);
+    }
+  };
+
+  // getters and state object must be gotten lazily
+  // because they will be changed by vm update
+  Object.defineProperties(local, {
+    getters: {
+      get: noNamespace
+        ? function () { return store.getters; }
+        : function () { return makeLocalGetters(store, namespace); }
+    },
+    state: {
+      get: function () { return getNestedState(store.state, path); }
+    }
+  });
+
+  return local
+}
+
+function makeLocalGetters (store, namespace) {
+  if (!store._makeLocalGettersCache[namespace]) {
+    var gettersProxy = {};
+    var splitPos = namespace.length;
+    Object.keys(store.getters).forEach(function (type) {
+      // skip if the target getter is not match this namespace
+      if (type.slice(0, splitPos) !== namespace) { return }
+
+      // extract local getter type
+      var localType = type.slice(splitPos);
+
+      // Add a port to the getters proxy.
+      // Define as getter property because
+      // we do not want to evaluate the getters in this time.
+      Object.defineProperty(gettersProxy, localType, {
+        get: function () { return store.getters[type]; },
+        enumerable: true
+      });
+    });
+    store._makeLocalGettersCache[namespace] = gettersProxy;
+  }
+
+  return store._makeLocalGettersCache[namespace]
+}
+
+function registerMutation (store, type, handler, local) {
+  var entry = store._mutations[type] || (store._mutations[type] = []);
+  entry.push(function wrappedMutationHandler (payload) {
+    handler.call(store, local.state, payload);
+  });
+}
+
+function registerAction (store, type, handler, local) {
+  var entry = store._actions[type] || (store._actions[type] = []);
+  entry.push(function wrappedActionHandler (payload) {
+    var res = handler.call(store, {
+      dispatch: local.dispatch,
+      commit: local.commit,
+      getters: local.getters,
+      state: local.state,
+      rootGetters: store.getters,
+      rootState: store.state
+    }, payload);
+    if (!isPromise(res)) {
+      res = Promise.resolve(res);
+    }
+    if (store._devtoolHook) {
+      return res.catch(function (err) {
+        store._devtoolHook.emit('vuex:error', err);
+        throw err
+      })
+    } else {
+      return res
+    }
+  });
+}
+
+function registerGetter (store, type, rawGetter, local) {
+  if (store._wrappedGetters[type]) {
+    if ((true)) {
+      console.error(("[vuex] duplicate getter key: " + type));
+    }
+    return
+  }
+  store._wrappedGetters[type] = function wrappedGetter (store) {
+    return rawGetter(
+      local.state, // local state
+      local.getters, // local getters
+      store.state, // root state
+      store.getters // root getters
+    )
+  };
+}
+
+function enableStrictMode (store) {
+  store._vm.$watch(function () { return this._data.$$state }, function () {
+    if ((true)) {
+      assert(store._committing, "do not mutate vuex store state outside mutation handlers.");
+    }
+  }, { deep: true, sync: true });
+}
+
+function getNestedState (state, path) {
+  return path.reduce(function (state, key) { return state[key]; }, state)
+}
+
+function unifyObjectStyle (type, payload, options) {
+  if (isObject(type) && type.type) {
+    options = payload;
+    payload = type;
+    type = type.type;
+  }
+
+  if ((true)) {
+    assert(typeof type === 'string', ("expects string as the type, but found " + (typeof type) + "."));
+  }
+
+  return { type: type, payload: payload, options: options }
+}
+
+function install (_Vue) {
+  if (Vue && _Vue === Vue) {
+    if ((true)) {
+      console.error(
+        '[vuex] already installed. Vue.use(Vuex) should be called only once.'
+      );
+    }
+    return
+  }
+  Vue = _Vue;
+  applyMixin(Vue);
+}
+
+/**
+ * Reduce the code which written in Vue.js for getting the state.
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} states # Object's item can be a function which accept state and getters for param, you can do something for state and getters in it.
+ * @param {Object}
+ */
+var mapState = normalizeNamespace(function (namespace, states) {
+  var res = {};
+  if (( true) && !isValidMap(states)) {
+    console.error('[vuex] mapState: mapper parameter must be either an Array or an Object');
+  }
+  normalizeMap(states).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedState () {
+      var state = this.$store.state;
+      var getters = this.$store.getters;
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapState', namespace);
+        if (!module) {
+          return
+        }
+        state = module.context.state;
+        getters = module.context.getters;
+      }
+      return typeof val === 'function'
+        ? val.call(this, state, getters)
+        : state[val]
+    };
+    // mark vuex getter for devtools
+    res[key].vuex = true;
+  });
+  return res
+});
+
+/**
+ * Reduce the code which written in Vue.js for committing the mutation
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @return {Object}
+ */
+var mapMutations = normalizeNamespace(function (namespace, mutations) {
+  var res = {};
+  if (( true) && !isValidMap(mutations)) {
+    console.error('[vuex] mapMutations: mapper parameter must be either an Array or an Object');
+  }
+  normalizeMap(mutations).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedMutation () {
+      var args = [], len = arguments.length;
+      while ( len-- ) args[ len ] = arguments[ len ];
+
+      // Get the commit method from store
+      var commit = this.$store.commit;
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapMutations', namespace);
+        if (!module) {
+          return
+        }
+        commit = module.context.commit;
+      }
+      return typeof val === 'function'
+        ? val.apply(this, [commit].concat(args))
+        : commit.apply(this.$store, [val].concat(args))
+    };
+  });
+  return res
+});
+
+/**
+ * Reduce the code which written in Vue.js for getting the getters
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} getters
+ * @return {Object}
+ */
+var mapGetters = normalizeNamespace(function (namespace, getters) {
+  var res = {};
+  if (( true) && !isValidMap(getters)) {
+    console.error('[vuex] mapGetters: mapper parameter must be either an Array or an Object');
+  }
+  normalizeMap(getters).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    // The namespace has been mutated by normalizeNamespace
+    val = namespace + val;
+    res[key] = function mappedGetter () {
+      if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
+        return
+      }
+      if (( true) && !(val in this.$store.getters)) {
+        console.error(("[vuex] unknown getter: " + val));
+        return
+      }
+      return this.$store.getters[val]
+    };
+    // mark vuex getter for devtools
+    res[key].vuex = true;
+  });
+  return res
+});
+
+/**
+ * Reduce the code which written in Vue.js for dispatch the action
+ * @param {String} [namespace] - Module's namespace
+ * @param {Object|Array} actions # Object's item can be a function which accept `dispatch` function as the first param, it can accept anthor params. You can dispatch action and do any other things in this function. specially, You need to pass anthor params from the mapped function.
+ * @return {Object}
+ */
+var mapActions = normalizeNamespace(function (namespace, actions) {
+  var res = {};
+  if (( true) && !isValidMap(actions)) {
+    console.error('[vuex] mapActions: mapper parameter must be either an Array or an Object');
+  }
+  normalizeMap(actions).forEach(function (ref) {
+    var key = ref.key;
+    var val = ref.val;
+
+    res[key] = function mappedAction () {
+      var args = [], len = arguments.length;
+      while ( len-- ) args[ len ] = arguments[ len ];
+
+      // get dispatch function from store
+      var dispatch = this.$store.dispatch;
+      if (namespace) {
+        var module = getModuleByNamespace(this.$store, 'mapActions', namespace);
+        if (!module) {
+          return
+        }
+        dispatch = module.context.dispatch;
+      }
+      return typeof val === 'function'
+        ? val.apply(this, [dispatch].concat(args))
+        : dispatch.apply(this.$store, [val].concat(args))
+    };
+  });
+  return res
+});
+
+/**
+ * Rebinding namespace param for mapXXX function in special scoped, and return them by simple object
+ * @param {String} namespace
+ * @return {Object}
+ */
+var createNamespacedHelpers = function (namespace) { return ({
+  mapState: mapState.bind(null, namespace),
+  mapGetters: mapGetters.bind(null, namespace),
+  mapMutations: mapMutations.bind(null, namespace),
+  mapActions: mapActions.bind(null, namespace)
+}); };
+
+/**
+ * Normalize the map
+ * normalizeMap([1, 2, 3]) => [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
+ * normalizeMap({a: 1, b: 2, c: 3}) => [ { key: 'a', val: 1 }, { key: 'b', val: 2 }, { key: 'c', val: 3 } ]
+ * @param {Array|Object} map
+ * @return {Object}
+ */
+function normalizeMap (map) {
+  if (!isValidMap(map)) {
+    return []
+  }
+  return Array.isArray(map)
+    ? map.map(function (key) { return ({ key: key, val: key }); })
+    : Object.keys(map).map(function (key) { return ({ key: key, val: map[key] }); })
+}
+
+/**
+ * Validate whether given map is valid or not
+ * @param {*} map
+ * @return {Boolean}
+ */
+function isValidMap (map) {
+  return Array.isArray(map) || isObject(map)
+}
+
+/**
+ * Return a function expect two param contains namespace and map. it will normalize the namespace and then the param's function will handle the new namespace and the map.
+ * @param {Function} fn
+ * @return {Function}
+ */
+function normalizeNamespace (fn) {
+  return function (namespace, map) {
+    if (typeof namespace !== 'string') {
+      map = namespace;
+      namespace = '';
+    } else if (namespace.charAt(namespace.length - 1) !== '/') {
+      namespace += '/';
+    }
+    return fn(namespace, map)
+  }
+}
+
+/**
+ * Search a special module from store by namespace. if module not exist, print error message.
+ * @param {Object} store
+ * @param {String} helper
+ * @param {String} namespace
+ * @return {Object}
+ */
+function getModuleByNamespace (store, helper, namespace) {
+  var module = store._modulesNamespaceMap[namespace];
+  if (( true) && !module) {
+    console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
+  }
+  return module
+}
+
+var index = {
+  Store: Store,
+  install: install,
+  version: '3.4.0',
+  mapState: mapState,
+  mapMutations: mapMutations,
+  mapGetters: mapGetters,
+  mapActions: mapActions,
+  createNamespacedHelpers: createNamespacedHelpers
+};
+
+/* harmony default export */ __webpack_exports__["default"] = (index);
+
+
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ 3)))
+
+/***/ }),
+
+/***/ 152:
+/*!*****************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/utils/qqmap-wx-jssdk.js ***!
+  \*****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+function _classCallCheck(instance, Constructor) {if (!(instance instanceof Constructor)) {throw new TypeError("Cannot call a class as a function");}}function _defineProperties(target, props) {for (var i = 0; i < props.length; i++) {var descriptor = props[i];descriptor.enumerable = descriptor.enumerable || false;descriptor.configurable = true;if ("value" in descriptor) descriptor.writable = true;Object.defineProperty(target, descriptor.key, descriptor);}}function _createClass(Constructor, protoProps, staticProps) {if (protoProps) _defineProperties(Constructor.prototype, protoProps);if (staticProps) _defineProperties(Constructor, staticProps);return Constructor;} /**
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               * 微信小程序JavaScriptSDK
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               * 
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               * @version 1.2
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               * @date 2019-03-06
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               * @author v_ylyue@tencent.com
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               */
+
+var ERROR_CONF = {
+  KEY_ERR: 311,
+  KEY_ERR_MSG: 'key格式错误',
+  PARAM_ERR: 310,
+  PARAM_ERR_MSG: '请求参数信息有误',
+  SYSTEM_ERR: 600,
+  SYSTEM_ERR_MSG: '系统错误',
+  WX_ERR_CODE: 1000,
+  WX_OK_CODE: 200 };
+
+var BASE_URL = 'https://apis.map.qq.com/ws/';
+var URL_SEARCH = BASE_URL + 'place/v1/search';
+var URL_SUGGESTION = BASE_URL + 'place/v1/suggestion';
+var URL_GET_GEOCODER = BASE_URL + 'geocoder/v1/';
+var URL_CITY_LIST = BASE_URL + 'district/v1/list';
+var URL_AREA_LIST = BASE_URL + 'district/v1/getchildren';
+var URL_DISTANCE = BASE_URL + 'distance/v1/';
+var URL_DIRECTION = BASE_URL + 'direction/v1/';
+var MODE = {
+  driving: 'driving',
+  transit: 'transit' };
+
+var EARTH_RADIUS = 6378136.49;
+var Utils = {
+  /**
+              * md5加密方法
+              * 版权所有©2011 Sebastian Tschan，https：//blueimp.net
+              */
+  safeAdd: function safeAdd(x, y) {
+    var lsw = (x & 0xffff) + (y & 0xffff);
+    var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+    return msw << 16 | lsw & 0xffff;
+  },
+  bitRotateLeft: function bitRotateLeft(num, cnt) {
+    return num << cnt | num >>> 32 - cnt;
+  },
+  md5cmn: function md5cmn(q, a, b, x, s, t) {
+    return this.safeAdd(this.bitRotateLeft(this.safeAdd(this.safeAdd(a, q), this.safeAdd(x, t)), s), b);
+  },
+  md5ff: function md5ff(a, b, c, d, x, s, t) {
+    return this.md5cmn(b & c | ~b & d, a, b, x, s, t);
+  },
+  md5gg: function md5gg(a, b, c, d, x, s, t) {
+    return this.md5cmn(b & d | c & ~d, a, b, x, s, t);
+  },
+  md5hh: function md5hh(a, b, c, d, x, s, t) {
+    return this.md5cmn(b ^ c ^ d, a, b, x, s, t);
+  },
+  md5ii: function md5ii(a, b, c, d, x, s, t) {
+    return this.md5cmn(c ^ (b | ~d), a, b, x, s, t);
+  },
+  binlMD5: function binlMD5(x, len) {
+    /* append padding */
+    x[len >> 5] |= 0x80 << len % 32;
+    x[(len + 64 >>> 9 << 4) + 14] = len;
+
+    var i;
+    var olda;
+    var oldb;
+    var oldc;
+    var oldd;
+    var a = 1732584193;
+    var b = -271733879;
+    var c = -1732584194;
+    var d = 271733878;
+
+    for (i = 0; i < x.length; i += 16) {
+      olda = a;
+      oldb = b;
+      oldc = c;
+      oldd = d;
+
+      a = this.md5ff(a, b, c, d, x[i], 7, -680876936);
+      d = this.md5ff(d, a, b, c, x[i + 1], 12, -389564586);
+      c = this.md5ff(c, d, a, b, x[i + 2], 17, 606105819);
+      b = this.md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
+      a = this.md5ff(a, b, c, d, x[i + 4], 7, -176418897);
+      d = this.md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
+      c = this.md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
+      b = this.md5ff(b, c, d, a, x[i + 7], 22, -45705983);
+      a = this.md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
+      d = this.md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
+      c = this.md5ff(c, d, a, b, x[i + 10], 17, -42063);
+      b = this.md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
+      a = this.md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
+      d = this.md5ff(d, a, b, c, x[i + 13], 12, -40341101);
+      c = this.md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
+      b = this.md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
+
+      a = this.md5gg(a, b, c, d, x[i + 1], 5, -165796510);
+      d = this.md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
+      c = this.md5gg(c, d, a, b, x[i + 11], 14, 643717713);
+      b = this.md5gg(b, c, d, a, x[i], 20, -373897302);
+      a = this.md5gg(a, b, c, d, x[i + 5], 5, -701558691);
+      d = this.md5gg(d, a, b, c, x[i + 10], 9, 38016083);
+      c = this.md5gg(c, d, a, b, x[i + 15], 14, -660478335);
+      b = this.md5gg(b, c, d, a, x[i + 4], 20, -405537848);
+      a = this.md5gg(a, b, c, d, x[i + 9], 5, 568446438);
+      d = this.md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
+      c = this.md5gg(c, d, a, b, x[i + 3], 14, -187363961);
+      b = this.md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
+      a = this.md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
+      d = this.md5gg(d, a, b, c, x[i + 2], 9, -51403784);
+      c = this.md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
+      b = this.md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
+
+      a = this.md5hh(a, b, c, d, x[i + 5], 4, -378558);
+      d = this.md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
+      c = this.md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
+      b = this.md5hh(b, c, d, a, x[i + 14], 23, -35309556);
+      a = this.md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
+      d = this.md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
+      c = this.md5hh(c, d, a, b, x[i + 7], 16, -155497632);
+      b = this.md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
+      a = this.md5hh(a, b, c, d, x[i + 13], 4, 681279174);
+      d = this.md5hh(d, a, b, c, x[i], 11, -358537222);
+      c = this.md5hh(c, d, a, b, x[i + 3], 16, -722521979);
+      b = this.md5hh(b, c, d, a, x[i + 6], 23, 76029189);
+      a = this.md5hh(a, b, c, d, x[i + 9], 4, -640364487);
+      d = this.md5hh(d, a, b, c, x[i + 12], 11, -421815835);
+      c = this.md5hh(c, d, a, b, x[i + 15], 16, 530742520);
+      b = this.md5hh(b, c, d, a, x[i + 2], 23, -995338651);
+
+      a = this.md5ii(a, b, c, d, x[i], 6, -198630844);
+      d = this.md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
+      c = this.md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
+      b = this.md5ii(b, c, d, a, x[i + 5], 21, -57434055);
+      a = this.md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
+      d = this.md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
+      c = this.md5ii(c, d, a, b, x[i + 10], 15, -1051523);
+      b = this.md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
+      a = this.md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
+      d = this.md5ii(d, a, b, c, x[i + 15], 10, -30611744);
+      c = this.md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
+      b = this.md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
+      a = this.md5ii(a, b, c, d, x[i + 4], 6, -145523070);
+      d = this.md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
+      c = this.md5ii(c, d, a, b, x[i + 2], 15, 718787259);
+      b = this.md5ii(b, c, d, a, x[i + 9], 21, -343485551);
+
+      a = this.safeAdd(a, olda);
+      b = this.safeAdd(b, oldb);
+      c = this.safeAdd(c, oldc);
+      d = this.safeAdd(d, oldd);
+    }
+    return [a, b, c, d];
+  },
+  binl2rstr: function binl2rstr(input) {
+    var i;
+    var output = '';
+    var length32 = input.length * 32;
+    for (i = 0; i < length32; i += 8) {
+      output += String.fromCharCode(input[i >> 5] >>> i % 32 & 0xff);
+    }
+    return output;
+  },
+  rstr2binl: function rstr2binl(input) {
+    var i;
+    var output = [];
+    output[(input.length >> 2) - 1] = undefined;
+    for (i = 0; i < output.length; i += 1) {
+      output[i] = 0;
+    }
+    var length8 = input.length * 8;
+    for (i = 0; i < length8; i += 8) {
+      output[i >> 5] |= (input.charCodeAt(i / 8) & 0xff) << i % 32;
+    }
+    return output;
+  },
+  rstrMD5: function rstrMD5(s) {
+    return this.binl2rstr(this.binlMD5(this.rstr2binl(s), s.length * 8));
+  },
+  rstrHMACMD5: function rstrHMACMD5(key, data) {
+    var i;
+    var bkey = this.rstr2binl(key);
+    var ipad = [];
+    var opad = [];
+    var hash;
+    ipad[15] = opad[15] = undefined;
+    if (bkey.length > 16) {
+      bkey = this.binlMD5(bkey, key.length * 8);
+    }
+    for (i = 0; i < 16; i += 1) {
+      ipad[i] = bkey[i] ^ 0x36363636;
+      opad[i] = bkey[i] ^ 0x5c5c5c5c;
+    }
+    hash = this.binlMD5(ipad.concat(this.rstr2binl(data)), 512 + data.length * 8);
+    return this.binl2rstr(this.binlMD5(opad.concat(hash), 512 + 128));
+  },
+  rstr2hex: function rstr2hex(input) {
+    var hexTab = '0123456789abcdef';
+    var output = '';
+    var x;
+    var i;
+    for (i = 0; i < input.length; i += 1) {
+      x = input.charCodeAt(i);
+      output += hexTab.charAt(x >>> 4 & 0x0f) + hexTab.charAt(x & 0x0f);
+    }
+    return output;
+  },
+  str2rstrUTF8: function str2rstrUTF8(input) {
+    return unescape(encodeURIComponent(input));
+  },
+  rawMD5: function rawMD5(s) {
+    return this.rstrMD5(this.str2rstrUTF8(s));
+  },
+  hexMD5: function hexMD5(s) {
+    return this.rstr2hex(this.rawMD5(s));
+  },
+  rawHMACMD5: function rawHMACMD5(k, d) {
+    return this.rstrHMACMD5(this.str2rstrUTF8(k), str2rstrUTF8(d));
+  },
+  hexHMACMD5: function hexHMACMD5(k, d) {
+    return this.rstr2hex(this.rawHMACMD5(k, d));
+  },
+
+  md5: function md5(string, key, raw) {
+    if (!key) {
+      if (!raw) {
+        return this.hexMD5(string);
+      }
+      return this.rawMD5(string);
+    }
+    if (!raw) {
+      return this.hexHMACMD5(key, string);
+    }
+    return this.rawHMACMD5(key, string);
+  },
+  /**
+      * 得到md5加密后的sig参数
+      * @param {Object} requestParam 接口参数
+      * @param {String} sk签名字符串
+      * @param {String} featrue 方法名
+      * @return 返回加密后的sig参数
+      */
+  getSig: function getSig(requestParam, sk, feature, mode) {
+    var sig = null;
+    var requestArr = [];
+    Object.keys(requestParam).sort().forEach(function (key) {
+      requestArr.push(key + '=' + requestParam[key]);
+    });
+    if (feature == 'search') {
+      sig = '/ws/place/v1/search?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'suggest') {
+      sig = '/ws/place/v1/suggestion?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'reverseGeocoder') {
+      sig = '/ws/geocoder/v1/?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'geocoder') {
+      sig = '/ws/geocoder/v1/?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'getCityList') {
+      sig = '/ws/district/v1/list?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'getDistrictByCityId') {
+      sig = '/ws/district/v1/getchildren?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'calculateDistance') {
+      sig = '/ws/distance/v1/?' + requestArr.join('&') + sk;
+    }
+    if (feature == 'direction') {
+      sig = '/ws/direction/v1/' + mode + '?' + requestArr.join('&') + sk;
+    }
+    sig = this.md5(sig);
+    return sig;
+  },
+  /**
+      * 得到终点query字符串
+      * @param {Array|String} 检索数据
+      */
+  location2query: function location2query(data) {
+    if (typeof data == 'string') {
+      return data;
+    }
+    var query = '';
+    for (var i = 0; i < data.length; i++) {
+      var d = data[i];
+      if (!!query) {
+        query += ';';
+      }
+      if (d.location) {
+        query = query + d.location.lat + ',' + d.location.lng;
+      }
+      if (d.latitude && d.longitude) {
+        query = query + d.latitude + ',' + d.longitude;
+      }
+    }
+    return query;
+  },
+
+  /**
+      * 计算角度
+      */
+  rad: function rad(d) {
+    return d * Math.PI / 180.0;
+  },
+  /**
+      * 处理终点location数组
+      * @return 返回终点数组
+      */
+  getEndLocation: function getEndLocation(location) {
+    var to = location.split(';');
+    var endLocation = [];
+    for (var i = 0; i < to.length; i++) {
+      endLocation.push({
+        lat: parseFloat(to[i].split(',')[0]),
+        lng: parseFloat(to[i].split(',')[1]) });
+
+    }
+    return endLocation;
+  },
+
+  /**
+      * 计算两点间直线距离
+      * @param a 表示纬度差
+      * @param b 表示经度差
+      * @return 返回的是距离，单位m
+      */
+  getDistance: function getDistance(latFrom, lngFrom, latTo, lngTo) {
+    var radLatFrom = this.rad(latFrom);
+    var radLatTo = this.rad(latTo);
+    var a = radLatFrom - radLatTo;
+    var b = this.rad(lngFrom) - this.rad(lngTo);
+    var distance = 2 * Math.asin(Math.sqrt(Math.pow(Math.sin(a / 2), 2) + Math.cos(radLatFrom) * Math.cos(radLatTo) * Math.pow(Math.sin(b / 2), 2)));
+    distance = distance * EARTH_RADIUS;
+    distance = Math.round(distance * 10000) / 10000;
+    return parseFloat(distance.toFixed(0));
+  },
+  /**
+      * 使用微信接口进行定位
+      */
+  getWXLocation: function getWXLocation(success, fail, complete) {
+    wx.getLocation({
+      type: 'gcj02',
+      success: success,
+      fail: fail,
+      complete: complete });
+
+  },
+
+  /**
+      * 获取location参数
+      */
+  getLocationParam: function getLocationParam(location) {
+    if (typeof location == 'string') {
+      var locationArr = location.split(',');
+      if (locationArr.length === 2) {
+        location = {
+          latitude: location.split(',')[0],
+          longitude: location.split(',')[1] };
+
+      } else {
+        location = {};
+      }
+    }
+    return location;
+  },
+
+  /**
+      * 回调函数默认处理
+      */
+  polyfillParam: function polyfillParam(param) {
+    param.success = param.success || function () {};
+    param.fail = param.fail || function () {};
+    param.complete = param.complete || function () {};
+  },
+
+  /**
+      * 验证param对应的key值是否为空
+      * 
+      * @param {Object} param 接口参数
+      * @param {String} key 对应参数的key
+      */
+  checkParamKeyEmpty: function checkParamKeyEmpty(param, key) {
+    if (!param[key]) {
+      var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + key + '参数格式有误');
+      param.fail(errconf);
+      param.complete(errconf);
+      return true;
+    }
+    return false;
+  },
+
+  /**
+      * 验证参数中是否存在检索词keyword
+      * 
+      * @param {Object} param 接口参数
+      */
+  checkKeyword: function checkKeyword(param) {
+    return !this.checkParamKeyEmpty(param, 'keyword');
+  },
+
+  /**
+      * 验证location值
+      * 
+      * @param {Object} param 接口参数
+      */
+  checkLocation: function checkLocation(param) {
+    var location = this.getLocationParam(param.location);
+    if (!location || !location.latitude || !location.longitude) {
+      var errconf = this.buildErrorConfig(ERROR_CONF.PARAM_ERR, ERROR_CONF.PARAM_ERR_MSG + ' location参数格式有误');
+      param.fail(errconf);
+      param.complete(errconf);
+      return false;
+    }
+    return true;
+  },
+
+  /**
+      * 构造错误数据结构
+      * @param {Number} errCode 错误码
+      * @param {Number} errMsg 错误描述
+      */
+  buildErrorConfig: function buildErrorConfig(errCode, errMsg) {
+    return {
+      status: errCode,
+      message: errMsg };
+
+  },
+
+  /**
+      * 
+      * 数据处理函数
+      * 根据传入参数不同处理不同数据
+      * @param {String} feature 功能名称
+      * search 地点搜索
+      * suggest关键词提示
+      * reverseGeocoder逆地址解析
+      * geocoder地址解析
+      * getCityList获取城市列表：父集
+      * getDistrictByCityId获取区县列表：子集
+      * calculateDistance距离计算
+      * @param {Object} param 接口参数
+      * @param {Object} data 数据
+      */
+  handleData: function handleData(param, data, feature) {
+    if (feature == 'search') {
+      var searchResult = data.data;
+      var searchSimplify = [];
+      for (var i = 0; i < searchResult.length; i++) {
+        searchSimplify.push({
+          id: searchResult[i].id || null,
+          title: searchResult[i].title || null,
+          latitude: searchResult[i].location && searchResult[i].location.lat || null,
+          longitude: searchResult[i].location && searchResult[i].location.lng || null,
+          address: searchResult[i].address || null,
+          category: searchResult[i].category || null,
+          tel: searchResult[i].tel || null,
+          adcode: searchResult[i].ad_info && searchResult[i].ad_info.adcode || null,
+          city: searchResult[i].ad_info && searchResult[i].ad_info.city || null,
+          district: searchResult[i].ad_info && searchResult[i].ad_info.district || null,
+          province: searchResult[i].ad_info && searchResult[i].ad_info.province || null });
+
+      }
+      param.success(data, {
+        searchResult: searchResult,
+        searchSimplify: searchSimplify });
+
+    } else if (feature == 'suggest') {
+      var suggestResult = data.data;
+      var suggestSimplify = [];
+      for (var i = 0; i < suggestResult.length; i++) {
+        suggestSimplify.push({
+          adcode: suggestResult[i].adcode || null,
+          address: suggestResult[i].address || null,
+          category: suggestResult[i].category || null,
+          city: suggestResult[i].city || null,
+          district: suggestResult[i].district || null,
+          id: suggestResult[i].id || null,
+          latitude: suggestResult[i].location && suggestResult[i].location.lat || null,
+          longitude: suggestResult[i].location && suggestResult[i].location.lng || null,
+          province: suggestResult[i].province || null,
+          title: suggestResult[i].title || null,
+          type: suggestResult[i].type || null });
+
+      }
+      param.success(data, {
+        suggestResult: suggestResult,
+        suggestSimplify: suggestSimplify });
+
+    } else if (feature == 'reverseGeocoder') {
+      var reverseGeocoderResult = data.result;
+      var reverseGeocoderSimplify = {
+        address: reverseGeocoderResult.address || null,
+        latitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lat || null,
+        longitude: reverseGeocoderResult.location && reverseGeocoderResult.location.lng || null,
+        adcode: reverseGeocoderResult.ad_info && reverseGeocoderResult.ad_info.adcode || null,
+        city: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.city || null,
+        district: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.district || null,
+        nation: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.nation || null,
+        province: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.province || null,
+        street: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street || null,
+        street_number: reverseGeocoderResult.address_component && reverseGeocoderResult.address_component.street_number || null,
+        recommend: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.recommend || null,
+        rough: reverseGeocoderResult.formatted_addresses && reverseGeocoderResult.formatted_addresses.rough || null };
+
+      if (reverseGeocoderResult.pois) {//判断是否返回周边poi
+        var pois = reverseGeocoderResult.pois;
+        var poisSimplify = [];
+        for (var i = 0; i < pois.length; i++) {
+          poisSimplify.push({
+            id: pois[i].id || null,
+            title: pois[i].title || null,
+            latitude: pois[i].location && pois[i].location.lat || null,
+            longitude: pois[i].location && pois[i].location.lng || null,
+            address: pois[i].address || null,
+            category: pois[i].category || null,
+            adcode: pois[i].ad_info && pois[i].ad_info.adcode || null,
+            city: pois[i].ad_info && pois[i].ad_info.city || null,
+            district: pois[i].ad_info && pois[i].ad_info.district || null,
+            province: pois[i].ad_info && pois[i].ad_info.province || null });
+
+        }
+        param.success(data, {
+          reverseGeocoderResult: reverseGeocoderResult,
+          reverseGeocoderSimplify: reverseGeocoderSimplify,
+          pois: pois,
+          poisSimplify: poisSimplify });
+
+      } else {
+        param.success(data, {
+          reverseGeocoderResult: reverseGeocoderResult,
+          reverseGeocoderSimplify: reverseGeocoderSimplify });
+
+      }
+    } else if (feature == 'geocoder') {
+      var geocoderResult = data.result;
+      var geocoderSimplify = {
+        title: geocoderResult.title || null,
+        latitude: geocoderResult.location && geocoderResult.location.lat || null,
+        longitude: geocoderResult.location && geocoderResult.location.lng || null,
+        adcode: geocoderResult.ad_info && geocoderResult.ad_info.adcode || null,
+        province: geocoderResult.address_components && geocoderResult.address_components.province || null,
+        city: geocoderResult.address_components && geocoderResult.address_components.city || null,
+        district: geocoderResult.address_components && geocoderResult.address_components.district || null,
+        street: geocoderResult.address_components && geocoderResult.address_components.street || null,
+        street_number: geocoderResult.address_components && geocoderResult.address_components.street_number || null,
+        level: geocoderResult.level || null };
+
+      param.success(data, {
+        geocoderResult: geocoderResult,
+        geocoderSimplify: geocoderSimplify });
+
+    } else if (feature == 'getCityList') {
+      var provinceResult = data.result[0];
+      var cityResult = data.result[1];
+      var districtResult = data.result[2];
+      param.success(data, {
+        provinceResult: provinceResult,
+        cityResult: cityResult,
+        districtResult: districtResult });
+
+    } else if (feature == 'getDistrictByCityId') {
+      var districtByCity = data.result[0];
+      param.success(data, districtByCity);
+    } else if (feature == 'calculateDistance') {
+      var calculateDistanceResult = data.result.elements;
+      var distance = [];
+      for (var i = 0; i < calculateDistanceResult.length; i++) {
+        distance.push(calculateDistanceResult[i].distance);
+      }
+      param.success(data, {
+        calculateDistanceResult: calculateDistanceResult,
+        distance: distance });
+
+    } else if (feature == 'direction') {
+      var direction = data.result.routes;
+      param.success(data, direction);
+    } else {
+      param.success(data);
+    }
+  },
+
+  /**
+      * 构造微信请求参数，公共属性处理
+      * 
+      * @param {Object} param 接口参数
+      * @param {Object} param 配置项
+      * @param {String} feature 方法名
+      */
+  buildWxRequestConfig: function buildWxRequestConfig(param, options, feature) {
+    var that = this;
+    options.header = { "content-type": "application/json" };
+    options.method = 'GET';
+    options.success = function (res) {
+      var data = res.data;
+      if (data.status === 0) {
+        that.handleData(param, data, feature);
+      } else {
+        param.fail(data);
+      }
+    };
+    options.fail = function (res) {
+      res.statusCode = ERROR_CONF.WX_ERR_CODE;
+      param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+    };
+    options.complete = function (res) {
+      var statusCode = +res.statusCode;
+      switch (statusCode) {
+        case ERROR_CONF.WX_ERR_CODE:{
+            param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+            break;
+          }
+        case ERROR_CONF.WX_OK_CODE:{
+            var data = res.data;
+            if (data.status === 0) {
+              param.complete(data);
+            } else {
+              param.complete(that.buildErrorConfig(data.status, data.message));
+            }
+            break;
+          }
+        default:{
+            param.complete(that.buildErrorConfig(ERROR_CONF.SYSTEM_ERR, ERROR_CONF.SYSTEM_ERR_MSG));
+          }}
+
+
+    };
+    return options;
+  },
+
+  /**
+      * 处理用户参数是否传入坐标进行不同的处理
+      */
+  locationProcess: function locationProcess(param, locationsuccess, locationfail, locationcomplete) {
+    var that = this;
+    locationfail = locationfail || function (res) {
+      res.statusCode = ERROR_CONF.WX_ERR_CODE;
+      param.fail(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+    };
+    locationcomplete = locationcomplete || function (res) {
+      if (res.statusCode == ERROR_CONF.WX_ERR_CODE) {
+        param.complete(that.buildErrorConfig(ERROR_CONF.WX_ERR_CODE, res.errMsg));
+      }
+    };
+    if (!param.location) {
+      that.getWXLocation(locationsuccess, locationfail, locationcomplete);
+    } else if (that.checkLocation(param)) {
+      var location = Utils.getLocationParam(param.location);
+      locationsuccess(location);
+    }
+  } };var
+
+
+
+QQMapWX = /*#__PURE__*/function () {"use strict";
+
+  /**
+                                                   * 构造函数
+                                                   * 
+                                                   * @param {Object} options 接口参数,key 为必选参数
+                                                   */
+  function QQMapWX(options) {_classCallCheck(this, QQMapWX);
+    if (!options.key) {
+      throw Error('key值不能为空');
+    }
+    this.key = options.key;
+  }_createClass(QQMapWX, [{ key: "search",
+
+    /**
+                                            * POI周边检索
+                                            *
+                                            * @param {Object} options 接口参数对象
+                                            * 
+                                            * 参数对象结构可以参考
+                                            * @see http://lbs.qq.com/webservice_v1/guide-search.html
+                                            */value: function search(
+    options) {
+      var that = this;
+      options = options || {};
+
+      Utils.polyfillParam(options);
+
+      if (!Utils.checkKeyword(options)) {
+        return;
+      }
+
+      var requestParam = {
+        keyword: options.keyword,
+        orderby: options.orderby || '_distance',
+        page_size: options.page_size || 10,
+        page_index: options.page_index || 1,
+        output: 'json',
+        key: that.key };
+
+
+      if (options.address_format) {
+        requestParam.address_format = options.address_format;
+      }
+
+      if (options.filter) {
+        requestParam.filter = options.filter;
+      }
+
+      var distance = options.distance || "1000";
+      var auto_extend = options.auto_extend || 1;
+      var region = null;
+      var rectangle = null;
+
+      //判断城市限定参数
+      if (options.region) {
+        region = options.region;
+      }
+
+      //矩形限定坐标(暂时只支持字符串格式)
+      if (options.rectangle) {
+        rectangle = options.rectangle;
+      }
+
+      var locationsuccess = function locationsuccess(result) {
+        if (region && !rectangle) {
+          //城市限定参数拼接
+          requestParam.boundary = "region(" + region + "," + auto_extend + "," + result.latitude + "," + result.longitude + ")";
+          if (options.sig) {
+            requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');
+          }
+        } else if (rectangle && !region) {
+          //矩形搜索
+          requestParam.boundary = "rectangle(" + rectangle + ")";
+          if (options.sig) {
+            requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');
+          }
+        } else {
+          requestParam.boundary = "nearby(" + result.latitude + "," + result.longitude + "," + distance + "," + auto_extend + ")";
+          if (options.sig) {
+            requestParam.sig = Utils.getSig(requestParam, options.sig, 'search');
+          }
+        }
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: URL_SEARCH,
+          data: requestParam },
+        'search'));
+      };
+      Utils.locationProcess(options, locationsuccess);
+    } }, { key: "getSuggestion",
+
+    /**
+                                  * sug模糊检索
+                                  *
+                                  * @param {Object} options 接口参数对象
+                                  * 
+                                  * 参数对象结构可以参考
+                                  * http://lbs.qq.com/webservice_v1/guide-suggestion.html
+                                  */value: function getSuggestion(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (!Utils.checkKeyword(options)) {
+        return;
+      }
+
+      var requestParam = {
+        keyword: options.keyword,
+        region: options.region || '全国',
+        region_fix: options.region_fix || 0,
+        policy: options.policy || 0,
+        page_size: options.page_size || 10, //控制显示条数
+        page_index: options.page_index || 1, //控制页数
+        get_subpois: options.get_subpois || 0, //返回子地点
+        output: 'json',
+        key: that.key };
+
+      //长地址
+      if (options.address_format) {
+        requestParam.address_format = options.address_format;
+      }
+      //过滤
+      if (options.filter) {
+        requestParam.filter = options.filter;
+      }
+      //排序
+      if (options.location) {
+        var locationsuccess = function locationsuccess(result) {
+          requestParam.location = result.latitude + ',' + result.longitude;
+          if (options.sig) {
+            requestParam.sig = Utils.getSig(requestParam, options.sig, 'suggest');
+          }
+          wx.request(Utils.buildWxRequestConfig(options, {
+            url: URL_SUGGESTION,
+            data: requestParam },
+          "suggest"));
+        };
+        Utils.locationProcess(options, locationsuccess);
+      } else {
+        if (options.sig) {
+          requestParam.sig = Utils.getSig(requestParam, options.sig, 'suggest');
+        }
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: URL_SUGGESTION,
+          data: requestParam },
+        "suggest"));
+      }
+    } }, { key: "reverseGeocoder",
+
+    /**
+                                    * 逆地址解析
+                                    *
+                                    * @param {Object} options 接口参数对象
+                                    * 
+                                    * 请求参数结构可以参考
+                                    * http://lbs.qq.com/webservice_v1/guide-gcoder.html
+                                    */value: function reverseGeocoder(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+      var requestParam = {
+        coord_type: options.coord_type || 5,
+        get_poi: options.get_poi || 0,
+        output: 'json',
+        key: that.key };
+
+      if (options.poi_options) {
+        requestParam.poi_options = options.poi_options;
+      }
+
+      var locationsuccess = function locationsuccess(result) {
+        requestParam.location = result.latitude + ',' + result.longitude;
+        if (options.sig) {
+          requestParam.sig = Utils.getSig(requestParam, options.sig, 'reverseGeocoder');
+        }
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: URL_GET_GEOCODER,
+          data: requestParam },
+        'reverseGeocoder'));
+      };
+      Utils.locationProcess(options, locationsuccess);
+    } }, { key: "geocoder",
+
+    /**
+                             * 地址解析
+                             *
+                             * @param {Object} options 接口参数对象
+                             * 
+                             * 请求参数结构可以参考
+                             * http://lbs.qq.com/webservice_v1/guide-geocoder.html
+                             */value: function geocoder(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'address')) {
+        return;
+      }
+
+      var requestParam = {
+        address: options.address,
+        output: 'json',
+        key: that.key };
+
+
+      //城市限定
+      if (options.region) {
+        requestParam.region = options.region;
+      }
+
+      if (options.sig) {
+        requestParam.sig = Utils.getSig(requestParam, options.sig, 'geocoder');
+      }
+
+      wx.request(Utils.buildWxRequestConfig(options, {
+        url: URL_GET_GEOCODER,
+        data: requestParam },
+      'geocoder'));
+    } }, { key: "getCityList",
+
+
+    /**
+                                * 获取城市列表
+                                *
+                                * @param {Object} options 接口参数对象
+                                * 
+                                * 请求参数结构可以参考
+                                * http://lbs.qq.com/webservice_v1/guide-region.html
+                                */value: function getCityList(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+      var requestParam = {
+        output: 'json',
+        key: that.key };
+
+
+      if (options.sig) {
+        requestParam.sig = Utils.getSig(requestParam, options.sig, 'getCityList');
+      }
+
+      wx.request(Utils.buildWxRequestConfig(options, {
+        url: URL_CITY_LIST,
+        data: requestParam },
+      'getCityList'));
+    } }, { key: "getDistrictByCityId",
+
+    /**
+                                        * 获取对应城市ID的区县列表
+                                        *
+                                        * @param {Object} options 接口参数对象
+                                        * 
+                                        * 请求参数结构可以参考
+                                        * http://lbs.qq.com/webservice_v1/guide-region.html
+                                        */value: function getDistrictByCityId(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'id')) {
+        return;
+      }
+
+      var requestParam = {
+        id: options.id || '',
+        output: 'json',
+        key: that.key };
+
+
+      if (options.sig) {
+        requestParam.sig = Utils.getSig(requestParam, options.sig, 'getDistrictByCityId');
+      }
+
+      wx.request(Utils.buildWxRequestConfig(options, {
+        url: URL_AREA_LIST,
+        data: requestParam },
+      'getDistrictByCityId'));
+    } }, { key: "calculateDistance",
+
+    /**
+                                      * 用于单起点到多终点的路线距离(非直线距离)计算：
+                                      * 支持两种距离计算方式：步行和驾车。
+                                      * 起点到终点最大限制直线距离10公里。
+                                      *
+                                      * 新增直线距离计算。
+                                      * 
+                                      * @param {Object} options 接口参数对象
+                                      * 
+                                      * 请求参数结构可以参考
+                                      * http://lbs.qq.com/webservice_v1/guide-distance.html
+                                      */value: function calculateDistance(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'to')) {
+        return;
+      }
+
+      var requestParam = {
+        mode: options.mode || 'walking',
+        to: Utils.location2query(options.to),
+        output: 'json',
+        key: that.key };
+
+
+      if (options.from) {
+        options.location = options.from;
+      }
+
+      //计算直线距离
+      if (requestParam.mode == 'straight') {
+        var locationsuccess = function locationsuccess(result) {
+          var locationTo = Utils.getEndLocation(requestParam.to); //处理终点坐标
+          var data = {
+            message: "query ok",
+            result: {
+              elements: [] },
+
+            status: 0 };
+
+          for (var i = 0; i < locationTo.length; i++) {
+            data.result.elements.push({ //将坐标存入
+              distance: Utils.getDistance(result.latitude, result.longitude, locationTo[i].lat, locationTo[i].lng),
+              duration: 0,
+              from: {
+                lat: result.latitude,
+                lng: result.longitude },
+
+              to: {
+                lat: locationTo[i].lat,
+                lng: locationTo[i].lng } });
+
+
+          }
+          var calculateResult = data.result.elements;
+          var distanceResult = [];
+          for (var i = 0; i < calculateResult.length; i++) {
+            distanceResult.push(calculateResult[i].distance);
+          }
+          return options.success(data, {
+            calculateResult: calculateResult,
+            distanceResult: distanceResult });
+
+        };
+
+        Utils.locationProcess(options, locationsuccess);
+      } else {
+        var locationsuccess = function locationsuccess(result) {
+          requestParam.from = result.latitude + ',' + result.longitude;
+          if (options.sig) {
+            requestParam.sig = Utils.getSig(requestParam, options.sig, 'calculateDistance');
+          }
+          wx.request(Utils.buildWxRequestConfig(options, {
+            url: URL_DISTANCE,
+            data: requestParam },
+          'calculateDistance'));
+        };
+
+        Utils.locationProcess(options, locationsuccess);
+      }
+    } }, { key: "direction",
+
+    /**
+                              * 路线规划：
+                              * 
+                              * @param {Object} options 接口参数对象
+                              * 
+                              * 请求参数结构可以参考
+                              * https://lbs.qq.com/webservice_v1/guide-road.html
+                              */value: function direction(
+    options) {
+      var that = this;
+      options = options || {};
+      Utils.polyfillParam(options);
+
+      if (Utils.checkParamKeyEmpty(options, 'to')) {
+        return;
+      }
+
+      var requestParam = {
+        output: 'json',
+        key: that.key };
+
+
+      //to格式处理
+      if (typeof options.to == 'string') {
+        requestParam.to = options.to;
+      } else {
+        requestParam.to = options.to.latitude + ',' + options.to.longitude;
+      }
+      //初始化局部请求域名
+      var SET_URL_DIRECTION = null;
+      //设置默认mode属性
+      options.mode = options.mode || MODE.driving;
+
+      //设置请求域名
+      SET_URL_DIRECTION = URL_DIRECTION + options.mode;
+
+      if (options.from) {
+        options.location = options.from;
+      }
+
+      if (options.mode == MODE.driving) {
+        if (options.from_poi) {
+          requestParam.from_poi = options.from_poi;
+        }
+        if (options.heading) {
+          requestParam.heading = options.heading;
+        }
+        if (options.speed) {
+          requestParam.speed = options.speed;
+        }
+        if (options.accuracy) {
+          requestParam.accuracy = options.accuracy;
+        }
+        if (options.road_type) {
+          requestParam.road_type = options.road_type;
+        }
+        if (options.to_poi) {
+          requestParam.to_poi = options.to_poi;
+        }
+        if (options.from_track) {
+          requestParam.from_track = options.from_track;
+        }
+        if (options.waypoints) {
+          requestParam.waypoints = options.waypoints;
+        }
+        if (options.policy) {
+          requestParam.policy = options.policy;
+        }
+        if (options.plate_number) {
+          requestParam.plate_number = options.plate_number;
+        }
+      }
+
+      if (options.mode == MODE.transit) {
+        if (options.departure_time) {
+          requestParam.departure_time = options.departure_time;
+        }
+        if (options.policy) {
+          requestParam.policy = options.policy;
+        }
+      }
+
+      var locationsuccess = function locationsuccess(result) {
+        requestParam.from = result.latitude + ',' + result.longitude;
+        if (options.sig) {
+          requestParam.sig = Utils.getSig(requestParam, options.sig, 'direction', options.mode);
+        }
+        wx.request(Utils.buildWxRequestConfig(options, {
+          url: SET_URL_DIRECTION,
+          data: requestParam },
+        'direction'));
+      };
+
+      Utils.locationProcess(options, locationsuccess);
+    } }]);return QQMapWX;}();
+;
+
+module.exports = QQMapWX;
+
+/***/ }),
+
+/***/ 16:
+/*!**********************************************************************************************************!*\
+  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
+  \**********************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+function normalizeComponent (
+  scriptExports,
+  render,
+  staticRenderFns,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier, /* server only */
+  shadowMode, /* vue-cli only */
+  components, // fixed by xxxxxx auto components
+  renderjs // fixed by xxxxxx renderjs
+) {
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // fixed by xxxxxx auto components
+  if (components) {
+    if (!options.components) {
+      options.components = {}
+    }
+    var hasOwn = Object.prototype.hasOwnProperty
+    for (var name in components) {
+      if (hasOwn.call(components, name) && !hasOwn.call(options.components, name)) {
+        options.components[name] = components[name]
+      }
+    }
+  }
+  // fixed by xxxxxx renderjs
+  if (renderjs) {
+    (renderjs.beforeCreate || (renderjs.beforeCreate = [])).unshift(function() {
+      this[renderjs.__module] = this
+    });
+    (options.mixins || (options.mixins = [])).push(renderjs)
+  }
+
+  // render functions
+  if (render) {
+    options.render = render
+    options.staticRenderFns = staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = 'data-v-' + scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = shadowMode
+      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
+      : injectStyles
+  }
+
+  if (hook) {
+    if (options.functional) {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      var originalRender = options.render
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return originalRender(h, context)
+      }
+    } else {
+      // inject component registration as beforeCreate hook
+      var existing = options.beforeCreate
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    }
+  }
+
+  return {
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+
+/***/ 17:
+/*!********************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/store/index.js ***!
+  \********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
+var _vuex = _interopRequireDefault(__webpack_require__(/*! vuex */ 13));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
+_vue.default.use(_vuex.default);
+
+var store = new _vuex.default.Store({
+  state: {
+
+    hasLogin: false,
+    real: false,
+    infoRes: {},
+    userInfo: {} },
+
+
+
+  mutations: {
+
+    logIn: function logIn(state, provider) {
+      state.hasLogin = true;
+      state.userInfo = provider;
+      uni.setStorageSync('userInfo', state.userInfo);
+
+    },
+    IndexlogIn: function IndexlogIn(state) {
+      state.hasLogin = true;
+    },
+    logOut: function logOut(state) {
+      state.hasLogin = false;
+      uni.setStorageSync('userInfo', '');
+      uni.setStorageSync('token', '');
+    },
+    uPuserInfo: function uPuserInfo(state, provider) {
+      state.userInfo = provider;
+      uni.setStorageSync('userInfo', state.userInfo);
+    } } });var _default =
+
+
+store;exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 18:
+/*!****************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdServerUrls.js ***!
+  \****************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
+var _xdConfig = _interopRequireDefault(__webpack_require__(/*! ./xdConfig.js */ 12));var _serverUrls;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
+var config = _xdConfig.default.appConfig; // 配置
+
+var serverBaseUrl = config.serverIp; //动态根据小程序类型自动获取接口地址
+var serverUrls = (_serverUrls = { //根据接口具体配置
+  // xd_register: serverBaseUrl + '/xxx', // 注册
+  xd_login: serverBaseUrl + '/xxx', // 登录
+  xd_logout: serverBaseUrl + '/xxx',
+  // xd_change_pass: serverBaseUrl + '/xxxxx' ,// 修改密码
+
+  xd_bannerList: serverBaseUrl + '/banner/bannerList', // banner广告
+  xd_label: serverBaseUrl + '/label/getLabels', //标签
+  xd_getLabelsById: serverBaseUrl + '/label/getLabelsById', //通过标签id获取标签信息
+  xd_tacitlyPushPng: serverBaseUrl + '/publishTarget/tacitlyPushPng', //标签
+
+  xd_saveCardReplayComment: serverBaseUrl + '/cardReplayComment/saveCardReplayComment', //保存打卡回复评论
+  xd_saveCardComment: serverBaseUrl + '/cardComment/saveCardComment', //保存打卡评论
+  xd_showCardComment: serverBaseUrl + '/cardComment/showCardCommentAndReplayCommtent', //评论和回复的展现
+  xd_showUserCardCommentAndReplayCommtent: serverBaseUrl + '/cardComment/showUserCardCommentAndReplayCommtent', //通过用户id查询所有打卡详情、评论及评论回复
+
+  // xd_saveGiveLikeByPush: serverBaseUrl + '/giveLike/saveGiveLikeByPush' ,//给行动项或打卡记录点赞
+  xd_iSAttention: serverBaseUrl + '/attention/iSAttention', //判断该用户是否已经关注了
+  xd_getAttentionList: serverBaseUrl + '/attention/getAttentionList', //获取关注列表
+  xd_getFansList: serverBaseUrl + '/attention/getFansList', //获取粉丝列表
+  xd_saveAttention: serverBaseUrl + '/attention/saveAttention', //保存关注
+  xd_getLookerCountByUserId: serverBaseUrl + '/attention/getLookerCountByUserId', //根据用户id获取关注数量和粉丝数量
+
+  xd_lookerPushListByUserId: serverBaseUrl + '/publishTarget/lookerPushListByUserId', //当前用户围观的行动项计划
+  xd_pushByCreateTimeList: serverBaseUrl + '/publishTarget/pushByCreateTimeList', //根据创建时间获取目标列表
+  xd_pushByHighGradeList: serverBaseUrl + '/publishTarget/pushByHighGradeList', //根据点赞数获取目标列表
+  xd_pushByUserIdList: serverBaseUrl + '/publishTarget/pushByUserIdList', //根据用户id获取目标列表
+  xd_savePush: serverBaseUrl + '/publishTarget/savePush', //保存发起的目标
+  xd_pushByLabel: serverBaseUrl + '/publishTarget/pushByLabel', //根据标签获取行动项列表
+
+  xd_uploadFile: serverBaseUrl + '/uploadFile/saveFiles', //上传图片
+
+  xd_getLookerByPushId: serverBaseUrl + '/looker/getLookerByPushId', //根据行动项id查看围观人
+  xd_saveLooker: serverBaseUrl + '/looker/saveLooker', //保存围观信息
+  xd_getLookerByUserId: serverBaseUrl + '/looker/getLookerByUserId', //根据用户id获取围观数据
+  xd_getLookerCountInfoByPushIdAndUserId: serverBaseUrl + '/looker/getLookerCountInfoByPushIdAndUserId', //根据行动项id和围观用户id查看点击数详情
+
+  xd_wechatCommercialTenant: serverBaseUrl + '/wechatCommercialTenant/pay', //微信商户给用户付款pay
+  xd_decodeUserInfo: serverBaseUrl + '/wechat/decodeUserInfo', //获取微信的openid和unionid
+  xd_pay: serverBaseUrl + '/wechat/pay', //pay
+  xd_resultCallBack: serverBaseUrl + '/wechat/resultCallBack', //decodeUserInfo
+
+  xd_generalPay: serverBaseUrl + '/generalWechat/pay', //通用微信支付 pay
+
+
+  xd_getImgIsNormal: serverBaseUrl + '/login/getImgIsNormal', //图片是否正常
+  xd_modifyUserInfo: serverBaseUrl + '/login/modifyUserInfo', //修改用户的基础信息
+  xd_weiXinLogin: serverBaseUrl + '/login/weiXinLogin', //微信登陆接口
+  xd_getUserInfoByUserId: serverBaseUrl + '/login/getUserInfoByUserId', //根据用户id获取用户信息
+  // GET /login/getAccessToken 获取token
+  // GET /login/getContentIsNormal 内容是否正常
+
+  xd_saveReplayComment: serverBaseUrl + '/replayPushComment/saveReplayComment', //行动项回复评论
+  xd_saveComment: serverBaseUrl + '/pushComment/saveComment', //保存行动项评论
+  xd_showCommentAndReplayCommtent: serverBaseUrl + '/pushComment/showCommentAndReplayCommtent', //评论和回复的展现
+
+  xd_savePushCard: serverBaseUrl + '/publishCard/savePushCard', //保存打卡记录
+  xd_pushCardListByPushId: serverBaseUrl + '/publishCard/pushCardListByPushId', //根据行动项id获取打卡列表
+
+  xd_pushDataByPushId: serverBaseUrl + '/publishTarget/pushDataByPushId' }, _defineProperty(_serverUrls, "xd_getUserInfoByUserId",
+serverBaseUrl + '/login/getUserInfoByUserId'), _defineProperty(_serverUrls, "xd_updatePushDataByPushId",
+serverBaseUrl + '/publishTarget/updatePushDataByPushId'), _defineProperty(_serverUrls, "xd_getContentIsNormal",
+
+serverBaseUrl + '/login/getContentIsNormal'), _defineProperty(_serverUrls, "xd_getImgIsNormal",
+serverBaseUrl + '/login/getImgIsNormal'), _defineProperty(_serverUrls, "xd_searchPushData",
+serverBaseUrl + '/publishTarget/searchPushData'), _defineProperty(_serverUrls, "xd_onOff",
+
+serverBaseUrl + '/config/onOff'), _defineProperty(_serverUrls, "xd_delPushDataByPushId",
+serverBaseUrl + '/publishTarget/delPushDataByPushId'), _defineProperty(_serverUrls, "xd_saveShareInfo",
+serverBaseUrl + '/share/saveShareInfo'), _defineProperty(_serverUrls, "xd_getLookerByPushId",
+serverBaseUrl + '/looker/getLookerByPushId'), _defineProperty(_serverUrls, "xd_savefeedbackInfo",
+
+serverBaseUrl + '/feedback/savefeedbackInfo'), _defineProperty(_serverUrls, "xd_balanceOrderQuery",
+
+serverBaseUrl + '/balance/balanceOrderQuery'), _defineProperty(_serverUrls, "xd_balanceWithdrawal",
+serverBaseUrl + '/balance/balanceWithdrawal'), _defineProperty(_serverUrls, "xd_topUpBalance",
+serverBaseUrl + '/balance/topUpBalance'), _defineProperty(_serverUrls, "xd_inquireBalance",
+serverBaseUrl + '/balance/inquireBalance'), _defineProperty(_serverUrls, "xd_selectBurieStatistics",
+serverBaseUrl + '/burie/selectBurieStatistics'), _defineProperty(_serverUrls, "xd_updateBurieStatistics",
+serverBaseUrl + '/burie/updateBurieStatistics'), _defineProperty(_serverUrls, "xd_saveSponsor",
+
+
+
+serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_saveSponsor",
+
+
+serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_getActSponsor",
+serverBaseUrl + '/sponsor/getList'), _defineProperty(_serverUrls, "xd_delSponsorCount",
+serverBaseUrl + '/sponsor/delSponsorCount'), _defineProperty(_serverUrls, "xd_getInviteList",
+
+
+serverBaseUrl + '/invite/getInviteList'), _defineProperty(_serverUrls, "xd_saveRedisByFree",
+serverBaseUrl + '/uploadFile/saveRedisByFree'), _defineProperty(_serverUrls, "xd_getVal",
+
+
+serverBaseUrl + '/sys/getVal'), _defineProperty(_serverUrls, "xd_saveGratitude",
+serverBaseUrl + '/gratitude/saveGratitude'), _defineProperty(_serverUrls, "xd_saveRoom",
+
+serverBaseUrl + '/room/saveRoom'), _defineProperty(_serverUrls, "xd_selectList",
+serverBaseUrl + '/room/selectList'), _defineProperty(_serverUrls, "xd_selectMsgList",
+serverBaseUrl + '/room/selectMsgList'), _defineProperty(_serverUrls, "xd_sendRoomMsg",
+serverBaseUrl + '/room/sendRoomMsg'), _defineProperty(_serverUrls, "xd_myRoomByType",
+serverBaseUrl + '/room/myRoomByType'), _defineProperty(_serverUrls, "xd_saveRoomJoin",
+serverBaseUrl + '/room/saveRoomJoin'), _defineProperty(_serverUrls, "xd_currentStatusByRoom",
+serverBaseUrl + '/room/currentStatusByRoom'), _defineProperty(_serverUrls, "xd_quitByUserId",
+serverBaseUrl + '/room/quitByUserId'), _serverUrls);var _default =
+
+{
+  serverUrls: serverUrls,
+  serverBaseUrl: serverBaseUrl };exports.default = _default;
+
+/***/ }),
+
+/***/ 19:
+/*!**************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdUniUtils.js ***!
+  \**************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; // 保存数据
+function xd_setStorage(keyParm, dataParm) {
+  uni.setStorage({
+    key: keyParm,
+    data: dataParm });
+
+}
+// 保存数据，同步
+function xd_setStorageSync(keyParm, dataParm) {
+  try {
+    uni.setStorageSync(keyParm, dataParm);
+  } catch (e) {
+    console.log('setStorageSync error');
+  }
+}
+// 获取数据，同步
+function xd_getStorageSync(keyParm) {
+  try {
+    var value = uni.getStorageSync(keyParm);
+    return value;
+  } catch (e) {
+    console.log('getStorageSync error');
+  }
+}
+/*** 设置token */
+function xd_setAccessToken(token) {
+  xd_setStorageSync('access_token', token);
+}
+/*** 获取token */
+function xd_getAccessToken() {
+  return xd_getStorageSync('access_token');
+}
+/** *************** alert 相关 *********************** */
+// 弹出框
+function xd_showToast(title, time, icon, callbackFun) {
+  uni.showToast({
+    title: title,
+    duration: time,
+    icon: icon ? icon : "none",
+    success: function success(res) {
+      if (typeof callbackFun != "undefined" && callbackFun != null) {
+        callbackFun(); // 回调函数
+      }
+    } });
+
+}
+// // 弹出框:操作成功
+// function xd_showToast_success(title, callbackFun) {
+// 	uni.showToast({
+// 		icon: "success",
+// 		success: function() {
+// 			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
+// 				callbackFun(); // 回调函数
+// 			}
+// 		}
+// 	});
+// }
+// // 弹出框:操作成功并跳转
+// function xd_showToast_success_redirectTo(pageUrl) {
+// 	xd_showToast_success(null, function() {
+// 		uni.redirectTo({
+// 			url: pageUrl // 跳转到页面
+// 		});
+// 	});
+// }
+// // 弹出框:操作成功并返回上一级
+// function xd_showToast_success_navigateBack() {
+// 	xd_showToast_success(null, function() {
+// 		uni.navigateBack({
+// 			delta: 1
+// 		});
+// 	});
+// }
+// // 弹窗，操作完成后返回上一级
+// function xd_showToast_navigateBack(toastTitle) {
+// 	uni.showToast({
+// 		title: toastTitle,
+// 		success: function() {
+// 			uni.navigateBack({
+// 				delta: 1
+// 			})
+// 		}
+// 	});
+// }
+// // 确认操作
+// function xd_showModal_confirm(title, message, showCancelBut, okCallbackFun, cancelCallbackFun) {
+// 	uni.showModal({
+// 		title: title || '操作确认',
+// 		content: message || '您确定要执行该操作吗？！',
+// 		showCancel: !showCancelBut ? showCancelBut : true,
+// 		success: function(res) {
+// 			if (res.confirm) {
+// 				if (typeof(okCallbackFun) != "undefined" && okCallbackFun != null) {
+// 					okCallbackFun();
+// 				}
+// 			} else if (res.cancel) {
+// 				if (typeof(cancelCallbackFun) != "undefined" && cancelCallbackFun != null) {
+// 					cancelCallbackFun();
+// 				}
+// 			}
+// 		}
+// 	});
+// }
+
+/** ***************request 相关*********************** */
+// 请求 url：请求路径，params请求参数，method：方法,请求header，
+function xd_request(url, method, params, headers) {
+  return new Promise(function (resolve, reject) {
+    uni.request({
+      url: url,
+      method: method || 'POST', // 默认get请求
+      data: params || {},
+      header: headers || {},
+      dataType: "json",
+
+      success: function success(res) {
+        var d = res;
+        if (d.data.resultCode == 10002) {
+          // 清除登录相关内容
+          try {
+            uni.removeStorage('userInfo');
+            uni.removeStorage('id');
+            uni.removeStorage('token');
+          } catch (e) {
+          }
+          // 切换到登录页面
+          uni.reLaunch({
+            url: '/pages/login/login' });
+
+
+        } else if (d.data.resultCode == 0 || d.data.status == 1) {
+          resolve(d.data);
+        } else {
+
+          resolve(d.data);
+        }
+      },
+      fail: function fail(err) {
+        uni.showToast({
+          title: err.errMsg });
+
+        console.log(err);
+        reject(err);
+      } });
+
+  }).catch(function (e) {
+
+  });
+}
+// 简单request get
+function xd_request_get(url, params, withToken) {
+  var headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  if (withToken !== false) {
+    var accessToken = xd_getAccessToken(); // token
+    headers = { // application/json
+      'access_token': accessToken // accessToken
+    };
+  }
+  return xd_request(url, 'GET', params, headers);
+}
+// post请求 url：请求路径，请求header，params请求参数
+function xd_request_post(url, params, withToken) {
+  var headers = {
+    'content-type': 'application/x-www-form-urlencoded' };
+
+  // if (withToken !== false) {
+  var token = uni.getStorageSync('token'); // token
+  if (token == undefined) {
+    uni.reLaunch({
+      url: '../login/login' });
+
+  }
+  headers.token = token; // accessToken
+  // }
+  return xd_request(url, 'POST', params, headers);
+}
+// 上传
+function xd_request_upload(url, params, withToken) {
+  var headers = {
+    'content-type': "multipart/form-data" };
+
+  // if (withToken !== false) {
+
+  var token = uni.getStorageSync('token'); // token
+  if (token == undefined) {
+    uni.reLaunch({
+      url: '../login/login' });
+
+  }
+  headers.session_token = token; // accessToken
+  // }
+  return xd_request(url, 'POST', params, headers);
+}
+//图片检查
+function xd_request_img(data) {
+  return new Promise(function (resolve, reject) {
+    uni.uploadFile({
+      url: 'https://xingdongdaka.zhidashixun.com/login/getImgIsNormal',
+      filePath: data,
+      name: 'file',
+      header: {
+        "Content-Type": "multipart/form-data" //记得设置
+      },
+      formData: {
+
+        'token': uni.getStorageSync('token') },
+
+      success: function success(uploadFileRes) {
+        var jsonObj = JSON.parse(uploadFileRes.data);
+        var jsonObj1 = JSON.parse(jsonObj.obj);
+        if (jsonObj1.errcode == 0)
+        {
+          resolve(true);
+        } else {
+          uni.showToast({
+            title: '图片不符规定',
+            duration: 2000 });
+
+          resolve(false);
+        }
+        ;
+
+      } });
+
+  });
+}
+// 类容检查
+function xd_request_text(params) {
+  var headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
+  var url = 'https://xingdongdaka.zhidashixun.com/login/getContentIsNormal';
+  headers.token = uni.getStorageSync('token');
+  return xd_request(url, 'GET', params, headers);
+}
+// 简单操作
+function xd_request_simpleOperate(url, message) {
+  var okCallbackFun = function okCallbackFun() {
+    xd_request_post(url, null, true);
+  };
+  xd_showModal_confirm(null, message, true, okCallbackFun);
+}
+// 删除
+function xd_request_delete(url) {
+  xd_request_simpleOperate(url, "确定要删除该条数据吗？");
+}
+// 返回上一级。delta：返回的页面数，如果 delta 大于现有页面数，则返回到首页
+function xd_navigateBack(delta) {
+  uni.navigateBack({
+    delta: delta });
+
+}
+//时间处理
+function xd_timestampToTime(timestamp, times, times1, times2) {
+  var date = new Date(timestamp); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
+  var Y = date.getFullYear() + '-';
+  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+  var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+  if (times) {
+    var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
+    var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    return M + D + ' ' + h + m + s;
+  }
+  if (times1) {
+
+    var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
+    var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+    return Y + M + D + ' ' + h + m + s;
+  }
+  if (times2) {
+
+    var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+    return Y + M + D + ' ' + h + m;
+  }
+  return Y + M + D;
+}
+//获取今天只后日期
+
+function xd_daysAddSub(date, num) {
+  var d = new Date(date);
+  var newD = new Date(d.setDate(d.getDate() + num)); //设置天数 +1 天
+  var Y = newD.getFullYear() + '-';
+  var M = (newD.getMonth() + 1 < 10 ? '0' + (newD.getMonth() + 1) : newD.getMonth() + 1) + '-';
+  var D = newD.getDate() + ' ';
+  var h = newD.getHours() + ':';
+  var m = newD.getMinutes();
+
+  return Y + M + D + h + m;
+}
+
+//数据校验
+//电话
+function xd_isValidPhone(str) {
+  var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
+  if (!myreg.test(str)) {
+    return false;
+  } else {
+    return true;
+  }
+}
+//大图浏览
+function xd_showImg(list, num) {
+  var ig = [];
+  if (Array.isArray(list)) {
+    ig = list;
+  } else {
+    ig = list.split(",");
+  }
+
+  uni.previewImage({
+    current: num ? num : 0,
+    urls: ig });
+
+}
+//随机图片
+function xd_randomImg() {
+  var ig = ["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733487746.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733529495.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733539676.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733559484.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733565500.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733578216.png",
+  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733591005.png"];
+
+  var num = Math.floor(Math.random() * 7 + 1);
+  return ig[num];
+}
+//分享
+function xd_onShare(title, path, imageUrl) {
+  //设置一个默认分享背景图片
+  var defaultImageUrl = 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+  var defaultTitle = "科学乐趣达目标 - 志趣相投交朋友";
+  var defaultPath = "/pages/index/index";
+
+  return {
+    title: title ? title : defaultTitle,
+    path: path ? path : defaultPath,
+    imageUrl: imageUrl ? imageUrl : defaultImageUrl,
+    success: function success(res) {
+      console.log("转发成功！");
+    },
+    fail: function fail(res) {
+      console.log("转发失败！");
+    } };
+
+}
+/**
+   * 
+   *Tab红点提示
+   */
+var updateNumber = function updateNumber(gnumber) {
+
+  if (gnumber < 1) {
+    uni.removeTabBarBadge({
+      index: 2 });
+
+  } else if (gnumber > 999) {
+    uni.setTabBarBadge({
+      index: 2,
+      text: "999+" });
+
+  } else {
+    uni.setTabBarBadge({
+      index: 2,
+      text: gnumber + "" });
+
+  }
+  // uni.setStorage({
+  // 	key: "gnumber",
+  // 	data: gnumber
+  // })
+};
+//登录检测
+function xd_login(e, nav) {
+  if (!e) {
+
+    if (nav) {
+      uni.reLaunch({
+        url: '/pages/login/login' });
+
+
+    } else {
+      uni.navigateTo({
+        url: '/pages/login/login' });
+
+      return false;
+    }
+    return false;
+  }
+}
+//广告组件
+function videoAdUtil() {
+  var videoAd = null;
+
+  if (wx.createRewardedVideoAd) {
+    uni.showLoading({
+      title: "加载中..." });
+
+    videoAd = wx.createRewardedVideoAd({
+      adUnitId: 'adunit-d579021705423692' });
+
+
+    videoAd.onError(function (err) {
+      videoAd.offClose();
+      uni.hideLoading();
+
+    });
+    return videoAd;
+  };
+}
+function videoshowAd(videoAd) {
+  if (videoAd) {
+    videoAd.load().
+    then(function () {
+      videoAd.show();
+    }).
+    catch(function (err) {
+      // 视频加载失败重试,酌情添加
+      videoAd.load().
+      then(function () {
+        videoAd.show();
+      }).
+      catch(function (err) {
+        videoAd.offClose();
+        wx.showToast({
+          title: '视频加载失败！',
+          icon: 'none',
+          success: function success() {
+            uni.navigateBack({
+              delta: 1 });
+
+          } });
+
+      });
+    });
+  }
+};
+
+/**
+    * 检测是否为空
+    * @param rst
+    * @returns {boolean}
+    * @constructor
+    */
+function IsNullOrEmpty(rst) {
+  if (rst != null && rst != "" && rst != undefined && Rst != "null") {
+    var Rst = JSON.stringify(rst);
+    if (Rst != "[]" && Rst != "null" && Rst != "{}" && Rst != "undefined") {
+      return false;
+    } else {
+      return true;
+    }
+  } else {
+    return true;
+  }
+}
+/**
+   * 显示弹框
+   */
+function showToast(isSuccess, content, methodes) {
+  var msg = methodes + content;
+  if (!IsNullOrEmpty(msg)) {
+    uni.showToast({
+      title: msg,
+      icon: isSuccess ? "/static/images/suc.png" : "none" });
+
+  }
+}var _default =
+
+{
+  showToast: showToast,
+  IsNullOrEmpty: IsNullOrEmpty,
+  updateNumber: updateNumber,
+  xd_setStorage: xd_setStorage,
+  xd_setStorageSync: xd_setStorageSync,
+  xd_getStorageSync: xd_getStorageSync,
+  xd_setAccessToken: xd_setAccessToken,
+  xd_getAccessToken: xd_getAccessToken,
+  xd_showToast: xd_showToast,
+  // xd_showToast_success,
+  // xd_showToast_success_redirectTo,
+  // xd_showToast_success_navigateBack,
+  // xd_showToast_navigateBack,
+  // xd_showModal_confirm,
+  xd_request: xd_request,
+  xd_request_get: xd_request_get,
+  xd_request_post: xd_request_post,
+  xd_request_upload: xd_request_upload,
+  xd_request_simpleOperate: xd_request_simpleOperate,
+  xd_request_delete: xd_request_delete,
+  xd_navigateBack: xd_navigateBack,
+  xd_timestampToTime: xd_timestampToTime,
+  xd_daysAddSub: xd_daysAddSub,
+  xd_request_img: xd_request_img,
+  xd_request_text: xd_request_text,
+  xd_showImg: xd_showImg,
+  xd_randomImg: xd_randomImg,
+  xd_onShare: xd_onShare,
+  xd_login: xd_login,
+  videoAdUtil: videoAdUtil,
+  videoshowAd: videoshowAd };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+
+/***/ 2:
 /*!******************************************************************************************!*\
   !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/mp-vue/dist/mp.runtime.esm.js ***!
   \******************************************************************************************/
@@ -2556,11 +5658,13 @@ Dep.SharedObject.targetStack = [];
 function pushTarget (target) {
   Dep.SharedObject.targetStack.push(target);
   Dep.SharedObject.target = target;
+  Dep.target = target;
 }
 
 function popTarget () {
   Dep.SharedObject.targetStack.pop();
   Dep.SharedObject.target = Dep.SharedObject.targetStack[Dep.SharedObject.targetStack.length - 1];
+  Dep.target = Dep.SharedObject.target;
 }
 
 /*  */
@@ -7329,7 +10433,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7350,14 +10454,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7401,13 +10505,14 @@ function cloneWithData(vm) {
   }, ret);
 
   // vue-composition-api
-  var rawBindings = vm.__secret_vfa_state__ && vm.__secret_vfa_state__.rawBindings;
+  var compositionApiState = vm.__composition_api_state__ || vm.__secret_vfa_state__;
+  var rawBindings = compositionApiState && compositionApiState.rawBindings;
   if (rawBindings) {
     Object.keys(rawBindings).forEach(function (key) {
       ret[key] = vm[key];
     });
   }
-  
+
   //TODO 需要把无用数据处理掉，比如 list=>l0 则 list 需要移除，否则多传输一份数据
   Object.assign(ret, vm.$mp.data || {});
   if (
@@ -7442,7 +10547,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -7848,7 +10953,33 @@ internalMixin(Vue);
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../../../../webpack/buildin/global.js */ 3)))
 
 /***/ }),
-/* 3 */
+
+/***/ 20:
+/*!************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdCommon.js ***!
+  \************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; // 当前项目用到的规则说明
+
+//围观提示说明
+var gzsm_wgglts = "感谢你的围观鼓励帮助！如果TA未达成，你将瓜分保证金，为TA打Call越多、【评论量】越多、获得TA的【认可度】越高，分得越多。如果TA已达成，你的鼓励帮助有效，TA对你的认可度高，TA也愿意给你感谢金";
+
+//微信付款页规则说明
+var gzsm_wxfk = "说明：\r\n达成则将在第二天退回，到小程序→我的→钱包。否则将全额扣除，分配给有效的围观者、分享等相关方，最终解释权属于平台。";
+
+//为完成行动打卡提示语
+var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动项？";var _default =
+{
+  gzsm_wgglts: gzsm_wgglts,
+  gzsm_wxfk: gzsm_wxfk,
+  gzsm_clickCard: gzsm_clickCard };exports.default = _default;
+
+/***/ }),
+
+/***/ 3:
 /*!***********************************!*\
   !*** (webpack)/buildin/global.js ***!
   \***********************************/
@@ -7878,7 +11009,8 @@ module.exports = g;
 
 
 /***/ }),
-/* 4 */
+
+/***/ 4:
 /*!****************************************************************************!*\
   !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json ***!
   \****************************************************************************/
@@ -7888,7 +11020,30 @@ module.exports = g;
 
 
 /***/ }),
-/* 5 */
+
+/***/ 41:
+/*!*********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/left.png ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABdklEQVRoQ9XYPUrEQBTA8TdVMK2VzWLrBTxDupkU5gCeQC+iR7CPkK8qd9hLWAk2y4IgjM3IFEJYFPZN3sck9SPz/yUQeDGw8ctsvB+yAPR9f13X9VvKw1QHjON4BwAtAOyttbdYhCpgER+7jwCws9Z+YhBqgJP42NxYa18x8XFWBUAVrwKgjBcHUMeLAjjixQBc8SIAznh2AHc8K0Aing0gFc8CkIwnB0jHkwI04skAWvEkAM341QDt+FWAHOKTAbnEJwHmeb7y3r8vNqekTQq7ef03j97I2ra9KIri6/eGIYR759wLVRD2PmhAPGAYhkdjzFMOiCRATohkQC6IVYAcEKsB2ggSgCaCDBAR0zQ9hBCeJb9OpAANBDlAGsECkESwAaQQrAAJBDuAGyEC4ESIAbgQogAOhDiAGqECoESoAf5CeO+Lpmm+MWulKmCJCCEcnHOXmPikvxLYA86Z77rupizLj6qqDufML2fU3wA2+HR+84AfKQ5IQBdVHA4AAAAASUVORK5CYII="
+
+/***/ }),
+
+/***/ 42:
+/*!**********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/right.png ***!
+  \**********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports) {
+
+module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAELUlEQVRoQ9WZSYicRRSA3+txpgfSFxdQcBmGdNdiH4wEIkJA9OJyiEzPgBoDJqCJgmZQiFFwieAeFUlE1LghGDUb6MElp3gzMgdnwtB/1d+MJxUGYl9EAmPXkzdUN3Xsv7v+v5N36Ut1ve+rV++vf0HIGMaYexBxHxEdlFJ+n/Hv0Ydj1hmTJDmPiFcAgCOiGaXUd1nniDk+s4C1doGINjMEIv6LiDO1Wu10TKgsc2UWMMbcBAAnAWAjJyKiNldCa/1zlsSxxmYW4MTW2luIiCWu9SB/cSWEEGdjgfU7z0ACPHmaprc551jiSp/sdwCYkVIu9ps8xriBBTh5s9m8ExFPIuIGD5N4Cf4tJIYSYMIkSe5lCQAY88S/EVFDKcUVyT2GFmBCY8x9APB1QPsLEc0qpf7M2yCKgJd4CAA+7wIj4plOpzOntT6fp0Q0Ad8Te0ql0gddYCL6iSXq9fo/eUlEFfA9MY+I7wbA3woh5hDxvzwkogt4if2I+HoA/I2U8v5LRsD3xIsAcCCA/kJKyX0SNXKpQJfQGPMqADwbEH8kpdwT0yBXAV+JdwDgyQD6sJRybyyJ3AUY1Fr7PhE9Flyd3lJK7YshUYiAl/iUiHYFEq8opZ4bVqIwAS9xlIgeCA6754UQLw8jUagAEV1mrT3GN3yBxNNCiIODShQqwJCrq6uVdrvNEncHEvNCiEODSBQu4K9MVwEAS9weSDwqhPgwq8RIBBgyTdPriOgYEd3ahXbO7dJa924I+5EZmQDDtVqtqnOOJW4OJLZrrb/qB57HjFTAb6cXAOClQOBBrfXRS0LAGPMMALwWnA0PK6U+6Rd+pBUwxjwFAG8HsE9IKd/LAj8yAWPM4wBwOMZZUHgPWGt3E1F4uTwgpez1wEVdAWvtTiL6LFj5N4QQ3AcDR2EVsNZuJ6Ivg4Y9pJSaH5jc/7EQgTRN55xzxwPYI1LK3cPCF9LEaZpu8/ATnJCroJTaEQM+d4EkSe4CgOOIWPHAp6SUs7HgcxVIkuQOD88fQzh+mJiYaExPT1+46AWMMVuJiFf+mvVVQjxTLpcbU1NT7ZjwuVTAGLPFw9/g4c/ye1Ip5R+x4aMLWGs3MTwAVH3Dnut0Oo16vd7KAz6qgLVWE9EJALjRw7accw2t9bm84KMJpGm60TnH8Js8LG+XhpTy1zzhowi0Wq3rO50Ow2/xsH+XSqVGrVYr5KPfUCfxysrK1Wtrawy/1cNfGBsbm6lWqz/mvfLd+QcWWFpaurxcLjM8X+/Xwzk3q7U+VRT8wFtocXFxw+TkJMPzSbseRLRDKdW7WStKInMFFhYWxiuVyglE3BZAPiKl/Lgo6DBPZoEkSfiEnevtQcS9Qoje01XREpkEms3mzlKpFD6Q7BdCvFk09MAVWF5eroyPj/ML2s3OuSNa6/ALzEg8/gewF5ZA7hIE8AAAAABJRU5ErkJggg=="
+
+/***/ }),
+
+/***/ 5:
 /*!*******************************************************!*\
   !*** ./node_modules/@dcloudio/uni-stat/dist/index.js ***!
   \*******************************************************/
@@ -8873,2081 +12028,19 @@ main();
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ }),
-/* 6 */
-/*!******************************************************!*\
-  !*** ./node_modules/@dcloudio/uni-stat/package.json ***!
-  \******************************************************/
-/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
-/***/ (function(module) {
 
-module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-28920200923001\",\"_inBundle\":false,\"_integrity\":\"sha512-VajbPlCUcWQNKT114irqeXzch1Q1huyENvkmXzwiS/U1K3B03/oia4YSbmCulMENX9Ykl+QkhdHzu2myEFkA1g==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-28920200923001.tgz\",\"_shasum\":\"a40d5775c6635b8fcc14f2218b67c9471b6625f2\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"59d53ac1e48d8d2a3dd7c622e07f6553b8c8a0c6\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-28920200923001\"}");
-
-/***/ }),
-/* 7 */
-/*!********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"stat"} ***!
-  \********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "appid": "__UNI__AE00780" };exports.default = _default;
-
-/***/ }),
-/* 8 */
-/*!*********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"style"} ***!
-  \*********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "查看信息" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "" }, "pages/pageA/ranking/rangkinDet": { "navigationBarTitleText": "挑战赛详情" }, "pages/pageA/ranking/rankinAdd": { "navigationBarTitleText": "加入挑战" }, "pages/pageA/ranking/rankingUp": { "navigationBarTitleText": "新建挑战" }, "pages/pageA/ranking/rankinglist": { "navigationBarTitleText": "我的挑战赛" }, "pages/pageA/group/userEditInfo": { "navigationBarTitleText": "" }, "pages/pageA/group/usersVote": { "navigationBarTitleText": "投票" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
-
-/***/ }),
-/* 9 */,
-/* 10 */,
-/* 11 */,
-/* 12 */
-/*!************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdConfig.js ***!
-  \************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = exports.env = void 0; // 获取当前小程序信息（要求小程序版本2.10.0）
-var accountInfo = uni.getAccountInfoSync();
-// env类型
-var env = accountInfo.miniProgram.envVersion;exports.env = env;
-uni.setStorageSync("env", env);
-var baseApi = {
-  // 开发版
-  develop: "http://testxingdongdaka.zhidashixun.com",
-  // develop: "https://xingdongdaka.zhidashixun.com",
-  // 体验版
-  trial: "http://testxingdongdaka.zhidashixun.com",
-  // 正式版
-  release: "https://xingdongdaka.zhidashixun.com" };
-
-// 系统配置
-var appConfig = {
-  enableDebug: true, // 设置是否打开调试开关。此开关对正式版也能生效。
-  // server 配置
-  serverIp: baseApi[env] // server IP
-};var _default =
-
-{
-  appConfig: appConfig };exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-/* 13 */
-/*!********************************************!*\
-  !*** ./node_modules/vuex/dist/vuex.esm.js ***!
-  \********************************************/
-/*! exports provided: default, Store, createNamespacedHelpers, install, mapActions, mapGetters, mapMutations, mapState */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* WEBPACK VAR INJECTION */(function(global) {/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Store", function() { return Store; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "createNamespacedHelpers", function() { return createNamespacedHelpers; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "install", function() { return install; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapActions", function() { return mapActions; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapGetters", function() { return mapGetters; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapMutations", function() { return mapMutations; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapState", function() { return mapState; });
-/*!
- * vuex v3.4.0
- * (c) 2020 Evan You
- * @license MIT
- */
-function applyMixin (Vue) {
-  var version = Number(Vue.version.split('.')[0]);
-
-  if (version >= 2) {
-    Vue.mixin({ beforeCreate: vuexInit });
-  } else {
-    // override init and inject vuex init procedure
-    // for 1.x backwards compatibility.
-    var _init = Vue.prototype._init;
-    Vue.prototype._init = function (options) {
-      if ( options === void 0 ) options = {};
-
-      options.init = options.init
-        ? [vuexInit].concat(options.init)
-        : vuexInit;
-      _init.call(this, options);
-    };
-  }
-
-  /**
-   * Vuex init hook, injected into each instances init hooks list.
-   */
-
-  function vuexInit () {
-    var options = this.$options;
-    // store injection
-    if (options.store) {
-      this.$store = typeof options.store === 'function'
-        ? options.store()
-        : options.store;
-    } else if (options.parent && options.parent.$store) {
-      this.$store = options.parent.$store;
-    }
-  }
-}
-
-var target = typeof window !== 'undefined'
-  ? window
-  : typeof global !== 'undefined'
-    ? global
-    : {};
-var devtoolHook = target.__VUE_DEVTOOLS_GLOBAL_HOOK__;
-
-function devtoolPlugin (store) {
-  if (!devtoolHook) { return }
-
-  store._devtoolHook = devtoolHook;
-
-  devtoolHook.emit('vuex:init', store);
-
-  devtoolHook.on('vuex:travel-to-state', function (targetState) {
-    store.replaceState(targetState);
-  });
-
-  store.subscribe(function (mutation, state) {
-    devtoolHook.emit('vuex:mutation', mutation, state);
-  }, { prepend: true });
-
-  store.subscribeAction(function (action, state) {
-    devtoolHook.emit('vuex:action', action, state);
-  }, { prepend: true });
-}
-
-/**
- * Get the first item that pass the test
- * by second argument function
- *
- * @param {Array} list
- * @param {Function} f
- * @return {*}
- */
-
-/**
- * forEach for object
- */
-function forEachValue (obj, fn) {
-  Object.keys(obj).forEach(function (key) { return fn(obj[key], key); });
-}
-
-function isObject (obj) {
-  return obj !== null && typeof obj === 'object'
-}
-
-function isPromise (val) {
-  return val && typeof val.then === 'function'
-}
-
-function assert (condition, msg) {
-  if (!condition) { throw new Error(("[vuex] " + msg)) }
-}
-
-function partial (fn, arg) {
-  return function () {
-    return fn(arg)
-  }
-}
-
-// Base data struct for store's module, package with some attribute and method
-var Module = function Module (rawModule, runtime) {
-  this.runtime = runtime;
-  // Store some children item
-  this._children = Object.create(null);
-  // Store the origin module object which passed by programmer
-  this._rawModule = rawModule;
-  var rawState = rawModule.state;
-
-  // Store the origin module's state
-  this.state = (typeof rawState === 'function' ? rawState() : rawState) || {};
-};
-
-var prototypeAccessors = { namespaced: { configurable: true } };
-
-prototypeAccessors.namespaced.get = function () {
-  return !!this._rawModule.namespaced
-};
-
-Module.prototype.addChild = function addChild (key, module) {
-  this._children[key] = module;
-};
-
-Module.prototype.removeChild = function removeChild (key) {
-  delete this._children[key];
-};
-
-Module.prototype.getChild = function getChild (key) {
-  return this._children[key]
-};
-
-Module.prototype.hasChild = function hasChild (key) {
-  return key in this._children
-};
-
-Module.prototype.update = function update (rawModule) {
-  this._rawModule.namespaced = rawModule.namespaced;
-  if (rawModule.actions) {
-    this._rawModule.actions = rawModule.actions;
-  }
-  if (rawModule.mutations) {
-    this._rawModule.mutations = rawModule.mutations;
-  }
-  if (rawModule.getters) {
-    this._rawModule.getters = rawModule.getters;
-  }
-};
-
-Module.prototype.forEachChild = function forEachChild (fn) {
-  forEachValue(this._children, fn);
-};
-
-Module.prototype.forEachGetter = function forEachGetter (fn) {
-  if (this._rawModule.getters) {
-    forEachValue(this._rawModule.getters, fn);
-  }
-};
-
-Module.prototype.forEachAction = function forEachAction (fn) {
-  if (this._rawModule.actions) {
-    forEachValue(this._rawModule.actions, fn);
-  }
-};
-
-Module.prototype.forEachMutation = function forEachMutation (fn) {
-  if (this._rawModule.mutations) {
-    forEachValue(this._rawModule.mutations, fn);
-  }
-};
-
-Object.defineProperties( Module.prototype, prototypeAccessors );
-
-var ModuleCollection = function ModuleCollection (rawRootModule) {
-  // register root module (Vuex.Store options)
-  this.register([], rawRootModule, false);
-};
-
-ModuleCollection.prototype.get = function get (path) {
-  return path.reduce(function (module, key) {
-    return module.getChild(key)
-  }, this.root)
-};
-
-ModuleCollection.prototype.getNamespace = function getNamespace (path) {
-  var module = this.root;
-  return path.reduce(function (namespace, key) {
-    module = module.getChild(key);
-    return namespace + (module.namespaced ? key + '/' : '')
-  }, '')
-};
-
-ModuleCollection.prototype.update = function update$1 (rawRootModule) {
-  update([], this.root, rawRootModule);
-};
-
-ModuleCollection.prototype.register = function register (path, rawModule, runtime) {
-    var this$1 = this;
-    if ( runtime === void 0 ) runtime = true;
-
-  if ((true)) {
-    assertRawModule(path, rawModule);
-  }
-
-  var newModule = new Module(rawModule, runtime);
-  if (path.length === 0) {
-    this.root = newModule;
-  } else {
-    var parent = this.get(path.slice(0, -1));
-    parent.addChild(path[path.length - 1], newModule);
-  }
-
-  // register nested modules
-  if (rawModule.modules) {
-    forEachValue(rawModule.modules, function (rawChildModule, key) {
-      this$1.register(path.concat(key), rawChildModule, runtime);
-    });
-  }
-};
-
-ModuleCollection.prototype.unregister = function unregister (path) {
-  var parent = this.get(path.slice(0, -1));
-  var key = path[path.length - 1];
-  if (!parent.getChild(key).runtime) { return }
-
-  parent.removeChild(key);
-};
-
-ModuleCollection.prototype.isRegistered = function isRegistered (path) {
-  var parent = this.get(path.slice(0, -1));
-  var key = path[path.length - 1];
-
-  return parent.hasChild(key)
-};
-
-function update (path, targetModule, newModule) {
-  if ((true)) {
-    assertRawModule(path, newModule);
-  }
-
-  // update target module
-  targetModule.update(newModule);
-
-  // update nested modules
-  if (newModule.modules) {
-    for (var key in newModule.modules) {
-      if (!targetModule.getChild(key)) {
-        if ((true)) {
-          console.warn(
-            "[vuex] trying to add a new module '" + key + "' on hot reloading, " +
-            'manual reload is needed'
-          );
-        }
-        return
-      }
-      update(
-        path.concat(key),
-        targetModule.getChild(key),
-        newModule.modules[key]
-      );
-    }
-  }
-}
-
-var functionAssert = {
-  assert: function (value) { return typeof value === 'function'; },
-  expected: 'function'
-};
-
-var objectAssert = {
-  assert: function (value) { return typeof value === 'function' ||
-    (typeof value === 'object' && typeof value.handler === 'function'); },
-  expected: 'function or object with "handler" function'
-};
-
-var assertTypes = {
-  getters: functionAssert,
-  mutations: functionAssert,
-  actions: objectAssert
-};
-
-function assertRawModule (path, rawModule) {
-  Object.keys(assertTypes).forEach(function (key) {
-    if (!rawModule[key]) { return }
-
-    var assertOptions = assertTypes[key];
-
-    forEachValue(rawModule[key], function (value, type) {
-      assert(
-        assertOptions.assert(value),
-        makeAssertionMessage(path, key, type, value, assertOptions.expected)
-      );
-    });
-  });
-}
-
-function makeAssertionMessage (path, key, type, value, expected) {
-  var buf = key + " should be " + expected + " but \"" + key + "." + type + "\"";
-  if (path.length > 0) {
-    buf += " in module \"" + (path.join('.')) + "\"";
-  }
-  buf += " is " + (JSON.stringify(value)) + ".";
-  return buf
-}
-
-var Vue; // bind on install
-
-var Store = function Store (options) {
-  var this$1 = this;
-  if ( options === void 0 ) options = {};
-
-  // Auto install if it is not done yet and `window` has `Vue`.
-  // To allow users to avoid auto-installation in some cases,
-  // this code should be placed here. See #731
-  if (!Vue && typeof window !== 'undefined' && window.Vue) {
-    install(window.Vue);
-  }
-
-  if ((true)) {
-    assert(Vue, "must call Vue.use(Vuex) before creating a store instance.");
-    assert(typeof Promise !== 'undefined', "vuex requires a Promise polyfill in this browser.");
-    assert(this instanceof Store, "store must be called with the new operator.");
-  }
-
-  var plugins = options.plugins; if ( plugins === void 0 ) plugins = [];
-  var strict = options.strict; if ( strict === void 0 ) strict = false;
-
-  // store internal state
-  this._committing = false;
-  this._actions = Object.create(null);
-  this._actionSubscribers = [];
-  this._mutations = Object.create(null);
-  this._wrappedGetters = Object.create(null);
-  this._modules = new ModuleCollection(options);
-  this._modulesNamespaceMap = Object.create(null);
-  this._subscribers = [];
-  this._watcherVM = new Vue();
-  this._makeLocalGettersCache = Object.create(null);
-
-  // bind commit and dispatch to self
-  var store = this;
-  var ref = this;
-  var dispatch = ref.dispatch;
-  var commit = ref.commit;
-  this.dispatch = function boundDispatch (type, payload) {
-    return dispatch.call(store, type, payload)
-  };
-  this.commit = function boundCommit (type, payload, options) {
-    return commit.call(store, type, payload, options)
-  };
-
-  // strict mode
-  this.strict = strict;
-
-  var state = this._modules.root.state;
-
-  // init root module.
-  // this also recursively registers all sub-modules
-  // and collects all module getters inside this._wrappedGetters
-  installModule(this, state, [], this._modules.root);
-
-  // initialize the store vm, which is responsible for the reactivity
-  // (also registers _wrappedGetters as computed properties)
-  resetStoreVM(this, state);
-
-  // apply plugins
-  plugins.forEach(function (plugin) { return plugin(this$1); });
-
-  var useDevtools = options.devtools !== undefined ? options.devtools : Vue.config.devtools;
-  if (useDevtools) {
-    devtoolPlugin(this);
-  }
-};
-
-var prototypeAccessors$1 = { state: { configurable: true } };
-
-prototypeAccessors$1.state.get = function () {
-  return this._vm._data.$$state
-};
-
-prototypeAccessors$1.state.set = function (v) {
-  if ((true)) {
-    assert(false, "use store.replaceState() to explicit replace store state.");
-  }
-};
-
-Store.prototype.commit = function commit (_type, _payload, _options) {
-    var this$1 = this;
-
-  // check object-style commit
-  var ref = unifyObjectStyle(_type, _payload, _options);
-    var type = ref.type;
-    var payload = ref.payload;
-    var options = ref.options;
-
-  var mutation = { type: type, payload: payload };
-  var entry = this._mutations[type];
-  if (!entry) {
-    if ((true)) {
-      console.error(("[vuex] unknown mutation type: " + type));
-    }
-    return
-  }
-  this._withCommit(function () {
-    entry.forEach(function commitIterator (handler) {
-      handler(payload);
-    });
-  });
-
-  this._subscribers
-    .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
-    .forEach(function (sub) { return sub(mutation, this$1.state); });
-
-  if (
-    ( true) &&
-    options && options.silent
-  ) {
-    console.warn(
-      "[vuex] mutation type: " + type + ". Silent option has been removed. " +
-      'Use the filter functionality in the vue-devtools'
-    );
-  }
-};
-
-Store.prototype.dispatch = function dispatch (_type, _payload) {
-    var this$1 = this;
-
-  // check object-style dispatch
-  var ref = unifyObjectStyle(_type, _payload);
-    var type = ref.type;
-    var payload = ref.payload;
-
-  var action = { type: type, payload: payload };
-  var entry = this._actions[type];
-  if (!entry) {
-    if ((true)) {
-      console.error(("[vuex] unknown action type: " + type));
-    }
-    return
-  }
-
-  try {
-    this._actionSubscribers
-      .slice() // shallow copy to prevent iterator invalidation if subscriber synchronously calls unsubscribe
-      .filter(function (sub) { return sub.before; })
-      .forEach(function (sub) { return sub.before(action, this$1.state); });
-  } catch (e) {
-    if ((true)) {
-      console.warn("[vuex] error in before action subscribers: ");
-      console.error(e);
-    }
-  }
-
-  var result = entry.length > 1
-    ? Promise.all(entry.map(function (handler) { return handler(payload); }))
-    : entry[0](payload);
-
-  return new Promise(function (resolve, reject) {
-    result.then(function (res) {
-      try {
-        this$1._actionSubscribers
-          .filter(function (sub) { return sub.after; })
-          .forEach(function (sub) { return sub.after(action, this$1.state); });
-      } catch (e) {
-        if ((true)) {
-          console.warn("[vuex] error in after action subscribers: ");
-          console.error(e);
-        }
-      }
-      resolve(res);
-    }, function (error) {
-      try {
-        this$1._actionSubscribers
-          .filter(function (sub) { return sub.error; })
-          .forEach(function (sub) { return sub.error(action, this$1.state, error); });
-      } catch (e) {
-        if ((true)) {
-          console.warn("[vuex] error in error action subscribers: ");
-          console.error(e);
-        }
-      }
-      reject(error);
-    });
-  })
-};
-
-Store.prototype.subscribe = function subscribe (fn, options) {
-  return genericSubscribe(fn, this._subscribers, options)
-};
-
-Store.prototype.subscribeAction = function subscribeAction (fn, options) {
-  var subs = typeof fn === 'function' ? { before: fn } : fn;
-  return genericSubscribe(subs, this._actionSubscribers, options)
-};
-
-Store.prototype.watch = function watch (getter, cb, options) {
-    var this$1 = this;
-
-  if ((true)) {
-    assert(typeof getter === 'function', "store.watch only accepts a function.");
-  }
-  return this._watcherVM.$watch(function () { return getter(this$1.state, this$1.getters); }, cb, options)
-};
-
-Store.prototype.replaceState = function replaceState (state) {
-    var this$1 = this;
-
-  this._withCommit(function () {
-    this$1._vm._data.$$state = state;
-  });
-};
-
-Store.prototype.registerModule = function registerModule (path, rawModule, options) {
-    if ( options === void 0 ) options = {};
-
-  if (typeof path === 'string') { path = [path]; }
-
-  if ((true)) {
-    assert(Array.isArray(path), "module path must be a string or an Array.");
-    assert(path.length > 0, 'cannot register the root module by using registerModule.');
-  }
-
-  this._modules.register(path, rawModule);
-  installModule(this, this.state, path, this._modules.get(path), options.preserveState);
-  // reset store to update getters...
-  resetStoreVM(this, this.state);
-};
-
-Store.prototype.unregisterModule = function unregisterModule (path) {
-    var this$1 = this;
-
-  if (typeof path === 'string') { path = [path]; }
-
-  if ((true)) {
-    assert(Array.isArray(path), "module path must be a string or an Array.");
-  }
-
-  this._modules.unregister(path);
-  this._withCommit(function () {
-    var parentState = getNestedState(this$1.state, path.slice(0, -1));
-    Vue.delete(parentState, path[path.length - 1]);
-  });
-  resetStore(this);
-};
-
-Store.prototype.hasModule = function hasModule (path) {
-  if (typeof path === 'string') { path = [path]; }
-
-  if ((true)) {
-    assert(Array.isArray(path), "module path must be a string or an Array.");
-  }
-
-  return this._modules.isRegistered(path)
-};
-
-Store.prototype.hotUpdate = function hotUpdate (newOptions) {
-  this._modules.update(newOptions);
-  resetStore(this, true);
-};
-
-Store.prototype._withCommit = function _withCommit (fn) {
-  var committing = this._committing;
-  this._committing = true;
-  fn();
-  this._committing = committing;
-};
-
-Object.defineProperties( Store.prototype, prototypeAccessors$1 );
-
-function genericSubscribe (fn, subs, options) {
-  if (subs.indexOf(fn) < 0) {
-    options && options.prepend
-      ? subs.unshift(fn)
-      : subs.push(fn);
-  }
-  return function () {
-    var i = subs.indexOf(fn);
-    if (i > -1) {
-      subs.splice(i, 1);
-    }
-  }
-}
-
-function resetStore (store, hot) {
-  store._actions = Object.create(null);
-  store._mutations = Object.create(null);
-  store._wrappedGetters = Object.create(null);
-  store._modulesNamespaceMap = Object.create(null);
-  var state = store.state;
-  // init all modules
-  installModule(store, state, [], store._modules.root, true);
-  // reset vm
-  resetStoreVM(store, state, hot);
-}
-
-function resetStoreVM (store, state, hot) {
-  var oldVm = store._vm;
-
-  // bind store public getters
-  store.getters = {};
-  // reset local getters cache
-  store._makeLocalGettersCache = Object.create(null);
-  var wrappedGetters = store._wrappedGetters;
-  var computed = {};
-  forEachValue(wrappedGetters, function (fn, key) {
-    // use computed to leverage its lazy-caching mechanism
-    // direct inline function use will lead to closure preserving oldVm.
-    // using partial to return function with only arguments preserved in closure environment.
-    computed[key] = partial(fn, store);
-    Object.defineProperty(store.getters, key, {
-      get: function () { return store._vm[key]; },
-      enumerable: true // for local getters
-    });
-  });
-
-  // use a Vue instance to store the state tree
-  // suppress warnings just in case the user has added
-  // some funky global mixins
-  var silent = Vue.config.silent;
-  Vue.config.silent = true;
-  store._vm = new Vue({
-    data: {
-      $$state: state
-    },
-    computed: computed
-  });
-  Vue.config.silent = silent;
-
-  // enable strict mode for new vm
-  if (store.strict) {
-    enableStrictMode(store);
-  }
-
-  if (oldVm) {
-    if (hot) {
-      // dispatch changes in all subscribed watchers
-      // to force getter re-evaluation for hot reloading.
-      store._withCommit(function () {
-        oldVm._data.$$state = null;
-      });
-    }
-    Vue.nextTick(function () { return oldVm.$destroy(); });
-  }
-}
-
-function installModule (store, rootState, path, module, hot) {
-  var isRoot = !path.length;
-  var namespace = store._modules.getNamespace(path);
-
-  // register in namespace map
-  if (module.namespaced) {
-    if (store._modulesNamespaceMap[namespace] && ("development" !== 'production')) {
-      console.error(("[vuex] duplicate namespace " + namespace + " for the namespaced module " + (path.join('/'))));
-    }
-    store._modulesNamespaceMap[namespace] = module;
-  }
-
-  // set state
-  if (!isRoot && !hot) {
-    var parentState = getNestedState(rootState, path.slice(0, -1));
-    var moduleName = path[path.length - 1];
-    store._withCommit(function () {
-      if ((true)) {
-        if (moduleName in parentState) {
-          console.warn(
-            ("[vuex] state field \"" + moduleName + "\" was overridden by a module with the same name at \"" + (path.join('.')) + "\"")
-          );
-        }
-      }
-      Vue.set(parentState, moduleName, module.state);
-    });
-  }
-
-  var local = module.context = makeLocalContext(store, namespace, path);
-
-  module.forEachMutation(function (mutation, key) {
-    var namespacedType = namespace + key;
-    registerMutation(store, namespacedType, mutation, local);
-  });
-
-  module.forEachAction(function (action, key) {
-    var type = action.root ? key : namespace + key;
-    var handler = action.handler || action;
-    registerAction(store, type, handler, local);
-  });
-
-  module.forEachGetter(function (getter, key) {
-    var namespacedType = namespace + key;
-    registerGetter(store, namespacedType, getter, local);
-  });
-
-  module.forEachChild(function (child, key) {
-    installModule(store, rootState, path.concat(key), child, hot);
-  });
-}
-
-/**
- * make localized dispatch, commit, getters and state
- * if there is no namespace, just use root ones
- */
-function makeLocalContext (store, namespace, path) {
-  var noNamespace = namespace === '';
-
-  var local = {
-    dispatch: noNamespace ? store.dispatch : function (_type, _payload, _options) {
-      var args = unifyObjectStyle(_type, _payload, _options);
-      var payload = args.payload;
-      var options = args.options;
-      var type = args.type;
-
-      if (!options || !options.root) {
-        type = namespace + type;
-        if (( true) && !store._actions[type]) {
-          console.error(("[vuex] unknown local action type: " + (args.type) + ", global type: " + type));
-          return
-        }
-      }
-
-      return store.dispatch(type, payload)
-    },
-
-    commit: noNamespace ? store.commit : function (_type, _payload, _options) {
-      var args = unifyObjectStyle(_type, _payload, _options);
-      var payload = args.payload;
-      var options = args.options;
-      var type = args.type;
-
-      if (!options || !options.root) {
-        type = namespace + type;
-        if (( true) && !store._mutations[type]) {
-          console.error(("[vuex] unknown local mutation type: " + (args.type) + ", global type: " + type));
-          return
-        }
-      }
-
-      store.commit(type, payload, options);
-    }
-  };
-
-  // getters and state object must be gotten lazily
-  // because they will be changed by vm update
-  Object.defineProperties(local, {
-    getters: {
-      get: noNamespace
-        ? function () { return store.getters; }
-        : function () { return makeLocalGetters(store, namespace); }
-    },
-    state: {
-      get: function () { return getNestedState(store.state, path); }
-    }
-  });
-
-  return local
-}
-
-function makeLocalGetters (store, namespace) {
-  if (!store._makeLocalGettersCache[namespace]) {
-    var gettersProxy = {};
-    var splitPos = namespace.length;
-    Object.keys(store.getters).forEach(function (type) {
-      // skip if the target getter is not match this namespace
-      if (type.slice(0, splitPos) !== namespace) { return }
-
-      // extract local getter type
-      var localType = type.slice(splitPos);
-
-      // Add a port to the getters proxy.
-      // Define as getter property because
-      // we do not want to evaluate the getters in this time.
-      Object.defineProperty(gettersProxy, localType, {
-        get: function () { return store.getters[type]; },
-        enumerable: true
-      });
-    });
-    store._makeLocalGettersCache[namespace] = gettersProxy;
-  }
-
-  return store._makeLocalGettersCache[namespace]
-}
-
-function registerMutation (store, type, handler, local) {
-  var entry = store._mutations[type] || (store._mutations[type] = []);
-  entry.push(function wrappedMutationHandler (payload) {
-    handler.call(store, local.state, payload);
-  });
-}
-
-function registerAction (store, type, handler, local) {
-  var entry = store._actions[type] || (store._actions[type] = []);
-  entry.push(function wrappedActionHandler (payload) {
-    var res = handler.call(store, {
-      dispatch: local.dispatch,
-      commit: local.commit,
-      getters: local.getters,
-      state: local.state,
-      rootGetters: store.getters,
-      rootState: store.state
-    }, payload);
-    if (!isPromise(res)) {
-      res = Promise.resolve(res);
-    }
-    if (store._devtoolHook) {
-      return res.catch(function (err) {
-        store._devtoolHook.emit('vuex:error', err);
-        throw err
-      })
-    } else {
-      return res
-    }
-  });
-}
-
-function registerGetter (store, type, rawGetter, local) {
-  if (store._wrappedGetters[type]) {
-    if ((true)) {
-      console.error(("[vuex] duplicate getter key: " + type));
-    }
-    return
-  }
-  store._wrappedGetters[type] = function wrappedGetter (store) {
-    return rawGetter(
-      local.state, // local state
-      local.getters, // local getters
-      store.state, // root state
-      store.getters // root getters
-    )
-  };
-}
-
-function enableStrictMode (store) {
-  store._vm.$watch(function () { return this._data.$$state }, function () {
-    if ((true)) {
-      assert(store._committing, "do not mutate vuex store state outside mutation handlers.");
-    }
-  }, { deep: true, sync: true });
-}
-
-function getNestedState (state, path) {
-  return path.reduce(function (state, key) { return state[key]; }, state)
-}
-
-function unifyObjectStyle (type, payload, options) {
-  if (isObject(type) && type.type) {
-    options = payload;
-    payload = type;
-    type = type.type;
-  }
-
-  if ((true)) {
-    assert(typeof type === 'string', ("expects string as the type, but found " + (typeof type) + "."));
-  }
-
-  return { type: type, payload: payload, options: options }
-}
-
-function install (_Vue) {
-  if (Vue && _Vue === Vue) {
-    if ((true)) {
-      console.error(
-        '[vuex] already installed. Vue.use(Vuex) should be called only once.'
-      );
-    }
-    return
-  }
-  Vue = _Vue;
-  applyMixin(Vue);
-}
-
-/**
- * Reduce the code which written in Vue.js for getting the state.
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} states # Object's item can be a function which accept state and getters for param, you can do something for state and getters in it.
- * @param {Object}
- */
-var mapState = normalizeNamespace(function (namespace, states) {
-  var res = {};
-  if (( true) && !isValidMap(states)) {
-    console.error('[vuex] mapState: mapper parameter must be either an Array or an Object');
-  }
-  normalizeMap(states).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    res[key] = function mappedState () {
-      var state = this.$store.state;
-      var getters = this.$store.getters;
-      if (namespace) {
-        var module = getModuleByNamespace(this.$store, 'mapState', namespace);
-        if (!module) {
-          return
-        }
-        state = module.context.state;
-        getters = module.context.getters;
-      }
-      return typeof val === 'function'
-        ? val.call(this, state, getters)
-        : state[val]
-    };
-    // mark vuex getter for devtools
-    res[key].vuex = true;
-  });
-  return res
-});
-
-/**
- * Reduce the code which written in Vue.js for committing the mutation
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} mutations # Object's item can be a function which accept `commit` function as the first param, it can accept anthor params. You can commit mutation and do any other things in this function. specially, You need to pass anthor params from the mapped function.
- * @return {Object}
- */
-var mapMutations = normalizeNamespace(function (namespace, mutations) {
-  var res = {};
-  if (( true) && !isValidMap(mutations)) {
-    console.error('[vuex] mapMutations: mapper parameter must be either an Array or an Object');
-  }
-  normalizeMap(mutations).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    res[key] = function mappedMutation () {
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
-      // Get the commit method from store
-      var commit = this.$store.commit;
-      if (namespace) {
-        var module = getModuleByNamespace(this.$store, 'mapMutations', namespace);
-        if (!module) {
-          return
-        }
-        commit = module.context.commit;
-      }
-      return typeof val === 'function'
-        ? val.apply(this, [commit].concat(args))
-        : commit.apply(this.$store, [val].concat(args))
-    };
-  });
-  return res
-});
-
-/**
- * Reduce the code which written in Vue.js for getting the getters
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} getters
- * @return {Object}
- */
-var mapGetters = normalizeNamespace(function (namespace, getters) {
-  var res = {};
-  if (( true) && !isValidMap(getters)) {
-    console.error('[vuex] mapGetters: mapper parameter must be either an Array or an Object');
-  }
-  normalizeMap(getters).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    // The namespace has been mutated by normalizeNamespace
-    val = namespace + val;
-    res[key] = function mappedGetter () {
-      if (namespace && !getModuleByNamespace(this.$store, 'mapGetters', namespace)) {
-        return
-      }
-      if (( true) && !(val in this.$store.getters)) {
-        console.error(("[vuex] unknown getter: " + val));
-        return
-      }
-      return this.$store.getters[val]
-    };
-    // mark vuex getter for devtools
-    res[key].vuex = true;
-  });
-  return res
-});
-
-/**
- * Reduce the code which written in Vue.js for dispatch the action
- * @param {String} [namespace] - Module's namespace
- * @param {Object|Array} actions # Object's item can be a function which accept `dispatch` function as the first param, it can accept anthor params. You can dispatch action and do any other things in this function. specially, You need to pass anthor params from the mapped function.
- * @return {Object}
- */
-var mapActions = normalizeNamespace(function (namespace, actions) {
-  var res = {};
-  if (( true) && !isValidMap(actions)) {
-    console.error('[vuex] mapActions: mapper parameter must be either an Array or an Object');
-  }
-  normalizeMap(actions).forEach(function (ref) {
-    var key = ref.key;
-    var val = ref.val;
-
-    res[key] = function mappedAction () {
-      var args = [], len = arguments.length;
-      while ( len-- ) args[ len ] = arguments[ len ];
-
-      // get dispatch function from store
-      var dispatch = this.$store.dispatch;
-      if (namespace) {
-        var module = getModuleByNamespace(this.$store, 'mapActions', namespace);
-        if (!module) {
-          return
-        }
-        dispatch = module.context.dispatch;
-      }
-      return typeof val === 'function'
-        ? val.apply(this, [dispatch].concat(args))
-        : dispatch.apply(this.$store, [val].concat(args))
-    };
-  });
-  return res
-});
-
-/**
- * Rebinding namespace param for mapXXX function in special scoped, and return them by simple object
- * @param {String} namespace
- * @return {Object}
- */
-var createNamespacedHelpers = function (namespace) { return ({
-  mapState: mapState.bind(null, namespace),
-  mapGetters: mapGetters.bind(null, namespace),
-  mapMutations: mapMutations.bind(null, namespace),
-  mapActions: mapActions.bind(null, namespace)
-}); };
-
-/**
- * Normalize the map
- * normalizeMap([1, 2, 3]) => [ { key: 1, val: 1 }, { key: 2, val: 2 }, { key: 3, val: 3 } ]
- * normalizeMap({a: 1, b: 2, c: 3}) => [ { key: 'a', val: 1 }, { key: 'b', val: 2 }, { key: 'c', val: 3 } ]
- * @param {Array|Object} map
- * @return {Object}
- */
-function normalizeMap (map) {
-  if (!isValidMap(map)) {
-    return []
-  }
-  return Array.isArray(map)
-    ? map.map(function (key) { return ({ key: key, val: key }); })
-    : Object.keys(map).map(function (key) { return ({ key: key, val: map[key] }); })
-}
-
-/**
- * Validate whether given map is valid or not
- * @param {*} map
- * @return {Boolean}
- */
-function isValidMap (map) {
-  return Array.isArray(map) || isObject(map)
-}
-
-/**
- * Return a function expect two param contains namespace and map. it will normalize the namespace and then the param's function will handle the new namespace and the map.
- * @param {Function} fn
- * @return {Function}
- */
-function normalizeNamespace (fn) {
-  return function (namespace, map) {
-    if (typeof namespace !== 'string') {
-      map = namespace;
-      namespace = '';
-    } else if (namespace.charAt(namespace.length - 1) !== '/') {
-      namespace += '/';
-    }
-    return fn(namespace, map)
-  }
-}
-
-/**
- * Search a special module from store by namespace. if module not exist, print error message.
- * @param {Object} store
- * @param {String} helper
- * @param {String} namespace
- * @return {Object}
- */
-function getModuleByNamespace (store, helper, namespace) {
-  var module = store._modulesNamespaceMap[namespace];
-  if (( true) && !module) {
-    console.error(("[vuex] module namespace not found in " + helper + "(): " + namespace));
-  }
-  return module
-}
-
-var index = {
-  Store: Store,
-  install: install,
-  version: '3.4.0',
-  mapState: mapState,
-  mapMutations: mapMutations,
-  mapGetters: mapGetters,
-  mapActions: mapActions,
-  createNamespacedHelpers: createNamespacedHelpers
-};
-
-/* harmony default export */ __webpack_exports__["default"] = (index);
-
-
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./../../webpack/buildin/global.js */ 3)))
-
-/***/ }),
-/* 14 */,
-/* 15 */,
-/* 16 */
-/*!**********************************************************************************************************!*\
-  !*** ./node_modules/@dcloudio/vue-cli-plugin-uni/packages/vue-loader/lib/runtime/componentNormalizer.js ***!
-  \**********************************************************************************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return normalizeComponent; });
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file (except for modules).
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-function normalizeComponent (
-  scriptExports,
-  render,
-  staticRenderFns,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier, /* server only */
-  shadowMode, /* vue-cli only */
-  components, // fixed by xxxxxx auto components
-  renderjs // fixed by xxxxxx renderjs
-) {
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // fixed by xxxxxx auto components
-  if (components) {
-    if (!options.components) {
-      options.components = {}
-    }
-    var hasOwn = Object.prototype.hasOwnProperty
-    for (var name in components) {
-      if (hasOwn.call(components, name) && !hasOwn.call(options.components, name)) {
-        options.components[name] = components[name]
-      }
-    }
-  }
-  // fixed by xxxxxx renderjs
-  if (renderjs) {
-    (renderjs.beforeCreate || (renderjs.beforeCreate = [])).unshift(function() {
-      this[renderjs.__module] = this
-    });
-    (options.mixins || (options.mixins = [])).push(renderjs)
-  }
-
-  // render functions
-  if (render) {
-    options.render = render
-    options.staticRenderFns = staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = 'data-v-' + scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = shadowMode
-      ? function () { injectStyles.call(this, this.$root.$options.shadowRoot) }
-      : injectStyles
-  }
-
-  if (hook) {
-    if (options.functional) {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      var originalRender = options.render
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return originalRender(h, context)
-      }
-    } else {
-      // inject component registration as beforeCreate hook
-      var existing = options.beforeCreate
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    }
-  }
-
-  return {
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
-/* 17 */
-/*!********************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/store/index.js ***!
-  \********************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _vue = _interopRequireDefault(__webpack_require__(/*! vue */ 2));
-var _vuex = _interopRequireDefault(__webpack_require__(/*! vuex */ 13));function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}
-_vue.default.use(_vuex.default);
-
-var store = new _vuex.default.Store({
-  state: {
-
-    hasLogin: false,
-    real: false,
-    infoRes: {},
-    userInfo: {} },
-
-
-
-  mutations: {
-
-    logIn: function logIn(state, provider) {
-      state.hasLogin = true;
-      state.userInfo = provider;
-      uni.setStorageSync('userInfo', state.userInfo);
-
-    },
-    IndexlogIn: function IndexlogIn(state) {
-      state.hasLogin = true;
-    },
-    logOut: function logOut(state) {
-      state.hasLogin = false;
-      uni.setStorageSync('userInfo', '');
-      uni.setStorageSync('token', '');
-    },
-    uPuserInfo: function uPuserInfo(state, provider) {
-      state.userInfo = provider;
-      uni.setStorageSync('userInfo', state.userInfo);
-    } } });var _default =
-
-
-store;exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-/* 18 */
-/*!****************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdServerUrls.js ***!
-  \****************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;
-var _xdConfig = _interopRequireDefault(__webpack_require__(/*! ./xdConfig.js */ 12));var _serverUrls;function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}
-var config = _xdConfig.default.appConfig; // 配置
-
-var serverBaseUrl = config.serverIp; //动态根据小程序类型自动获取接口地址
-var serverUrls = (_serverUrls = { //根据接口具体配置
-  // xd_register: serverBaseUrl + '/xxx', // 注册
-  xd_login: serverBaseUrl + '/xxx', // 登录
-  xd_logout: serverBaseUrl + '/xxx',
-  // xd_change_pass: serverBaseUrl + '/xxxxx' ,// 修改密码
-
-  xd_bannerList: serverBaseUrl + '/banner/bannerList', // banner广告
-  xd_label: serverBaseUrl + '/label/getLabels', //标签
-  xd_getLabelsById: serverBaseUrl + '/label/getLabelsById', //通过标签id获取标签信息
-  xd_tacitlyPushPng: serverBaseUrl + '/publishTarget/tacitlyPushPng', //标签
-
-  xd_saveCardReplayComment: serverBaseUrl + '/cardReplayComment/saveCardReplayComment', //保存打卡回复评论
-  xd_saveCardComment: serverBaseUrl + '/cardComment/saveCardComment', //保存打卡评论
-  xd_showCardComment: serverBaseUrl + '/cardComment/showCardCommentAndReplayCommtent', //评论和回复的展现
-  xd_showUserCardCommentAndReplayCommtent: serverBaseUrl + '/cardComment/showUserCardCommentAndReplayCommtent', //通过用户id查询所有打卡详情、评论及评论回复
-
-  // xd_saveGiveLikeByPush: serverBaseUrl + '/giveLike/saveGiveLikeByPush' ,//给行动项或打卡记录点赞
-  xd_iSAttention: serverBaseUrl + '/attention/iSAttention', //判断该用户是否已经关注了
-  xd_getAttentionList: serverBaseUrl + '/attention/getAttentionList', //获取关注列表
-  xd_getFansList: serverBaseUrl + '/attention/getFansList', //获取粉丝列表
-  xd_saveAttention: serverBaseUrl + '/attention/saveAttention', //保存关注
-  xd_getLookerCountByUserId: serverBaseUrl + '/attention/getLookerCountByUserId', //根据用户id获取关注数量和粉丝数量
-
-  xd_lookerPushListByUserId: serverBaseUrl + '/publishTarget/lookerPushListByUserId', //当前用户围观的行动项计划
-  xd_pushByCreateTimeList: serverBaseUrl + '/publishTarget/pushByCreateTimeList', //根据创建时间获取目标列表
-  xd_pushByHighGradeList: serverBaseUrl + '/publishTarget/pushByHighGradeList', //根据点赞数获取目标列表
-  xd_pushByUserIdList: serverBaseUrl + '/publishTarget/pushByUserIdList', //根据用户id获取目标列表
-  xd_savePush: serverBaseUrl + '/publishTarget/savePush', //保存发起的目标
-  xd_pushByLabel: serverBaseUrl + '/publishTarget/pushByLabel', //根据标签获取行动项列表
-
-  xd_uploadFile: serverBaseUrl + '/uploadFile/saveFiles', //上传图片
-
-  xd_getLookerByPushId: serverBaseUrl + '/looker/getLookerByPushId', //根据行动项id查看围观人
-  xd_saveLooker: serverBaseUrl + '/looker/saveLooker', //保存围观信息
-  xd_getLookerByUserId: serverBaseUrl + '/looker/getLookerByUserId', //根据用户id获取围观数据
-  xd_getLookerCountInfoByPushIdAndUserId: serverBaseUrl + '/looker/getLookerCountInfoByPushIdAndUserId', //根据行动项id和围观用户id查看点击数详情
-
-  xd_wechatCommercialTenant: serverBaseUrl + '/wechatCommercialTenant/pay', //微信商户给用户付款pay
-  xd_decodeUserInfo: serverBaseUrl + '/wechat/decodeUserInfo', //获取微信的openid和unionid
-  xd_pay: serverBaseUrl + '/wechat/pay', //pay
-  xd_resultCallBack: serverBaseUrl + '/wechat/resultCallBack', //decodeUserInfo
-
-  xd_generalPay: serverBaseUrl + '/generalWechat/pay', //通用微信支付 pay
-
-
-  xd_getImgIsNormal: serverBaseUrl + '/login/getImgIsNormal', //图片是否正常
-  xd_modifyUserInfo: serverBaseUrl + '/login/modifyUserInfo', //修改用户的基础信息
-  xd_weiXinLogin: serverBaseUrl + '/login/weiXinLogin', //微信登陆接口
-  xd_getUserInfoByUserId: serverBaseUrl + '/login/getUserInfoByUserId', //根据用户id获取用户信息
-  // GET /login/getAccessToken 获取token
-  // GET /login/getContentIsNormal 内容是否正常
-
-  xd_saveReplayComment: serverBaseUrl + '/replayPushComment/saveReplayComment', //行动项回复评论
-  xd_saveComment: serverBaseUrl + '/pushComment/saveComment', //保存行动项评论
-  xd_showCommentAndReplayCommtent: serverBaseUrl + '/pushComment/showCommentAndReplayCommtent', //评论和回复的展现
-
-  xd_savePushCard: serverBaseUrl + '/publishCard/savePushCard', //保存打卡记录
-  xd_pushCardListByPushId: serverBaseUrl + '/publishCard/pushCardListByPushId', //根据行动项id获取打卡列表
-
-  xd_pushDataByPushId: serverBaseUrl + '/publishTarget/pushDataByPushId' }, _defineProperty(_serverUrls, "xd_getUserInfoByUserId",
-serverBaseUrl + '/login/getUserInfoByUserId'), _defineProperty(_serverUrls, "xd_updatePushDataByPushId",
-serverBaseUrl + '/publishTarget/updatePushDataByPushId'), _defineProperty(_serverUrls, "xd_getContentIsNormal",
-
-serverBaseUrl + '/login/getContentIsNormal'), _defineProperty(_serverUrls, "xd_getImgIsNormal",
-serverBaseUrl + '/login/getImgIsNormal'), _defineProperty(_serverUrls, "xd_searchPushData",
-serverBaseUrl + '/publishTarget/searchPushData'), _defineProperty(_serverUrls, "xd_onOff",
-
-serverBaseUrl + '/config/onOff'), _defineProperty(_serverUrls, "xd_delPushDataByPushId",
-serverBaseUrl + '/publishTarget/delPushDataByPushId'), _defineProperty(_serverUrls, "xd_saveShareInfo",
-serverBaseUrl + '/share/saveShareInfo'), _defineProperty(_serverUrls, "xd_getLookerByPushId",
-serverBaseUrl + '/looker/getLookerByPushId'), _defineProperty(_serverUrls, "xd_savefeedbackInfo",
-
-serverBaseUrl + '/feedback/savefeedbackInfo'), _defineProperty(_serverUrls, "xd_balanceOrderQuery",
-
-serverBaseUrl + '/balance/balanceOrderQuery'), _defineProperty(_serverUrls, "xd_balanceWithdrawal",
-serverBaseUrl + '/balance/balanceWithdrawal'), _defineProperty(_serverUrls, "xd_topUpBalance",
-serverBaseUrl + '/balance/topUpBalance'), _defineProperty(_serverUrls, "xd_inquireBalance",
-serverBaseUrl + '/balance/inquireBalance'), _defineProperty(_serverUrls, "xd_selectBurieStatistics",
-serverBaseUrl + '/burie/selectBurieStatistics'), _defineProperty(_serverUrls, "xd_updateBurieStatistics",
-serverBaseUrl + '/burie/updateBurieStatistics'), _defineProperty(_serverUrls, "xd_saveSponsor",
-
-
-
-serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_saveSponsor",
-
-
-serverBaseUrl + '/sponsor/save'), _defineProperty(_serverUrls, "xd_getActSponsor",
-serverBaseUrl + '/sponsor/getList'), _defineProperty(_serverUrls, "xd_delSponsorCount",
-serverBaseUrl + '/sponsor/delSponsorCount'), _defineProperty(_serverUrls, "xd_getInviteList",
-
-
-serverBaseUrl + '/invite/getInviteList'), _defineProperty(_serverUrls, "xd_saveRedisByFree",
-serverBaseUrl + '/uploadFile/saveRedisByFree'), _defineProperty(_serverUrls, "xd_getVal",
-
-
-serverBaseUrl + '/sys/getVal'), _defineProperty(_serverUrls, "xd_saveGratitude",
-serverBaseUrl + '/gratitude/saveGratitude'), _defineProperty(_serverUrls, "xd_saveRoom",
-
-serverBaseUrl + '/room/saveRoom'), _defineProperty(_serverUrls, "xd_selectList",
-serverBaseUrl + '/room/selectList'), _defineProperty(_serverUrls, "xd_selectMsgList",
-serverBaseUrl + '/room/selectMsgList'), _defineProperty(_serverUrls, "xd_sendRoomMsg",
-serverBaseUrl + '/room/sendRoomMsg'), _defineProperty(_serverUrls, "xd_myRoomByType",
-serverBaseUrl + '/room/myRoomByType'), _defineProperty(_serverUrls, "xd_saveRoomJoin",
-serverBaseUrl + '/room/saveRoomJoin'), _defineProperty(_serverUrls, "xd_currentStatusByRoom",
-serverBaseUrl + '/room/currentStatusByRoom'), _defineProperty(_serverUrls, "xd_quitByUserId",
-serverBaseUrl + '/room/quitByUserId'), _serverUrls);var _default =
-
-{
-  serverUrls: serverUrls,
-  serverBaseUrl: serverBaseUrl };exports.default = _default;
-
-/***/ }),
-/* 19 */
-/*!**************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdUniUtils.js ***!
-  \**************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; // 保存数据
-function xd_setStorage(keyParm, dataParm) {
-  uni.setStorage({
-    key: keyParm,
-    data: dataParm });
-
-}
-// 保存数据，同步
-function xd_setStorageSync(keyParm, dataParm) {
-  try {
-    uni.setStorageSync(keyParm, dataParm);
-  } catch (e) {
-    console.log('setStorageSync error');
-  }
-}
-// 获取数据，同步
-function xd_getStorageSync(keyParm) {
-  try {
-    var value = uni.getStorageSync(keyParm);
-    return value;
-  } catch (e) {
-    console.log('getStorageSync error');
-  }
-}
-/*** 设置token */
-function xd_setAccessToken(token) {
-  xd_setStorageSync('access_token', token);
-}
-/*** 获取token */
-function xd_getAccessToken() {
-  return xd_getStorageSync('access_token');
-}
-/** *************** alert 相关 *********************** */
-// 弹出框
-function xd_showToast(title, time, icon, callbackFun) {
-  uni.showToast({
-    title: title,
-    duration: time,
-    icon: icon ? icon : "none",
-    success: function success(res) {
-      if (typeof callbackFun != "undefined" && callbackFun != null) {
-        callbackFun(); // 回调函数
-      }
-    } });
-
-}
-// // 弹出框:操作成功
-// function xd_showToast_success(title, callbackFun) {
-// 	uni.showToast({
-// 		icon: "success",
-// 		success: function() {
-// 			if (typeof(callbackFun) != "undefined" && callbackFun != null) {
-// 				callbackFun(); // 回调函数
-// 			}
-// 		}
-// 	});
-// }
-// // 弹出框:操作成功并跳转
-// function xd_showToast_success_redirectTo(pageUrl) {
-// 	xd_showToast_success(null, function() {
-// 		uni.redirectTo({
-// 			url: pageUrl // 跳转到页面
-// 		});
-// 	});
-// }
-// // 弹出框:操作成功并返回上一级
-// function xd_showToast_success_navigateBack() {
-// 	xd_showToast_success(null, function() {
-// 		uni.navigateBack({
-// 			delta: 1
-// 		});
-// 	});
-// }
-// // 弹窗，操作完成后返回上一级
-// function xd_showToast_navigateBack(toastTitle) {
-// 	uni.showToast({
-// 		title: toastTitle,
-// 		success: function() {
-// 			uni.navigateBack({
-// 				delta: 1
-// 			})
-// 		}
-// 	});
-// }
-// // 确认操作
-// function xd_showModal_confirm(title, message, showCancelBut, okCallbackFun, cancelCallbackFun) {
-// 	uni.showModal({
-// 		title: title || '操作确认',
-// 		content: message || '您确定要执行该操作吗？！',
-// 		showCancel: !showCancelBut ? showCancelBut : true,
-// 		success: function(res) {
-// 			if (res.confirm) {
-// 				if (typeof(okCallbackFun) != "undefined" && okCallbackFun != null) {
-// 					okCallbackFun();
-// 				}
-// 			} else if (res.cancel) {
-// 				if (typeof(cancelCallbackFun) != "undefined" && cancelCallbackFun != null) {
-// 					cancelCallbackFun();
-// 				}
-// 			}
-// 		}
-// 	});
-// }
-
-/** ***************request 相关*********************** */
-// 请求 url：请求路径，params请求参数，method：方法,请求header，
-function xd_request(url, method, params, headers) {
-  return new Promise(function (resolve, reject) {
-    uni.request({
-      url: url,
-      method: method || 'POST', // 默认get请求
-      data: params || {},
-      header: headers || {},
-      dataType: "json",
-
-      success: function success(res) {
-        var d = res;
-        if (d.data.resultCode == 10002) {
-          // 清除登录相关内容
-          try {
-            uni.removeStorage('userInfo');
-            uni.removeStorage('id');
-            uni.removeStorage('token');
-          } catch (e) {
-          }
-          // 切换到登录页面
-          uni.reLaunch({
-            url: '/pages/login/login' });
-
-
-        } else if (d.data.resultCode == 0 || d.data.status == 1) {
-          resolve(d.data);
-        } else {
-
-          resolve(d.data);
-        }
-      },
-      fail: function fail(err) {
-        uni.showToast({
-          title: err.errMsg });
-
-        console.log(err);
-        reject(err);
-      } });
-
-  }).catch(function (e) {
-
-  });
-}
-// 简单request get
-function xd_request_get(url, params, withToken) {
-  var headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-  if (withToken !== false) {
-    var accessToken = xd_getAccessToken(); // token
-    headers = { // application/json
-      'access_token': accessToken // accessToken
-    };
-  }
-  return xd_request(url, 'GET', params, headers);
-}
-// post请求 url：请求路径，请求header，params请求参数
-function xd_request_post(url, params, withToken) {
-  var headers = {
-    'content-type': 'application/x-www-form-urlencoded' };
-
-  // if (withToken !== false) {
-  var token = uni.getStorageSync('token'); // token
-  if (token == undefined) {
-    uni.reLaunch({
-      url: '../login/login' });
-
-  }
-  headers.token = token; // accessToken
-  // }
-  return xd_request(url, 'POST', params, headers);
-}
-// 上传
-function xd_request_upload(url, params, withToken) {
-  var headers = {
-    'content-type': "multipart/form-data" };
-
-  // if (withToken !== false) {
-
-  var token = uni.getStorageSync('token'); // token
-  if (token == undefined) {
-    uni.reLaunch({
-      url: '../login/login' });
-
-  }
-  headers.session_token = token; // accessToken
-  // }
-  return xd_request(url, 'POST', params, headers);
-}
-//图片检查
-function xd_request_img(data) {
-  return new Promise(function (resolve, reject) {
-    uni.uploadFile({
-      url: 'https://xingdongdaka.zhidashixun.com/login/getImgIsNormal',
-      filePath: data,
-      name: 'file',
-      header: {
-        "Content-Type": "multipart/form-data" //记得设置
-      },
-      formData: {
-
-        'token': uni.getStorageSync('token') },
-
-      success: function success(uploadFileRes) {
-        var jsonObj = JSON.parse(uploadFileRes.data);
-        var jsonObj1 = JSON.parse(jsonObj.obj);
-        if (jsonObj1.errcode == 0)
-        {
-          resolve(true);
-        } else {
-          uni.showToast({
-            title: '图片不符规定',
-            duration: 2000 });
-
-          resolve(false);
-        }
-        ;
-
-      } });
-
-  });
-}
-// 类容检查
-function xd_request_text(params) {
-  var headers = { 'Content-Type': 'application/x-www-form-urlencoded' };
-  var url = 'https://xingdongdaka.zhidashixun.com/login/getContentIsNormal';
-  headers.token = uni.getStorageSync('token');
-  return xd_request(url, 'GET', params, headers);
-}
-// 简单操作
-function xd_request_simpleOperate(url, message) {
-  var okCallbackFun = function okCallbackFun() {
-    xd_request_post(url, null, true);
-  };
-  xd_showModal_confirm(null, message, true, okCallbackFun);
-}
-// 删除
-function xd_request_delete(url) {
-  xd_request_simpleOperate(url, "确定要删除该条数据吗？");
-}
-// 返回上一级。delta：返回的页面数，如果 delta 大于现有页面数，则返回到首页
-function xd_navigateBack(delta) {
-  uni.navigateBack({
-    delta: delta });
-
-}
-//时间处理
-function xd_timestampToTime(timestamp, times, times1, times2) {
-  var date = new Date(timestamp); //时间戳为10位需*1000，时间戳为13位的话不需乘1000
-  var Y = date.getFullYear() + '-';
-  var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-  var D = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-  if (times) {
-    var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
-    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
-    var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-    return M + D + ' ' + h + m + s;
-  }
-  if (times1) {
-
-    var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
-    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
-    var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
-    return Y + M + D + ' ' + h + m + s;
-  }
-  if (times2) {
-
-    var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
-    var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
-    return Y + M + D + ' ' + h + m;
-  }
-  return Y + M + D;
-}
-//获取今天只后日期
-
-function xd_daysAddSub(date, num) {
-  var d = new Date(date);
-  var newD = new Date(d.setDate(d.getDate() + num)); //设置天数 +1 天
-  var Y = newD.getFullYear() + '-';
-  var M = (newD.getMonth() + 1 < 10 ? '0' + (newD.getMonth() + 1) : newD.getMonth() + 1) + '-';
-  var D = newD.getDate() + ' ';
-  var h = newD.getHours() + ':';
-  var m = newD.getMinutes();
-
-  return Y + M + D + h + m;
-}
-
-//数据校验
-//电话
-function xd_isValidPhone(str) {
-  var myreg = /^[1][3,4,5,7,8][0-9]{9}$/;
-  if (!myreg.test(str)) {
-    return false;
-  } else {
-    return true;
-  }
-}
-//大图浏览
-function xd_showImg(list, num) {
-  var ig = [];
-  if (Array.isArray(list)) {
-    ig = list;
-  } else {
-    ig = list.split(",");
-  }
-
-  uni.previewImage({
-    current: num ? num : 0,
-    urls: ig });
-
-}
-//随机图片
-function xd_randomImg() {
-  var ig = ["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733487746.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733529495.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733539676.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733559484.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733565500.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733578216.png",
-  "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733591005.png"];
-
-  var num = Math.floor(Math.random() * 7 + 1);
-  return ig[num];
-}
-//分享
-function xd_onShare(title, path, imageUrl) {
-  //设置一个默认分享背景图片
-  var defaultImageUrl = 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
-  var defaultTitle = "行动打卡目标达成工具";
-  var defaultPath = "/pages/index/index";
-
-  return {
-    title: title ? title : defaultTitle,
-    path: path ? path : defaultPath,
-    imageUrl: imageUrl ? imageUrl : defaultImageUrl,
-    success: function success(res) {
-      console.log("转发成功！");
-    },
-    fail: function fail(res) {
-      console.log("转发失败！");
-    } };
-
-}
-/**
-   * 
-   *Tab红点提示
-   */
-var updateNumber = function updateNumber(gnumber) {
-
-  if (gnumber < 1) {
-    uni.removeTabBarBadge({
-      index: 2 });
-
-  } else if (gnumber > 999) {
-    uni.setTabBarBadge({
-      index: 2,
-      text: "999+" });
-
-  } else {
-    uni.setTabBarBadge({
-      index: 2,
-      text: gnumber + "" });
-
-  }
-  // uni.setStorage({
-  // 	key: "gnumber",
-  // 	data: gnumber
-  // })
-};
-//登录检测
-function xd_login(e, nav) {
-  if (!e) {
-
-    if (nav) {
-      uni.reLaunch({
-        url: '/pages/login/login' });
-
-
-    } else {
-      uni.navigateTo({
-        url: '/pages/login/login' });
-
-      return false;
-    }
-    return false;
-  }
-}
-//广告组件
-function videoAdUtil() {
-  var videoAd = null;
-
-  if (wx.createRewardedVideoAd) {
-    uni.showLoading({
-      title: "加载中..." });
-
-    videoAd = wx.createRewardedVideoAd({
-      adUnitId: 'adunit-d579021705423692' });
-
-
-    videoAd.onError(function (err) {
-      videoAd.offClose();
-      uni.hideLoading();
-
-    });
-    return videoAd;
-  };
-}
-function videoshowAd(videoAd) {
-  if (videoAd) {
-    videoAd.load().
-    then(function () {
-      videoAd.show();
-    }).
-    catch(function (err) {
-      // 视频加载失败重试,酌情添加
-      videoAd.load().
-      then(function () {
-        videoAd.show();
-      }).
-      catch(function (err) {
-        videoAd.offClose();
-        wx.showToast({
-          title: '视频加载失败！',
-          icon: 'none',
-          success: function success() {
-            uni.navigateBack({
-              delta: 1 });
-
-          } });
-
-      });
-    });
-  }
-};
-
-/**
-    * 检测是否为空
-    * @param rst
-    * @returns {boolean}
-    * @constructor
-    */
-function IsNullOrEmpty(rst) {
-  if (rst != null && rst != "" && rst != undefined && Rst != "null") {
-    var Rst = JSON.stringify(rst);
-    if (Rst != "[]" && Rst != "null" && Rst != "{}" && Rst != "undefined") {
-      return false;
-    } else {
-      return true;
-    }
-  } else {
-    return true;
-  }
-}
-/**
-   * 显示弹框
-   */
-function showToast(isSuccess, content, methodes) {
-  var msg = methodes + content;
-  if (!IsNullOrEmpty(msg)) {
-    uni.showToast({
-      title: msg,
-      icon: isSuccess ? "/static/images/suc.png" : "none" });
-
-  }
-}var _default =
-
-{
-  showToast: showToast,
-  IsNullOrEmpty: IsNullOrEmpty,
-  updateNumber: updateNumber,
-  xd_setStorage: xd_setStorage,
-  xd_setStorageSync: xd_setStorageSync,
-  xd_getStorageSync: xd_getStorageSync,
-  xd_setAccessToken: xd_setAccessToken,
-  xd_getAccessToken: xd_getAccessToken,
-  xd_showToast: xd_showToast,
-  // xd_showToast_success,
-  // xd_showToast_success_redirectTo,
-  // xd_showToast_success_navigateBack,
-  // xd_showToast_navigateBack,
-  // xd_showModal_confirm,
-  xd_request: xd_request,
-  xd_request_get: xd_request_get,
-  xd_request_post: xd_request_post,
-  xd_request_upload: xd_request_upload,
-  xd_request_simpleOperate: xd_request_simpleOperate,
-  xd_request_delete: xd_request_delete,
-  xd_navigateBack: xd_navigateBack,
-  xd_timestampToTime: xd_timestampToTime,
-  xd_daysAddSub: xd_daysAddSub,
-  xd_request_img: xd_request_img,
-  xd_request_text: xd_request_text,
-  xd_showImg: xd_showImg,
-  xd_randomImg: xd_randomImg,
-  xd_onShare: xd_onShare,
-  xd_login: xd_login,
-  videoAdUtil: videoAdUtil,
-  videoshowAd: videoshowAd };exports.default = _default;
-/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
-
-/***/ }),
-/* 20 */
-/*!************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdCommon.js ***!
-  \************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0; // 当前项目用到的规则说明
-
-//围观提示说明
-var gzsm_wgglts = "感谢你的围观鼓励帮助！如果TA未达成，你将瓜分保证金，为TA打Call越多、【评论量】越多、获得TA的【认可度】越高，分得越多。如果TA已达成，你的鼓励帮助有效，TA对你的认可度高，TA也愿意给你感谢金";
-
-//微信付款页规则说明
-var gzsm_wxfk = "说明：\r\n达成则原额退回。否则将全额扣除，分配给有效的围观者、分享等相关方，最终解释权属于平台。";
-
-//为完成行动打卡提示语
-var gzsm_clickCard = "本行动项已结束，是否需要新建继续本行动项？";var _default =
-{
-  gzsm_wgglts: gzsm_wgglts,
-  gzsm_wxfk: gzsm_wxfk,
-  gzsm_clickCard: gzsm_clickCard };exports.default = _default;
-
-/***/ }),
-/* 21 */,
-/* 22 */,
-/* 23 */,
-/* 24 */,
-/* 25 */,
-/* 26 */,
-/* 27 */,
-/* 28 */,
-/* 29 */,
-/* 30 */,
-/* 31 */,
-/* 32 */,
-/* 33 */
-/*!*********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/left.png ***!
-  \*********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABdklEQVRoQ9XYPUrEQBTA8TdVMK2VzWLrBTxDupkU5gCeQC+iR7CPkK8qd9hLWAk2y4IgjM3IFEJYFPZN3sck9SPz/yUQeDGw8ctsvB+yAPR9f13X9VvKw1QHjON4BwAtAOyttbdYhCpgER+7jwCws9Z+YhBqgJP42NxYa18x8XFWBUAVrwKgjBcHUMeLAjjixQBc8SIAznh2AHc8K0Aing0gFc8CkIwnB0jHkwI04skAWvEkAM341QDt+FWAHOKTAbnEJwHmeb7y3r8vNqekTQq7ef03j97I2ra9KIri6/eGIYR759wLVRD2PmhAPGAYhkdjzFMOiCRATohkQC6IVYAcEKsB2ggSgCaCDBAR0zQ9hBCeJb9OpAANBDlAGsECkESwAaQQrAAJBDuAGyEC4ESIAbgQogAOhDiAGqECoESoAf5CeO+Lpmm+MWulKmCJCCEcnHOXmPikvxLYA86Z77rupizLj6qqDufML2fU3wA2+HR+84AfKQ5IQBdVHA4AAAAASUVORK5CYII="
-
-/***/ }),
-/* 34 */
-/*!**********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/right.png ***!
-  \**********************************************************************************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAAELUlEQVRoQ9WZSYicRRSA3+txpgfSFxdQcBmGdNdiH4wEIkJA9OJyiEzPgBoDJqCJgmZQiFFwieAeFUlE1LghGDUb6MElp3gzMgdnwtB/1d+MJxUGYl9EAmPXkzdUN3Xsv7v+v5N36Ut1ve+rV++vf0HIGMaYexBxHxEdlFJ+n/Hv0Ydj1hmTJDmPiFcAgCOiGaXUd1nniDk+s4C1doGINjMEIv6LiDO1Wu10TKgsc2UWMMbcBAAnAWAjJyKiNldCa/1zlsSxxmYW4MTW2luIiCWu9SB/cSWEEGdjgfU7z0ACPHmaprc551jiSp/sdwCYkVIu9ps8xriBBTh5s9m8ExFPIuIGD5N4Cf4tJIYSYMIkSe5lCQAY88S/EVFDKcUVyT2GFmBCY8x9APB1QPsLEc0qpf7M2yCKgJd4CAA+7wIj4plOpzOntT6fp0Q0Ad8Te0ql0gddYCL6iSXq9fo/eUlEFfA9MY+I7wbA3woh5hDxvzwkogt4if2I+HoA/I2U8v5LRsD3xIsAcCCA/kJKyX0SNXKpQJfQGPMqADwbEH8kpdwT0yBXAV+JdwDgyQD6sJRybyyJ3AUY1Fr7PhE9Flyd3lJK7YshUYiAl/iUiHYFEq8opZ4bVqIwAS9xlIgeCA6754UQLw8jUagAEV1mrT3GN3yBxNNCiIODShQqwJCrq6uVdrvNEncHEvNCiEODSBQu4K9MVwEAS9weSDwqhPgwq8RIBBgyTdPriOgYEd3ahXbO7dJa924I+5EZmQDDtVqtqnOOJW4OJLZrrb/qB57HjFTAb6cXAOClQOBBrfXRS0LAGPMMALwWnA0PK6U+6Rd+pBUwxjwFAG8HsE9IKd/LAj8yAWPM4wBwOMZZUHgPWGt3E1F4uTwgpez1wEVdAWvtTiL6LFj5N4QQ3AcDR2EVsNZuJ6Ivg4Y9pJSaH5jc/7EQgTRN55xzxwPYI1LK3cPCF9LEaZpu8/ATnJCroJTaEQM+d4EkSe4CgOOIWPHAp6SUs7HgcxVIkuQOD88fQzh+mJiYaExPT1+46AWMMVuJiFf+mvVVQjxTLpcbU1NT7ZjwuVTAGLPFw9/g4c/ye1Ip5R+x4aMLWGs3MTwAVH3Dnut0Oo16vd7KAz6qgLVWE9EJALjRw7accw2t9bm84KMJpGm60TnH8Js8LG+XhpTy1zzhowi0Wq3rO50Ow2/xsH+XSqVGrVYr5KPfUCfxysrK1Wtrawy/1cNfGBsbm6lWqz/mvfLd+QcWWFpaurxcLjM8X+/Xwzk3q7U+VRT8wFtocXFxw+TkJMPzSbseRLRDKdW7WStKInMFFhYWxiuVyglE3BZAPiKl/Lgo6DBPZoEkSfiEnevtQcS9Qoje01XREpkEms3mzlKpFD6Q7BdCvFk09MAVWF5eroyPj/ML2s3OuSNa6/ALzEg8/gewF5ZA7hIE8AAAAABJRU5ErkJggg=="
-
-/***/ }),
-/* 35 */,
-/* 36 */,
-/* 37 */,
-/* 38 */,
-/* 39 */,
-/* 40 */,
-/* 41 */,
-/* 42 */,
-/* 43 */,
-/* 44 */,
-/* 45 */
+/***/ 53:
 /*!**********************************************************!*\
   !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
   \**********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! regenerator-runtime */ 46);
+module.exports = __webpack_require__(/*! regenerator-runtime */ 54);
 
 /***/ }),
-/* 46 */
+
+/***/ 54:
 /*!************************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime-module.js ***!
   \************************************************************/
@@ -10978,7 +12071,7 @@ var oldRuntime = hadRuntime && g.regeneratorRuntime;
 // Force reevalutation of runtime.js.
 g.regeneratorRuntime = undefined;
 
-module.exports = __webpack_require__(/*! ./runtime */ 47);
+module.exports = __webpack_require__(/*! ./runtime */ 55);
 
 if (hadRuntime) {
   // Restore the original runtime.
@@ -10994,7 +12087,8 @@ if (hadRuntime) {
 
 
 /***/ }),
-/* 47 */
+
+/***/ 55:
 /*!*****************************************************!*\
   !*** ./node_modules/regenerator-runtime/runtime.js ***!
   \*****************************************************/
@@ -11724,6 +12818,42 @@ if (hadRuntime) {
 );
 
 
+/***/ }),
+
+/***/ 6:
+/*!******************************************************!*\
+  !*** ./node_modules/@dcloudio/uni-stat/package.json ***!
+  \******************************************************/
+/*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
+/***/ (function(module) {
+
+module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-29320201014001\",\"_inBundle\":false,\"_integrity\":\"sha512-XQEghsD2SDyxZqRkQ5RXl6pqnOHGlCtNCLysmOcWV437twGEvvds3OgINdyV9DEEI9G3Vt9ESrZ+biDZzA0psA==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-29320201014001.tgz\",\"_shasum\":\"08b0fb1bb25f3a29f6889d192f182444d9742ac3\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"969deb11c7fed98826823e1d8142bb1e6318fd98\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-29320201014001\"}");
+
+/***/ }),
+
+/***/ 7:
+/*!********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"stat"} ***!
+  \********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "appid": "__UNI__AE00780" };exports.default = _default;
+
+/***/ }),
+
+/***/ 8:
+/*!*********************************************************************************************!*\
+  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"style"} ***!
+  \*********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "个人主页" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/selfCenter/addressList": { "navigationBarTitleText": "我的地址", "enablePullDownRefresh": false }, "pages/selfCenter/cityList": { "navigationBarTitleText": "我的城市", "enablePullDownRefresh": false }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "" }, "pages/pageA/ranking/rangkinDet": { "navigationBarTitleText": "挑战赛详情" }, "pages/pageA/ranking/rankinAdd": { "navigationBarTitleText": "加入挑战" }, "pages/pageA/ranking/rankingUp": { "navigationBarTitleText": "新建挑战" }, "pages/pageA/ranking/rankinglist": { "navigationBarTitleText": "我的挑战赛" }, "pages/pageA/group/userEditInfo": { "navigationBarTitleText": "" }, "pages/pageA/group/usersVote": { "navigationBarTitleText": "投票" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+
 /***/ })
-]]);
+
+}]);
 //# sourceMappingURL=../../.sourcemap/mp-weixin/common/vendor.js.map

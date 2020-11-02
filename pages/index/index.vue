@@ -42,19 +42,19 @@
 					<wyb-noticeBar type="vert" :text="listnotice" v-on:showMore="showMore" font-weight="bold" height="80" />
 				</view>
 				<view class="swiper-banner " v-if="active == 1 || active ==3">
-					<!-- <swiper class="swiper" autoplay="true" circular="true" v-if="adOff" interval="20000" :style="{'height':adHeight+'px'}"> -->
-						<!-- <swiper-item v-for="(item,index) in adid" :key="item"> -->
+					<swiper class="swiper" autoplay="true" circular="true" v-if="adOff" interval="20000" :style="{'height':adHeight+'px'}">
+						<swiper-item v-for="(item,index) in adid" :key="item">
 							<!-- #ifdef MP-WEIXIN -->
-							<!-- <ad-custom v-if="index<3" id="ads" :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror"></ad-custom> -->
-							<!-- <image id="ads" v-else class="swiper-item" :src="item.bannerImage" v-model="aspectFit" @tap="bannerListtap(index)"></image> -->
+							<ad-custom v-if="index<3" id="ads" :unit-id="item" :ad-intervals="adtime" @load="bindload" @error="binderror"></ad-custom>
+							<image id="ads" v-else class="swiper-item" :src="item.bannerImage" v-model="aspectFit" @tap="bannerListtap(index)"></image>
 							<!-- #endif -->
-						<!-- </swiper-item> -->
-					<!-- </swiper> -->
-					<!-- <swiper class="swiper" autoplay="true" circular="true" v-else>
+						</swiper-item>
+					</swiper>
+					<swiper class="swiper" autoplay="true" circular="true" v-else>
 						<swiper-item v-for="(item ,index)  in bannerList" :key="item">
 							<image class="swiper-item" :src="item.bannerImage" v-model="aspectFit" @tap="bannerListtap(index)"></image>
 						</swiper-item>
-					</swiper> -->
+					</swiper>
 				</view>
 				<!-- 推荐内容 -->
 				<view class="xd-info-main">
@@ -98,8 +98,7 @@
 						<view class="cu-item shadow">
 							<view class=" flex justify-center " @tap="rankingGoDet()">
 								<view class="image cu-item-imggs ">
-									<image :src="rankinItem.pictures"
-									 mode="aspectFill"></image>
+									<image :src="rankinItem.pictures" mode="aspectFill"></image>
 									<view class="cu-tag bg-orange text-bold">挑战赛</view>
 									<view class="cu-bar bg-shadeBottom"> <text class="text-cut">{{rankinItem.label}}</text></view>
 								</view>
@@ -110,18 +109,18 @@
 										<view style="font-size: 30px;">
 											<text class="lg text-orange cuIcon-upstage"></text>
 										</view>
-										<text >￥123</text>
+										<text>￥123</text>
 									</view>
 									<view class="cu-capsule round margin-right-sm">
 										<view class='cu-tag bg-orange '>
 											加入
 										</view>
-										
+
 										<view class="cu-tag line-orange">
 											999+
 										</view>
 									</view>
-									
+
 								</view>
 							</view>
 						</view>
@@ -166,7 +165,7 @@
 		<!-- 开始行动-加号 -->
 		<view class="start-add" v-if="scrollTop<2000">
 			<text v-if="isGroupLable" class="cuIcon-friendadd" @tap="groupAdd()" style="font-size: 20px;"></text>
-			<image v-else-if="isRankingLable"src="../../static/images/Body.png" @tap="rankingAdd" mode="widthFix"></image>
+			<image v-else-if="isRankingLable" src="../../static/images/Body.png" @tap="rankingAdd" mode="widthFix"></image>
 			<image v-else src="../../static/images/icon/add.png" @tap="goPage('/pages/action/step1')" mode="widthFix"></image>
 		</view>
 	</view>
@@ -195,10 +194,11 @@
 				inimg: '',
 				adtime: 31,
 				active: 1,
-				adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
+				adid: [],
+				// adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
 				currentIndex: -1,
 				isGroupLable: false,
-				isRankingLable:false,
+				isRankingLable: false,
 				labelId: 1,
 				bannerList: [],
 				groupList: [],
@@ -267,7 +267,7 @@
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
-			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)){
+			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)) {
 				this.isGroupLable = option.isGroupLable;
 			}
 			this.indexData();
@@ -275,12 +275,12 @@
 			this.getnotic();
 
 		},
-		onShow(option) {	
+		onShow(option) {
 			// this.currentIndex=-1;
 			// this.active=1;
 			// this.indexData();
 		},
-		
+
 		computed: {
 			...mapState(['hasLogin'])
 		},
@@ -310,20 +310,20 @@
 					url: "../pageA/group/groupAdd?isadd=true&group=" + group
 				})
 			},
-			rankingAdd(){
+			rankingAdd() {
 				uni.navigateTo({
-					url:'../pageA/ranking/rankingUp'
+					url: '../pageA/ranking/rankingUp'
 				})
 			},
-			rankingGoDet(e){
+			rankingGoDet(e) {
 				uni.navigateTo({
-					url:'../pageA/ranking/rangkinDet?rangkinId='+encodeURIComponent(JSON.stringify(e))
+					url: '../pageA/ranking/rangkinDet?rangkinId=' + encodeURIComponent(JSON.stringify(e))
 				})
 			},
 			//选择互助小组
-			selectGroup(group){
+			selectGroup(group) {
 				uni.navigateTo({
-					url:"../pageA/group/groupMsg?group="+encodeURIComponent(JSON.stringify(group))
+					url: "../pageA/group/groupMsg?group=" + encodeURIComponent(JSON.stringify(group))
 				})
 			},
 			//获取小组列表
@@ -335,10 +335,10 @@
 					pageNum: this.pageNum,
 					pageSize: 10
 				}
-				if(this.currentIndex!=-1){
-					info["type"]=this.currentIndex;
+				if (this.currentIndex != -1) {
+					info["type"] = this.currentIndex;
 				}
-				
+
 				uni.showLoading({
 					title: '加载中..',
 				})
@@ -376,6 +376,9 @@
 
 			//通知跳转
 			showMore(e) {
+				if(this.listnoticedata[e].desc==''||this.listnoticedata[e].desc==undefined){
+					return 
+				 } 
 				if (this.listnoticedata[e].type == 1) {
 					var url = encodeURIComponent(this.listnoticedata[e].desc);
 					uni.navigateTo({
@@ -473,6 +476,7 @@
 			//首页信息
 			indexData: function() {
 				this.xd_request_post(this.xdServerUrls.xd_bannerList, {}, true).then((res) => {
+
 					this.bannerList = res.obj;
 					this.adid.push(...res.obj);
 
@@ -485,12 +489,12 @@
 					}, ...res.obj];
 					this.tabs = da;
 				}).catch(err => {});
-				
-				if(this.isGroupLable){//加载互助小组
-					this.isRankingLable=false;
+
+				if (this.isGroupLable) { //加载互助小组
+					this.isRankingLable = false;
 					this.pageNum = 1;
 					this.getGroupList();
-				}else{//加载打卡列表
+				} else { //加载打卡列表
 					this.getShowRecommend();
 				}
 			},
@@ -552,7 +556,7 @@
 
 				})
 			},
-			
+
 			showNew: function() {
 				this.active = 0;
 				this.pageNum = 1;
@@ -570,7 +574,8 @@
 					},
 					true
 				).then((res) => {
-
+					console.log("打卡new内容")
+					console.log(res.obj.list)
 					this.listsTab = this.timeStamp(res.obj.list);
 					this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
@@ -593,6 +598,8 @@
 					},
 					true
 				).then((res) => {
+					console.log("打卡内容")
+					console.log(res.obj.list)
 					this.listsTab = this.timeStamp(res.obj.list);
 					this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
@@ -660,17 +667,17 @@
 
 			},
 			lebleTab(e) {
-				if(e==1){
-					this.isRankingLable=!this.isRankingLable;
+				if (e == 1) {
+					this.isRankingLable = !this.isRankingLable;
 					this.isGroupLable = false;
 					this.pageNum = 1;
-				}else{
+				} else {
 					this.isGroupLable = !this.isGroupLable;
-					this.isRankingLable=false;
+					this.isRankingLable = false;
 					this.pageNum = 1;
 					this.getGroupList();
 				}
-				
+
 			},
 			// 推荐内容切换
 			navChange: function(e) {
@@ -681,7 +688,7 @@
 				let id = e.currentTarget.dataset.id
 				this.currentIndex = id;
 				this.isGroupLable = false;
-				this.isRankingLable=false;
+				this.isRankingLable = false;
 				if (e.currentTarget.dataset.id == -1) {
 					this.currentIndex = -1;
 					this.getShowRecommend();
@@ -817,7 +824,7 @@
 
 			},
 		},
-		
+
 		// 下拉刷新
 		onPullDownRefresh() {
 			switch (this.active) {
@@ -1054,14 +1061,16 @@
 	.pading-top-ss {
 		padding-top: 10upx;
 	}
-	.rankinglist{
-		
+
+	.rankinglist {
+
 		height: 90upx;
 	}
-	.cu-item-imggs{
-		
+
+	.cu-item-imggs {
+
 		width: 93%;
 		margin-top: 20upx;
-		
+
 	}
 </style>
