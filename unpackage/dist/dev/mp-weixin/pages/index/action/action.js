@@ -425,10 +425,14 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
   onShareAppMessage: function onShareAppMessage(res) {
     var that = this;
-    var tit = that.pushList.userId == that.userId ? '第' + that.pushList.pushCardCishuCount + '次打卡:' + that.pusCardList[0].content : '我为@' + that.pushList.userName + '打Call：' + that.pusCardList[0].content;
-    var path = '/pages/index/action/action?pushId=' + that.pushList.id + '&share=' + that.pushList.userId + '&isopen=' + that.pushList.isopen;
-    var img = that.pusCardList[0].pictures[0] ? that.pusCardList[0].pictures[0] : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
-
+    var tit = '';
+    var path = '';
+    var img = '';
+    if (that.pusCardList.length > 0) {
+      tit = that.pushList.userId == that.userId ? '第' + that.pushList.pushCardCishuCount + '次打卡:' + that.pusCardList[0].content : '我为@' + that.pushList.userName + '打Call：' + that.pusCardList[0].content;
+      path = '/pages/index/action/action?pushId=' + that.pushList.id + '&share=' + that.pushList.userId + '&isopen=' + that.pushList.isopen;
+      img = that.pusCardList[0].pictures[0] ? that.pusCardList[0].pictures[0] : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+    }
     var tit2 = that.pushList.userId == that.userId ? '第' + that.pushList.pushCardCishuCount + '次打卡:' + that.pushList.content : '我为@' + that.pushList.userName + '打Call：' + that.pushList.content;
     var path2 = '/pages/index/action/action?pushId=' + that.pushList.id + '&share=' + that.pushList.userId + '&isopen=' + that.pushList.isopen;
     var img2 = that.pushList.pictures ? that.pushList.pictures : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
@@ -448,6 +452,10 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         return that.xdUniUtils.xd_onShare(tit, path, img);
 
       } else {
+        console.log("share");
+        console.log(tit2);
+        console.log(path2);
+        console.log(img2);
         that.setSaveShareInfo();
         return that.xdUniUtils.xd_onShare(tit2, path2, img2);
       }
