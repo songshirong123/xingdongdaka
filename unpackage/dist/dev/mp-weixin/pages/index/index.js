@@ -758,6 +758,8 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _toConsumableArray(arr)
         } else {
           dataList[i].pushCardList[0].pictures = [];
         }
+
+        dataList[i].pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(dataList[i].pushCardList[0].address) ? "" : dataList[i].pushCardList[0].address;
         dataList[i].pushCardList[0].createTime = time;
         dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 

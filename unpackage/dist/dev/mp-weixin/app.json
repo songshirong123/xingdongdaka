@@ -89,5 +89,9 @@
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
   },
+<<<<<<< HEAD
   "sitemapLocation": "sitemap50.json"
+=======
+  "sitemapLocation": "sitemap54.json"
+>>>>>>> 7cee107801eee1a536a1ffaad6448b0e65ce3fc4
 }

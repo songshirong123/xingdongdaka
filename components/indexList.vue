@@ -13,7 +13,7 @@
 							</view>
 							<!-- 打卡地址 -->
 							<view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
-								
+								{{list.pushCardList[0].address}}
 							</view>
 						</view>
 						<view v-if="list.challengeRmb>0">

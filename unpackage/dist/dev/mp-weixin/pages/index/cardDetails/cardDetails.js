@@ -603,6 +603,9 @@ var _default = {
         token: uni.getStorageSync('token') },
       true).then(function (res) {
         var data = res.obj;
+        data.pushCardList[0].address = _this4.xdUniUtils.IsNullOrEmpty(data.pushCardList[0].address) ? "" : data.pushCardList[0].address;
+        console.log("getpushList");
+        console.log(data);
         data.challengeRmb = res.obj.challengeRmb / 100;
         var time = _this4.xdUniUtils.xd_timestampToTime(res.obj.createTime, false, false, true);
         data.createTime = time;
