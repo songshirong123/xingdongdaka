@@ -75,11 +75,17 @@
 							</view>
 						</view>	
 						<view class="widthtext margin-top-sm" >
-							<view class="text-gray text-sm " v-if="pushList.xinXin">
-								动力：{{pushList.xinXin}}
+							<view class="text-gray text-sm flex flex-wrap "  @tap="showModal(1)">
+								<view class="text-xl">
+									<text class="lg text-gray cuIcon-write"></text>
+								</view>
+								<text class=" margin-left-xs">动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
 							</view>
-							<view class="text-gray text-sm margin-top-sm" v-if="pushList.dongLi">
-								信心：{{pushList.dongLi}}
+							<view class="text-gray text-sm margin-top-sm flex flex-wrap"  @tap="showModal">
+								<view class="text-xl">
+									<text class="lg text-gray cuIcon-write"></text>
+								</view>
+								<text class=" margin-left-xs textcontentshow">信心：{{pushList.xinXin?pushList.xinXin:""}}</text>
 							</view>
 						</view>
 					</view>
@@ -181,6 +187,20 @@
 					</view>
 				</view>
 			</block>
+			<view class="cu-modal" :class="modalName=='Modal'?'show':''">
+				<view class="cu-dialog">
+					<view class="cu-bar bg-white justify-end">
+						<view class="content">{{ModalTitil}}</view>
+						<view class="action" @tap="hideModal">
+							<text class="cuIcon-close text-red"></text>
+						</view>
+					</view>
+					<view class="padding-sm">
+						<textarea auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
+					</view>
+					<button v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
+				</view>
+			</view>
 			<backTop :scrollTop="scrollTop"></backTop>
 			<!-- 开始行动-加号 -->
 			<view class="start-add" @tap="goPage('/pages/action/step1')" v-if="scrollTop<2000">
@@ -212,7 +232,10 @@
 				sponsorRmb:0,  //赞助金额
 				sponsorCnt:0,  //赞助笔数
 				surpassHolidayDay:0,
-				
+				modalName:null,
+				ModalTitil:'',
+				ModalConten:'',
+				cententdata:'',
 				lookerList:[],
 				looktotal:'',
 				lookNextPageTwo:'',
@@ -301,10 +324,7 @@
 					return	that.xdUniUtils.xd_onShare(tit,path,img);
 					
 				}else{
-					console.log("share" )
-					console.log(tit2 )
-					console.log(path2 )
-					console.log(img2 )
+					
 					that.setSaveShareInfo();
 					return	that.xdUniUtils.xd_onShare(tit2,path2,img2);	
 				}
@@ -333,6 +353,58 @@
 		},
 		//#endif
 		methods:{
+			//动力信心修改内容
+			textDonAndXin(e){
+				this.cententdata=e.detail.value;
+			},
+			//修改动力信心
+			updataPushData(){
+				let data='';
+				if (this.cententdata == '') {
+					uni.showToast({
+						title: '请输入修改内容',
+						duration: 2000,
+						icon: 'none'
+					});
+					return false
+				};
+				if(this.ModalTitil=="动力"){
+					data={id:this.pushId,
+					dongLi:this.cententdata
+					}
+				}else{
+					data={id:this.pushId,
+					xinXin:this.cententdata
+					}
+				}
+				this.xd_request_post(this.xdServerUrls.xd_updatePushDataByPushId,
+					data
+				,true
+				   ).then(res => {
+						this.modalName = null;
+						this.ModalTitil='';
+						this.ModalConten='';
+						this.cententdata =''
+					   })
+				
+			},
+			//动力信心修改弹窗
+			showModal(e) {
+				this.modalName = "Modal";
+				if(e==1){
+					this.ModalTitil="动力";
+					this.ModalConten=this.pushList.dongLi;
+				}else{
+					this.ModalTitil="信心";
+					this.ModalConten=this.pushList.xinXin;
+				}
+			},
+			//关闭弹窗
+			hideModal(e) {
+				this.modalName = null;
+				this.ModalTitil='';
+				this.ModalConten='';
+			},
 			// 赞助
 			gotoSponsor(list) {
 				console.log('aaaaa',list)
@@ -884,5 +956,11 @@
 		height: 60upx;
 		line-height: 1.9;
 	}
+.testcontentshow{
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
 
 </style>

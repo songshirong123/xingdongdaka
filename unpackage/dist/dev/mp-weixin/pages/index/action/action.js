@@ -343,6 +343,26 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(obj) {return obj && obj.__esModule ? obj : { default: obj };}function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {try {var info = gen[key](arg);var value = info.value;} catch (error) {reject(error);return;}if (info.done) {resolve(value);} else {Promise.resolve(value).then(_next, _throw);}}function _asyncToGenerator(fn) {return function () {var self = this,args = arguments;return new Promise(function (resolve, reject) {var gen = fn.apply(self, args);function _next(value) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);}function _throw(err) {asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);}_next(undefined);});};}function ownKeys(object, enumerableOnly) {var keys = Object.keys(object);if (Object.getOwnPropertySymbols) {var symbols = Object.getOwnPropertySymbols(object);if (enumerableOnly) symbols = symbols.filter(function (sym) {return Object.getOwnPropertyDescriptor(object, sym).enumerable;});keys.push.apply(keys, symbols);}return keys;}function _objectSpread(target) {for (var i = 1; i < arguments.length; i++) {var source = arguments[i] != null ? arguments[i] : {};if (i % 2) {ownKeys(Object(source), true).forEach(function (key) {_defineProperty(target, key, source[key]);});} else if (Object.getOwnPropertyDescriptors) {Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));} else {ownKeys(Object(source)).forEach(function (key) {Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));});}}return target;}function _defineProperty(obj, key, value) {if (key in obj) {Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true });} else {obj[key] = value;}return obj;}var lookerCountInfo = function lookerCountInfo() {__webpack_require__.e(/*! require.ensure | components/lookerCountInfo */ "components/lookerCountInfo").then((function () {return resolve(__webpack_require__(/*! @/components/lookerCountInfo.vue */ 347));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var backTop = function backTop() {__webpack_require__.e(/*! require.ensure | components/backTop */ "components/backTop").then((function () {return resolve(__webpack_require__(/*! @/components/backTop.vue */ 326));}).bind(null, __webpack_require__)).catch(__webpack_require__.oe);};var _default =
 
 {
@@ -363,7 +383,10 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
       sponsorRmb: 0, //赞助金额
       sponsorCnt: 0, //赞助笔数
       surpassHolidayDay: 0,
-
+      modalName: null,
+      ModalTitil: '',
+      ModalConten: '',
+      cententdata: '',
       lookerList: [],
       looktotal: '',
       lookNextPageTwo: '',
@@ -452,10 +475,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         return that.xdUniUtils.xd_onShare(tit, path, img);
 
       } else {
-        console.log("share");
-        console.log(tit2);
-        console.log(path2);
-        console.log(img2);
+
         that.setSaveShareInfo();
         return that.xdUniUtils.xd_onShare(tit2, path2, img2);
       }
@@ -484,6 +504,58 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
   },
 
   methods: {
+    //动力信心修改内容
+    textDonAndXin: function textDonAndXin(e) {
+      this.cententdata = e.detail.value;
+    },
+    //修改动力信心
+    updataPushData: function updataPushData() {var _this = this;
+      var data = '';
+      if (this.cententdata == '') {
+        uni.showToast({
+          title: '请输入修改内容',
+          duration: 2000,
+          icon: 'none' });
+
+        return false;
+      };
+      if (this.ModalTitil == "动力") {
+        data = { id: this.pushId,
+          dongLi: this.cententdata };
+
+      } else {
+        data = { id: this.pushId,
+          xinXin: this.cententdata };
+
+      }
+      this.xd_request_post(this.xdServerUrls.xd_updatePushDataByPushId,
+      data,
+      true).
+      then(function (res) {
+        _this.modalName = null;
+        _this.ModalTitil = '';
+        _this.ModalConten = '';
+        _this.cententdata = '';
+      });
+
+    },
+    //动力信心修改弹窗
+    showModal: function showModal(e) {
+      this.modalName = "Modal";
+      if (e == 1) {
+        this.ModalTitil = "动力";
+        this.ModalConten = this.pushList.dongLi;
+      } else {
+        this.ModalTitil = "信心";
+        this.ModalConten = this.pushList.xinXin;
+      }
+    },
+    //关闭弹窗
+    hideModal: function hideModal(e) {
+      this.modalName = null;
+      this.ModalTitil = '';
+      this.ModalConten = '';
+    },
     // 赞助
     gotoSponsor: function gotoSponsor(list) {
       console.log('aaaaa', list);
@@ -505,9 +577,9 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         url: '/pages/pageA/thankmoney/thankmoney?userId=' + e.lookUserId + "&pushId=" + e.pushId });
 
     },
-    getActSponsor: function getActSponsor() {var _this = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var that, parm, _yield$that$xd_reques, resultCode, obj, msg;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
+    getActSponsor: function getActSponsor() {var _this2 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee() {var that, parm, _yield$that$xd_reques, resultCode, obj, msg;return _regenerator.default.wrap(function _callee$(_context) {while (1) {switch (_context.prev = _context.next) {case 0:
 
-                that = _this;
+                that = _this2;
                 parm = {
                   token: uni.getStorageSync('token'),
                   pageSize: 99,
@@ -519,20 +591,20 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
                 if (resultCode === '0') {
 
                   if (obj.pageInfo && obj.pageInfo.list && Array.isArray(obj.pageInfo.list) && obj.pageInfo.list.length > 0) {
-                    _this.sponsorList = obj.pageInfo.list.map(function (item) {
+                    _this2.sponsorList = obj.pageInfo.list.map(function (item) {
                       return _objectSpread(_objectSpread({},
                       item),
-                      { sponsorCondition: item.sponsorCondition ? JSON.parse(item.sponsorCondition) : _this.sponsorCondition,
-                        pictures: item.pictures ? JSON.parse(item.pictures) : _this.pictures });
+                      { sponsorCondition: item.sponsorCondition ? JSON.parse(item.sponsorCondition) : _this2.sponsorCondition,
+                        pictures: item.pictures ? JSON.parse(item.pictures) : _this2.pictures });
 
 
                     });
 
-                    _this.sponsorCnt = _this.sponsorList.length;
-                    _this.sponsorRmb = Math.round(_this.sponsorList.reduce(function (t, v) {return t += v.zanzhujinRmb;}, 0) / 100);
+                    _this2.sponsorCnt = _this2.sponsorList.length;
+                    _this2.sponsorRmb = Math.round(_this2.sponsorList.reduce(function (t, v) {return t += v.zanzhujinRmb;}, 0) / 100);
 
                   }
-                  _this.sponsorShare = obj.pushTarget;
+                  _this2.sponsorShare = obj.pushTarget;
                 } else {
                   uni.showToast({
                     title: msg,
@@ -568,7 +640,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
       }
       return this.xdUniUtils.xd_timestampToTime(d1.createTime, false, false, false) > this.xdUniUtils.xd_timestampToTime(d2.createTime, false, false, false);
     },
-    gostep: function gostep() {var _this2 = this;
+    gostep: function gostep() {var _this3 = this;
       if (!uni.getStorageSync('token')) {
         uni.switchTab({
           url: '../index' });
@@ -580,7 +652,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         '继续'), _defineProperty(_uni$showModal, "success",
         function success(res) {
           if (res.confirm) {
-            uni.setStorageSync('pushData', _this2.pushList);
+            uni.setStorageSync('pushData', _this3.pushList);
             uni.navigateTo({
               url: '../../action/step1' });
 
@@ -607,7 +679,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
       });
     },
-    clickSaveShareInfo: function clickSaveShareInfo() {var _this3 = this;
+    clickSaveShareInfo: function clickSaveShareInfo() {var _this4 = this;
       if (uni.getStorageSync('share') != '' && this.userId != undefined) {
         this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
           pushId: this.pushId,
@@ -615,7 +687,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
           clickUserId: this.userId },
         true).
         then(function (res) {
-          _this3.getpushList();
+          _this4.getpushList();
         });
       }
     },
@@ -697,14 +769,14 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         } });
 
     },
-    goSteps: function goSteps() {var _this4 = this;
+    goSteps: function goSteps() {var _this5 = this;
       if (this.pushList.pushCardStatus == 2 || this.pushList.pushCardStatus == 3) {
         uni.showModal({
           content: this.xdCommon.gzsm_clickCard,
           confirmText: '新建',
           success: function success(res) {
             if (res.confirm) {
-              uni.setStorageSync('pushData', _this4.pushList);
+              uni.setStorageSync('pushData', _this5.pushList);
               uni.navigateTo({
                 url: '../../action/step1' });
 
@@ -773,8 +845,8 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
 
     },
-    getpushList: function getpushList() {var _this5 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!(
-                _this5.isShare == 1)) {_context2.next = 4;break;}if (
+    getpushList: function getpushList() {var _this6 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee2() {return _regenerator.default.wrap(function _callee2$(_context2) {while (1) {switch (_context2.prev = _context2.next) {case 0:if (!(
+                _this6.isShare == 1)) {_context2.next = 4;break;}if (
                 uni.getStorageSync('token')) {_context2.next = 4;break;}
                 uni.navigateTo({
                   url: '../../login/login' });return _context2.abrupt("return",
@@ -782,32 +854,32 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
                 false);case 4:
 
 
-                _this5.xd_request_post(_this5.xdServerUrls.xd_pushDataByPushId, {
-                  pushId: _this5.pushId,
-                  isShare: _this5.isShare,
+                _this6.xd_request_post(_this6.xdServerUrls.xd_pushDataByPushId, {
+                  pushId: _this6.pushId,
+                  isShare: _this6.isShare,
                   lookUserId: uni.getStorageSync('id') },
                 true).then(function (res) {
                   if (res.resultCode == 0) {
                     var data = res.obj;
                     console.log("行动详情");
                     console.log(data);
-                    data.createTime = _this5.xdUniUtils.xd_timestampToTime(res.obj.createTime);
-                    data.endTime = _this5.xdUniUtils.xd_timestampToTime(res.obj.endTime);
+                    data.createTime = _this6.xdUniUtils.xd_timestampToTime(res.obj.createTime);
+                    data.endTime = _this6.xdUniUtils.xd_timestampToTime(res.obj.endTime);
                     data.challengeRmb = res.obj.challengeRmb / 100;
-                    _this5.pushList = data;
-                    _this5.surpassHolidayDay = Math.abs(_this5.pushList.surpassHolidayDay);
-                    if (_this5.pushList.userId == uni.getStorageSync('id')) {
-                      _this5.guanzhu = '';
+                    _this6.pushList = data;
+                    _this6.surpassHolidayDay = Math.abs(_this6.pushList.surpassHolidayDay);
+                    if (_this6.pushList.userId == uni.getStorageSync('id')) {
+                      _this6.guanzhu = '';
                     } else {
-                      _this5.xd_request_post(_this5.xdServerUrls.xd_iSAttention, {
+                      _this6.xd_request_post(_this6.xdServerUrls.xd_iSAttention, {
                         userId: uni.getStorageSync('id'),
-                        attentionUserId: _this5.pushList.userId },
+                        attentionUserId: _this6.pushList.userId },
                       true).
                       then(function (res) {
                         if (res.obj) {
-                          _this5.guanzhu = '已关注';
+                          _this6.guanzhu = '已关注';
                         } else {
-                          _this5.guanzhu = '关注';
+                          _this6.guanzhu = '关注';
                         }
 
                       });
@@ -826,28 +898,28 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         url: "/pages/action/step1" });
 
     },
-    getPushComenList: function getPushComenList() {var _this6 = this;
+    getPushComenList: function getPushComenList() {var _this7 = this;
       this.xd_request_post(this.xdServerUrls.xd_showCommentAndReplayCommtent, {
         pushId: this.pushId,
         token: uni.getStorageSync('token') },
       false).then(function (res) {
 
-        _this6.pushComentList = _this6.timeStamp(res);
+        _this7.pushComentList = _this7.timeStamp(res);
       });
     },
-    getPushCardList: function getPushCardList() {var _this7 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
-                _this7.xd_request_post(_this7.xdServerUrls.xd_pushCardListByPushId, {
-                  pushId: _this7.pushId },
+    getPushCardList: function getPushCardList() {var _this8 = this;return _asyncToGenerator( /*#__PURE__*/_regenerator.default.mark(function _callee3() {return _regenerator.default.wrap(function _callee3$(_context3) {while (1) {switch (_context3.prev = _context3.next) {case 0:
+                _this8.xd_request_post(_this8.xdServerUrls.xd_pushCardListByPushId, {
+                  pushId: _this8.pushId },
 
                 true).then(function (res) {
                   var data = res.obj.list;
                   for (var i = 0; i < res.obj.list.length; i++) {
-                    data[i].createTime = _this7.xdUniUtils.xd_timestampToTime(data[i].createTime, false, false, false);
+                    data[i].createTime = _this8.xdUniUtils.xd_timestampToTime(data[i].createTime, false, false, false);
                     if (res.obj.list[i].pictures != "") {
                       data[i].pictures = res.obj.list[i].pictures.split(',');
                     }
                   }
-                  _this7.pusCardList = data;
+                  _this8.pusCardList = data;
                 });case 1:case "end":return _context3.stop();}}}, _callee3);}))();
     },
     // 打卡
@@ -863,7 +935,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
       this.active = 2;
       this.getLookerList();
     },
-    tags: function tags() {var _this8 = this;
+    tags: function tags() {var _this9 = this;
       if (!uni.getStorageSync('token')) {
         uni.navigateTo({
           url: '../../login/login' });
@@ -879,7 +951,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
 
       true).then(function (res) {
         if (res.resultCode == 0) {
-          _this8.guanzhu = "已关注";
+          _this9.guanzhu = "已关注";
           uni.showToast({
             icon: 'none',
             title: '关注成功' });
@@ -892,19 +964,19 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function _interopRequireDefault(
         }
       });
     },
-    getLookerList: function getLookerList() {var _this9 = this;
+    getLookerList: function getLookerList() {var _this10 = this;
       this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId, {
         pushId: this.pushId,
         pageNum: this.lookNextPageTwo,
         pageSize: 10 },
       true).
       then(function (res) {
-        _this9.lookerList = res.obj.list;
-        _this9.looktotal = res.obj.total;
-        _this9.lookNextPageTwo = res.obj.nextPage;
-        _this9.lookerList.forEach(function (item) {
+        _this10.lookerList = res.obj.list;
+        _this10.looktotal = res.obj.total;
+        _this10.lookNextPageTwo = res.obj.nextPage;
+        _this10.lookerList.forEach(function (item) {
           if (item.lookUserId == uni.getStorageSync('id')) {
-            _this9.guanzhu = '已关注';
+            _this10.guanzhu = '已关注';
           }
         });
 

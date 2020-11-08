@@ -73,9 +73,9 @@
 					<!-- <view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
 					</view> -->
-					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
+					<view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
-					</view> -->
+					</view>
 
 					<!-- 互助小组对应内容 -->
 					<view class="xd-line"></view>
