@@ -75,17 +75,17 @@
 							</view>
 						</view>	
 						<view class="widthtext margin-top-sm" >
-							<view class="text-gray text-sm flex flex-wrap "  @tap="showModal(1)">
+							<view class="text-gray text-sm flex flex-wrap align-center testdonli"  @tap="showModal(1)">
 								<view class="text-xl">
 									<text class="lg text-gray cuIcon-write"></text>
 								</view>
-								<text class=" margin-left-xs">动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
+								<text class=" margin-left-xs testcontentshow" >动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
 							</view>
-							<view class="text-gray text-sm margin-top-sm flex flex-wrap"  @tap="showModal">
+							<view class="text-gray text-sm margin-top-sm flex flex-wrap align-center testdonli"  @tap="showModal">
 								<view class="text-xl">
 									<text class="lg text-gray cuIcon-write"></text>
 								</view>
-								<text class=" margin-left-xs textcontentshow">信心：{{pushList.xinXin?pushList.xinXin:""}}</text>
+								<text class=" margin-left-xs testcontentshow">信心：{{pushList.xinXin?pushList.xinXin:""}}</text>
 							</view>
 						</view>
 					</view>
@@ -963,6 +963,9 @@
 	-webkit-box-orient: vertical;
 	-webkit-line-clamp: 2;
 	overflow: hidden;
+}
+.testdonli{
+	flex-wrap: nowrap;
 }
 
 </style>
