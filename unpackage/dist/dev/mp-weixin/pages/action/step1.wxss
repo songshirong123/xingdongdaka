@@ -81,4 +81,7 @@
   -webkit-justify-content: space-evenly;
           justify-content: space-evenly;
 }
+.titleBT {
+  font-size: 35rpx;
+}
 

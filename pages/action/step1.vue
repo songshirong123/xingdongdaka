@@ -50,17 +50,17 @@
 					<switch :class="switchA==0?'checked':''" :checked="switchA==0?true:false" @change="isOpenswitch"></switch>
 				</view>
 			</view>
+			<view class="cu-form-group align-start " v-if="!modalNamecheckbox">
+				<view class="title flex flex-wrap">行动:<view class="titleBT  text-red"><span>*</span></view></view>
+				<textarea :value="content" name="content" maxlength="500" :disabled="modalName!=null" placeholder="行动主题内容、计划目标、打卡方式等"></textarea>
+			</view>
 			<view class="cu-form-group align-start">
 				<view class="title">动力:</view>
-				<textarea maxlength="500" :value="dongLi" :disabled="modalName!=null"   placeholder="填写意义目的、危机后果、榜样等动机原因" name="dongLi"></textarea>
+				<textarea maxlength="500" :value="dongLi" :disabled="modalName!=null"   placeholder="意义目的、损失后果、榜样等动机原因" name="dongLi"></textarea>
 			</view>
 			<view class="cu-form-group align-start">
 				<view class="title">信心:</view>
-				<textarea maxlength="500" :value="xinXin" :disabled="modalName!=null"   placeholder="填写进步总结和认识面对困难、围观鼓励等" name="xinXin"></textarea>
-			</view>
-			<view class="cu-form-group align-start " v-if="!modalNamecheckbox">
-				<view class="title">内容:</view>
-				<textarea :value="content" name="content" maxlength="500" :disabled="modalName!=null" placeholder="减肥,锻炼意志力,提高耐性,提升魅力..."></textarea>
+				<textarea maxlength="500" :value="xinXin" :disabled="modalName!=null"   placeholder="进步总结、面对困难、鼓励支持、方法资源等" name="xinXin"></textarea>
 			</view>
 			<view class="padding solid-top">
 				<view class="flex flex-wrap">
@@ -558,5 +558,11 @@
 		flex-wrap: wrap;
 		line-height: 100upx;
 		justify-content: space-evenly;
+	}
+	.titleBT{
+		
+			    font-size: 35rpx;
+			    
+		
 	}
 </style>

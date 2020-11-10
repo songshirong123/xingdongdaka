@@ -305,7 +305,7 @@
 				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
 				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
 			}
-		    let	tit2= that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
+		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
 		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
 		    let	img2=that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
 			if(res.from=="menu"){
@@ -369,11 +369,11 @@
 					return false
 				};
 				if(this.ModalTitil=="动力"){
-					data={id:this.pushId,
+					data={id:this.pushId?this.pushId:uni.getStorageSync('pushId'),
 					dongLi:this.cententdata
 					}
 				}else{
-					data={id:this.pushId,
+					data={id:this.pushId?this.pushId:uni.getStorageSync('pushId'),
 					xinXin:this.cententdata
 					}
 				}
@@ -381,6 +381,8 @@
 					data
 				,true
 				   ).then(res => {
+					   this.getpushList();
+					   this.getPushCardList();
 						this.modalName = null;
 						this.ModalTitil='';
 						this.ModalConten='';
