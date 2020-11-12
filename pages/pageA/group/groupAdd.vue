@@ -6,6 +6,7 @@
 			<input placeholder="组名称,不低于20个字" @input="inputGroupName" />
 		</view>
 
+
 		<!-- 诚意金 -->
 		<view class="label-hint">诚意金</view>
 		<view class="label-hint infos">
