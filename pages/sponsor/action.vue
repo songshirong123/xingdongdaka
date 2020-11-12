@@ -253,7 +253,7 @@
 			that.setSaveShareInfo();
 			return {
 					title: '我为@'+that.pushList.userName+'拉赞助：'+that.pushList.content,
-					path: '/pages/sponsor/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
+					path: '/pages/sponsor/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
 					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png',
 			}
 			// return {
