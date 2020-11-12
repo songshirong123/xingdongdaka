@@ -254,7 +254,7 @@
 			return {
 					title: '我为@'+that.pushList.userName+'拉赞助：'+that.pushList.content,
 					path: '/pages/sponsor/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
 			}
 			// return {
 			// 	title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'拉赞助：'+that.pusCardList[0].content,

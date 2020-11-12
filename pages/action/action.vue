@@ -127,13 +127,13 @@ export default {
 				return {
 					title:'第'+that.cardList[res.target.id].pushCardCishuCount+'次打卡:'+that.cardList[res.target.id].content,
 					path: '/pages/index/action/action?pushId='+ that.cardList[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.cardList[res.target.id].isopen,
-					imageUrl:that.cardList[res.target.id].pictures?that.cardList[res.target.id].pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+					imageUrl:that.cardList[res.target.id].pictures?that.cardList[res.target.id].pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
 				}
 			}else if(that.tab==1){
 				return {
 					title: '我为@'+that.lookerList[res.target.id].userName+'打Call：'+that.lookerList[res.target.id].content,
 					path: '/pages/index/action/action?pushId='+ that.lookerList[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.lookerList[res.target.id].isopen,
-					imageUrl:that.lookerList[res.target.id].pictures?that.lookerList[res.target.id].pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+					imageUrl:that.lookerList[res.target.id].pictures?that.lookerList[res.target.id].pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
 				}
 			}
 			

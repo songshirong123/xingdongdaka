@@ -250,7 +250,7 @@
 					path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync('id') +
 						'&isopen=' + that.listsTab[res.target.id].isopen,
 					imageUrl: that.listsTab[res.target.id].pushCardList[0].pictures[0] ? that.listsTab[res.target.id].pushCardList[0].pictures[
-						0] : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+						0] : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
 				}
 			}
 		},
