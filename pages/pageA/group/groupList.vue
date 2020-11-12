@@ -89,6 +89,7 @@
 			this.pageNum+=1;
 			this.getGroupList()
 		},	
+		
 	}
 </script>
 
