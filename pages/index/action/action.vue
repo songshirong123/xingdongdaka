@@ -92,7 +92,7 @@
 				</view>
 			</view>
 				<view class="text-contents contentext">
-					<text style="font-size: 15px;font-weight: 700;">{{pushList.content}}</text>
+					<text style="font-size: 14px;font-weight: 700;">{{pushList.content}}</text>
 				</view>
 				<view class="grid flex-sub padding-lr" style="margin-top: 5px;" >
 					<image class="bg-img imgheit"  :src="pushList.pictures" mode="aspectFill"
