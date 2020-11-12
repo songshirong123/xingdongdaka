@@ -11,7 +11,7 @@
 							<view class="text-gray text-sm flex justify-between" style="margin-top: 3px;">{{pushCardCreateTime}}</view>
 							<!-- 打卡地址 -->
 							<view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
-								
+								{{pusCardLists.pushCardList[0].address}}
 							</view>
 							
 							
@@ -467,6 +467,9 @@
 					token:uni.getStorageSync('token')
 				},true).then(res=>{	
 					var data =res.obj;
+					data.pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(data.pushCardList[0].address)?"":data.pushCardList[0].address;
+					console.log("getpushList");
+					console.log(data);
 					data.challengeRmb=res.obj.challengeRmb/100;
 					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
 					data.createTime=time;

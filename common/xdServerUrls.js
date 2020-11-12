@@ -83,6 +83,7 @@ const serverUrls = { //根据接口具体配置
 	xd_inquireBalance: serverBaseUrl + '/balance/inquireBalance' ,//余额查询
 	xd_selectBurieStatistics: serverBaseUrl + '/burie/selectBurieStatistics' ,//获取埋点数据（新增关注数和新增围观分钱数）
 	xd_updateBurieStatistics: serverBaseUrl + '/burie/updateBurieStatistics' ,//查看埋点数据后删除
+	xd_updatePushDataByPushId: serverBaseUrl + '/publishTarget/updatePushDataByPushId' ,//根据行动项id修改行动项信息
 	
 
 

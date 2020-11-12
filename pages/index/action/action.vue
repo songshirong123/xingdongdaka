@@ -74,6 +74,20 @@
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
 						</view>	
+						<view class="widthtext margin-top-sm" >
+							<view class="text-gray text-sm flex flex-wrap align-center testdonli"  @tap="showModal(1)">
+								<view class="text-xl">
+									<text class="lg text-gray cuIcon-write"></text>
+								</view>
+								<text class=" margin-left-xs testcontentshow" >动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
+							</view>
+							<view class="text-gray text-sm margin-top-sm flex flex-wrap align-center testdonli"  @tap="showModal">
+								<view class="text-xl">
+									<text class="lg text-gray cuIcon-write"></text>
+								</view>
+								<text class=" margin-left-xs testcontentshow">信心：{{pushList.xinXin?pushList.xinXin:""}}</text>
+							</view>
+						</view>
 					</view>
 				</view>
 			</view>
@@ -173,6 +187,20 @@
 					</view>
 				</view>
 			</block>
+			<view class="cu-modal" :class="modalName=='Modal'?'show':''">
+				<view class="cu-dialog">
+					<view class="cu-bar bg-white justify-end">
+						<view class="content">{{ModalTitil}}</view>
+						<view class="action" @tap="hideModal">
+							<text class="cuIcon-close text-red"></text>
+						</view>
+					</view>
+					<view class="padding-sm">
+						<textarea auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
+					</view>
+					<button v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
+				</view>
+			</view>
 			<backTop :scrollTop="scrollTop"></backTop>
 			<!-- 开始行动-加号 -->
 			<view class="start-add" @tap="goPage('/pages/action/step1')" v-if="scrollTop<2000">
@@ -204,7 +232,10 @@
 				sponsorRmb:0,  //赞助金额
 				sponsorCnt:0,  //赞助笔数
 				surpassHolidayDay:0,
-				
+				modalName:null,
+				ModalTitil:'',
+				ModalConten:'',
+				cententdata:'',
 				lookerList:[],
 				looktotal:'',
 				lookNextPageTwo:'',
@@ -266,11 +297,15 @@
 	
 		onShareAppMessage(res) {
 			let that = this;
-			let tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
-			let path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
-			let img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
-			
-		    let	tit2= that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
+			let tit='';
+			let path='';
+			let img='';
+			if(that.pusCardList.length>0){
+				 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
+				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
+				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+			}
+		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
 		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
 		    let	img2=that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
 			if(res.from=="menu"){
@@ -289,6 +324,7 @@
 					return	that.xdUniUtils.xd_onShare(tit,path,img);
 					
 				}else{
+					
 					that.setSaveShareInfo();
 					return	that.xdUniUtils.xd_onShare(tit2,path2,img2);	
 				}
@@ -317,6 +353,60 @@
 		},
 		//#endif
 		methods:{
+			//动力信心修改内容
+			textDonAndXin(e){
+				this.cententdata=e.detail.value;
+			},
+			//修改动力信心
+			updataPushData(){
+				let data='';
+				if (this.cententdata == '') {
+					uni.showToast({
+						title: '请输入修改内容',
+						duration: 2000,
+						icon: 'none'
+					});
+					return false
+				};
+				if(this.ModalTitil=="动力"){
+					data={id:this.pushId?this.pushId:uni.getStorageSync('pushId'),
+					dongLi:this.cententdata
+					}
+				}else{
+					data={id:this.pushId?this.pushId:uni.getStorageSync('pushId'),
+					xinXin:this.cententdata
+					}
+				}
+				this.xd_request_post(this.xdServerUrls.xd_updatePushDataByPushId,
+					data
+				,true
+				   ).then(res => {
+					   this.getpushList();
+					   this.getPushCardList();
+						this.modalName = null;
+						this.ModalTitil='';
+						this.ModalConten='';
+						this.cententdata =''
+					   })
+				
+			},
+			//动力信心修改弹窗
+			showModal(e) {
+				this.modalName = "Modal";
+				if(e==1){
+					this.ModalTitil="动力";
+					this.ModalConten=this.pushList.dongLi;
+				}else{
+					this.ModalTitil="信心";
+					this.ModalConten=this.pushList.xinXin;
+				}
+			},
+			//关闭弹窗
+			hideModal(e) {
+				this.modalName = null;
+				this.ModalTitil='';
+				this.ModalConten='';
+			},
 			// 赞助
 			gotoSponsor(list) {
 				console.log('aaaaa',list)
@@ -868,5 +958,14 @@
 		height: 60upx;
 		line-height: 1.9;
 	}
+.testcontentshow{
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	overflow: hidden;
+}
+.testdonli{
+	flex-wrap: nowrap;
+}
 
 </style>

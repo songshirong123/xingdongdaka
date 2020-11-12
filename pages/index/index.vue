@@ -75,8 +75,8 @@
 					</view> -->
 					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
-					</view> -->
-
+					</view>
+ -->
 					<!-- 互助小组对应内容 -->
 					<view class="xd-line"></view>
 					<view v-if="isGroupLable">
@@ -376,6 +376,9 @@
 
 			//通知跳转
 			showMore(e) {
+				if(this.listnoticedata[e].desc==''||this.listnoticedata[e].desc==undefined){
+					return 
+				 } 
 				if (this.listnoticedata[e].type == 1) {
 					var url = encodeURIComponent(this.listnoticedata[e].desc);
 					uni.navigateTo({
@@ -619,6 +622,8 @@
 					} else {
 						dataList[i].pushCardList[0].pictures = [];
 					}
+					
+					dataList[i].pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(dataList[i].pushCardList[0].address)?"":dataList[i].pushCardList[0].address;
 					dataList[i].pushCardList[0].createTime = time;
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 

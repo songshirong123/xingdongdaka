@@ -50,11 +50,17 @@
 					<switch :class="switchA==0?'checked':''" :checked="switchA==0?true:false" @change="isOpenswitch"></switch>
 				</view>
 			</view>
-			<view v-if="!modalNamecheckbox">
-				<!-- textare-heght -->
-				<view class="cu-form-group align-start ">
-					<textarea :value="content" name="content" maxlength="500" :disabled="modalName!=null" placeholder="减肥,锻炼意志力,提高耐性,提升魅力..."></textarea>
-				</view>
+			<view class="cu-form-group align-start " v-if="!modalNamecheckbox">
+				<view class="title flex flex-wrap">行动:<view class="titleBT  text-red"><span>*</span></view>:</view>
+				<textarea :value="content" name="content" maxlength="500" :disabled="modalName!=null" placeholder="必填，行动主题内容、计划目标、打卡方式等"></textarea>
+			</view>
+			<view class="cu-form-group align-start">
+				<view class="title">动力:</view>
+				<textarea maxlength="500" :value="dongLi" :disabled="modalName!=null"   placeholder="选填，意义目的、损失后果、榜样等动机原因" name="dongLi"></textarea>
+			</view>
+			<view class="cu-form-group align-start">
+				<view class="title">信心:</view>
+				<textarea maxlength="500" :value="xinXin" :disabled="modalName!=null"   placeholder="选填，进步总结、面对困难、鼓励支持、方法资源等" name="xinXin"></textarea>
 			</view>
 			<view class="padding solid-top">
 				<view class="flex flex-wrap">
@@ -160,6 +166,8 @@
 				switchA: 0,
 				switchB: 0,
 				content: '',
+				xinXin:'',
+				dongLi:'',
 				holidayf: false,
 				targetDayf: false,
 				extendContent: '',
@@ -202,7 +210,10 @@
 				this.content = data.content;
 				this.punchCardWay = data.punchCardWay;
 				this.param.pictures = data.pictures;
+				this.xinXin= data.xinXin;
+				this.dongLi= data.dongLi;
 			}
+			
 			this.tabs();
 		},
 		methods: {
@@ -453,6 +464,31 @@
 
 				});
 			},
+			//获取定位
+			addLocat(){
+				uni.authorize({
+				    scope: 'scope.userLocation',
+				    success() {
+				        uni.getLocation({
+				        	// #ifdef APP-PLUS
+				        	type: ' gcj02',
+				        	// #endif
+				        	// #ifdef MP
+				        	type: ' wgs84',
+				        	// #endif
+				        	altitude: true,
+				        	geocode: true,
+				        	success: res => {
+								console.log(res)
+								
+				        	},
+				        	fail: res => {
+				        		console.log('获取定位失败', res.errMsg);
+				        	}
+				        });
+				    }
+				})
+			}
 
 		}
 	};
@@ -522,5 +558,11 @@
 		flex-wrap: wrap;
 		line-height: 100upx;
 		justify-content: space-evenly;
+	}
+	.titleBT{
+		
+			    font-size: 35rpx;
+			    
+		
 	}
 </style>

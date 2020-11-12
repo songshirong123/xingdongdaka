@@ -6,10 +6,13 @@ export const env = accountInfo.miniProgram.envVersion;
 const baseApi = {
   // 开发版
    // develop: "https://xingdongdaka.zhidashixun.com",
-  develop: "https://xingdongdaka.zhidashixun.com",
+  develop: "http://testxingdongdaka.zhidashixun.com",
   // 体验版
+
   // trial: "http://testxingdongdaka.zhidashixun.com",
-  trial: "https://testxingdongdaka.zhidashixun.com",
+  trial: "http://testxingdongdaka.zhidashixun.com",
+
+  // trial: "https://testxingdongdaka.zhidashixun.com",
   // 正式版
   release: "https://xingdongdaka.zhidashixun.com"
 };
