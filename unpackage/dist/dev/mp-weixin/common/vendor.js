@@ -1807,9 +1807,9 @@ uni$1;exports.default = _default;
 /***/ }),
 
 /***/ 12:
-/*!*********************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
-  \*********************************************************************/
+/*!***********************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2956,9 +2956,9 @@ var index = {
 /***/ }),
 
 /***/ 152:
-/*!**************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/utils/qqmap-wx-jssdk.js ***!
-  \**************************************************************************/
+/*!****************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/utils/qqmap-wx-jssdk.js ***!
+  \****************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4218,9 +4218,9 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 17:
-/*!*****************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/store/index.js ***!
-  \*****************************************************************/
+/*!*******************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/store/index.js ***!
+  \*******************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4267,9 +4267,9 @@ store;exports.default = _default;
 /***/ }),
 
 /***/ 18:
-/*!*************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
-  \*************************************************************************/
+/*!***************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
+  \***************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4393,9 +4393,9 @@ serverBaseUrl + '/room/quitByUserId'), _serverUrls);var _default =
 /***/ }),
 
 /***/ 19:
-/*!***********************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
-  \***********************************************************************/
+/*!*************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
+  \*************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -5658,13 +5658,11 @@ Dep.SharedObject.targetStack = [];
 function pushTarget (target) {
   Dep.SharedObject.targetStack.push(target);
   Dep.SharedObject.target = target;
-  Dep.target = target;
 }
 
 function popTarget () {
   Dep.SharedObject.targetStack.pop();
   Dep.SharedObject.target = Dep.SharedObject.targetStack[Dep.SharedObject.targetStack.length - 1];
-  Dep.target = Dep.SharedObject.target;
 }
 
 /*  */
@@ -10505,14 +10503,13 @@ function cloneWithData(vm) {
   }, ret);
 
   // vue-composition-api
-  var compositionApiState = vm.__composition_api_state__ || vm.__secret_vfa_state__;
-  var rawBindings = compositionApiState && compositionApiState.rawBindings;
+  var rawBindings = vm.__secret_vfa_state__ && vm.__secret_vfa_state__.rawBindings;
   if (rawBindings) {
     Object.keys(rawBindings).forEach(function (key) {
       ret[key] = vm[key];
     });
   }
-
+  
   //TODO 需要把无用数据处理掉，比如 list=>l0 则 list 需要移除，否则多传输一份数据
   Object.assign(ret, vm.$mp.data || {});
   if (
@@ -10955,9 +10952,9 @@ internalMixin(Vue);
 /***/ }),
 
 /***/ 20:
-/*!*********************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
-  \*********************************************************************/
+/*!***********************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
+  \***********************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11011,9 +11008,9 @@ module.exports = g;
 /***/ }),
 
 /***/ 4:
-/*!*************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json ***!
-  \*************************************************************/
+/*!***************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/pages.json ***!
+  \***************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11022,9 +11019,9 @@ module.exports = g;
 /***/ }),
 
 /***/ 41:
-/*!******************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
-  \******************************************************************************/
+/*!********************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11033,9 +11030,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 /***/ }),
 
 /***/ 42:
-/*!*******************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
-  \*******************************************************************************/
+/*!*********************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
+  \*********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12827,14 +12824,14 @@ if (hadRuntime) {
 /*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-29320201014001\",\"_inBundle\":false,\"_integrity\":\"sha512-XQEghsD2SDyxZqRkQ5RXl6pqnOHGlCtNCLysmOcWV437twGEvvds3OgINdyV9DEEI9G3Vt9ESrZ+biDZzA0psA==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-29320201014001.tgz\",\"_shasum\":\"08b0fb1bb25f3a29f6889d192f182444d9742ac3\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"969deb11c7fed98826823e1d8142bb1e6318fd98\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-29320201014001\"}");
+module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-28920200923001\",\"_inBundle\":false,\"_integrity\":\"sha512-VajbPlCUcWQNKT114irqeXzch1Q1huyENvkmXzwiS/U1K3B03/oia4YSbmCulMENX9Ykl+QkhdHzu2myEFkA1g==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-28920200923001.tgz\",\"_shasum\":\"a40d5775c6635b8fcc14f2218b67c9471b6625f2\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"59d53ac1e48d8d2a3dd7c622e07f6553b8c8a0c6\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-28920200923001\"}");
 
 /***/ }),
 
 /***/ 7:
-/*!*****************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
-  \*****************************************************************************/
+/*!*******************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
+  \*******************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12844,9 +12841,9 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /***/ }),
 
 /***/ 8:
-/*!******************************************************************************!*\
-  !*** E:/Documents/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
-  \******************************************************************************/
+/*!********************************************************************!*\
+  !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
+  \********************************************************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
