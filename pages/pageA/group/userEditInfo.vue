@@ -23,6 +23,7 @@
 				inputMsg: ""
 			}
 		},
+		
 		methods: {
 			inputInfo(e) {
 				this.inputMsg = e.detail.value;
