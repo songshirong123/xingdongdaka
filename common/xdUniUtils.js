@@ -315,22 +315,20 @@ function xd_showImg(list,num) {
 }
 //随机图片
 function xd_randomImg() {
-	var ig=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733487746.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733529495.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733539676.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733559484.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733565500.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733578216.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733591005.png",
+	var ig=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187912470.png",
+	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187930074.png"
 	];
-	var num=Math.floor(Math.random()*7+1);
+	var num=Math.floor(Math.random()*5+1);
 	return ig[num]
 }
 //分享
 function xd_onShare(title, path, imageUrl) {
   //设置一个默认分享背景图片
-  let defaultImageUrl = 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png';
+  let defaultImageUrl = 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png';
   let defaultTitle="科学乐趣达目标 - 志趣相投交朋友";
   let defaultPath="/pages/index/index";
  
