@@ -78,7 +78,7 @@
 				return {
 					title:'我为@'+that.listsTab[res.target.id].userName+'拉赞助：'+ that.listsTab[res.target.id].pushCardList[0].content,
 					path: '/pages/index/action/action?pushId='+that.listsTab[res.target.id].id+'&share='+uni.getStorageSync('id')+'&isopen='+that.listsTab[res.target.id].isopen,
-					imageUrl:that.listsTab[res.target.id].pictures?that.listsTab[res.target.id].pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1595733463227.png',
+					imageUrl:that.listsTab[res.target.id].pictures?that.listsTab[res.target.id].pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
 				}
 			}		
 		},
