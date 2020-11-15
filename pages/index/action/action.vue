@@ -195,10 +195,10 @@
 							<text class="cuIcon-close text-red"></text>
 						</view>
 					</view>
-					<view class="padding-sm">
-						<textarea auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
+					<view class="padding-sm text-sm texttDonAndXin">
+						<textarea class="textarescss" auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
 					</view>
-					<button v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
+					<button class="buttonDonAndXin text-orange" v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
 				</view>
 			</view>
 			<backTop :scrollTop="scrollTop"></backTop>
@@ -966,6 +966,14 @@
 }
 .testdonli{
 	flex-wrap: nowrap;
+}
+.textarescss{
+	width: 100%;
+	
+}
+.buttonDonAndXin{
+	// background: #ffe66f;
+	// border: 2px solid #ffa700;
 }
 
 </style>
