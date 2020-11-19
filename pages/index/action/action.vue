@@ -10,7 +10,7 @@
 							<view @tap="goUser(pushList.userId)">{{pushList.userName}}</view>
 						</view>
 						<view >
-							<!-- <view class="cu-tag line-orange radius"   @tap="clickGroup" >互助小组</view> -->
+							<view class="cu-tag line-orange radius"   @tap="clickGroup(pushList.userId)" >互助小组</view>
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
@@ -49,25 +49,25 @@
 							</view>
 							
 						</view>
-						<view class='xd-flex'>
-							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" >
+						<view class='xd-flex' style="margin-top: 3px;">
+							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
 								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
 									保证金￥{{pushList.challengeRmb}}
 								</view> 
 							</view>
-							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0">
+							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
 								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
 									保证金￥{{pushList.challengeRmb+sponsorRmb}}
 								</view>
 							</view>
-							<view style="padding-left:6px"  v-if="userId==pushList.userId && sponsorRmb>0" >
+							<view style="margin-right: 6px;"  v-if="userId==pushList.userId && sponsorRmb>0" >
 								<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)" >
 									获赞助金￥{{sponsorRmb}} 
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df " >{{sponsorCnt}}</text>
 							</view>
 
-							<view style="padding-left:6px"  v-if="userId!=pushList.userId && sponsorCnt>0"  >
+							<view  style="margin-right: 6px;" v-if="userId!=pushList.userId && sponsorCnt>0"  >
 								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)"  >
 									赞助 
 								</view>
@@ -195,10 +195,10 @@
 							<text class="cuIcon-close text-red"></text>
 						</view>
 					</view>
-					<view class="padding-sm">
-						<textarea auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
+					<view class="padding-sm text-sm texttDonAndXin">
+						<textarea class="textarescss" auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
 					</view>
-					<button v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
+					<button class="buttonDonAndXin text-orange" v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
 				</view>
 			</view>
 			<backTop :scrollTop="scrollTop"></backTop>
@@ -303,11 +303,11 @@
 			if(that.pusCardList.length>0){
 				 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
 				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
-				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png';
+				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png';
 			}
 		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
 		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
-		    let	img2=that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png';
+		    let	img2=that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png';
 			if(res.from=="menu"){
 				
 			if(that.pusCardList.length>0){
@@ -338,7 +338,7 @@
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
 					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(),
 				}
 				
 			}else{
@@ -346,13 +346,26 @@
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
 					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(),
 				}
 				
 			}
 		},
 		//#endif
 		methods:{
+			
+			//互助小组点击事件
+			clickGroup(userid){
+				if(userid == uni.getStorageSync('id')){
+					uni.navigateTo({
+						url:'../../pageA/group/groupList?userId='+userid
+					})
+				}else{
+					uni.reLaunch({
+						url:'../index?isGroupLable=true'
+					})
+				}
+			},
 			//动力信心修改内容
 			textDonAndXin(e){
 				this.cententdata=e.detail.value;
@@ -966,6 +979,14 @@
 }
 .testdonli{
 	flex-wrap: nowrap;
+}
+.textarescss{
+	width: 100%;
+	
+}
+.buttonDonAndXin{
+	// background: #ffe66f;
+	// border: 2px solid #ffa700;
 }
 
 </style>

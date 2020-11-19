@@ -70,13 +70,21 @@
 							</view>
 						</scroll-view>
 					</view>
-					<!-- <view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
+<<<<<<< HEAD
+					<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
-					</view> -->
+					</view>
 					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
+=======
+					<view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
+						<view>互助小组</view>
+>>>>>>> b6d518609afbb6f435dec79b8b6c045ae18a895c
 					</view>
- -->
+				<!-- 	<view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
+						<view>挑战赛</view>
+					</view> -->
+
 					<!-- 互助小组对应内容 -->
 					<view class="xd-line"></view>
 					<view v-if="isGroupLable">
@@ -220,7 +228,7 @@
 				scrollTopinfo: true,
 				listnoticedata: '',
 				adHeight: '',
-
+				showHzGroup: this.xdUniUtils.showHzGroup()
 			};
 		},
 		onPageScroll(e) {
@@ -250,7 +258,7 @@
 					path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync('id') +
 						'&isopen=' + that.listsTab[res.target.id].isopen,
 					imageUrl: that.listsTab[res.target.id].pushCardList[0].pictures[0] ? that.listsTab[res.target.id].pushCardList[0].pictures[
-						0] : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+						0] : that.xdUniUtils.xd_randomImg(),
 				}
 			}
 		},
@@ -376,9 +384,9 @@
 
 			//通知跳转
 			showMore(e) {
-				if(this.listnoticedata[e].desc==''||this.listnoticedata[e].desc==undefined){
-					return 
-				 } 
+				if (this.listnoticedata[e].desc == '' || this.listnoticedata[e].desc == undefined) {
+					return
+				}
 				if (this.listnoticedata[e].type == 1) {
 					var url = encodeURIComponent(this.listnoticedata[e].desc);
 					uni.navigateTo({
@@ -622,8 +630,9 @@
 					} else {
 						dataList[i].pushCardList[0].pictures = [];
 					}
-					
-					dataList[i].pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(dataList[i].pushCardList[0].address)?"":dataList[i].pushCardList[0].address;
+
+					dataList[i].pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(dataList[i].pushCardList[0].address) ? "" :
+						dataList[i].pushCardList[0].address;
 					dataList[i].pushCardList[0].createTime = time;
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
@@ -878,13 +887,16 @@
 		padding-bottom: 3px;
 		background: #FFFFFF;
 		border-radius: 30upx;
-		border: 1px solid #626466;
+		border: 1px solid #fd5107;
 		font-size: 12px;
+		background: #fbf3e6;
+		color:#fd5107
 	}
 
 	.group-active {
 		border: 1px solid #fd5107;
-		color: #fd5107;
+		background: #fd5107;
+		color: #FFFFFF;
 	}
 
 

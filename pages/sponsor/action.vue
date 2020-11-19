@@ -18,64 +18,78 @@
 					<view class="flex flex-wrap padding justify-between">
 						<view class="widthtext " >
 							<view class="flex flex-wrap justify-between">
-								<view class="cu-tag bg-grey radio">{{pushList.label}}</view>
-								<view class="text-xl" v-if="pushList.isopen==1">
-									<text class="lg text-orange cuIcon-lock" ></text>
+								<view class="">
+									<text class="text-orange" v-if="pushList.pushCardStatus==1">进行中...</text>
+									<text class="text-gray" v-else-if="pushList.pushCardStatus==2">未达成</text>
+									<text class="text-green" v-else-if="pushList.pushCardStatus==3">已达成</text>
+									<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
 								</view>
 							</view>
 							
 							<view class="text-gray text-sm ">
 								阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
 							</view>
-							<view class="text-gray text-sm ">
-								已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
-							</view>
-							<view class="text-gray text-sm ">
-								可休假天数： 
-									<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
-										{{pushList.kholidayDay}}
-									</view>
-									<view class="text-sm text-red display-inline" v-else>
-										超期{{Math.abs(pushList.surpassHolidayDay)}}
-									</view>
-									<view class="text-sm display-inline">
-										/{{pushList.holidayDay}}
-									</view>
+							<view class="xd-rows">
+								<view class="text-gray text-sm ">
+									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}  
+								</view>
+								<view class="text-gray text-sm " style="margin-left: 10px;">
+									可休假天数： 
+										<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
+											{{pushList.kholidayDay}}
+										</view>
+										<view class="text-sm text-red display-inline" v-else>
+											超期{{Math.abs(pushList.surpassHolidayDay)}}
+										</view>
+										<view class="text-sm display-inline">
+											/{{pushList.holidayDay}}
+										</view>
+								</view>
 							</view>
 						</view>
-						<view class='xd-flex'>
-							<view v-if="userId==pushList.userId && pushList.challengeRmb>0">
+						<view class='xd-flex' style="margin-top: 3px;">
+							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
 								<view class="cu-tag light bg-red radius" >
 									保证金￥{{pushList.challengeRmb}}
 								</view>
 							</view>
-							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0">
+							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
 								<view class="cu-tag light bg-red radius" >
 									保证金￥{{pushList.challengeRmb+sponsorRmb}}
 								</view>
 							</view>
-							<view style="padding-left:6px"  v-if="userId==pushList.userId && sponsorRmb>0">
+							<view style="margin-right: 6px;"  v-if="userId==pushList.userId && sponsorRmb>0">
 								<view class="cu-tag radius bg-yellow " >
 									获赞助金￥{{sponsorRmb}} 
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
 
-							<view style="padding-left:6px"  v-if="userId!=pushList.userId && sponsorCnt>0">
+							<view  v-if="userId!=pushList.userId && sponsorCnt>0">
 								<view class="cu-tag radius bg-yellow" >
 									赞助 
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
 						</view>	
+						<view class="widthtext margin-top-sm" >
+							<view class="text-gray text-sm flex flex-wrap align-center testdonli" >
+								<view class="text-xl">
+									<text class="lg text-gray cuIcon-write"></text>
+								</view>
+								<text class=" margin-left-xs testcontentshow" >动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
+							</view>
+							<view class="text-gray text-sm margin-top-sm flex flex-wrap align-center testdonli" >
+								<view class="text-xl">
+									<text class="lg text-gray cuIcon-write"></text>
+								</view>
+								<text class=" margin-left-xs testcontentshow">信心：{{pushList.xinXin?pushList.xinXin:""}}</text>
+							</view>
+						</view>
 					</view>
 				</view>
-				
-				<view class="text-contents">
-					<text class="contentext" >{{pushList.content}}
-					</text>
-					
-					
+				<view class="text-contents contentext">
+					<text style="font-size: 14px;font-weight: 700;">{{pushList.content}}</text>
 				</view>
 				<view class="grid flex-sub padding-lr"  >
 					<image class="bg-img imgheit"  :src="pushList.pictures" mode="aspectFill"
@@ -85,6 +99,7 @@
 					 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 					</image>
 				</view>
+				
 				
 				<view v-if="sponsorList.length>0" class="solids-top margin-top">
 					<view class="cu-list menu-avatar comment solids-top">
@@ -156,9 +171,35 @@
 					
 				</view >	
 
-				<view  class="margin-top" style="padding:30px">
+				<view  style="padding: 10px;">
+					<block v-for="(item,index) in pusCardList" :key="index" >
+						<view class="cu-timeline">
+							<view class="cu-time" v-if="index == 0 || compareDate(pusCardList[index-1],item)">{{item.createTime}}</view>
+							<view class="cu-item">
+								<view class="content">
+									<view class="">
+										<view class="cu-tag line-green">第{{pusCardList.length-index}}次打卡</view>
+									</view>
+									<view  class="margin-top-sm margin-bottom-sm margin-left-lg textcon" @tap="gocardComentList(item,0)">{{item.content}}</view>
+									<view class="videheit" v-if="item.videos!=''&&item.videos!=undefined &&item.videos!=null ">
+										<video class="videos"  :src="item.videos" controls></video>
+									</view>
+									<view v-else class="grid flex-sub padding-lr"   >
+										<image class="bg-img imgheit"  :src="item.pictures[0]" mode="aspectFill"
+										 @tap="goPageImg(item.pictures)" v-if="item.pictures.length!=''">
+										</image>
+									</view>
+									<view class="text-xxl flex flex-wrap justify-end " @tap="gocardComentList(item,1)">
+										<text class="text-gray cuIcon-comment  "></text>
+										<text class="text-gray text-df">{{item.commentCount}}</text>
+									</view>
+								</view>
+							</view>
+						</view>
+					</block>
 					
-				</view >	
+				</view>
+					
 				
 
 				<view  style="background:#fff" class="cu-bar foot flex padding justify-around" >
@@ -254,7 +295,7 @@
 			return {
 					title: '我为@'+that.pushList.userName+'拉赞助：'+that.pushList.content,
 					path: '/pages/sponsor/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
 			}
 			// return {
 			// 	title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'拉赞助：'+that.pusCardList[0].content,
@@ -551,6 +592,7 @@
 				},true).then(res=>{
 					var data=res.obj.list;
 					for(let i=0;i<res.obj.list.length;i++){
+						data[i].createTime=this.xdUniUtils.xd_timestampToTime(data[i].createTime,false,false,false);
 						if(res.obj.list[i].pictures!=""){
 							data[i].pictures=res.obj.list[i].pictures.split(',')
 						}

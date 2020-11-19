@@ -25,14 +25,14 @@
 							</view> --> 
 						</view>
 						<view >
-							<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(pusCardLists.userId)" >互助小组</view> -->
+							<view v-if="showHzGroup" class="cu-tag line-orange radius" @tap="clickGroup(pusCardLists.userId)" >互助小组</view>
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">{{guanzhu}}</view>
 						</view>
 					</view>
 				</view>				
 				<view class="text-contents margin-top-sm">
 					<view class="cu-tag bg-pink radius sm" >第{{dakacishu}}次打卡</view>
-					<text class="contentext" >{{showCardCommentlist.pushCard.content}}</text>			
+					<text class="contentext" style="padding-left: 5px;">{{showCardCommentlist.pushCard.content}}</text>			
 				</view>	
 				<view class="padding-lr" v-if="showCardCommentlist.pushCard.videos!=''&&showCardCommentlist.pushCard.videos!=undefined&&showCardCommentlist.pushCard.videos!=null">
 					<video class="videoheit" 
@@ -62,7 +62,7 @@
 					<view class="flex flex-wrap padding justify-between align-center">
 						<view class="flex  flex-wrap " >
 							<view class="">所属行动</view>
-							<view class="text-gray text-sm  margincardlist ">
+							<view class="text-gray text-sm  margincardlist " style="padding-left: 5px;">
 								{{pusCardLists.createTime }}  ({{pusCardLists.pushCardCount}}/{{pusCardLists.targetDay}})
 							</view>
 						</view>
@@ -175,7 +175,8 @@
 				showCardCommentlist:'',
 				guanzhu:'关注',
 				pushCardCreateTime:'',
-				dakacishu:0
+				dakacishu:0,
+				showHzGroup:this.xdUniUtils.showHzGroup()
 			}
 		},
 		watch:{
@@ -203,7 +204,7 @@
 			}
 			let text=that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content;
 			let pathText='/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+that.id+'&isopen='+that.pusCardLists.isopen;
-			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png';
+			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg();
 			if(res.from=="menu"){
 			return	that.xdUniUtils.xd_onShare(text,pathText,img
 			);
@@ -219,7 +220,7 @@
 			return {
 				title:that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content,
 				query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
-				imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png',
+				imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(),
 			}
 				
 			
