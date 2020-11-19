@@ -467,7 +467,12 @@ function  showToast(isSuccess, content, methodes) {
 	}
 }
 
+function showHzGroup(){
+	return false;
+}
+
 export default {
+	showHzGroup,
 	showToast,
 	IsNullOrEmpty,
 	updateNumber,

@@ -10,7 +10,7 @@
 							<view @tap="goUser(pushList.userId)">{{pushList.userName}}</view>
 						</view>
 						<view >
-							<!-- <view class="cu-tag line-orange radius"   @tap="clickGroup" >互助小组</view> -->
+							<view class="cu-tag line-orange radius"   @tap="clickGroup(pushList.userId)" >互助小组</view>
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
@@ -49,25 +49,25 @@
 							</view>
 							
 						</view>
-						<view class='xd-flex'>
-							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" >
+						<view class='xd-flex' style="margin-top: 3px;">
+							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
 								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
 									保证金￥{{pushList.challengeRmb}}
 								</view> 
 							</view>
-							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0">
+							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
 								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
 									保证金￥{{pushList.challengeRmb+sponsorRmb}}
 								</view>
 							</view>
-							<view style="padding-left:6px"  v-if="userId==pushList.userId && sponsorRmb>0" >
+							<view style="margin-right: 6px;"  v-if="userId==pushList.userId && sponsorRmb>0" >
 								<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)" >
 									获赞助金￥{{sponsorRmb}} 
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df " >{{sponsorCnt}}</text>
 							</view>
 
-							<view style="padding-left:6px"  v-if="userId!=pushList.userId && sponsorCnt>0"  >
+							<view  style="margin-right: 6px;" v-if="userId!=pushList.userId && sponsorCnt>0"  >
 								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)"  >
 									赞助 
 								</view>
@@ -353,6 +353,19 @@
 		},
 		//#endif
 		methods:{
+			
+			//互助小组点击事件
+			clickGroup(userid){
+				if(userid == uni.getStorageSync('id')){
+					uni.navigateTo({
+						url:'../../pageA/group/groupList?userId='+userid
+					})
+				}else{
+					uni.reLaunch({
+						url:'../index?isGroupLable=true'
+					})
+				}
+			},
 			//动力信心修改内容
 			textDonAndXin(e){
 				this.cententdata=e.detail.value;

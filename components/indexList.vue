@@ -29,11 +29,11 @@
 				
 				<view class="text-content margin-top-sm padding-bottom-sm" @tap="goComentConten(list)">				
 					<view class="cu-tag bg-pink radius sm" >打卡</view>
-					<text class="contentext" >{{list.pushCardList[0].content}}</text>
+					<text class="contentext"  style="padding-left: 5px;">{{list.pushCardList[0].content}}</text>
 				</view>
 				<view class="text-content margin-top-sm padding-bottom-sm"  @tap="goPageCard(list)" v-if="list.pushCardCount.length==0">
 					<view class="cu-tag bg-green radius sm" >行动</view>
-					<text class="contentext" >{{list.content}}</text>
+					<text class="contentext" style="padding-left: 5px;">{{list.content}}</text>
 				</view>
 				
 				<view class="grid flex-sub padding-lr " :class="list.pushCardList[0].videos!=''?'col-3 grid-square':'col-1'" v-if="list.pushCardList[0].videos!=undefined && list.pushCardList[0].videos!=null && list.pushCardList[0].videos!=''">

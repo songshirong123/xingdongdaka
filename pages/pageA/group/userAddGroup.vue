@@ -172,13 +172,17 @@
 			getBalance(){
 				let _this =this;
 				this.xd_request_post(this.xdServerUrls.xd_inquireBalance,{token:uni.getStorageSync('token')},true).then((res) => {
+						console.log("res.obj xd_inquireBalance")
+						console.log(res.obj)
 					if(typeof res.obj.rmb !== undefined){
+					
 						// this.rmb=res.obj.rmb/100;
-						if(_this.group.rmb >res.obj.rmb){//如果余额不足以支付用微信支付
-							_this.wxChartPay();
-						}else{//用余额支付
+						// if(_this.group.rmb >res.obj.rmb){//如果余额不足以支付用微信支付
+						// 	_this.wxChartPay();
+						// }else{//用余额支付
 							
-						}
+						// }
+						_this.wxChartPay();
 					}else{
 						_this.wxChartPay();
 					}
