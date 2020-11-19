@@ -328,7 +328,8 @@ function xd_randomImg() {
 //分享
 function xd_onShare(title, path, imageUrl) {
   //设置一个默认分享背景图片
-  let defaultImageUrl = 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png';
+ 
+  let defaultImageUrl =  this.xd_randomImg();
   let defaultTitle="科学乐趣达目标 - 志趣相投交朋友";
   let defaultPath="/pages/index/index";
  

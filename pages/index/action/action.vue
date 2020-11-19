@@ -195,10 +195,10 @@
 							<text class="cuIcon-close text-red"></text>
 						</view>
 					</view>
-					<view class="padding-sm">
-						<textarea auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
+					<view class="padding-sm text-sm texttDonAndXin">
+						<textarea class="textarescss" auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
 					</view>
-					<button v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
+					<button class="buttonDonAndXin text-orange" v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
 				</view>
 			</view>
 			<backTop :scrollTop="scrollTop"></backTop>
@@ -338,7 +338,7 @@
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
 					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
+					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(),
 				}
 				
 			}else{
@@ -346,7 +346,7 @@
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
 					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
+					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(),
 				}
 				
 			}
@@ -979,6 +979,14 @@
 }
 .testdonli{
 	flex-wrap: nowrap;
+}
+.textarescss{
+	width: 100%;
+	
+}
+.buttonDonAndXin{
+	// background: #ffe66f;
+	// border: 2px solid #ffa700;
 }
 
 </style>

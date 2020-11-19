@@ -204,7 +204,7 @@
 			}
 			let text=that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content;
 			let pathText='/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+that.id+'&isopen='+that.pusCardLists.isopen;
-			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png';
+			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg();
 			if(res.from=="menu"){
 			return	that.xdUniUtils.xd_onShare(text,pathText,img
 			);
@@ -220,7 +220,7 @@
 			return {
 				title:that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content,
 				query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
-				imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
+				imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(),
 			}
 				
 			
