@@ -84,8 +84,7 @@ page {
   height: 65rpx;
   line-height: 65rpx;
   border: 1px solid #ffa700;
-  -webkit-border-radius: 5px;
-          border-radius: 5px;
+  border-radius: 5px;
   overflow: hidden;
   position: relative;
 }

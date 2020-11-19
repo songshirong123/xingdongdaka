@@ -70,8 +70,16 @@
 							</view>
 						</scroll-view>
 					</view>
+<<<<<<< HEAD
+					<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
+						<view>互助小组</view>
+					</view>
+					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
+						<view>挑战赛</view>
+=======
 					<view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
+>>>>>>> b6d518609afbb6f435dec79b8b6c045ae18a895c
 					</view>
 				<!-- 	<view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
@@ -220,7 +228,7 @@
 				scrollTopinfo: true,
 				listnoticedata: '',
 				adHeight: '',
-
+				showHzGroup: this.xdUniUtils.showHzGroup()
 			};
 		},
 		onPageScroll(e) {
@@ -376,9 +384,9 @@
 
 			//通知跳转
 			showMore(e) {
-				if(this.listnoticedata[e].desc==''||this.listnoticedata[e].desc==undefined){
-					return 
-				 } 
+				if (this.listnoticedata[e].desc == '' || this.listnoticedata[e].desc == undefined) {
+					return
+				}
 				if (this.listnoticedata[e].type == 1) {
 					var url = encodeURIComponent(this.listnoticedata[e].desc);
 					uni.navigateTo({
@@ -622,8 +630,9 @@
 					} else {
 						dataList[i].pushCardList[0].pictures = [];
 					}
-					
-					dataList[i].pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(dataList[i].pushCardList[0].address)?"":dataList[i].pushCardList[0].address;
+
+					dataList[i].pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(dataList[i].pushCardList[0].address) ? "" :
+						dataList[i].pushCardList[0].address;
 					dataList[i].pushCardList[0].createTime = time;
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
