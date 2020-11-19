@@ -114,25 +114,22 @@
 			"style": {
 				"navigationBarTitleText": "赞助详情"
 			}
-		},{
-            "path" : "pages/selfCenter/addressList",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的地址",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-        ,{
-            "path" : "pages/selfCenter/cityList",
-            "style" :                                                                                    
-            {
-                "navigationBarTitleText": "我的城市",
-                "enablePullDownRefresh": false
-            }
-            
-        }
-    ],
+		}, {
+			"path": "pages/selfCenter/addressList",
+			"style": {
+				"navigationBarTitleText": "我的地址",
+				"enablePullDownRefresh": false
+			}
+
+		}, {
+			"path": "pages/selfCenter/cityList",
+			"style": {
+				"navigationBarTitleText": "我的城市",
+				"enablePullDownRefresh": false
+			}
+
+		}
+	],
 	"subPackages": [{
 		"root": "pages/pageA",
 		"pages": [{
@@ -232,6 +229,16 @@
 				"path": "group/usersVote",
 				"style": {
 					"navigationBarTitleText": "投票"
+				}
+			}, {
+				"path": "merchant/merchant",
+				"style": {
+					"navigationBarTitleText": "审核权限"
+				}
+			}, {
+				"path": "merchant/merchantPay",
+				"style": {
+					"navigationBarTitleText": "支付开通"
 				}
 			}
 		]
