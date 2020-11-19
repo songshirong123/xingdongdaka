@@ -970,6 +970,7 @@
 	.defaultbut{
 		height: 60upx;
 		line-height: 1.9;
+		font-size: 14px;
 	}
 .testcontentshow{
 	display: -webkit-box;
