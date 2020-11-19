@@ -194,8 +194,8 @@
 				inimg: '',
 				adtime: 31,
 				active: 1,
-				adid: [],
-				// adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
+				// adid: [],
+				adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
 				currentIndex: -1,
 				isGroupLable: false,
 				isRankingLable: false,
@@ -250,7 +250,7 @@
 					path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync('id') +
 						'&isopen=' + that.listsTab[res.target.id].isopen,
 					imageUrl: that.listsTab[res.target.id].pushCardList[0].pictures[0] ? that.listsTab[res.target.id].pushCardList[0].pictures[
-						0] : that.xdUniUtils.xd_randomImg(),
+						0] : that.xdUniUtils.xd_randomImg(1),
 				}
 			}
 		},
@@ -408,6 +408,7 @@
 					});
 				} else if (this.bannerList[e].type == 2) {
 					var url = encodeURIComponent(this.bannerList[e].bannerUrl);
+					console.log(url)
 					uni.navigateTo({
 						url: '../pageA/web/webShow?url=' + url
 					});
@@ -479,7 +480,6 @@
 
 					this.bannerList = res.obj;
 					this.adid.push(...res.obj);
-
 				}).catch(err => {});
 				this.getimg();
 				this.xd_request_post(this.xdServerUrls.xd_label, {}, false).then((res) => {

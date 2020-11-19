@@ -198,7 +198,7 @@
 					<view class="padding-sm text-sm texttDonAndXin">
 						<textarea class="textarescss" auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
 					</view>
-					<button class="buttonDonAndXin text-orange" v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
+					<button class="buttonDonAndXin " v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
 				</view>
 			</view>
 			<backTop :scrollTop="scrollTop"></backTop>
@@ -303,11 +303,11 @@
 			if(that.pusCardList.length>0){
 				 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
 				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
-				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png';
+				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1);
 			}
 		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
 		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
-		    let	img2=that.pushList.pictures?that.pushList.pictures:'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png';
+		    let	img2=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1);
 			if(res.from=="menu"){
 				
 			if(that.pusCardList.length>0){
@@ -338,7 +338,7 @@
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
 					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(),
+					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1),
 				}
 				
 			}else{
@@ -346,7 +346,7 @@
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
 					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(),
+					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1),
 				}
 				
 			}
@@ -969,6 +969,7 @@
 }
 .textarescss{
 	width: 100%;
+	text-align: left;
 	
 }
 .buttonDonAndXin{
