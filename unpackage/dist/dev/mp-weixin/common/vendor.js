@@ -904,7 +904,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_NAME":"xingdongdaka","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -1807,15 +1807,9 @@ uni$1;exports.default = _default;
 /***/ }),
 
 /***/ 12:
-<<<<<<< HEAD
 /*!***********************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/common/xdConfig.js ***!
   \***********************************************************/
-=======
-/*!************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdConfig.js ***!
-  \************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -2965,15 +2959,9 @@ var index = {
 /***/ }),
 
 /***/ 152:
-<<<<<<< HEAD
 /*!****************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/utils/qqmap-wx-jssdk.js ***!
   \****************************************************************/
-=======
-/*!*****************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/utils/qqmap-wx-jssdk.js ***!
-  \*****************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -4233,15 +4221,9 @@ function normalizeComponent (
 /***/ }),
 
 /***/ 17:
-<<<<<<< HEAD
 /*!*******************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/store/index.js ***!
   \*******************************************************/
-=======
-/*!********************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/store/index.js ***!
-  \********************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4288,15 +4270,9 @@ store;exports.default = _default;
 /***/ }),
 
 /***/ 18:
-<<<<<<< HEAD
 /*!***************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/common/xdServerUrls.js ***!
   \***************************************************************/
-=======
-/*!****************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdServerUrls.js ***!
-  \****************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -4421,15 +4397,9 @@ serverBaseUrl + '/room/quitByUserId'), _serverUrls);var _default =
 /***/ }),
 
 /***/ 19:
-<<<<<<< HEAD
 /*!*************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/common/xdUniUtils.js ***!
   \*************************************************************/
-=======
-/*!**************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdUniUtils.js ***!
-  \**************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -10463,7 +10433,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_NAME":"xingdongdaka","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -10484,14 +10454,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_NAME":"xingdongdaka","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_NAME":"xingdongdaka","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -10576,7 +10546,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = this.$shouldDiffData === false ? data : diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_NAME":"xingdongdaka","VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -10984,15 +10954,9 @@ internalMixin(Vue);
 /***/ }),
 
 /***/ 20:
-<<<<<<< HEAD
 /*!***********************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/common/xdCommon.js ***!
   \***********************************************************/
-=======
-/*!************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/common/xdCommon.js ***!
-  \************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11046,15 +11010,9 @@ module.exports = g;
 /***/ }),
 
 /***/ 4:
-<<<<<<< HEAD
 /*!***************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/pages.json ***!
   \***************************************************/
-=======
-/*!****************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json ***!
-  \****************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11063,15 +11021,9 @@ module.exports = g;
 /***/ }),
 
 /***/ 41:
-<<<<<<< HEAD
 /*!********************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/left.png ***!
   \********************************************************************/
-=======
-/*!*********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/left.png ***!
-  \*********************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -11080,15 +11032,9 @@ module.exports = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABX
 /***/ }),
 
 /***/ 42:
-<<<<<<< HEAD
 /*!*********************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/static/images/icon/right.png ***!
   \*********************************************************************/
-=======
-/*!**********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/static/images/icon/right.png ***!
-  \**********************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports) {
 
@@ -12880,24 +12826,14 @@ if (hadRuntime) {
 /*! exports provided: _from, _id, _inBundle, _integrity, _location, _phantomChildren, _requested, _requiredBy, _resolved, _shasum, _spec, _where, author, bugs, bundleDependencies, deprecated, description, devDependencies, files, gitHead, homepage, license, main, name, repository, scripts, version, default */
 /***/ (function(module) {
 
-<<<<<<< HEAD
 module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-28920200923001\",\"_inBundle\":false,\"_integrity\":\"sha512-VajbPlCUcWQNKT114irqeXzch1Q1huyENvkmXzwiS/U1K3B03/oia4YSbmCulMENX9Ykl+QkhdHzu2myEFkA1g==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-28920200923001.tgz\",\"_shasum\":\"a40d5775c6635b8fcc14f2218b67c9471b6625f2\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"59d53ac1e48d8d2a3dd7c622e07f6553b8c8a0c6\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-28920200923001\"}");
-=======
-module.exports = JSON.parse("{\"_from\":\"@dcloudio/uni-stat@next\",\"_id\":\"@dcloudio/uni-stat@2.0.0-29720201105001\",\"_inBundle\":false,\"_integrity\":\"sha512-etbUoavFKvWIh5ZrtmPKuN+hIbqOi1qc8CxcN8RvkLSST+L9aMhzRlEadDS3psmsJOvv9hvM2DlRtJ/SBoNCVQ==\",\"_location\":\"/@dcloudio/uni-stat\",\"_phantomChildren\":{},\"_requested\":{\"type\":\"tag\",\"registry\":true,\"raw\":\"@dcloudio/uni-stat@next\",\"name\":\"@dcloudio/uni-stat\",\"escapedName\":\"@dcloudio%2funi-stat\",\"scope\":\"@dcloudio\",\"rawSpec\":\"next\",\"saveSpec\":null,\"fetchSpec\":\"next\"},\"_requiredBy\":[\"#USER\",\"/\",\"/@dcloudio/vue-cli-plugin-uni\"],\"_resolved\":\"https://registry.npmjs.org/@dcloudio/uni-stat/-/uni-stat-2.0.0-29720201105001.tgz\",\"_shasum\":\"af7dce024a89918b330a3b216437eb95809e0488\",\"_spec\":\"@dcloudio/uni-stat@next\",\"_where\":\"/Users/guoshengqiang/Documents/dcloud-plugins/release/uniapp-cli\",\"author\":\"\",\"bugs\":{\"url\":\"https://github.com/dcloudio/uni-app/issues\"},\"bundleDependencies\":false,\"deprecated\":false,\"description\":\"\",\"devDependencies\":{\"@babel/core\":\"^7.5.5\",\"@babel/preset-env\":\"^7.5.5\",\"eslint\":\"^6.1.0\",\"rollup\":\"^1.19.3\",\"rollup-plugin-babel\":\"^4.3.3\",\"rollup-plugin-clear\":\"^2.0.7\",\"rollup-plugin-commonjs\":\"^10.0.2\",\"rollup-plugin-copy\":\"^3.1.0\",\"rollup-plugin-eslint\":\"^7.0.0\",\"rollup-plugin-json\":\"^4.0.0\",\"rollup-plugin-node-resolve\":\"^5.2.0\",\"rollup-plugin-replace\":\"^2.2.0\",\"rollup-plugin-uglify\":\"^6.0.2\"},\"files\":[\"dist\",\"package.json\",\"LICENSE\"],\"gitHead\":\"b89b0fc43e4b02d90539e49b4c3b1381a4807601\",\"homepage\":\"https://github.com/dcloudio/uni-app#readme\",\"license\":\"Apache-2.0\",\"main\":\"dist/index.js\",\"name\":\"@dcloudio/uni-stat\",\"repository\":{\"type\":\"git\",\"url\":\"git+https://github.com/dcloudio/uni-app.git\",\"directory\":\"packages/uni-stat\"},\"scripts\":{\"build\":\"NODE_ENV=production rollup -c rollup.config.js\",\"dev\":\"NODE_ENV=development rollup -w -c rollup.config.js\"},\"version\":\"2.0.0-29720201105001\"}");
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 
 /***/ }),
 
 /***/ 7:
-<<<<<<< HEAD
 /*!*******************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"stat"} ***!
   \*******************************************************************/
-=======
-/*!********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"stat"} ***!
-  \********************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -12907,20 +12843,14 @@ Object.defineProperty(exports, "__esModule", { value: true });exports.default = 
 /***/ }),
 
 /***/ 8:
-<<<<<<< HEAD
 /*!********************************************************************!*\
   !*** E:/HBuilderProjects/xingdongdaka/pages.json?{"type":"style"} ***!
   \********************************************************************/
-=======
-/*!*********************************************************************************************!*\
-  !*** C:/Users/85002/Documents/HBuilderProjects/xingdongdaka-ui/pages.json?{"type":"style"} ***!
-  \*********************************************************************************************/
->>>>>>> 52b898b2615d3ec6b8f5334cbeab736960dfcbf7
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true }, "pages/login/login": { "navigationBarTitleText": "微信授权登录" }, "pages/msg/talk": { "navigationBarTitleText": "消息回复" }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡" }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的" }, "pages/selfCenter/selfView": { "navigationBarTitleText": "个人主页" }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true }, "pages/action/step1": { "navigationBarTitleText": "新建行动" }, "pages/action/finish": { "navigationBarTitleText": "保证金" }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情" }, "pages/index/action/action": { "navigationBarTitleText": "行动详情" }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现" }, "pages/sponsor/form": { "navigationBarTitleText": "赞助" }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情" }, "pages/selfCenter/addressList": { "navigationBarTitleText": "我的地址", "enablePullDownRefresh": false }, "pages/selfCenter/cityList": { "navigationBarTitleText": "我的城市", "enablePullDownRefresh": false }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金" }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页" }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页" }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注" }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝" }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息" }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组" }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签" }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "" }, "pages/pageA/ranking/rangkinDet": { "navigationBarTitleText": "挑战赛详情" }, "pages/pageA/ranking/rankinAdd": { "navigationBarTitleText": "加入挑战" }, "pages/pageA/ranking/rankingUp": { "navigationBarTitleText": "新建挑战" }, "pages/pageA/ranking/rankinglist": { "navigationBarTitleText": "我的挑战赛" }, "pages/pageA/group/userEditInfo": { "navigationBarTitleText": "" }, "pages/pageA/group/usersVote": { "navigationBarTitleText": "投票" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/index": { "navigationBarTitleText": "圈子", "enablePullDownRefresh": true, "usingComponents": { "index-list": "/components/indexList", "back-top": "/components/backTop", "wyb-notice-bar": "/components/wyb-noticeBar/wyb-noticeBar" }, "usingAutoImportComponents": { "wyb-notice-bar": "/components/wyb-noticeBar/wyb-noticeBar" } }, "pages/login/login": { "navigationBarTitleText": "微信授权登录", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/msg/talk": { "navigationBarTitleText": "消息回复", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/selfCenter/clockIn": { "navigationBarTitleText": "打卡", "usingComponents": { "imt-audio": "/components/imt-audio/imt-audio" }, "usingAutoImportComponents": {} }, "pages/selfCenter/selfCenter": { "navigationBarTitleText": "我的", "usingComponents": { "usershow": "/components/usershow" }, "usingAutoImportComponents": {} }, "pages/selfCenter/selfView": { "navigationBarTitleText": "个人主页", "usingComponents": { "usershow": "/components/usershow", "actionlist": "/components/actionlist" }, "usingAutoImportComponents": {} }, "pages/selfCenter/income": { "navigationBarTitleText": "账单", "enablePullDownRefresh": true, "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/action/action": { "navigationBarTitleText": "行动", "enablePullDownRefresh": true, "usingComponents": { "actionlist": "/components/actionlist", "back-top": "/components/backTop" }, "usingAutoImportComponents": {} }, "pages/action/step1": { "navigationBarTitleText": "新建行动", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/action/finish": { "navigationBarTitleText": "保证金", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/index/cardDetails/cardDetails": { "navigationBarTitleText": "打卡详情", "usingComponents": { "imt-audio": "/components/imt-audio/imt-audio" }, "usingAutoImportComponents": { "imt-audio": "/components/imt-audio/imt-audio" } }, "pages/index/action/action": { "navigationBarTitleText": "行动详情", "usingComponents": { "looker-count-info": "/components/lookerCountInfo", "back-top": "/components/backTop" }, "usingAutoImportComponents": {} }, "pages/selfCenter/balanDrawal": { "navigationBarTitleText": "提现", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/sponsor/form": { "navigationBarTitleText": "赞助", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/sponsor/action": { "navigationBarTitleText": "赞助详情", "usingComponents": { "looker-count-info": "/components/lookerCountInfo" }, "usingAutoImportComponents": {} }, "pages/selfCenter/addressList": { "navigationBarTitleText": "我的地址", "enablePullDownRefresh": false, "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/selfCenter/cityList": { "navigationBarTitleText": "我的城市", "enablePullDownRefresh": false, "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/thankmoney/thankmoney": { "navigationBarTitleText": "设置感谢金", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/web/webShow": { "navigationBarTitleText": "网页", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/web/richtext": { "navigationBarTitleText": "网页", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/user/myattention": { "navigationBarTitleText": "关注", "usingComponents": { "index-list": "/components/indexList" }, "usingAutoImportComponents": {} }, "pages/pageA/user/myfans": { "navigationBarTitleText": "粉丝", "usingComponents": { "index-list": "/components/indexList" }, "usingAutoImportComponents": {} }, "pages/pageA/user/editUserInfo": { "navigationBarTitleText": "编辑信息", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/groupList": { "navigationBarTitleText": "互助小组", "enablePullDownRefresh": true, "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/groupAdd": { "navigationBarTitleText": "添加小组", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/groupMsg": { "navigationBarTitleText": "群组", "enablePullDownRefresh": true, "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/addLable": { "navigationBarTitleText": "添加标签", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/userAddGroup": { "navigationBarTitleText": "", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/ranking/rangkinDet": { "navigationBarTitleText": "挑战赛详情", "usingComponents": { "index-list": "/components/indexList", "back-top": "/components/backTop" }, "usingAutoImportComponents": {} }, "pages/pageA/ranking/rankinAdd": { "navigationBarTitleText": "加入挑战", "usingComponents": { "index-list": "/components/indexList" }, "usingAutoImportComponents": {} }, "pages/pageA/ranking/rankingUp": { "navigationBarTitleText": "新建挑战", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/ranking/rankinglist": { "navigationBarTitleText": "我的挑战赛", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/userEditInfo": { "navigationBarTitleText": "", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/group/usersVote": { "navigationBarTitleText": "投票", "usingComponents": { "uni-grid": "/components/uni-grid/uni-grid", "uni-grid-item": "/components/uni-grid-item/uni-grid-item" }, "usingAutoImportComponents": { "uni-grid": "/components/uni-grid/uni-grid", "uni-grid-item": "/components/uni-grid-item/uni-grid-item" } }, "pages/pageA/merchant/merchant": { "navigationBarTitleText": "审核权限", "usingComponents": {}, "usingAutoImportComponents": {} }, "pages/pageA/merchant/merchantPay": { "navigationBarTitleText": "支付开通", "usingComponents": {}, "usingAutoImportComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "行动打卡", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ })
 
