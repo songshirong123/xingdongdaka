@@ -70,16 +70,14 @@
 							</view>
 						</scroll-view>
 					</view>
-<<<<<<< HEAD
+
 					<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
 					</view>
 					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
-=======
 					<view :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 						<view>互助小组</view>
->>>>>>> b6d518609afbb6f435dec79b8b6c045ae18a895c
 					</view>
 				<!-- 	<view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
