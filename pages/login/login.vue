@@ -5,7 +5,7 @@
 			<!--  -->
 			<view class="bg-white">
 				<view class='header bg-white'>
-					<image src='../../static/images/icon/img/xddak.png'></image>
+					<image src='../../static/images/icon/img/xddak.png' style="width: 120px;height: 120px;"></image>
 				</view>
 				<view class='content'>
 					<view>申请获取以下权限</view>

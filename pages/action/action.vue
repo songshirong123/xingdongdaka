@@ -503,7 +503,7 @@ export default {
 
 <style lang="scss">
 .action {
-	padding: 0 20rpx 0 20rpx;
+	padding: 0 10rpx 0 10rpx;
 	font-size: 30rpx;
 }
 .actionInfo{

@@ -233,13 +233,27 @@
 			}, {
 				"path": "merchant/merchant",
 				"style": {
-					"navigationBarTitleText": "审核权限"
+					"navigationBarTitleText": "商家信息"
 				}
 			}, {
 				"path": "merchant/merchantPay",
 				"style": {
-					"navigationBarTitleText": "支付开通"
+					"navigationBarTitleText": "审核权限开通"
 				}
+			}, {
+				"path": "merchant/merchantAction",
+				"style": {
+					"navigationBarTitleText": "发起活动",
+					"enablePullDownRefresh": false
+				}
+
+			}, {
+				"path": "merchant/merchantActionList",
+				"style": {
+					"navigationBarTitleText": "参与活动",
+					"enablePullDownRefresh": false
+				}
+
 			}
 		]
 	}],
