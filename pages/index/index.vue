@@ -671,8 +671,8 @@
 
 			},
 			lebleTab(e) {
-				if (!that.hasLogin) {
-					return that.xdUniUtils.xd_login(that.hasLogin);
+				if (!this.hasLogin) {
+					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
 				if (e == 1) {
 					this.isRankingLable = !this.isRankingLable;
