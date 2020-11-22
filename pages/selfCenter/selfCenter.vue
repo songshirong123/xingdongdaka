@@ -33,6 +33,12 @@
 				      <text class='thin'>互助小组</text>
 				    </button>
 				</view>
+				<view class="user_column_item"  @tap="merchant">
+				    <button class='content cu-btn'>
+				      <text class="lg text-gray cuIcon-group"></text>
+				      <text class='thin'>审核权限</text>
+				    </button>
+				</view>
 				
 				<!-- <view class="user_column_item"  @tap="goranking">
 				    <button class='content cu-btn'>
@@ -161,7 +167,12 @@
 				this.onOff = (env != 'release' ? true : false)
 				
 			},
-			
+			//审核权限
+			merchant(){
+				uni.navigateTo({
+					url:'../pageA/merchant/merchant'
+				});
+			},
 			//去互助小组列表
 			gogroup(){
 				uni.navigateTo({
