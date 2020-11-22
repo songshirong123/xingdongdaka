@@ -91,7 +91,7 @@
 							.content,
 						path: '/pages/index/action/action?pushId=' + that.list[res.target.id].id + '&share=' + uni.getStorageSync('id') +
 							'&isopen=' + that.list[res.target.id].isopen,
-						imageUrl: that.list[res.target.id].pictures ? that.list[res.target.id].pictures : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
+						imageUrl: that.list[res.target.id].pictures ? that.list[res.target.id].pictures : that.xdUniUtils.xd_randomImg(1),
 					}
 				} else if (that.tab == 1) {
 					return {
@@ -101,7 +101,7 @@
 							that.lookerList[res.target.id].content,
 						path: '/pages/index/action/action?pushId=' + that.lookerList[res.target.id].id + '&share=' + uni.getStorageSync(
 							'id') + '&isopen=' + that.lookerList[res.target.id].isopen,
-						imageUrl: that.lookerList[res.target.id].pictures ? that.lookerList[res.target.id].pictures : 'https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605193182702.png',
+						imageUrl: that.lookerList[res.target.id].pictures ? that.lookerList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(1),
 					}
 				}
 			}
