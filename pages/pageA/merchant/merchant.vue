@@ -25,8 +25,8 @@
 
 			<!-- 说明 -->
 			<view class="xd-columns" style="padding: 10px;border-bottom: 2px solid #f0f0f0;">
-				<text>1.已获取分享后行动项的审核权。</text>
-				<text>2.已获取分享后行动项的收入权。</text>
+				<text>1.已获取分享后行动项的审核权、审核目标是否达成，可设置自己需要的条件。</text>
+				<text>2.已获取分享后行动项的收入权，获得保证金的特别分配收入。</text>
 				<text>3.详细情况可咨询客服。</text>
 			</view>
 			<!-- 事件内容 -->

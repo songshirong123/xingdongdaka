@@ -147,6 +147,8 @@
 	import imtAudio from 'components/imt-audio/imt-audio'
 	const recorderManager = uni.getRecorderManager();
 	const innerAudioContext = uni.createInnerAudioContext();
+	var QQMapWX = require('../../utils/qqmap-wx-jssdk.js');
+	var qqmapsdk = null;
 	export default {
 		components: {
 			imtAudio
@@ -190,6 +192,7 @@
 			this.xdUniUtils.xd_setStorageSync("selectAddress", null);
 			this.pushId = option.pushId;
 			this.getpushList();
+			this.initAddress();
 		},
 		onReady() {
 			//  this._isLoaded = false
@@ -235,6 +238,38 @@
 				//    })
 				//  }
 				// })
+			},
+			initAddress(){
+				qqmapsdk = new QQMapWX({
+					key: 'S4EBZ-MKCCV-ECYPE-UFCS3-XUJEV-AJBEM' // 必填
+				});
+				let that = this;
+				uni.getLocation({
+					type: 'wgs84',
+					success: function(res) {
+						console.log(res);
+						console.log('当前位置的经度：' + res.longitude);
+						console.log('当前位置的纬度：' + res.latitude);
+						that.getAddressList(res.longitude, res.latitude);
+					}
+				});
+			},
+			//获取地址列表
+			getAddressList(longitude, latitude) {
+				let location = latitude + "," + longitude;
+				let that = this;
+				qqmapsdk.reverseGeocoder({
+					location: location,
+					get_poi: 1,
+					poi_options: "radius=5000",
+					success: function(res) { //成功后的回调
+						console.log(res);
+						var res = res.result;
+						that.pushAddress = res.ad_info.city+" . "+res.ad_info.district;
+					},
+					fail: function(error) {},
+					complete: function(res) {}
+				})
 			},
 			showAd() {
 				if (this._isLoaded) {

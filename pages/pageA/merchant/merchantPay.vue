@@ -25,32 +25,34 @@
 
 			<!-- 支付金额 -->
 			<view class="xd-info-main">
+				<!-- 说明 -->
+				<view class="xd-columns solid-bottom" style="padding: 10px;">
+					<text>1.获取分享后行动项的审核权、审核目标是否达成，可设置自己需要的条件。</text>
+					<text>2.获取分享后行动项的收入权，获得保证金的特别分配收入。</text>
+					<text>3.详细情况可咨询客服。</text>
+				</view>
 				<!-- 支付金额列表-->
 				<view class="main-tabbar">
-					<scroll-view :class="['xd-nav-bar', isCenter ? 'xd-nav-center' : '']"  scroll-x="true" show-scrollbar="false">
-						<view :class="['nav-item', currentIndex == item.ID ? 'nav-active' : '']" :id="'tab-'+index" v-for="(item, index) in payList"
-						 :key="index" :data-index="index" :data-id="item.ID" @tap="navChange(item)">
-							<view class="nav-item-title xd-columns">
-								<text style="font-size: 20px;font-weight: 700;">{{item.pay}}<text v-if="item.type==1" style="font-size: 12px;font-weight: 300;">/月</text><text v-if="item.type==2" style="font-size: 12px;font-weight: 300;">/年</text></text>
-								<text style="margin-top: 3px;">活动收入返点\n高达{{item.rateDes}}%</text>
+					<!-- <scroll-view :class="['xd-nav-bar', isCenter ? 'xd-nav-center' : '']"  scroll-x="true" show-scrollbar="false"> -->
+						<view class="xd-nav-bar solid-bottom"  v-for="(item, index) in payList">
+							<view :class="['nav-item', currentIndex == item.ID ? 'nav-active' : '']" :id="'tab-'+index"
+							 :key="index" :data-index="index" :data-id="item.ID" @tap="navChange(item)">
+								<view class="nav-item-title xd-columns">
+									<text style="font-size: 20px;font-weight: 700;">{{item.pay}}<text v-if="item.type==1" style="font-size: 12px;font-weight: 300;">/月</text><text v-if="item.type==2||item.type==3" style="font-size: 12px;font-weight: 300;">/年</text></text>
+									<text style="margin-top: 3px;">活动收入返点\n可高达{{item.rateDes}}%</text>
+								</view>
 							</view>
 						</view>
-					</scroll-view>
+						
+						
+					<!-- </scroll-view> -->
 				</view>
 			</view>
 		</view>
 
 		<view class="xd-common-bottom-ly" style="background-color: #FFFFFF;padding: 5px">
-			<view class="xd-columns" style="flex: 1">
-				<!-- 说明 -->
-				<view class="xd-columns" style="padding-bottom: 5px;">
-					<text>1.获取分享后行动项的审核权。</text>
-					<text>2.获取分享后行动项的收入权。</text>
-					<text>3.详细情况可咨询客服。</text>
-				</view>
-				<view style="flex: 1">
-					<button class="bg-orange" hover-class="xd-but-active" @tap="userSubmit">立即开通</button>
-				</view>
+			<view style="flex: 1">
+				<button class="bg-orange" hover-class="xd-but-active" @tap="userSubmit">立即开通</button>
 			</view>
 		</view>
 	</view>
@@ -189,15 +191,20 @@
 			width: 100%;
 			box-sizing: border-box;
 			border-bottom: 1px solid #efe5e8;
-			padding: 20upx 3upx 20upx 3upx;
+			// padding: 20upx 3upx 20upx 3upx;
 			background-color: #FFFFFF;
 			.xd-nav-bar {
 				width: 100%;
 				display: flex;
-				white-space: nowrap;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				padding-top: 5px;
+				padding-bottom: 5px;
+				// white-space: nowrap;
 
 				.nav-item {
-					width: 33%;
+					width: 60%;
 					display: inline-flex;
 					flex-direction: column;
 					text-align: center;

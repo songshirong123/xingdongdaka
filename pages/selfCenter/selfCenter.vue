@@ -38,7 +38,7 @@
 				<view class="user_column_item"  @tap="merchant">
 					    <button class='content cu-btn'>
 						      <text class="lg text-gray cuIcon-group"></text>
-						      <text class='thin'>审核权限</text>
+						      <text class='thin'>高级权限</text>
 						    </button>
 				</view>
 
