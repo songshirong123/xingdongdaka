@@ -480,7 +480,7 @@ function  showToast(isSuccess, content, methodes) {
 }
 
 function showHzGroup(){
-	return false;
+	return true;
 }
 
 export default {

@@ -1,22 +1,24 @@
 <template>
-	<view>	
-		<usershow  :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals"  :lookerCount="lookerCount" :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe" :isEditInfo='true'></usershow>
+	<view>
+		<usershow :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals" :lookerCount="lookerCount"
+		 :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe" :isEditInfo='true'></usershow>
 		<view class="moreInfo">
 			<view class="moreInfoRow2">
 				<view class="user_column_item" @tap="gomoney">
-					<button class='content cu-btn' >
-					      <text class="lg text-gray cuIcon-moneybag"></text>
-					      <text class='thin'>钱包</text>
-						  <text class="lg text-orange cuIcon-pay margin-left-lg">{{rmb}}元</text>
-						  <view class="cu-tag  tag-text1 bg-red" v-if="wg_num>0&&wg_num<100">{{wg_num}}</view>
-						  <view class="cu-tag  tag-text1 bg-red" v-if="wg_num>=100">99+</view>
-				     </button>
+					<button class='content cu-btn'>
+						      <text class="lg text-gray cuIcon-moneybag"></text>
+						      <text class='thin'>钱包</text>
+						<text class="lg text-orange cuIcon-pay margin-left-lg">{{rmb}}元</text>
+						<view class="cu-tag  tag-text1 bg-red" v-if="wg_num>0&&wg_num<100">{{wg_num}}</view>
+						<view class="cu-tag  tag-text1 bg-red" v-if="wg_num>=100">99+</view>
+						    
+					</button>
 				</view>
 				<view class="user_column_item">
-				    <button class='content cu-btn' open-type="feedback">
-				      <text class="lg text-gray cuIcon-question"></text>
-				      <text class='thin'>问题反馈</text>
-				    </button>
+					    <button class='content cu-btn' open-type="feedback">
+						      <text class="lg text-gray cuIcon-question"></text>
+						      <text class='thin'>问题反馈</text>
+						    </button>
 				</view>
 				<view class='user_column_item'>
 					<button class="content cu-btn" open-type="contact">
@@ -26,27 +28,27 @@
 						<text class="thin">联系客服</text>
 					</button>
 				</view>
-				
+
 				<view class="user_column_item"  @tap="gogroup">
-				    <button class='content cu-btn'>
-				      <text class="lg text-gray cuIcon-group"></text>
-				      <text class='thin'>互助小组</text>
-				    </button>
+					    <button class='content cu-btn'>
+						      <text class="lg text-gray cuIcon-group"></text>
+						      <text class='thin'>互助小组</text>
+						    </button>
 				</view>
 				<view class="user_column_item"  @tap="merchant">
-				    <button class='content cu-btn'>
-				      <text class="lg text-gray cuIcon-group"></text>
-				      <text class='thin'>审核权限</text>
-				    </button>
+					    <button class='content cu-btn'>
+						      <text class="lg text-gray cuIcon-group"></text>
+						      <text class='thin'>高级权限</text>
+						    </button>
 				</view>
-				
+
 				<!-- <view class="user_column_item"  @tap="goranking">
 				    <button class='content cu-btn'>
 				      <text class="lg text-gray cuIcon-group"></text>
 				      <text class='thin'>挑战赛</text>
 				    </button>
 				</view> -->
-			</view> 
+			</view>
 		</view>
 	</view>
 </template>
@@ -57,35 +59,36 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	
+
 	export default {
-		components:{
+		components: {
 			usershow
-			
+
 		},
 		data() {
 			return {
 				tab: 0, //行动，围观，收藏
 				// list: [1, 2, 3, 4, 5],
-				userInfos:'',
-				looktotals:0,
+				userInfos: '',
+				looktotals: 0,
 				lookerCount: 0,
 				likeCount: 0,
-				num:0, //关注新增数量
-				wg_num:0, //围观分钱新增数量
+				num: 0, //关注新增数量
+				wg_num: 0, //围观分钱新增数量
 				// onOff: true,
 				// env:uni.getStorageSync('env'),
-				rmb:0.00,
-				id:uni.getStorageSync('id'),
-				userId:'',
-				guanzhu:''
+				rmb: 0.00,
+				id: uni.getStorageSync('id'),
+				userId: '',
+				guanzhu: '',
+				userBean: {}
 			}
 		},
 		computed: {
-			...mapState(['hasLogin','userInfo'])
+			...mapState(['hasLogin', 'userInfo'])
 		},
 		onShow() {
-			if(!this.hasLogin){
+			if (!this.hasLogin) {
 				return this.xdUniUtils.xd_login(this.hasLogin);
 			}
 			if (this.userInfos == '' || this.userInfos == undefined || this.userInfos == null) {
@@ -107,89 +110,107 @@
 		},
 		watch: {
 			userInfo() {
-				this.userInfos= '';
+				this.userInfos = '';
 				setTimeout(() => {
-					this.userInfos=this.xdUniUtils.xd_getStorageSync('userInfo');
+					this.userInfos = this.xdUniUtils.xd_getStorageSync('userInfo');
 				}, 100);
 			},
-			
+
 		},
 		methods: {
 			...mapMutations(['logOut']),
-			async getBalance(){
+			async getBalance() {
 				console.log("xd_inquireBalance");
 				console.log(uni.getStorageSync('token'));
-				this.xd_request_post(this.xdServerUrls.xd_inquireBalance,
-				{
-					token:uni.getStorageSync('token'),
-				},true).then((res) => {
+				this.xd_request_post(this.xdServerUrls.xd_inquireBalance, {
+					token: uni.getStorageSync('token'),
+				}, true).then((res) => {
 					console.log("xd_inquireBalance");
 					console.log(res);
-					if(typeof res.obj.rmb !== undefined){
-						this.rmb=res.obj.rmb/100;
+					if (typeof res.obj.rmb !== undefined) {
+						this.rmb = res.obj.rmb / 100;
 					}
+					this.userBean = res.obj.userBean;
 				})
 			},
-			getShowFollow(){
-				this.xd_request_post(this.xdServerUrls.xd_getInviteList,
-				{
-					token:uni.getStorageSync('token'),
-				
-				},
-				true
-					   ).then((res) => {
-						   this.looktotals=res.obj.total;
-					   }).catch(err => {											
-				                           });
-				
-				
+			getShowFollow() {
+				this.xd_request_post(this.xdServerUrls.xd_getInviteList, {
+						token: uni.getStorageSync('token'),
+
+					},
+					true
+				).then((res) => {
+					this.looktotals = res.obj.total;
+				}).catch(err => {});
 			},
-			burieInit(){
-				this.xd_request_post(this.xdServerUrls.xd_selectBurieStatistics,
-				{
-				},true).then((res) => {
+			burieInit() {
+				this.xd_request_post(this.xdServerUrls.xd_selectBurieStatistics, {}, true).then((res) => {
 					if (res.resultCode == 0) {
 						let gz_num = res.obj.gzCount;
 						let wg_num = res.obj.wgCount;
 						this.num = gz_num;
 						this.wg_num = wg_num;
-						let num = gz_num+wg_num;
+						let num = gz_num + wg_num;
 						this.xdUniUtils.updateNumber(0);
 					}
 				})
-				
+
 			},
 			onToOff() {
 				const accountInfo = wx.getAccountInfoSync();
 				// env类型
-				const env = accountInfo.miniProgram.envVersion;		
+				const env = accountInfo.miniProgram.envVersion;
 
 				this.onOff = (env != 'release' ? true : false)
-				
+
 			},
 			//审核权限
-			merchant(){
-				uni.navigateTo({
-					url:'../pageA/merchant/merchant'
-				});
+			merchant() {
+				// uni.navigateTo({
+				// 	url: '../pageA/merchant/merchant'
+				// });
+				
+				let userBean = this.userBean;
+				if (!this.xdUniUtils.IsNullOrEmpty(userBean)) {
+					let merchantType = userBean.merchantType;
+					if (merchantType == 0) {
+						uni.showModal({
+							title: '温馨提示',
+							content: '您尚未开通审核权限，是否开通？',
+							confirmText: "去开通",
+							cancelText: "暂不开通",
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '../pageA/merchant/merchantPay'
+									});
+								}
+							},
+						});
+					} else if (merchantType == 1) {
+						uni.navigateTo({
+							url: '../pageA/merchant/merchant'
+						});
+					}
+				}
 			},
 			//去互助小组列表
-			gogroup(){
+			gogroup() {
 				uni.navigateTo({
-					url:'../pageA/group/groupList'
+					url: '../pageA/group/groupList'
 				});
 			},
 			//我的挑战赛页面
-			goranking(){
+			goranking() {
 				uni.navigateTo({
-					url:'../pageA/ranking/rankinglist'
+					url: '../pageA/ranking/rankinglist'
 				});
 			},
 			//去提现
-			gomoney(){
-				
+			gomoney() {
+
 				uni.navigateTo({
-					url:'./income'
+					url: './income'
 				});
 			},
 			goPage(url) {
@@ -197,9 +218,9 @@
 					url
 				});
 			},
-		   lookerCountData: function(list) {
+			lookerCountData: function(list) {
 				var that = this;
-				if(!that.hasLogin){
+				if (!that.hasLogin) {
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				that.userId = uni.getStorageSync('id');
@@ -208,7 +229,7 @@
 				}, false).then(res => {
 
 					if (res.resultCode == 0) {
-						
+
 						that.lookerCount = res.obj.lookerCount
 						that.likeCount = res.obj.likeCount
 					} else {
@@ -297,11 +318,13 @@
 
 <style lang="scss">
 	.selfCenter {
-		padding:10rpx 20rpx 20rpx;
+		padding: 10rpx 20rpx 20rpx;
 	}
+
 	.moreInfo {
 		padding: 6rpx 0;
 		font-size: 26rpx;
+
 		.user_column_item {
 			background-color: #FFFFFF;
 			height: 100rpx;
@@ -309,6 +332,7 @@
 			padding-left: 20rpx;
 			border-bottom: 1px solid #F0F0F0;
 		}
+
 		.user_column_item .cu-btn {
 			background-color: #FFFFFF;
 			padding: 0;
@@ -317,7 +341,8 @@
 		.user_column_item .thin {
 			padding: 0 16rpx;
 		}
-		.tag-text1{
+
+		.tag-text1 {
 			border-radius: 200rpx;
 			font-size: 20rpx;
 			padding: 0rpx 10rpx;

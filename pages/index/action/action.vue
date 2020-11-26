@@ -1,23 +1,23 @@
 <template>
-	<view >
+	<view>
 		<lookerCountInfo ref="lookerCountInfo"></lookerCountInfo>
 		<view class="cu-card dynamic " :class="pushList.pictures!=''?'no-card':''">
 			<view class="cu-item shadow">
 				<view class="cu-list menu-avatar">
 					<view class="cu-item ">
-						<view @tap="goUser(pushList.userId)" class="cu-avatar round lg" :style="{backgroundImage: 'url(' +pushList.userHead + ')'}" ></view>
+						<view @tap="goUser(pushList.userId)" class="cu-avatar round lg" :style="{backgroundImage: 'url(' +pushList.userHead + ')'}"></view>
 						<view class="content flex-sub">
 							<view @tap="goUser(pushList.userId)">{{pushList.userName}}</view>
 						</view>
-						<view >
-							<view class="cu-tag line-orange radius"   @tap="clickGroup(pushList.userId)" >互助小组</view>
+						<view>
+							<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">互助小组</view>
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
 						</view>
 					</view>
 					<view class="flex flex-wrap padding justify-between">
-						<view class="widthtext " >
+						<view class="widthtext ">
 							<view class="flex flex-wrap justify-between">
 								<view class="">
 									<text class="text-orange" v-if="pushList.pushCardStatus==1">进行中...</text>
@@ -26,62 +26,62 @@
 									<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
 								</view>
 							</view>
-							
+
 							<view class="text-gray text-sm ">
 								阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
 							</view>
 							<view class="xd-rows">
 								<view class="text-gray text-sm ">
-									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}  
+									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
 								</view>
 								<view class="text-gray text-sm " style="margin-left: 10px;">
-									可休假天数： 
-										<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
-											{{pushList.kholidayDay}}
-										</view>
-										<view class="text-sm text-red display-inline" v-else>
-											超期{{surpassHolidayDay}}
-										</view>
-										<view class="text-sm display-inline">
-											/{{pushList.holidayDay}}
-										</view>
+									可休假天数：
+									<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
+										{{pushList.kholidayDay}}
+									</view>
+									<view class="text-sm text-red display-inline" v-else>
+										超期{{surpassHolidayDay}}
+									</view>
+									<view class="text-sm display-inline">
+										/{{pushList.holidayDay}}
+									</view>
 								</view>
 							</view>
-							
+
 						</view>
 						<view class='xd-flex' style="margin-top: 3px;">
 							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
-								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
+								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)">
 									保证金￥{{pushList.challengeRmb}}
-								</view> 
+								</view>
 							</view>
 							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
-								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)" >
+								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)">
 									保证金￥{{pushList.challengeRmb+sponsorRmb}}
 								</view>
 							</view>
-							<view style="margin-right: 6px;"  v-if="userId==pushList.userId && sponsorRmb>0" >
-								<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)" >
-									获赞助金￥{{sponsorRmb}} 
-								</view>
-								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df " >{{sponsorCnt}}</text>
-							</view>
-
-							<view  style="margin-right: 6px;" v-if="userId!=pushList.userId && sponsorCnt>0"  >
-								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)"  >
-									赞助 
+							<view style="margin-right: 6px;" v-if="userId==pushList.userId && sponsorRmb>0">
+								<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)">
+									获赞助金￥{{sponsorRmb}}
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
-						</view>	
-						<view class="widthtext margin-top-sm" >
-							<view class="text-gray text-sm flex flex-wrap align-center testdonli"  @tap="showModal(1)">
+
+							<view style="margin-right: 6px;" v-if="userId!=pushList.userId && sponsorCnt>0">
+								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)">
+									赞助
+								</view>
+								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+							</view>
+						</view>
+						<view class="widthtext margin-top-sm">
+							<view class="text-gray text-sm flex flex-wrap align-center testdonli" @tap="showModal(1)">
 								<view class="text-xl">
 									<text class="lg text-gray cuIcon-write"></text>
 								</view>
-								<text class=" margin-left-xs testcontentshow" >动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
+								<text class=" margin-left-xs testcontentshow">动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
 							</view>
-							<view class="text-gray text-sm margin-top-sm flex flex-wrap align-center testdonli"  @tap="showModal">
+							<view class="text-gray text-sm margin-top-sm flex flex-wrap align-center testdonli" @tap="showModal">
 								<view class="text-xl">
 									<text class="lg text-gray cuIcon-write"></text>
 								</view>
@@ -91,112 +91,111 @@
 					</view>
 				</view>
 			</view>
-				<view class="text-contents contentext">
-					<text style="font-size: 14px;font-weight: 700;">{{pushList.content}}</text>
+			<view class="text-contents contentext">
+				<text style="font-size: 14px;font-weight: 700;">{{pushList.content}}</text>
+			</view>
+			<view class="grid flex-sub padding-lr" style="margin-top: 5px;">
+				<image class="bg-img imgheit" :src="pushList.pictures" mode="aspectFill" @tap="goPageImg(pushList.pictures)" v-if="pushList.pictures!=''">
+				</image>
+				<image class="bg-img imgheit" :src="audioPlaySrc" mode="aspectFill" @tap="goPageImg(audioPlaySrc)" v-else @error="error">
+				</image>
+			</view>
+			<view class="flex padding justify-between">
+				<view>
+					<button class="cu-btn bg-light-blue sm round" v-if="pushList.userId==userId" :id="index" open-type="share">分享邀请</button>
+					<button class="cu-btn bg-orange sm round" v-else-if="pushList.onlooker" :id="index" open-type="share">为TA打Call</button>
+					<button class="cu-btn bg-green sm round  " v-else-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0"
+					 @tap="lookerClick(pushList,index)">围观</button>
+					<button class="cu-btn bg-green sm round  " v-else @tap="lookerClick(pushList,index)">围观分钱</button>
+					<text class="text-gray text-df ">{{pushList.onlookerCount}}</text>
 				</view>
-				<view class="grid flex-sub padding-lr" style="margin-top: 5px;" >
-					<image class="bg-img imgheit"  :src="pushList.pictures" mode="aspectFill"
-					 @tap="goPageImg(pushList.pictures)" v-if="pushList.pictures!=''">
-					</image>
-					<image class="bg-img imgheit"  :src="audioPlaySrc" mode="aspectFill"
-					 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
-					</image>
+
+				<view class="text-xxl">
+					<button class="cu-btn line-green sm round  " @click="goSteps" v-if="userId==pushList.userId">立即打卡</button>
+					<button class="cu-btn line-green sm round  " @click="gostep" v-else>一起行动</button>
 				</view>
-				<view class="flex padding justify-between" >
-					<view>
-						<button class="cu-btn bg-light-blue sm round" v-if="pushList.userId==userId"  :id="index" open-type="share">分享邀请</button>
-						<button class="cu-btn bg-orange sm round" v-else-if="pushList.onlooker"  :id="index" open-type="share">为TA打Call</button>
-						<button class="cu-btn bg-green sm round  " v-else-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0"  @tap="lookerClick(pushList,index)">围观</button>
-						<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(pushList,index)">围观分钱</button>
-						<text class="text-gray text-df ">{{pushList.onlookerCount}}</text>
-					</view>
-					
-					<view class="text-xxl"  >
-						<button class="cu-btn line-green sm round  " @click="goSteps" v-if="userId==pushList.userId" >立即打卡</button>
-						<button class="cu-btn line-green sm round  " @click="gostep" v-else>一起行动</button>
-					</view>
-				
+
+			</view>
+		</view>
+		<scroll-view scroll-x class="bg-white nav">
+			<view class="flex text-center">
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(items,index) in ['打卡内容','围观排行']"
+				 :key="index" @tap="tabSelect" :id="index">
+					{{items}}
 				</view>
 			</view>
-			<scroll-view scroll-x class="bg-white nav">
-				<view class="flex text-center">
-					<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(items,index) in ['打卡内容','围观排行']" :key="index" @tap="tabSelect" :id="index" >
-						{{items}}
-					</view>
-				</view>
-			</scroll-view>
-			<block v-for="(item,index) in pusCardList" :key="index" v-if="TabCur==0">
-				<view class="cu-timeline">
-					<view class="cu-time" v-if="index == 0 || compareDate(pusCardList[index-1],item)">{{item.createTime}}</view>
-					<view class="cu-item">
-						<view class="content">
-							<view class="">
-								<view class="cu-tag line-green">第{{pusCardList.length-index}}次打卡</view>
-							</view>
-							<view  class="margin-top-sm margin-bottom-sm margin-left-lg textcon" @tap="gocardComentList(item,0)">{{item.content}}</view>
-							<view class="videheit" v-if="item.videos!=''&&item.videos!=undefined &&item.videos!=null ">
-								<video class="videos"  :src="item.videos" controls></video>
-							</view>
-							<view v-else class="grid flex-sub padding-lr"   >
-								<image class="bg-img imgheit"  :src="item.pictures[0]" mode="aspectFill"
-								 @tap="goPageImg(item.pictures)" v-if="item.pictures.length!=''">
-								</image>
-							</view>
-							<view class="text-xxl flex flex-wrap justify-end " @tap="gocardComentList(item,1)">
-								<text class="text-gray cuIcon-comment  "></text>
-								<text class="text-gray text-df">{{item.commentCount}}</text>
-							</view>
+		</scroll-view>
+		<block v-for="(item,index) in pusCardList" :key="index" v-if="TabCur==0">
+			<view class="cu-timeline">
+				<view class="cu-time" v-if="index == 0 || compareDate(pusCardList[index-1],item)">{{item.createTime}}</view>
+				<view class="cu-item">
+					<view class="content">
+						<view class="">
+							<view class="cu-tag line-green">第{{pusCardList.length-index}}次打卡</view>
+						</view>
+						<view class="margin-top-sm margin-bottom-sm margin-left-lg textcon" @tap="gocardComentList(item,0)">{{item.content}}</view>
+						<view class="videheit" v-if="item.videos!=''&&item.videos!=undefined &&item.videos!=null ">
+							<video class="videos" :src="item.videos" controls></video>
+						</view>
+						<view v-else class="grid flex-sub padding-lr">
+							<image class="bg-img imgheit" :src="item.pictures[0]" mode="aspectFill" @tap="goPageImg(item.pictures)" v-if="item.pictures.length!=''">
+							</image>
+						</view>
+						<view class="text-xxl flex flex-wrap justify-end " @tap="gocardComentList(item,1)">
+							<text class="text-gray cuIcon-comment  "></text>
+							<text class="text-gray text-df">{{item.commentCount}}</text>
 						</view>
 					</view>
 				</view>
-			</block>
-			<block v-for="(attention,index) in lookerList" :key="index" v-if="TabCur==1">
-				<view class="actionLi bg-white">
-					<view class="ali-main">
-						<view class="texticon" v-if="index==0">
-							<text class="lg cuIcon-crown"> </text>
+			</view>
+		</block>
+		<block v-for="(attention,index) in lookerList" :key="index" v-if="TabCur==1">
+			<view class="actionLi bg-white">
+				<view class="ali-main">
+					<view class="texticon" v-if="index==0">
+						<text class="lg cuIcon-crown"> </text>
+					</view>
+					<view class="textnum" v-if="index>0">
+						{{index+1}}
+					</view>
+					<view class="ali-main-img" @tap="goUser(attention.lookUserId)">
+
+						<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
+
+					</view>
+					<view class="lli-main-content xd-list-body" @tap="goUser(attention.lookUserId)">
+						<view class="xd-list-title-text">
+							<text>{{attention.userName}}</text>
+							<text v-if="attention.sex==1" class="boy">♂</text>
+							<text v-else-if="attention.sex==0" class="boy">♀</text>
+							<text v-else class="boy">密</text>
 						</view>
-						<view class="textnum" v-if="index>0">
-							{{index+1}}
+						<view class="moreInfoIn">
+							<image class='address' src="/static/images/icon/address.png"></image>
+							<text class="province">{{attention.province}}.{{attention.city}}</text>
 						</view>
-						<view class="ali-main-img" @tap="goUser(attention.lookUserId)">
-							
-							<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
-							
-						</view>
-						<view class="lli-main-content xd-list-body" @tap="goUser(attention.lookUserId)">
-							<view class="xd-list-title-text">
-								<text>{{attention.userName}}</text>
-								<text v-if="attention.sex==1" class="boy">♂</text>
-								<text v-else-if="attention.sex==0" class="boy">♀</text>
-								<text v-else class="boy">密</text>
-							</view>
-							<view class="moreInfoIn">
-								<image class='address' src="/static/images/icon/address.png"></image>
-								<text class="province">{{attention.province}}.{{attention.city}}</text>
-							</view>
-						</view>
-						<view class="ali-main-list" @tap="showBanner(attention.lookUserId,attention.pushId)">
-							<view class="ali-main-list-num">{{attention.lookerCount}}</view>
-						</view>
-						
-						<view class="defaultthank" @click="gothank(attention)" >
-							<button class="defaultbut" type="default">感谢</button>
-						</view>
-						
+					</view>
+					<view class="ali-main-list" @tap="showBanner(attention.lookUserId,attention.pushId)">
+						<view class="ali-main-list-num">{{attention.lookerCount}}</view>
+					</view>
+
+					<view class="defaultthank" @click="gothank(attention)">
+						<button class="defaultbut" type="default">感谢</button>
+					</view>
+
+				</view>
+			</view>
+		</block>
+		<view class="cu-modal" :class="modalName=='Modal'?'show':''">
+			<view class="cu-dialog">
+				<view class="cu-bar bg-white justify-end">
+					<view class="content">{{ModalTitil}}</view>
+					<view class="action" @tap="hideModal">
+						<text class="cuIcon-close text-red"></text>
 					</view>
 				</view>
-			</block>
-			<view class="cu-modal" :class="modalName=='Modal'?'show':''">
-				<view class="cu-dialog">
-					<view class="cu-bar bg-white justify-end">
-						<view class="content">{{ModalTitil}}</view>
-						<view class="action" @tap="hideModal">
-							<text class="cuIcon-close text-red"></text>
-						</view>
-					</view>
-					<view class="padding-sm text-sm texttDonAndXin">
-						<textarea class="textarescss" auto-height="true" :value="ModalConten" maxlength="500"  @input="textDonAndXin"/>
+				<view class="padding-sm text-sm texttDonAndXin">
+					<textarea class="textarescss" auto-height="true" :value="ModalConten" maxlength="500" @input="textDonAndXin" />
 					</view>
 					<button class="buttonDonAndXin " v-if="pushList.userId==userId" type="default" @tap="updataPushData">修改</button>
 				</view>

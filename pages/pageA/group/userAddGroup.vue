@@ -195,8 +195,8 @@
 				var that = this;
 				var data = {
 					id: uni.getStorageSync('id'),
-					pushId:uni.getStorageSync('id'),
-					outTradeNo: uni.getStorageSync('id'), 
+					// pushId:uni.getStorageSync('id'),
+					// outTradeNo: uni.getStorageSync('id'), 
 					userName: '',
 					unionId: userInfo.unionId,
 					openid: userInfo.openId,

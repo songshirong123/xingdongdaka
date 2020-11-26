@@ -71,10 +71,14 @@
 						</scroll-view>
 					</view>
 
-
-					<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
-						<view>互助小组</view>
+					<view class="xd-rows"  style="background-color: #FFFFFF;margin-top: 2px;">
+						<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
+							<view>互助小组</view>
+						</view>
 					</view>
+
+
+
 					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
 						<view>挑战赛</view>
 				
@@ -671,8 +675,8 @@
 
 			},
 			lebleTab(e) {
-				if (!that.hasLogin) {
-					return that.xdUniUtils.xd_login(that.hasLogin);
+				if (!this.hasLogin) {
+					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
 				if (e == 1) {
 					this.isRankingLable = !this.isRankingLable;
@@ -886,7 +890,7 @@
 		border: 1px solid #fd5107;
 		font-size: 12px;
 		background: #fbf3e6;
-		color:#fd5107
+		color: #fd5107
 	}
 
 	.group-active {
