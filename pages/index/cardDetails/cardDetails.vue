@@ -13,16 +13,6 @@
 							<view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
 								{{pusCardLists.pushCardList[0].address}}
 							</view>
-							
-							
-							
-							<!-- <view class="text-gray text-sm flex justify-between">
-								{{pushCardCreateTime }} 
-							</view>
-							<!-- 打卡地址 -->
-							<!-- <view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
-								北京市
-							</view> --> 
 						</view>
 						<view >
 							<view v-if="showHzGroup" class="cu-tag line-orange radius" @tap="clickGroup(pusCardLists.userId)" >互助小组</view>
@@ -30,9 +20,12 @@
 						</view>
 					</view>
 				</view>				
-				<view class="text-contents margin-top-sm">
-					<view class="cu-tag bg-pink radius sm" >第{{dakacishu}}次打卡</view>
-					<text class="contentext" style="padding-left: 5px;">{{showCardCommentlist.pushCard.content}}</text>			
+				<view class="text-contents margin-top-sm flex flex-direction">
+					<view class="cu-tag bg-gray radius sm dakacishu" >第{{dakacishu}}次打卡</view>
+					<view class="padding-top-sm">
+						<text class="contentext" style="padding-left: 5px;">{{showCardCommentlist.pushCard.content}}</text>			
+					</view>
+					
 				</view>	
 				<view class="padding-lr" v-if="showCardCommentlist.pushCard.videos!=''&&showCardCommentlist.pushCard.videos!=undefined&&showCardCommentlist.pushCard.videos!=null">
 					<video class="videoheit" 
@@ -66,11 +59,6 @@
 								{{pusCardLists.createTime }}  ({{pusCardLists.pushCardCount}}/{{pusCardLists.targetDay}})
 							</view>
 						</view>
-						<view v-if="pusCardLists.challengeRmb>0">
-							<view class="cu-tag light bg-red radius" >
-								保证金￥{{pusCardLists.challengeRmb}}
-							</view>
-						</view>
 					</view>
 					<view class=" flex  padding">
 						<image class="bg-img imgheit"  :src="pusCardLists.pictures" mode="aspectFill"
@@ -79,23 +67,18 @@
 						<image class="bg-img imgheit"  :src="audioPlaySrc" mode="aspectFill"
 						 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 						</image>
-						<view class="text-content textheit margin-left-sm" @tap="goAction(pusCardLists.id)">
-							<text class="contentext" >{{pusCardLists.content}}</text>		
+						<view class="text-content textheit margin-left-sm flex flex-direction" @tap="goAction(pusCardLists.id)">
+							<text class="contentext" >{{pusCardLists.content}}</text>	
+							<view class="cu-tag  bg-pink radius dakacishus" v-if="pusCardLists.challengeRmb>0" >
+								保证金￥{{pusCardLists.challengeRmb}}
+							</view>
 						</view>	
 					</view>		
 				</view>
 				
 				<view class="flex padding justify-between">
 					<view class="text-xxl" @tap="showInputComent()">
-						<text class="text-gray cuIcon-comment "></text>
-						<text class="text-gray text-df">评论:({{showCardCommentlist.pushCommentList.length?showCardCommentlist.pushCommentList.length:0}})</text>
-					</view>
-					<view>
-						<button class="cu-btn bg-light-blue sm round" v-if="pusCardLists.userId==userId"  :id="index" open-type="share">分享邀请</button>
-						<button class="cu-btn bg-orange sm round  " v-else-if="pusCardLists.onlooker" open-type="share">为TA打Call</button>
-						<button class="cu-btn bg-green sm round  " v-else-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0"  @tap="lookerClick(pusCardLists,index)">围观</button>
-						<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(pusCardLists,index)">围观分钱</button>
-						<text class="text-gray text-df ">{{pusCardLists.onlookerCount}}</text>
+						<text class="text-gray text-df">评论 {{showCardCommentlist.pushCommentList.length?showCardCommentlist.pushCommentList.length:0}}</text>
 					</view>
 				</view>
 				<view class="">
@@ -103,24 +86,27 @@
 						<view class="cu-item" v-for="(item,index) in showCardCommentlist.pushCommentList" :key='index'>
 							<view class="cu-avatar round" :style="{backgroundImage: 'url(' +item.userHead + ')'}" @tap="goUser(item.userId)"></view>
 							<view class="content">
-								<view class="flex flex-wrap align-center justify-around">
+								<view class="">
 									<view class="text-grey" @tap="goUser(item.userId)">{{item.userName}}  
 									</view>
-									<view class=" ">
-										<view class="text-gray text-df">{{item.createTimeStr}}</view>
-									</view>
-									<view class="text-grey" @tap="userRepaly(item,index)">回复</view>
 								</view>
 								<view class="text-content text-df commenttext">
-									评论：{{item.content}}
+									{{item.content}}
 								</view>
-								<view class="text-grey thanktext" @tap="gothank(item)">
-									感谢
+								<view class="flex flex-wrap">
+									<view class="text-gray text-df">{{item.createTimeStr}}</view>
+									<text>-</text>
+									<view class="text-grey" @tap="userRepaly(item,index)">回复</view>
+									<text>-</text>
+									<view class="text-grey thanktext" @tap="gothank(item)">
+										感谢TA
+									</view>
 								</view>
 								<view class="bg-gray padding-sm radius margin-top-sm  text-sm" v-if="showCardCommentlist.pushCommentList[index].cardReplayCommentList.length>0">
-									<view class="flex"  v-for="(items,index) in showCardCommentlist.pushCommentList[index].cardReplayCommentList" :key='index'>
-										{{items.userName}} 回复
-										<view @tap="goUser(items.replayUserId)"> {{ item.userName}}：</view>
+									<view class="flex align-center"  v-for="(items,index) in showCardCommentlist.pushCommentList[index].cardReplayCommentList" :key='index'>
+										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==id">作者</view>
+										<view class="" v-else>{{items.userName}}</view>
+										<view @tap="goUser(items.replayUserId)">回复 {{ item.userName}}：</view>
 										<view class="flex-sub">{{items.content}}</view>
 									</view>
 								</view>
@@ -132,13 +118,36 @@
 					</view>
 				</view>
 			</view>
-			<view class="box" v-if="showInput" >
+			<!-- <view class="box" v-if="showInput" >
 				<view class="cu-barbox input">
 					<view class="action">
 						<text >评论</text>
 					</view>
 					<textarea placeholder-class="textplo"   @input="InputBlur" :adjust-position="true" class="solid-bottom textareawhit" :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"></textarea>
 					<button class="cu-btn bg-green shadow-blur" @tap="inputComent">发送</button>
+				</view>
+			</view> -->
+			<view class="cu-bar foot input" >
+				<input class=" search-form" :placeholder-class="value?' ':'cuIcon-write'"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue"></input>
+				<view class="action flex flex-direction" @tap="gotoSponsor">
+					<text class="lg text-black cuIcon-moneybag"></text>
+					<text class="text-xs">赞助</text>
+				</view>
+				<view class=" flex flex-direction">
+					<button class="cu-btns"  open-type="share">
+						<view class="text-black text-xxl">
+							<text class="lg text-black cuIcon-forward"></text>
+						</view>
+					</button>
+					<text class="text-xs">为TA打Call</text>
+				</view>
+				<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
+					<!-- <button class="" v-if="pusCardLists.userId==userId"  :id="index" open-type="share"><text class="lg text-black cuIcon-friendfavor"></text></button>
+					<text class="text-xs" v-if="pusCardLists.userId==userId" >分享邀请</text> -->
+					<text class="lg text-black cuIcon-friendfavor"></text>
+					<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
+					<text class="text-xs" v-else  >围观分钱</text>
+					<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
 				</view>
 			</view>
 		</view>
@@ -159,8 +168,8 @@
 				audioPlaySrc:'../../../static/images/icon/img/ti.png',
 				showInput:false,
 				pusCardLists:undefined,
-			
-				value:'',
+				InputBottom: 0,
+				value:false,
 				id:uni.getStorageSync('id'),
 				userId:uni.getStorageSync('id'),
 				inputType:2,//2评论，1回复
@@ -171,7 +180,7 @@
 				commentId:'',
 				pushId:'',
 				tolist:false,
-				conmmmenttext:'请输入评论内容',
+				conmmmenttext:'说些什么...',
 				showCardCommentlist:'',
 				guanzhu:'关注',
 				pushCardCreateTime:'',
@@ -243,6 +252,15 @@
 			
 		},
 		methods: {
+			gotoSponsor() {
+				
+				uni.setStorageSync("pushId", this.pushId);
+				uni.setStorageSync("cardId", this.cardId);
+				uni.navigateTo({
+					url: '../../sponsor/action'
+			
+				})
+			},
 			gothank(e){
 				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
@@ -384,75 +402,63 @@
 				this.inputType=1;
 				this.conmmmenttext='回复：'+e.userName
 			},
-			inputComent(e){		
+			inputComent(e){	
 				if(!this.hasLogin){
 					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
-				if(this.inputType==1){
-					this.xdUniUtils.xd_request_text({content:this.value}).then(res=>{
-						if(res.obj.errcode==0){
+			
+				this.xdUniUtils.xd_request_text({content:e.detail.value}).then(res=>{
+					if(res.obj.errcode==0){
+						if(this.inputType==1){
 							this.xd_request_post(this.xdServerUrls.xd_saveCardReplayComment,{
 								replayUserId:this.userId,
 								commentId:this.commentId,
 								cardId:this.dataCardId,
 								userId:this.id,
-								
-								content:this.value,
+								content:e.detail.value,
 							},true).then(res=>{
 							
 								this.showInput=false;
-								this.value='';
+								this.value=false;
 								if (res.resultCode == 0) {
 									var data=res.obj;
 									this.showCardCommentlist=data
 								}
 							})
-						}else{
-							uni.showToast({
-							    title: '内容包含敏感内容',
-								mask:true,
-							    duration: 2000,
 								
-							});
-							return false
-						}})
-				}else if(this.inputType==2){
-					this.xdUniUtils.xd_request_text({content:this.value}).then(res=>{
-						if(res.obj.errcode==0){
-							this.xd_request_post(this.xdServerUrls.xd_saveCardComment,{
-								cardId:this.dataCardId?this.dataCardId:this.cardId,
-								userId:this.id,
-								content:this.value,
-							},true).then(res=>{
-								
-								this.showInput=false;
-								this.value='';
-								/* uni.redirectTo({
-									url:'../cardDetails/cardDetails?pushId='+this.pushId+'&cardId='+this.cardId+'&show=0'
-								}) */
-								 if (res.resultCode == 0) {
-									var data=res.obj;
-									this.showCardCommentlist=data
-								} 
-								
-							})
-						}else{
-							uni.showToast({
-							    title: '内容包含敏感内容',
-								mask:true,
-							    duration: 2000,
-								
-							});
-							return false
-						}})
-						
-					
-				}
-	
-				
+						}else if(this.inputType==2){
+								this.xd_request_post(this.xdServerUrls.xd_saveCardComment,{
+									cardId:this.dataCardId?this.dataCardId:this.cardId,
+									userId:this.id,
+									content:e.detail.value,
+								},true).then(res=>{
+									
+									this.showInput=false;
+									this.value=false;
+									/* uni.redirectTo({
+										url:'../cardDetails/cardDetails?pushId='+this.pushId+'&cardId='+this.cardId+'&show=0'
+									}) */
+									 if (res.resultCode == 0) {
+										var data=res.obj;
+										this.showCardCommentlist=data
+									} 
+									
+						    })
+						}
+					}else{
+						uni.showToast({
+							title: '内容包含敏感内容',
+							mask:true,
+							duration: 2000,
+							
+						});
+						return false
+					}
+					})
+			
 			},
-			InputBlur(e){
-				this.value=e.detail.value;
+			inputshowvue(){
+			this.value=true;	
 			},
 			showInputComent(){
 				if(!this.hasLogin){
@@ -460,7 +466,7 @@
 				}
 				this.showInput=!this.showInput;
 				this.inputType=2;
-				this.conmmmenttext='请输入评论内容'
+				this.conmmmenttext='说些什么...'
 			},
 			getpushList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushDataByPushId,{
@@ -469,8 +475,8 @@
 				},true).then(res=>{	
 					var data =res.obj;
 					data.pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(data.pushCardList[0].address)?"":data.pushCardList[0].address;
-					console.log("getpushList");
-					console.log(data);
+					// console.log("getpushList");
+					// console.log(data);
 					data.challengeRmb=res.obj.challengeRmb/100;
 					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
 					data.createTime=time;
@@ -553,7 +559,6 @@
 		width: 80%;
 		overflow: hidden;
 		text-overflow:ellipsis;
-		display:-webkit-box; 
 		-webkit-box-orient:vertical;
 		-webkit-line-clamp:2; ; 
 	}
@@ -577,7 +582,7 @@
 		margin-top: 10upx;
 	}
 	.commenttext{
-		margin-left: 30upx;
+		
 	}
 	.bg-light-blue{background-color: #007AFF;}
 	.videoheit{
@@ -587,14 +592,30 @@
 	.thanktext{
 		float: right;
 	}
-	.textareawhit{
-		padding-top: 10upx;
-		width: 70%;
-		height: 100upx;
-		font-size:30upx
-	}
+
 	.textplo{
 		color: #007AFF;
 	}
-	
+	.dakacishu{
+		width: 20%;
+	}
+	.dakacishus{
+		width: 30%;
+	}
+	.tagcss{
+		top:12upx;
+		right: 50upx;
+	}
+	.cu-btns{
+		// position: static;
+		background-color: #FFFFFF;
+		padding-left: 1upx;
+		padding-right: 1upx;
+		line-height: 1.1;
+
+	}
+	button::after{
+		
+		border:none;
+	}
 </style>

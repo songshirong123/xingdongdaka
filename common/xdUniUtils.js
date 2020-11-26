@@ -257,8 +257,8 @@ function xd_navigateBack(delta) {
   if(times){
 	  var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
 	  var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
-	  var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() ;
-	   return M+D+ ' '+h+m+s;
+	  // var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() ;
+	   return M+D+ ' '+h+m;
   }
   if(times1){
   	
