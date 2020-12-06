@@ -27,7 +27,12 @@
 			<view class="xd-columns" style="padding: 10px;border-bottom: 2px solid #f0f0f0;">
 				<text>1.已获取分享后行动项的审核权、审核目标是否达成，可设置自己需要的条件。</text>
 				<text>2.已获取分享后行动项的收入权，获得保证金的特别分配收入。</text>
-				<text>3.详细情况可咨询客服。</text>
+				<view class="xd-rows">
+					<text>3.详细情况可咨询客服。</text>
+					<button style="background-color: #FFFFFF;border:1px solid #ffffff; height:40upx;box-shadow: none;line-height: 1;font-size: 32upx;margin-left: 1px;" open-type="contact">
+						<text class="cuIcon-service"></text>
+					</button>
+				</view>
 			</view>
 			<!-- 事件内容 -->
 			<view v-for="(item,index) in userInfolist" @tap="selectGroup(item)" :key="index" style="padding: 10px;border-bottom: 1px solid #f0f0f0;background-color: #FFFFFF;">

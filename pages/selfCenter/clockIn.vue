@@ -265,6 +265,13 @@
 					success: function(res) { //成功后的回调
 						console.log(res);
 						var res = res.result;
+						var item={
+							address:"",
+							title:res.ad_info.district,
+							id:res.ad_info.adcode,
+							ad_info:res.ad_info
+						}
+						that.xdUniUtils.xd_setStorageSync("selectAddress", item);
 						that.pushAddress = res.ad_info.city+" . "+res.ad_info.district;
 					},
 					fail: function(error) {},
