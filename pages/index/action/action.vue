@@ -119,7 +119,7 @@
 		</view>
 		<scroll-view scroll-x class="bg-white nav">
 			<view class="flex text-center">
-				<view class="cu-item flex-sub" :class="index==TabCur?'text-orange cur':''" v-for="(items,index) in ['打卡内容','围观排行']"
+				<view class="cu-item flex-sub" :class="index==TabCur?'text-orange curcss':''" v-for="(items,index) in ['打卡内容','围观排行']"
 				 :key="index" @tap="tabSelect" :id="index">
 					{{items}}
 				</view>
@@ -988,6 +988,10 @@
 .buttonDonAndXin{
 	// background: #ffe66f;
 	// border: 2px solid #ffa700;
+}
+.curcss{
+	  border-bottom: 4rpx solid;
+
 }
 
 </style>

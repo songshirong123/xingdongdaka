@@ -75,13 +75,15 @@
 						</view>	
 					</view>		
 				</view>
-				
-				<view class="flex padding justify-between">
-					<view class="text-xxl" @tap="showInputComent()">
-						<text class="text-gray text-df">评论 {{showCardCommentlist.pushCommentList.length?showCardCommentlist.pushCommentList.length:0}}</text>
+				<view class="flex padding justify-start">
+					<view class="text-xxl"  @tap="tabSelect(0)">
+						<text class=" text-df" :class="TabCur==0?'text-orange cur':''">评论 {{showCardCommentlist.pushCommentList.length?showCardCommentlist.pushCommentList.length:0}}</text>
+					</view>
+					<view class="text-xxl margin-left-sm"  @tap="tabSelect(1)">
+						<text class=" text-df" :class="TabCur==1?'text-orange cur':''">围观排行 {{lookerList.length?lookerList.length:0}}</text>
 					</view>
 				</view>
-				<view class="">
+				<view class="" v-if="TabCur==0">
 					<view class="cu-list menu-avatar comment solids-top">
 						<view class="cu-item" v-for="(item,index) in showCardCommentlist.pushCommentList" :key='index'>
 							<view class="cu-avatar round" :style="{backgroundImage: 'url(' +item.userHead + ')'}" @tap="goUser(item.userId)"></view>
@@ -112,23 +114,63 @@
 								</view>
 							</view>
 						</view>
-						<view class="padding-top-sm" v-if="!showInput">
-							<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
+					</view>
+				</view>
+				<block v-for="(attention,index) in lookerList" :key="index" v-if="TabCur==1">
+					<view class="actionLi bg-white">
+						<view class="ali-main">
+							<view class="texticon" v-if="index==0">
+								<text class="lg cuIcon-crown"> </text>
+							</view>
+							<view class="textnum" v-if="index>0">
+								{{index+1}}
+							</view>
+							<view class="ali-main-img" @tap="goUser(attention.lookUserId)">
+				
+								<image class='xd-mag xd-box-shadow' :src="attention.userHead"></image>
+				
+							</view>
+							<view class="lli-main-content xd-list-body" @tap="goUser(attention.lookUserId)">
+								<view class="xd-list-title-text">
+									<text>{{attention.userName}}</text>
+									<text v-if="attention.sex==1" class="boy">♂</text>
+									<text v-else-if="attention.sex==0" class="boy">♀</text>
+									<text v-else class="boy">密</text>
+								</view>
+								<view class="moreInfoIn">
+									<image class='address' src="/static/images/icon/address.png"></image>
+									<text class="province">{{attention.province}}.{{attention.city}}</text>
+								</view>
+							</view>
+							<view class="ali-main-list" @tap="showBanner(attention.lookUserId,attention.pushId)">
+								<view class="ali-main-list-num">{{attention.lookerCount}}</view>
+							</view>
+				
+							<view class="defaultthank" @click="gothanks(attention)">
+								<button class="defaultbut" type="default">感谢</button>
+							</view>
+				
 						</view>
 					</view>
+				</block>
+				<view class="underconten" v-if="showCardCommentlist.pushCommentList.length==0&&TabCur==0">
+					<view class=" underconten-a" >
+						<view class="padding">还没有人发布评论，快来帮助它动力起来...</view>
+					</view>
+					<button class="cu-btn bg-orange undercontenbutton" @click="showInputComent" >评论</button>
+				</view>
+				<view class="underconten" v-if="lookerList.length==0&&TabCur==1">
+					<view class=" underconten-a">
+						<view class="padding">还没有人围观,快来围观吧...</view>
+					</view>
+					
 				</view>
 			</view>
-			<!-- <view class="box" v-if="showInput" >
-				<view class="cu-barbox input">
-					<view class="action">
-						<text >评论</text>
-					</view>
-					<textarea placeholder-class="textplo"   @input="InputBlur" :adjust-position="true" class="solid-bottom textareawhit" :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"></textarea>
-					<button class="cu-btn bg-green shadow-blur" @tap="inputComent">发送</button>
-				</view>
-			</view> -->
+			<view class="padding-top-sm adcus" v-if="!showInput">
+				<ad unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad>
+			</view>
 			<view class="cu-bar foot input" >
-				<input class=" search-form" :placeholder-class="value?' ':'cuIcon-write'"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue"></input>
+				<input class=" search-form" :placeholder-class="value?' ':'cuIcon-write'"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur"></input>
 				<view class="action flex flex-direction" @tap="gotoSponsor">
 					<text class="lg text-black cuIcon-moneybag"></text>
 					<text class="text-xs">赞助</text>
@@ -139,13 +181,14 @@
 							<text class="lg text-black cuIcon-forward"></text>
 						</view>
 					</button>
-					<text class="text-xs">为TA打Call</text>
+					<text class="text-xs" v-if="pusCardLists.userId==userId ">分享邀请</text>
+					<text class="text-xs" v-else>为TA打Call</text>
+					
 				</view>
 				<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
-					<!-- <button class="" v-if="pusCardLists.userId==userId"  :id="index" open-type="share"><text class="lg text-black cuIcon-friendfavor"></text></button>
-					<text class="text-xs" v-if="pusCardLists.userId==userId" >分享邀请</text> -->
 					<text class="lg text-black cuIcon-friendfavor"></text>
 					<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
+					<text class="text-xs text-red" v-else-if="pusCardLists.onlooker">已围观</text>
 					<text class="text-xs" v-else  >围观分钱</text>
 					<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
 				</view>
@@ -165,6 +208,8 @@
 		},
 		data() {
 			return {
+				lookerList:[],
+				TabCur: 0,
 				audioPlaySrc:'../../../static/images/icon/img/ti.png',
 				showInput:false,
 				pusCardLists:undefined,
@@ -252,6 +297,38 @@
 			
 		},
 		methods: {
+			tabSelect(e){
+				this.TabCur=e;
+				if(this.TabCur ==1){
+					this.getLookerList()
+				}
+			},
+			getLookerList(){
+				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
+					pushId:this.pushId,
+					pageNum: this.lookNextPageTwo,
+					pageSize:10,
+				},true)
+				.then(res=>{
+					this.lookerList=res.obj.list;
+					this.looktotal=res.obj.total;
+					this.lookNextPageTwo=res.obj.nextPage;
+					this.lookerList.forEach(item =>{
+						if(item.lookUserId == uni.getStorageSync('id')){
+							this.guanzhu ='已关注'
+						}
+					})
+					
+				})
+			},
+			onblur(){
+				this.showInput=false;
+			},
+			onshowad(){
+				if(!this.showInput){
+					this.showInput=true;
+				}
+			},
 			gotoSponsor() {
 				
 				uni.setStorageSync("pushId", this.pushId);
@@ -270,6 +347,17 @@
 				}
 				uni.navigateTo({
 				url:'/pages/pageA/thankmoney/thankmoney?userId='+e.userId+"&pushId="+this.pusCardLists.id
+			});
+			},
+			gothanks(e){
+				if(!uni.getStorageSync('token')){
+					uni.navigateTo({
+						url: '../../login/login' 
+					});
+					return false
+				}
+				uni.navigateTo({
+				url:'/pages/pageA/thankmoney/thankmoney?userId='+e.lookUserId+"&pushId="+e.pushId
 			});
 			},
 			//围观
@@ -617,5 +705,79 @@
 	button::after{
 		
 		border:none;
+	}
+	.adcus{
+		padding-bottom: 105upx;
+	}
+	.underconten{
+		height: 300upx;
+		.underconten-a{
+			text-align: center;
+			padding-top: 10%;
+		}
+		.undercontenbutton{
+			margin-left: 40%;
+			width: 20%;
+		}
+	}
+	.cur{
+	padding-bottom: 18upx;
+	 border-bottom: 4rpx solid;
+	}
+	.defaultthank{
+		padding-top: 30upx;
+	}
+	.defaultbut{
+		height: 60upx;
+		line-height: 1.9;
+		font-size: 14px;
+	}
+	.actionLi{
+		padding-bottom: 10upx;
+	}
+	.ali-main{
+		display: flex;
+		padding: 20rpx;
+		.ali-main-list{
+			color: #f37b1d;
+			margin-left: 10%;
+			line-height: 130rpx;
+			width: 140rpx;
+			.ali-main-list-num{
+				margin-left: 40%;
+			}
+		}
+		.ali-main-img .xd-mag{
+			border-radius: 100%;
+			height: 125rpx;
+			width: 125rpx;
+		}
+		.lli-main-content {
+			.boy{
+				background:#66CCFF;
+				color:#fff;
+				display: inline-block;
+				padding:0 12upx;
+				border-radius: 100%;
+				font-size: 25rpx;
+				
+				margin-left: 14rpx;
+			}
+			.lli-main-content-text{
+				line-height: 90rpx;
+				margin-right: 20rpx;
+			}
+			.moreInfoIn {
+				.address {
+					width: 30rpx;
+					height: 30rpx;
+				}
+			
+				.province {
+					font-size: 28rpx;
+					margin-left: 6rpx;
+				}
+			}
+		}
 	}
 </style>

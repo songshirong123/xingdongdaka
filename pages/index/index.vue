@@ -75,13 +75,10 @@
 						<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
 							<view>互助小组</view>
 						</view>
+						<!-- <view  :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
+							<view>挑战赛</view>
+						</view> -->
 					</view>
-
-
-
-					<!-- <view :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
-						<view>挑战赛</view>
-				
 					<!-- 互助小组对应内容 -->
 					<view class="xd-line"></view>
 					<view v-if="isGroupLable">
@@ -117,7 +114,7 @@
 										<text>￥123</text>
 									</view>
 									<view class="cu-capsule round margin-right-sm">
-										<view class='cu-tag bg-orange '>
+										<view class='cu-tag bg-orange ' @tap="goRanking(rankinItem.id)">
 											加入
 										</view>
 
@@ -298,6 +295,12 @@
 					that.adHeight = data.height;
 				}).exec()
 			},
+			
+			goRanking(e){
+				uni.navigateTo({
+					url:'../pageA/ranking/rankinAdd?id='+e
+				})
+			},
 
 			//添加小组
 			groupAdd() {
@@ -403,17 +406,17 @@
 
 			},
 			bannerListtap(e) {
+				
 				if (e >= this.bannerList.length) {
 					e = e - 3;
 				}
-
 				if (this.bannerList[e].type == 1) {
 					uni.navigateTo({
 						url: this.bannerList.bannerUrl
 					});
 				} else if (this.bannerList[e].type == 2) {
 					var url = encodeURIComponent(this.bannerList[e].bannerUrl);
-					console.log(url)
+					
 					uni.navigateTo({
 						url: '../pageA/web/webShow?url=' + url
 					});

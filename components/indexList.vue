@@ -56,28 +56,56 @@
 					 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 					</image>
 				</view>
-				<view class="flex padding justify-between">
-					<view class='xd-flex'>
-						<view class="text-xxl" @tap="goComent(list)">
-							<text class="text-gray cuIcon-comment "></text>
-							<text class="text-gray text-df"></text>
+				<view class="flex padding justify-around align-center">
+					<button class="cu-btns" :id="index"  open-type="share">
+						<view class="flex flex-wrap align-center ">
+							<view class="text-black text-lg">
+								<text class="lg text-black cuIcon-forward"></text>
+							</view>
+							<text class="text-sm marginxs" v-if="list.userId==userId ">分享邀请</text>
+							<text class="text-sm marginxs" v-else>为TA打Call</text>
 						</view>
-						<view style="padding-left:6px">
-							<button class="cu-btn bg-yellow sm round" @tap="gotoSponsor(list,index)">赞助</button>
-							<text v-if="list.sponsorCount>0" class="text-gray text-df ">{{list.sponsorCount}}</text>
+					</button>
+					<view class="action flex flex-wrap align-center" @tap="goComent(list)">
+						<view class="text-lg">
+							<text class="lg text-black cuIcon-mark"></text>
 						</view>
+						
+						<text class="text-sm marginxs">评论</text>
 					</view>
-					
+					<view class="action flex flex-wrap align-center" @tap="gotoSponsor(list,index)">
+						<view class="text-lg">
+							<text class="lg text-black cuIcon-moneybag"></text>
+						</view>
+						
+						<text class="text-sm marginxs">赞助</text>
+						<text v-if="list.sponsorCount>0" class="text-gray text-sm ">{{list.sponsorCount}}</text>
+					</view>
 					<view class="" v-if="isRanking">
 						<button class="cu-btn bg-green sm round"  @click="addRankin" >选择该行动加入</button>
 					</view>
+					<view class="action flex flex-wrap align-center " v-else >
+						<view class="text-lg">
+							<text class="lg text-black cuIcon-friendfavor"></text>
+						</view>
+						<text class="text-sm marginxs" v-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0" :id="index"  @tap="lookerClick(list,index)" >围观</text>
+						<text class="text-sm marginxs" v-else-if="!list.onlooker" @tap="lookerClick(list,index)" >围观分钱</text>
+						<text class="text-sm marginxs" v-else-if="list.onlooker">已围观</text>
+	
+						<view class="cu-tag badge tagcss ">{{list.onlookerCount}}</view>
+					</view>
+					
+					<!-- <view class='xd-flex'>
+				
+					</view>
+					
 					<view v-else>
 						<button class="cu-btn bg-light-blue sm round" v-if="list.userId==userId"  :id="index" open-type="share">分享邀请</button>
 						<button class="cu-btn bg-orange sm round  " v-else-if="list.onlooker"  :id="index"  open-type="share">为TA打Call</button>
 						<button class="cu-btn bg-green sm round  " v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0" :id="index"  @tap="lookerClick(list,index)">围观</button>
 						<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(list,index)">围观分钱</button>
 						<text class="text-gray text-df ">{{list.onlookerCount}}</text>
-					</view>
+					</view> -->
 				
 				</view>
 			</view>
@@ -189,4 +217,19 @@
 .videowhind{
 	width: 100%;
 }
+button::after{
+		border:none;
+	}
+	.cu-btns{
+		margin-left: unset;
+		margin-right: unset;
+		background-color: #FFFFFF;
+		line-height: unset;
+		padding-left: unset;
+		padding-right: unset;
+		color: #333333;
+	}
+	.marginxs{
+		margin-left: 4upx;
+	}
 </style>
