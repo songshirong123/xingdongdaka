@@ -71,7 +71,7 @@
 				userBean: {},
 				userInfolist: [{
 					ID: 0,
-					Name: "联系电话",
+					Name: "账号电话",
 					Value: "暂无",
 					Icon: "cuIcon-mobile"
 				}, {
@@ -81,7 +81,7 @@
 					Icon: "cuIcon-phone"
 				}, {
 					ID: 2,
-					Name: "联系微信",
+					Name: "活动微信",
 					Value: "暂无",
 					Icon: "cuIcon-weixin"
 				}, {
@@ -110,11 +110,14 @@
 				let id = item.ID;
 				if (id == 0 || id == 1 || id == 2) {
 					let shInfo = this.shInfo;
+					shInfo.showInfo=shInfo.phone;
 					let info ={IDS:id}
 					let til = "修改联系电话";
 					if (id == 1) {
+						shInfo.showInfo=shInfo.activityPhone;
 						til = "修改活动电话";
-					} else if (id == 1) {
+					} else if (id == 2) {
+						shInfo.showInfo=shInfo.wx;
 						til = "修改联系微信";
 					}
 					info.Title = til;
