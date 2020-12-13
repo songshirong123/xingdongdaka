@@ -110,6 +110,10 @@ const serverUrls = { //根据接口具体配置
 	xd_saveRoomJoin: serverBaseUrl + '/room/saveRoomJoin',//加入群组	
 	xd_currentStatusByRoom: serverBaseUrl + '/room/currentStatusByRoom',//查看用户在群状态	1群主 2群成员 3游客
 	xd_quitByUserId: serverBaseUrl + '/room/quitByUserId',//退出小组
+	
+	xd_selectSHInfo: serverBaseUrl + '/Activity/select',//查询商户信息
+	xd_updateSHInfo: serverBaseUrl + '/Activity/update',//更新商户信息
+	xd_saveSHInfo: serverBaseUrl + '/Activity/save',//保存商户信息
 }
 export default {
 	serverUrls,

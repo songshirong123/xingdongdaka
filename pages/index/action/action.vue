@@ -66,8 +66,8 @@
 								</view>
 								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
 							</view>
-
-							<view style="margin-right: 6px;" v-if="userId!=pushList.userId && sponsorCnt>0">
+                            <!-- && sponsorCnt>0 -->
+							<view style="margin-right: 6px;" v-if="userId!=pushList.userId ">
 								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)">
 									赞助
 								</view>

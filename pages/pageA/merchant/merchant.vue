@@ -29,7 +29,8 @@
 				<text>2.已获取分享后行动项的收入权，获得保证金的特别分配收入。</text>
 				<view class="xd-rows">
 					<text>3.详细情况可咨询客服。</text>
-					<button style="background-color: #FFFFFF;border:1px solid #ffffff; height:40upx;box-shadow: none;line-height: 1;font-size: 32upx;margin-left: 1px;" open-type="contact">
+					<button style="background-color: #FFFFFF;border:1px solid #ffffff; height:40upx;box-shadow: none;line-height: 1;font-size: 32upx;margin-left: 1px;"
+					 open-type="contact">
 						<text class="cuIcon-service"></text>
 					</button>
 				</view>
@@ -38,7 +39,7 @@
 			<view v-for="(item,index) in userInfolist" @tap="selectGroup(item)" :key="index" style="padding: 10px;border-bottom: 1px solid #f0f0f0;background-color: #FFFFFF;">
 				<view class="xd-rows">
 					<view class="xd-rows" style="flex: 1;padding-top: 3px;padding-bottom: 3px;">
-						<text :class='item.Icon'  style="margin-top: 2px;"></text>
+						<text :class='item.Icon' style="margin-top: 2px;"></text>
 						<text class='thin' style="margin-left: 5px;">{{item.Name}}</text>
 					</view>
 					<view class="xd-rows" style="width: 100px;display: flex;justify-content: flex-end;padding-top: 3px;padding-bottom: 3px;">
@@ -65,11 +66,12 @@
 	export default {
 		data() {
 			return {
+				shInfo: {},
 				newList: {},
 				userBean: {},
 				userInfolist: [{
 					ID: 0,
-					Name: "联系电话",
+					Name: "账号电话",
 					Value: "暂无",
 					Icon: "cuIcon-mobile"
 				}, {
@@ -79,10 +81,10 @@
 					Icon: "cuIcon-phone"
 				}, {
 					ID: 2,
-					Name: "联系微信",
+					Name: "活动微信",
 					Value: "暂无",
 					Icon: "cuIcon-weixin"
-				},{
+				}, {
 					ID: 3,
 					Name: "我的活动",
 					Value: "",
@@ -104,24 +106,38 @@
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
-			selectGroup(item){
+			selectGroup(item) {
 				let id = item.ID;
-				if(id==0 || id==1||id==2){
-					
-				}else if(id==3){
-					
-				}else if(id==4){
-					
-				}else if(id==5){
+				if (id == 0 || id == 1 || id == 2) {
+					let shInfo = this.shInfo;
+					shInfo.showInfo=shInfo.phone;
+					let info ={IDS:id}
+					let til = "修改联系电话";
+					if (id == 1) {
+						shInfo.showInfo=shInfo.activityPhone;
+						til = "修改活动电话";
+					} else if (id == 2) {
+						shInfo.showInfo=shInfo.wx;
+						til = "修改联系微信";
+					}
+					info.Title = til;
 					uni.navigateTo({
-						url:'./merchantActionList'
+						url: './merchantEditInfo?shInfo=' + JSON.stringify(shInfo)+"&infos="+JSON.stringify(info)
+					});
+				} else if (id == 3) {
+
+				} else if (id == 4) {
+
+				} else if (id == 5) {
+					uni.navigateTo({
+						url: './merchantActionList'
 					})
 				}
 			},
 			//发起活动
-			userSubmit(){
+			userSubmit() {
 				uni.navigateTo({
-					url:'./merchantAction'
+					url: './merchantAction'
 				})
 			},
 			//获取余额 如果没有余额或者余额不够支付 用微信支付否则用余额支付
@@ -133,17 +149,58 @@
 					console.log("res.obj xd_inquireBalance")
 					console.log(res.obj)
 					_this.userBean = res.obj.userBean;
-					let userMobile = _this.userBean.userMobile;
-					if (_this.xdUniUtils.IsNullOrEmpty(userMobile)) {
-						let mobiles = userMobile.split(",");
-						_this.userInfolist[0].Value = mobiles[0];
-						_this.userInfolist[1].Value = mobiles[1];
-					}
 				})
+			},
+			getShInfo() {
+				let _this = this;
+				this.xd_request_get(this.xdServerUrls.xd_selectSHInfo, {
+					token: uni.getStorageSync('token')
+				}, true).then((res) => {
+					console.log("xd_selectSHInfo")
+					console.log(res);
+					let msg = res.obj;
+					if (_this.xdUniUtils.IsNullOrEmpty(msg)){
+						_this.saveSHInfo();
+					}else{
+						let infos = res.obj[0];
+						let info = {
+							id:infos.id,
+							type:infos.type,
+							activityIncome:infos.activityIncome,
+							activityPhone:infos.activityPhone,
+							joinActivity:infos.joinActivity,
+							myActivity:infos.myActivity,
+							phone:infos.phone,
+							userId:infos.userId,
+							wx:infos.wx,
+						}
+						info.activityIncome=_this.xdUniUtils.IsNullOrEmpty(info.activityIncome)?"":info.activityIncome;
+						info.activityPhone=_this.xdUniUtils.IsNullOrEmpty(info.activityPhone)?"":info.activityPhone;
+						info.joinActivity=_this.xdUniUtils.IsNullOrEmpty(info.joinActivity)?"":info.joinActivity;
+						info.myActivity=_this.xdUniUtils.IsNullOrEmpty(info.myActivity)?"":info.myActivity;
+						info.phone=_this.xdUniUtils.IsNullOrEmpty(info.phone)?"":info.phone;
+						info.userId=_this.xdUniUtils.IsNullOrEmpty(info.userId)?"":info.userId;
+						info.wx=_this.xdUniUtils.IsNullOrEmpty(info.wx)?"":info.wx;
+						_this.shInfo = info;
+						_this.userInfolist[0].Value = info.phone;
+						_this.userInfolist[1].Value = info.activityPhone;
+						_this.userInfolist[2].Value = info.wx;
+					}
+						
+				})
+			},
+			//编辑商户信息
+			saveSHInfo() {
+				let _this = this;
+				let infos={token: uni.getStorageSync('token')};
+				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
+				_this.getShInfo();
+				}).catch(err => {});
 			},
 		},
 		onShow() {
 			this.getBalance();
+			this.getShInfo();
 			if (!this.hasLogin) {
 				return this.xdUniUtils.xd_login(this.hasLogin);
 			}

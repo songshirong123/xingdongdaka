@@ -254,6 +254,12 @@
 					"enablePullDownRefresh": false
 				}
 
+			}, {
+				"path": "merchant/merchantEditInfo",
+				"style": {
+					"navigationBarTitleText": "编辑信息",
+					"enablePullDownRefresh": false
+				}
 			}
 		]
 	}],
