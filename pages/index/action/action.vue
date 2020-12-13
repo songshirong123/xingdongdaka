@@ -1,5 +1,5 @@
 <template>
-	<view>
+	<view class="bg-white">
 		<lookerCountInfo ref="lookerCountInfo"></lookerCountInfo>
 		<view class="cu-card dynamic " :class="pushList.pictures!=''?'no-card':''">
 			<view class="cu-item shadow">
@@ -10,68 +10,71 @@
 							<view @tap="goUser(pushList.userId)">{{pushList.userName}}</view>
 						</view>
 						<view>
+						<!-- 	<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">赞助</view> -->
 							<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">互助小组</view>
 							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
+							
 						</view>
 					</view>
-					<view class="flex flex-wrap padding justify-between">
-						<view class="widthtext ">
-							<view class="flex flex-wrap justify-between">
-								<view class="">
-									<text class="text-orange" v-if="pushList.pushCardStatus==1">进行中...</text>
-									<text class="text-gray" v-else-if="pushList.pushCardStatus==2">未达成</text>
-									<text class="text-green" v-else-if="pushList.pushCardStatus==3">已达成</text>
-									<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
-								</view>
+					<view class="flex flex-direction padding justify-between">
+						<view class="flex flex-wrap justify-between">
+							<view class="">
+								<text class="text-orange" v-if="pushList.pushCardStatus==1">进行中...</text>
+								<text class="text-gray" v-else-if="pushList.pushCardStatus==2">未达成</text>
+								<text class="text-green" v-else-if="pushList.pushCardStatus==3">已达成</text>
+								<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
 							</view>
-
-							<view class="text-gray text-sm ">
-								阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
-							</view>
-							<view class="xd-rows">
-								<view class="text-gray text-sm ">
-									已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
-								</view>
-								<view class="text-gray text-sm " style="margin-left: 10px;">
-									可休假天数：
-									<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
-										{{pushList.kholidayDay}}
-									</view>
-									<view class="text-sm text-red display-inline" v-else>
-										超期{{surpassHolidayDay}}
-									</view>
-									<view class="text-sm display-inline">
-										/{{pushList.holidayDay}}
-									</view>
-								</view>
-							</view>
-
 						</view>
-						<view class='xd-flex' style="margin-top: 3px;">
-							<view v-if="userId==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
-								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)">
-									保证金￥{{pushList.challengeRmb}}
+						<view class="flex light bg-red radius ">
+							<view class="widthtext padding-sm">
+								<view class="text-black text-sm ">
+									阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
 								</view>
+								<view class="xd-rows margin-top-sm">
+									<view class="text-gray text-sm ">
+										已达成天数：{{pushList.pushCardCount}}/{{pushList.targetDay}}
+									</view>
+									<view class="text-gray text-sm " style="margin-left: 10px;">
+										可休假天数：
+										<view class="text-sm display-inline" v-if="pushList.surpassHolidayDay>=0">
+											{{pushList.kholidayDay}}
+										</view>
+										<view class="text-sm text-red display-inline" v-else>
+											超期{{surpassHolidayDay}}
+										</view>
+										<view class="text-sm display-inline">
+											/{{pushList.holidayDay}}
+										</view>
+									</view>
+								</view>
+							
 							</view>
-							<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" style="margin-right: 6px;">
-								<view class="cu-tag light bg-red radius" @click="gotoSponsor(pushList)">
-									保证金￥{{pushList.challengeRmb+sponsorRmb}}
+							<view class='xd-flex flex-direction bg-pink align-center widthtext-b radius' >
+								<view v-if="userId==pushList.userId && pushList.challengeRmb>0" >
+									<view :class="pushList.challengeRmb>10?'textlinhet-a':'textlinhet'" @click="gotoSponsor(pushList)">
+										保证金￥{{pushList.challengeRmb}}
+									</view>
 								</view>
-							</view>
-							<view style="margin-right: 6px;" v-if="userId==pushList.userId && sponsorRmb>0">
-								<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)">
-									获赞助金￥{{sponsorRmb}}
+								<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" >
+									<view :class="pushList.challengeRmb>10?'textlinhet-a':'textlinhet'" @click="gotoSponsor(pushList)">
+										保证金￥{{pushList.challengeRmb+sponsorRmb}}
+									</view>
 								</view>
-								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
-							</view>
-                            <!-- && sponsorCnt>0 -->
-							<view style="margin-right: 6px;" v-if="userId!=pushList.userId ">
-								<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)">
-									赞助
-								</view>
-								<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+								<!-- <view style="margin-right: 6px;" v-if="userId==pushList.userId && sponsorRmb>0">
+									<view class="cu-tag radius bg-yellow " @click="gotoSponsor(pushList)">
+										获赞助金￥{{sponsorRmb}}
+									</view>
+									<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+								</view> -->
+							    <!-- && sponsorCnt>0 -->
+								<!-- <view style="margin-right: 6px;" v-if="userId!=pushList.userId ">
+									<view class="cu-tag radius bg-yellow" @click="gotoSponsor(pushList)">
+										赞助
+									</view>
+									<text style="position:relative;top:2px;left:4px;" class="text-gray text-df ">{{sponsorCnt}}</text>
+								</view> -->
 							</view>
 						</view>
 						<view class="widthtext margin-top-sm">
@@ -850,7 +853,8 @@
 	
 </script>
 <style scoped lang="scss">
-	page{background: #fcfcfc;}
+	
+	page{background-color: #FFFFFF;}
 	.imgheit{
 		height: 320upx;
 		width: 100%;
@@ -929,7 +933,10 @@
 		height: 325upx;
 	}
 	.widthtext{
-		width: 100%;
+		width: 80%;
+	}
+	.widthtext-b{
+		width: 20%;
 	}
 	.texticon{
 		display: inline-flex;
@@ -967,8 +974,11 @@
 		padding-top: 30upx;
 	}
 	.defaultbut{
+		border: 1upx solid #f37b1d;
+		color: #f37b1d;
+		background-color: #FFFFFF;
 		height: 60upx;
-		line-height: 1.9;
+		line-height: 2.5;
 		font-size: 14px;
 	}
 .testcontentshow{
@@ -992,6 +1002,13 @@
 .curcss{
 	  border-bottom: 4rpx solid;
 
+}
+.textlinhet{
+	margin-top: 31%;
+}
+.textlinhet-a{
+	margin-top: 20%;
+	margin-left: 20%;
 }
 
 </style>

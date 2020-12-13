@@ -106,7 +106,7 @@
 								</view>
 								<view class="bg-gray padding-sm radius margin-top-sm  text-sm" v-if="showCardCommentlist.pushCommentList[index].cardReplayCommentList.length>0">
 									<view class="flex align-center"  v-for="(items,index) in showCardCommentlist.pushCommentList[index].cardReplayCommentList" :key='index'>
-										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==id">作者</view>
+										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==id">达人</view>
 										<view class="" v-else>{{items.userName}}</view>
 										<view @tap="goUser(items.replayUserId)">回复 {{ item.userName}}：</view>
 										<view class="flex-sub">{{items.content}}</view>
@@ -155,7 +155,7 @@
 				</block>
 				<view class="underconten" v-if="showCardCommentlist.pushCommentList.length==0&&TabCur==0">
 					<view class=" underconten-a" >
-						<view class="padding">还没有人发布评论，快来帮助TA动力起来...</view>
+						<view class="padding">还没有人发布评论，快来帮助TA行动起来...</view>
 					</view>
 					<button class="cu-btn bg-orange undercontenbutton" @click="showInputComent" >评论</button>
 				</view>
@@ -169,8 +169,8 @@
 			<view class="padding-top-sm adcus" v-if="!showInput">
 				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
 			</view>
-			<view class="cu-bar foot input" >
-				<input class=" search-form" :placeholder-class="value?' ':'cuIcon-write'"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur"></input>
+			<view class="cu-bar foot input" >	
+				<textarea class="  textarea-text"  placeholder-style="font-size:28rpx;"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur" show-confirm-bar="false"></textarea>
 				<view class="action flex flex-direction" @tap="gotoSponsor">
 					<text class="lg text-black cuIcon-moneybag"></text>
 					<text class="text-xs">赞助</text>
@@ -730,8 +730,11 @@
 		padding-top: 30upx;
 	}
 	.defaultbut{
+		border: 1upx solid #f37b1d;
+		color: #f37b1d;
+		background-color: #FFFFFF;
 		height: 60upx;
-		line-height: 1.9;
+		line-height: 2.5;
 		font-size: 14px;
 	}
 	.actionLi{
@@ -781,5 +784,40 @@
 				}
 			}
 		}
+	}
+	.textarea-text{
+		    background-color: #f5f5f5;
+		    height: 64rpx;
+		    font-size: 28rpx;
+		    color: #333333;
+		    display: -webkit-box;
+		    display: -webkit-flex;
+		    display: flex;
+		    -webkit-box-align: center;
+		    -webkit-align-items: center;
+		    align-items: center;
+		    margin: 0 20rpx;
+		   width: 55%;
+	}
+	.texticon{
+		display: inline-flex;
+		position: absolute;
+		color: #f37b1d;
+		font-size: 35upx;
+		white-space: nowrap;
+		-webkit-transform:rotate(-50deg);
+		z-index: 10;
+	
+	}
+	.textnum{
+		display: inline-flex;
+		position: absolute;
+		color: #FFFFFF;
+		background-color:#f37b1d;
+		white-space: nowrap;
+		z-index: 10;
+		border-radius: 200rpx;
+		padding: 0rpx 10rpx;
+		height: 28rpx;
 	}
 </style>
