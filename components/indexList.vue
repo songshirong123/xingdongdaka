@@ -57,15 +57,6 @@
 					</image>
 				</view>
 				<view class="flex padding justify-around align-center">
-					<button class="cu-btns" :id="index"  open-type="share">
-						<view class="flex flex-wrap align-center ">
-							<view class="text-black text-lg">
-								<text class="lg text-black cuIcon-forward"></text>
-							</view>
-							<text class="text-sm marginxs" v-if="list.userId==userId ">分享邀请</text>
-							<text class="text-sm marginxs" v-else>为TA打Call</text>
-						</view>
-					</button>
 					<view class="action flex flex-wrap align-center" @tap="goComent(list)">
 						<view class="text-lg">
 							<text class="lg text-black cuIcon-mark"></text>
@@ -81,9 +72,19 @@
 						<text class="text-sm marginxs">赞助</text>
 						<text v-if="list.sponsorCount>0" class="text-gray text-sm ">{{list.sponsorCount}}</text>
 					</view>
+					<button class="cu-btns" :id="index"  open-type="share">
+						<view class="flex flex-wrap align-center ">
+							<view class="text-black text-lg">
+								<text class="lg text-black cuIcon-forward"></text>
+							</view>
+							<text class="text-sm marginxs" v-if="list.userId==userId ">分享邀请</text>
+							<text class="text-sm marginxs" v-else>为TA打Call</text>
+						</view>
+					</button>
 					<view class="" v-if="isRanking">
 						<button class="cu-btn bg-green sm round"  @click="addRankin" >选择该行动加入</button>
 					</view>
+					
 					<view class="action flex flex-wrap align-center " v-else >
 						<view class="text-lg">
 							<text class="lg text-black cuIcon-friendfavor"></text>

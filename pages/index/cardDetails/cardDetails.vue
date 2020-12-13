@@ -155,7 +155,7 @@
 				</block>
 				<view class="underconten" v-if="showCardCommentlist.pushCommentList.length==0&&TabCur==0">
 					<view class=" underconten-a" >
-						<view class="padding">还没有人发布评论，快来帮助它动力起来...</view>
+						<view class="padding">还没有人发布评论，快来帮助TA动力起来...</view>
 					</view>
 					<button class="cu-btn bg-orange undercontenbutton" @click="showInputComent" >评论</button>
 				</view>
@@ -167,7 +167,7 @@
 				</view>
 			</view>
 			<view class="padding-top-sm adcus" v-if="!showInput">
-				<ad unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad>
+				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
 			</view>
 			<view class="cu-bar foot input" >
 				<input class=" search-form" :placeholder-class="value?' ':'cuIcon-write'"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur"></input>
@@ -294,6 +294,7 @@
 			}
 			this.getshowCardComment();
 			this.getpushList();
+			this.getLookerList();
 			
 		},
 		methods: {
@@ -303,6 +304,7 @@
 					this.getLookerList()
 				}
 			},
+			//围观排行
 			getLookerList(){
 				this.xd_request_post(this.xdServerUrls.xd_getLookerByPushId,{
 					pushId:this.pushId,
