@@ -1,6 +1,6 @@
 <template>
 	<view class="flex bg-white contentspe">
-		<form class="contentspe" @submit="formSubmit">
+		<form class="contentspe">
 			<view class="flex flex-wrap padding solid-top align-center">
 				<view class="text-xl">
 					<text class="lg text-gray cuIcon-list "></text>
@@ -38,29 +38,31 @@
 					</view>
 				</view>
 			</view>
-			<view class=" flex flex-wrap padding solid-top align-center justify-between">
+			<view class="padding solid-top align-center justify-between">
 				<view class="flex flex-wrap">
 					<view class="text-xl">
 						<text class="lg text-gray cuIcon-activity"></text>
 					</view>
-					<text class="margin-left-xs">行动内容</text>
+					<text class="margin-left-xs">活动内容</text>
+
 				</view>
+				<textarea @input="onInputActivity" placeholder="请输入活动内容" style="padding-top: 10px;padding-bottom: 10px;font-size: 12px;"></textarea>
 			</view>
-			
+
 			<view class="flex flex-wrap padding solid-top align-center">
 				<view class="text-xl">
 					<text class="lg text-gray cuIcon-moneybag"></text>
 				</view>
 				<text class="margin-left-xs">保证金</text>
-			
+
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
-					<view>
-						<text>5</text>
-						<text class="lg text-gray cuIcon-triangledownfill"></text>
+					<view class="flex flex-wrap">
+						<input @input="onInputAmout" type="number" min="1" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;" />
+						<text class="lg text-gray cuIcon-triangledownfill" style="margin-top: 6px;"></text>
 					</view>
 				</view>
 			</view>
-			
+
 			<view class=" flex flex-wrap padding solid-top align-center">
 				<view class="text-xl">
 					<text class="lg text-gray cuIcon-calendar"></text>
@@ -110,7 +112,7 @@
 				<view style="margin-top: 10px;">
 					<view class="cu-form-group">
 						<view class="grid col-4 grid-square flex-sub">
-							<view class="bg-img" @tap="ViewImage" :data-url="param.pictures" v-if="param.pictures!=''">
+							<view class="bg-img" :data-url="param.pictures" v-if="param.pictures!=''">
 								<image :src="param.pictures" mode="aspectFill"></image>
 								<view class="cu-tag bg-red" @tap.stop="DelImg">
 									<text class='cuIcon-close'></text>
@@ -124,7 +126,7 @@
 				</view>
 			</view>
 			<view class="btn_bar">
-				<button class="bg-orange " form-type="submit">发起活动</button>
+				<button class="bg-orange " @click="formSubmit">发起活动</button>
 			</view>
 		</form>
 	</view>
@@ -173,6 +175,8 @@
 				targetDay: 7,
 				holidayDay: 1,
 				labeldata: [],
+				inputAmout: 5,
+				inputActivity: ""
 			}
 		},
 		onShow() {
@@ -197,6 +201,122 @@
 
 				});
 			},
+			//发起活动
+			formSubmit() {
+				let labelCodes = this.labeldata; //数组 分类
+				if (this.xdUniUtils.IsNullOrEmpty(labelCodes))
+					return this.xdUniUtils.showToast(false, "分类不能为空！", "");
+				labelCodes = labelCodes.join();
+				let actitivtyContent = this.inputActivity; //活动内容
+				if (this.xdUniUtils.IsNullOrEmpty(actitivtyContent))
+					return this.xdUniUtils.showToast(false, "活动内容不能为空！", "");
+				let inputAmout = this.inputAmout; //保证金
+				if (this.xdUniUtils.IsNullOrEmpty(inputAmout) || inputAmout <= 0)
+					return this.xdUniUtils.showToast(false, "保证金不能为空！", "");
+				let targetDay = this.targetDay; //计划打卡天数
+				if (this.xdUniUtils.IsNullOrEmpty(targetDay))
+					return this.xdUniUtils.showToast(false, "打卡天数不能为空！", "");
+				let holidayDay = this.holidayDay; //可休息天数
+				let pictures = this.param.pictures; //封面图片
+				if (this.xdUniUtils.IsNullOrEmpty(pictures))
+					return this.xdUniUtils.showToast(false, "请上传封面图片！", "");
+
+				
+				let infos = {
+					token: uni.getStorageSync('token'),
+					userId:uni.getStorageSync('id'),
+					labels:labelCodes,
+					activityContent:actitivtyContent,
+					baoZhengJin:inputAmout,
+					planDay:targetDay,
+					holidayDay:holidayDay,
+					imgs:pictures
+				};
+				let that =this;
+				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
+					console.log("xd_saveSHInfo");
+					console.log(res);
+					let msg="活动创建成功！";
+					if(res.msg!="成功"){
+						msg="活动创建成失败！";
+					}
+					
+					uni.showModal({
+						title: '温馨提示',
+						content: msg,
+						confirmText: '确定',
+						cancelText: '取消',
+						image: '/static/images/icon/clock.png',
+						success: function(ress) {
+							if (ress.confirm) {
+								that.xdUniUtils.xd_navigateBack(1);
+							}
+						},
+								
+					});
+				}).catch(err => {});
+			},
+			//可休息天数
+			holidayDayinput(e) {
+				this.holidayDay = e.detail.value;
+			},
+			//打卡天数
+			targetDayinput(e) {
+				this.targetDay = e.detail.value;
+			},
+			//保证金
+			onInputAmout(e) {
+				this.inputAmout = e.detail.value;
+			},
+
+			//活动内容
+			onInputActivity(e) {
+				this.inputActivity = e.detail.value;
+			},
+
+
+
+			popUpImg() {
+				const that = this;
+				uni.chooseImage({
+					count: 1, //默认9
+					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
+					sourceType: ['album'], //从相册选择
+					success: function(res) {
+						let tempFilePaths = res.tempFilePaths;
+						that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res => {
+							if (res) {
+								uni.uploadFile({
+									url: that.xdServerUrls.xd_uploadFile,
+									filePath: tempFilePaths[0],
+									name: 'files',
+									formData: {
+										'userId': uni.getStorageSync('id'),
+									},
+									success: (uploadFileRes) => {
+
+										that.param.pictures = JSON.parse(uploadFileRes.data).obj[0];
+										console.log(that.param.pictures)
+									}
+								});
+							} else {
+								uni.showToast({
+									title: '内容包含敏感内容',
+									mask: true,
+									duration: 2000,
+
+								});
+								return false
+							}
+						});
+
+					}
+				});
+			},
+			DelImg() {
+				this.param.pictures = '';
+			},
+
 			//休息天数
 			PickerChangeholiday(e) {
 				switch (e.detail.value) {
