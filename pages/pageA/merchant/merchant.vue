@@ -112,13 +112,13 @@
 					let shInfo = this.shInfo;
 					shInfo.showInfo=shInfo.phone;
 					let info ={IDS:id}
-					let til = "修改联系电话";
+					let til = "编辑联系电话";
 					if (id == 1) {
 						shInfo.showInfo=shInfo.activityPhone;
-						til = "修改活动电话";
+						til = "编辑活动电话";
 					} else if (id == 2) {
 						shInfo.showInfo=shInfo.wx;
-						til = "修改联系微信";
+						til = "编辑联系微信";
 					}
 					info.Title = til;
 					uni.navigateTo({
