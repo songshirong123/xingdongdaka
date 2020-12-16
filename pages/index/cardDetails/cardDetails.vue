@@ -106,7 +106,7 @@
 								</view>
 								<view class="bg-gray padding-sm radius margin-top-sm  text-sm" v-if="showCardCommentlist.pushCommentList[index].cardReplayCommentList.length>0">
 									<view class="flex align-center"  v-for="(items,index) in showCardCommentlist.pushCommentList[index].cardReplayCommentList" :key='index'>
-										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==id">达人</view>
+										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==id">打卡人</view>
 										<view class="" v-else>{{items.userName}}</view>
 										<view @tap="goUser(items.replayUserId)">回复 {{ item.userName}}：</view>
 										<view class="flex-sub">{{items.content}}</view>
@@ -170,28 +170,35 @@
 				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
 			</view>
 			<view class="cu-bar foot input" >	
-				<textarea class="  textarea-text"  placeholder-style="font-size:28rpx;"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  @confirm="inputComent" confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur" show-confirm-bar="false"></textarea>
-				<view class="action flex flex-direction" @tap="gotoSponsor">
-					<text class="lg text-black cuIcon-moneybag"></text>
-					<text class="text-xs">赞助</text>
-				</view>
-				<view class=" flex flex-direction">
-					<button class="cu-btns"  open-type="share">
-						<view class="text-black text-xxl">
-							<text class="lg text-black cuIcon-forward"></text>
-						</view>
-					</button>
-					<text class="text-xs" v-if="pusCardLists.userId==userId ">分享邀请</text>
-					<text class="text-xs" v-else>为TA打Call</text>
-					
-				</view>
-				<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
-					<text class="lg text-black cuIcon-friendfavor"></text>
-					<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
-					<text class="text-xs text-red" v-else-if="pusCardLists.onlooker">已围观</text>
-					<text class="text-xs" v-else  >围观分钱</text>
-					<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
-				</view>
+				<textarea class="  textarea-text"  placeholder-style="font-size:28rpx;"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur" show-confirm-bar="false"></textarea>
+				<block v-if="!showInput">
+					<view class="action flex flex-direction" @tap="gotoSponsor">
+						<text class="lg text-black cuIcon-moneybag"></text>
+						<text class="text-xs">赞助</text>
+					</view>
+					<view class=" flex flex-direction">
+						<button class="cu-btns"  open-type="share">
+							<view class="text-black text-xxl">
+								<text class="lg text-black cuIcon-forward"></text>
+							</view>
+						</button>
+						<text class="text-xs" v-if="pusCardLists.userId==userId ">分享邀请</text>
+						<text class="text-xs" v-else>为TA打Call</text>
+						
+					</view>
+					<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
+						<text class="lg text-black cuIcon-friendfavor"></text>
+						<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
+						<text class="text-xs text-red" v-else-if="pusCardLists.onlooker">已围观</text>
+						<text class="text-xs" v-else  >围观分钱</text>
+						<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
+					</view>
+				</block>
+				<block v-else>
+					<view class="margin-right-xl">
+						<button class="cu-btn bg-pink"  @tap="inputComent"> 发送</button>
+					</view>
+				</block>
 			</view>
 		</view>
 	</view>
