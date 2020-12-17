@@ -127,10 +127,31 @@
 							</view>
 						</view>
 					</view>
-
+					<!-- 商家活动 -->
 					<view v-else-if="isMerchant">
 						<block v-for="(list, index) in merchantList" :key="index">
-							222
+							<view class="cu-card dynamic">
+								<view class="cu-item shadow">
+									<view class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+										<view class="xd-rows">
+											<text class="text-orange">进行中……</text>
+											<text style="margin-left: 3px;">{{list.labels}}</text>
+										</view>
+										<view class="xd-rows">
+											<text>打卡天数：{{list.planDay}} 可休假天数：{{list.holidayDay}}</text>
+											<text style="margin-left: 3px;">保证金：￥{{list.baoZhengJin}}</text>
+										</view>
+										<view style="height: 7px;"></view>
+									</view>
+									<view class="text-contents contentext">
+										<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
+									</view>
+									<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
+										<image class="bg-img imgheit" :src="list.imgs" mode="aspectFill" @tap="goPageImgHD(list.imgs)">
+										</image>
+									</view>
+								</view>
+							</view>
 						</block>
 					</view>
 					<view v-else>
@@ -197,8 +218,7 @@
 		},
 		data() {
 			return {
-
-				// audioPlaySrc:'../static/images/icon/img/title1.png',
+				audioPlaySrc: '../../static/images/icon/img/xddak.png',
 				inimg: '',
 				adtime: 31,
 				active: 1,
@@ -234,7 +254,7 @@
 					ID: 0,
 					Name: "互助小组",
 					IsOpen: this.xdUniUtils.showHzGroup(),
-					Checked: true
+					Checked: false
 				}, {
 					ID: 1,
 					Name: "商家活动",
@@ -390,7 +410,7 @@
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 					}
 					_this.groupList = _this.pageNum == 1 ? list : _this.groupList.concat(list);
-					that.pageNum = res.obj.nextPage;
+					_this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
 			},
 
@@ -414,10 +434,16 @@
 					console.log("商家活动信息结果", res);
 					let list = res.obj.list;
 					for (let i in list) {
+						list[i].imgs =_this.xdUniUtils.IsNullOrEmpty(list[i].imgs)?_this.audioPlaySrc:list[i].imgs;
+						list[i].labels =_this.xdUniUtils.IsNullOrEmpty(list[i].labels)?"暂未添加":list[i].labels;
+						list[i].planDay =_this.xdUniUtils.IsNullOrEmpty(list[i].planDay)?"0":list[i].planDay;
+						list[i].activityContent =_this.xdUniUtils.IsNullOrEmpty(list[i].activityContent)?"暂未添加":list[i].activityContent;
+						list[i].baoZhengJin =_this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin)?"0":list[i].baoZhengJin;
+						list[i].holidayDay =_this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay)?"0":list[i].holidayDay;
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 					}
 					_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
-					that.pageNum = res.obj.nextPage;
+					_this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
 			},
 
@@ -696,6 +722,9 @@
 				}
 				return dataList;
 			},
+			goPageImgHD(e,index){
+				this.xdUniUtils.xd_showImg(e,index)
+			},
 			// 关注
 			showFollow: function() {
 				this.active = 2;
@@ -771,6 +800,12 @@
 				this.currentIndex = id;
 				this.isGroupLable = false;
 				this.isRankingLable = false;
+				this.isMerchant = false;
+				let activityList = this.activityList;
+				for (let i in activityList) {
+					activityList[i].Checked = false;
+				}
+
 				if (e.currentTarget.dataset.id == -1) {
 					this.currentIndex = -1;
 					this.getShowRecommend();
@@ -936,8 +971,11 @@
 		// 上拉加载
 		onReachBottom() {
 			let lableTabid = this.isGroupLable;
+			let isMerchant = this.isMerchant;
 			if (lableTabid) {
 				this.getGroupList();
+			}else if(isMerchant){
+				this.getMerchantList();
 			} else {
 				this.getReachList();
 			}
@@ -947,6 +985,10 @@
 </script>
 
 <style scoped lang="scss">
+	.imgheit{
+		height: 320upx;
+		width: 100%;
+	}
 	.group-lable {
 		display: inline-flex;
 		flex-direction: column;
