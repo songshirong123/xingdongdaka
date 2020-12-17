@@ -152,6 +152,9 @@
 						this.num = gz_num;
 						this.wg_num = wg_num;
 						let num = gz_num + wg_num;
+						if(num==null||num==undefined){
+							that.xdUniUtils.xd_login(true);
+						}
 						this.xdUniUtils.updateNumber(0);
 					}
 				})
@@ -240,7 +243,6 @@
 			},
 			clickMe: function() {
 				let that = this;
-
 				wx.getSetting({
 					success: res => {
 

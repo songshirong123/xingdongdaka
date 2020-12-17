@@ -106,9 +106,10 @@
 								</view>
 								<view class="bg-gray padding-sm radius margin-top-sm  text-sm" v-if="showCardCommentlist.pushCommentList[index].cardReplayCommentList.length>0">
 									<view class="flex align-center"  v-for="(items,index) in showCardCommentlist.pushCommentList[index].cardReplayCommentList" :key='index'>
-										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==id">打卡人</view>
-										<view class="" v-else>{{items.userName}}</view>
-										<view @tap="goUser(items.replayUserId)">回复 {{ item.userName}}：</view>
+										<view class="cu-tag bg-red sm margin-lr-xs" v-if="items.userId==pusCardLists.userId">达人</view>
+										<view class="" v-else>{{items.userName }} </view>
+										<view class="text-bold margin-lr-xs" @tap="goUser(items.replayUserId)"> 回复 </view>
+										<text class=""> {{ item.userName}}：</text>
 										<view class="flex-sub">{{items.content}}</view>
 									</view>
 								</view>
@@ -169,37 +170,39 @@
 			<view class="padding-top-sm adcus" v-if="!showInput">
 				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
 			</view>
-			<view class="cu-bar foot input" >	
-				<textarea class="  textarea-text"  placeholder-style="font-size:28rpx;"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur" show-confirm-bar="false"></textarea>
-				<block v-if="!showInput">
-					<view class="action flex flex-direction" @tap="gotoSponsor">
-						<text class="lg text-black cuIcon-moneybag"></text>
-						<text class="text-xs">赞助</text>
-					</view>
-					<view class=" flex flex-direction">
-						<button class="cu-btns"  open-type="share">
-							<view class="text-black text-xxl">
-								<text class="lg text-black cuIcon-forward"></text>
-							</view>
-						</button>
-						<text class="text-xs" v-if="pusCardLists.userId==userId ">分享邀请</text>
-						<text class="text-xs" v-else>为TA打Call</text>
-						
-					</view>
-					<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
-						<text class="lg text-black cuIcon-friendfavor"></text>
-						<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
-						<text class="text-xs text-red" v-else-if="pusCardLists.onlooker">已围观</text>
-						<text class="text-xs" v-else  >围观分钱</text>
-						<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
-					</view>
-				</block>
-				<block v-else>
-					<view class="margin-right-xl">
-						<button class="cu-btn bg-pink"  @tap="inputComent"> 发送</button>
-					</view>
-				</block>
-			</view>
+			<form @submit="inputComent" >
+				<view class="cu-bar foot input" >
+					<textarea class="  textarea-text"  placeholder-style="font-size:28rpx;"  :focus="showInput" :placeholder='conmmmenttext' maxlength="150" cursor-spacing="10"  confirm-type="done" @input="inputshowvue" @focus="onshowad" @blur="onblur" show-confirm-bar="false" name="conten"></textarea>
+					<block v-if="!showInput">
+						<view class="action flex flex-direction" @tap="gotoSponsor">
+							<text class="lg text-black cuIcon-moneybag"></text>
+							<text class="text-xs">赞助</text>
+						</view>
+						<view class=" flex flex-direction">
+							<button class="cu-btns"  open-type="share">
+								<view class="text-black text-xxl">
+									<text class="lg text-black cuIcon-forward"></text>
+								</view>
+							</button>
+							<text class="text-xs" v-if="pusCardLists.userId==userId ">分享邀请</text>
+							<text class="text-xs" v-else>为TA打Call</text>
+							
+						</view>
+						<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
+							<text class="lg text-black cuIcon-friendfavor"></text>
+							<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
+							<text class="text-xs text-red" v-else-if="pusCardLists.onlooker">已围观</text>
+							<text class="text-xs" v-else  >围观分钱</text>
+							<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
+						</view>
+					</block>
+					<block v-else>
+						<view class="margin-right-xl">
+							<button class="cu-btn bg-pink" form-type="submit" > 发送</button>
+						</view>
+					</block>
+				</view>
+			</form>
 		</view>
 	</view>
 </template>
@@ -500,10 +503,19 @@
 				this.conmmmenttext='回复：'+e.userName
 			},
 			inputComent(e){	
+				console.log(e)
 				if(!this.hasLogin){
 					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
-			
+				if(e.detail.value.conten==undefined||e.detail.value.conten==''){
+					uni.showToast({
+						title: '评论内容不能为空',
+						mask: true,
+						duration: 2000,
+						icon: 'none'
+					});
+					return false
+				}
 				this.xdUniUtils.xd_request_text({content:e.detail.value}).then(res=>{
 					if(res.obj.errcode==0){
 						if(this.inputType==1){
@@ -512,7 +524,7 @@
 								commentId:this.commentId,
 								cardId:this.dataCardId,
 								userId:this.id,
-								content:e.detail.value,
+								content:e.detail.value.conten,
 							},true).then(res=>{
 							
 								this.showInput=false;
@@ -527,7 +539,7 @@
 								this.xd_request_post(this.xdServerUrls.xd_saveCardComment,{
 									cardId:this.dataCardId?this.dataCardId:this.cardId,
 									userId:this.id,
-									content:e.detail.value,
+									content:e.detail.value.conten,
 								},true).then(res=>{
 									
 									this.showInput=false;
@@ -554,7 +566,7 @@
 					})
 			
 			},
-			inputshowvue(){
+			inputshowvue(e){
 			this.value=true;	
 			},
 			showInputComent(){
@@ -827,4 +839,5 @@
 		padding: 0rpx 10rpx;
 		height: 28rpx;
 	}
+	
 </style>
