@@ -479,6 +479,7 @@ function  showToast(isSuccess, content, methodes) {
 	}
 }
 
+//互助小组是否开通
 function showHzGroup(){
 	return true;
 }

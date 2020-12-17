@@ -114,6 +114,7 @@ const serverUrls = { //根据接口具体配置
 	xd_selectSHInfo: serverBaseUrl + '/Activity/select',//查询商户信息
 	xd_updateSHInfo: serverBaseUrl + '/Activity/update',//更新商户信息
 	xd_saveSHInfo: serverBaseUrl + '/Activity/save',//保存商户信息
+	xd_selectSHList: serverBaseUrl + '/Activity/selectList',//首页展示商户活动列表
 }
 export default {
 	serverUrls,

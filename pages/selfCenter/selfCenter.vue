@@ -29,7 +29,7 @@
 					</button>
 				</view>
 
-				<view class="user_column_item"  @tap="gogroup">
+				<view v-if="showHzGroup"  class="user_column_item"  @tap="gogroup">
 					    <button class='content cu-btn'>
 						      <text class="lg text-gray cuIcon-group"></text>
 						      <text class='thin'>互助小组</text>
@@ -81,7 +81,8 @@
 				id: uni.getStorageSync('id'),
 				userId: '',
 				guanzhu: '',
-				userBean: {}
+				userBean: {},
+				showHzGroup: this.xdUniUtils.showHzGroup(),
 			}
 		},
 		computed: {
