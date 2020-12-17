@@ -154,6 +154,7 @@
 							</view>
 						</block>
 					</view>
+					
 					<view v-else>
 						<block v-for="(list, index) in listsTab" :key="index">
 							<indexList id="indexList" :list="list" :index="index" @gotoSponsor='gotoSponsor' v-on:loveclick='loveClick'
