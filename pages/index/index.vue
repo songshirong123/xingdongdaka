@@ -71,16 +71,18 @@
 						</scroll-view>
 					</view>
 
-					<view class="xd-rows"  style="background-color: #FFFFFF;margin-top: 2px;">
-						<view v-if="showHzGroup" :class="['group-lable', isGroupLable? 'group-active' : '']" @tap="lebleTab">
-							<view>互助小组</view>
-						</view>
-						<!-- <view  :class="['group-lable', isRankingLable? 'group-active' : '']" @tap="lebleTab(1)">
-							<view>挑战赛</view>
-						</view> -->
+					<!-- 活动标签 -->
+					<view class="xd-rows" style="background-color: #FFFFFF;margin-top: 2px;">
+						<scroll-view scroll-x="true" show-scrollbar="false">
+							<view v-for="(item, index) in activityList" v-if="item.IsOpen" :class="['group-lable', item.Checked? 'group-active' : '']"
+							 @tap="lebleTab(item.ID)">
+								{{item.Name}}
+							</view>
+						</scroll-view>
 					</view>
-					<!-- 互助小组对应内容 -->
+
 					<view class="xd-line"></view>
+					<!-- 互助小组对应内容 -->
 					<view v-if="isGroupLable">
 						<view v-for="(item,groupindex) in groupList" @tap="selectGroup(item)" :key="groupindex" style="padding: 10px;border-bottom: 1px solid #f0f0f0;background-color: #FFFFFF;">
 							<view class="xd-rows">
@@ -117,15 +119,19 @@
 										<view class='cu-tag bg-orange ' @tap="goRanking(rankinItem.id)">
 											加入
 										</view>
-
 										<view class="cu-tag line-orange">
 											999+
 										</view>
 									</view>
-
 								</view>
 							</view>
 						</view>
+					</view>
+
+					<view v-else-if="isMerchant">
+						<block v-for="(list, index) in merchantList" :key="index">
+							222
+						</block>
 					</view>
 					<view v-else>
 						<block v-for="(list, index) in listsTab" :key="index">
@@ -199,11 +205,8 @@
 				// adid: [],
 				adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
 				currentIndex: -1,
-				isGroupLable: false,
-				isRankingLable: false,
 				labelId: 1,
 				bannerList: [],
-				groupList: [],
 				tabs: [],
 				listnotice: [
 
@@ -222,7 +225,27 @@
 				scrollTopinfo: true,
 				listnoticedata: '',
 				adHeight: '',
-				showHzGroup: this.xdUniUtils.showHzGroup()
+				isGroupLable: false, //是否展示互助小组内容
+				isRankingLable: false, //是否展示挑战赛内容
+				isMerchant: false, //是否展示商家活动内容
+				groupList: [], //互助小组内容
+				merchantList: [], //商家活动内容
+				activityList: [{
+					ID: 0,
+					Name: "互助小组",
+					IsOpen: this.xdUniUtils.showHzGroup(),
+					Checked: true
+				}, {
+					ID: 1,
+					Name: "商家活动",
+					IsOpen: true,
+					Checked: false
+				}, {
+					ID: 2,
+					Name: "挑战赛",
+					IsOpen: false,
+					Checked: false
+				}]
 			};
 		},
 		onPageScroll(e) {
@@ -271,6 +294,13 @@
 			//#endif
 			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)) {
 				this.isGroupLable = option.isGroupLable;
+				let activtyList = this.activityList;
+				for (let i in activtyList) {
+					activtyList[i].Checked = false;
+					if (activtyList[i].Name == "互助小组") {
+						activtyList[i].Checked = true;
+					}
+				}
 			}
 			this.indexData();
 			this.burieInit();
@@ -295,10 +325,10 @@
 					that.adHeight = data.height;
 				}).exec()
 			},
-			
-			goRanking(e){
+
+			goRanking(e) {
 				uni.navigateTo({
-					url:'../pageA/ranking/rankinAdd?id='+e
+					url: '../pageA/ranking/rankinAdd?id=' + e
 				})
 			},
 
@@ -364,6 +394,33 @@
 				}).catch(err => {});
 			},
 
+
+			//获取商家活动
+			getMerchantList() {
+				if (this.pageNum == 0) {
+					return this.xdUniUtils.showToast(false, "没有更多数据了！", "");
+				}
+				let info = {
+					pageNum: this.pageNum,
+					pageSize: 10
+				}
+				uni.showLoading({
+					title: '加载中..',
+				})
+				let _this = this;
+				console.log("商家活动信息参数", info);
+				this.xd_request_get(this.xdServerUrls.xd_selectSHList, info, true).then((res) => {
+					uni.hideLoading();
+					console.log("商家活动信息结果", res);
+					let list = res.obj.list;
+					for (let i in list) {
+						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+					}
+					_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
+					that.pageNum = res.obj.nextPage;
+				}).catch(err => {});
+			},
+
 			//获取通知
 			getnotic() {
 				this.xd_request_get(this.xdServerUrls.xd_getVal, {
@@ -406,7 +463,7 @@
 
 			},
 			bannerListtap(e) {
-				
+
 				if (e >= this.bannerList.length) {
 					e = e - 3;
 				}
@@ -416,7 +473,7 @@
 					});
 				} else if (this.bannerList[e].type == 2) {
 					var url = encodeURIComponent(this.bannerList[e].bannerUrl);
-					
+
 					uni.navigateTo({
 						url: '../pageA/web/webShow?url=' + url
 					});
@@ -677,20 +734,31 @@
 				}).catch(err => {});
 
 			},
-			lebleTab(e) {
+			lebleTab(id) {
 				if (!this.hasLogin) {
 					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
-				if (e == 1) {
-					this.isRankingLable = !this.isRankingLable;
-					this.isGroupLable = false;
-					this.pageNum = 1;
-				} else {
-					this.isGroupLable = !this.isGroupLable;
-					this.isRankingLable = false;
-					this.pageNum = 1;
-					this.getGroupList();
+				let activtyList = this.activityList;
+				for (let i in activtyList) {
+					activtyList[i].Checked = false;
+					if (activtyList[i].ID == id)
+						activtyList[i].Checked = true;
 				}
+				this.pageNum = 1;
+				this.isGroupLable = false;
+				this.isRankingLable = false;
+				this.isMerchant = false;
+				if (id == 0) { //互助小组
+					this.isGroupLable = true;
+					this.getGroupList();
+				} else if (id == 1) { //商家活动 
+					this.isMerchant = true;
+					this.getMerchantList();
+				} else if (id == 2) { //挑战赛
+					this.isRankingLable = true;
+
+				}
+
 
 			},
 			// 推荐内容切换
