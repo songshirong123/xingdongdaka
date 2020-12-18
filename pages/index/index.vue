@@ -258,7 +258,7 @@
 					Checked: false
 				}, {
 					ID: 1,
-					Name: "商家活动",
+					Name: "奖励活动",
 					IsOpen: true,
 					Checked: false
 				}, {
