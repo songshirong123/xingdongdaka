@@ -150,11 +150,27 @@
 										<image class="bg-img imgheit" :src="list.imgs" mode="aspectFill" @tap="goPageImgHD(list.imgs)">
 										</image>
 									</view>
+									<view class="flex padding-sm">
+										<view style="flex: 1;">
+											<!-- <view class="text-lg">
+												<text class="lg text-black cuIcon-mark"></text>
+											</view>
+											<text class="text-sm marginxs"></text> -->
+										</view>
+
+										<view class=" flex flex-wrap justify-end" style="flex: 1">
+											<view class="text-lg">
+												<text class="lg text-black cuIcon-friendfavor"></text>
+											</view>
+											<text class="text-sm marginxs" @tap="addActivity(list)">加入活动</text>
+										</view>
+
+									</view>
 								</view>
 							</view>
 						</block>
 					</view>
-					
+
 					<view v-else>
 						<block v-for="(list, index) in listsTab" :key="index">
 							<indexList id="indexList" :list="list" :index="index" @gotoSponsor='gotoSponsor' v-on:loveclick='loveClick'
@@ -353,6 +369,44 @@
 				})
 			},
 
+			//添加活动
+			addActivity(event) {
+				let _this = this;
+				uni.showModal({
+					title: '温馨提示',
+					content: "您确定要加入该活动吗？？",
+					showCancel: false,
+					success: function(res) {
+						if (res.confirm) {
+							_this.addActivityToUser(event);
+						}
+					}
+				});
+			},
+			//加入活动
+			addActivityToUser(event) {
+				let _this = this;
+				let info = {
+					activityId: event.id,
+					userId: uni.getStorageSync('id'),
+					token: uni.getStorageSync('token')
+				}
+				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
+					let contents = "加入成功！";
+					if (res.resultCode == 10000) {
+						contents = res.msg;
+					}
+
+					uni.showModal({
+						title: '温馨提示',
+						content: contents,
+						showCancel: false,
+						confirmText: "我知道了"
+					});
+				}).catch(err => {});
+			},
+
+
 			//添加小组
 			groupAdd() {
 				let tabs = this.tabs;
@@ -394,7 +448,7 @@
 					pageNum: this.pageNum,
 					pageSize: 10
 				}
-				if (this.currentIndex != -1) {
+				if (this.currentIndex != -1 && this.currentIndex != -10) {
 					info["type"] = this.currentIndex;
 				}
 
@@ -435,12 +489,12 @@
 					console.log("商家活动信息结果", res);
 					let list = res.obj.list;
 					for (let i in list) {
-						list[i].imgs =_this.xdUniUtils.IsNullOrEmpty(list[i].imgs)?_this.audioPlaySrc:list[i].imgs;
-						list[i].labels =_this.xdUniUtils.IsNullOrEmpty(list[i].labels)?"暂未添加":list[i].labels;
-						list[i].planDay =_this.xdUniUtils.IsNullOrEmpty(list[i].planDay)?"0":list[i].planDay;
-						list[i].activityContent =_this.xdUniUtils.IsNullOrEmpty(list[i].activityContent)?"暂未添加":list[i].activityContent;
-						list[i].baoZhengJin =_this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin)?"0":list[i].baoZhengJin;
-						list[i].holidayDay =_this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay)?"0":list[i].holidayDay;
+						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
+						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
+						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
+						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
+						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
+						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 					}
 					_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
@@ -723,8 +777,8 @@
 				}
 				return dataList;
 			},
-			goPageImgHD(e,index){
-				this.xdUniUtils.xd_showImg(e,index)
+			goPageImgHD(e, index) {
+				this.xdUniUtils.xd_showImg(e, index)
 			},
 			// 关注
 			showFollow: function() {
@@ -774,6 +828,7 @@
 					if (activtyList[i].ID == id)
 						activtyList[i].Checked = true;
 				}
+				this.currentIndex = -10;
 				this.pageNum = 1;
 				this.isGroupLable = false;
 				this.isRankingLable = false;
@@ -975,7 +1030,7 @@
 			let isMerchant = this.isMerchant;
 			if (lableTabid) {
 				this.getGroupList();
-			}else if(isMerchant){
+			} else if (isMerchant) {
 				this.getMerchantList();
 			} else {
 				this.getReachList();
@@ -986,10 +1041,11 @@
 </script>
 
 <style scoped lang="scss">
-	.imgheit{
+	.imgheit {
 		height: 320upx;
 		width: 100%;
 	}
+
 	.group-lable {
 		display: inline-flex;
 		flex-direction: column;

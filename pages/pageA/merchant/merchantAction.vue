@@ -179,6 +179,10 @@
 				inputActivity: ""
 			}
 		},
+		onLoad(option) {
+			this.userInfo =JSON.parse(option.userInfo);
+		},
+		
 		onShow() {
 			this.tabs();
 		},
@@ -221,7 +225,6 @@
 				if (this.xdUniUtils.IsNullOrEmpty(pictures))
 					return this.xdUniUtils.showToast(false, "请上传封面图片！", "");
 
-				
 				let infos = {
 					token: uni.getStorageSync('token'),
 					userId:uni.getStorageSync('id'),
@@ -230,7 +233,10 @@
 					baoZhengJin:inputAmout,
 					planDay:targetDay,
 					holidayDay:holidayDay,
-					imgs:pictures
+					imgs:pictures,
+					phone:this.userInfo[0],
+					activityPhone:this.userInfo[1],
+					wx:this.userInfo[2]
 				};
 				let that =this;
 				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {

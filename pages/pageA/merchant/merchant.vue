@@ -110,24 +110,28 @@
 				let id = item.ID;
 				if (id == 0 || id == 1 || id == 2) {
 					let shInfo = this.shInfo;
-					shInfo.showInfo=shInfo.phone;
-					let info ={IDS:id}
+					shInfo.showInfo = shInfo.phone;
+					let info = {
+						IDS: id
+					}
 					let til = "编辑联系电话";
 					if (id == 1) {
-						shInfo.showInfo=shInfo.activityPhone;
+						shInfo.showInfo = shInfo.activityPhone;
 						til = "编辑活动电话";
 					} else if (id == 2) {
-						shInfo.showInfo=shInfo.wx;
+						shInfo.showInfo = shInfo.wx;
 						til = "编辑联系微信";
 					}
 					info.Title = til;
 					uni.navigateTo({
-						url: './merchantEditInfo?shInfo=' + JSON.stringify(shInfo)+"&infos="+JSON.stringify(info)
+						url: './merchantEditInfo?shInfo=' + JSON.stringify(shInfo) + "&infos=" + JSON.stringify(info)
 					});
 				} else if (id == 3) {
-
+					uni.navigateTo({
+						url: './merchantMyAction'
+					})
 				} else if (id == 4) {
-
+					return this.xdUniUtils.xd_showToastNew(false, "暂未开启！！", "");
 				} else if (id == 5) {
 					uni.navigateTo({
 						url: './merchantActionList'
@@ -136,8 +140,20 @@
 			},
 			//发起活动
 			userSubmit() {
+				let phone = this.userInfolist[0].Value;
+				if (phone == "暂无" || phone == "")
+					return this.xdUniUtils.xd_showToastNew(false, "账号电话不能为空！！", "");
+
+				let activityPhone = this.userInfolist[1].Value;
+				if (activityPhone == "暂无" || activityPhone == "")
+					return this.xdUniUtils.xd_showToastNew(false, "活动电话不能为空！！", "");
+
+				let wx = this.userInfolist[2].Value;
+				if (wx == "暂无" || wx == "")
+					return this.xdUniUtils.xd_showToastNew(false, "活动微信不能为空！！", "");
+
 				uni.navigateTo({
-					url: './merchantAction'
+					url: './merchantAction?userInfo=' + JSON.stringify(this.userInfolist)
 				})
 			},
 			//获取余额 如果没有余额或者余额不够支付 用微信支付否则用余额支付
@@ -153,48 +169,50 @@
 			},
 			getShInfo() {
 				let _this = this;
-				this.xd_request_get(this.xdServerUrls.xd_selectSHInfo, {
+				this.xd_request_get(this.xdServerUrls.xd_baseSelectSHInfo, {
 					token: uni.getStorageSync('token')
 				}, true).then((res) => {
 					console.log("xd_selectSHInfo")
 					console.log(res);
-					let msg = res.obj;
-					if (_this.xdUniUtils.IsNullOrEmpty(msg)){
+					let infos = res.obj;
+					if (_this.xdUniUtils.IsNullOrEmpty(infos)) {
 						_this.saveSHInfo();
-					}else{
-						let infos = res.obj[0];
+					} else {
+						
 						let info = {
-							id:infos.id,
-							type:infos.type,
-							activityIncome:infos.activityIncome,
-							activityPhone:infos.activityPhone,
-							joinActivity:infos.joinActivity,
-							myActivity:infos.myActivity,
-							phone:infos.phone,
-							userId:infos.userId,
-							wx:infos.wx,
+							id: infos.id,
+							type: infos.type,
+							activityIncome: infos.activityIncome,
+							activityPhone: infos.activityPhone,
+							joinActivity: infos.joinActivity,
+							myActivity: infos.myActivity,
+							phone: infos.phone,
+							userId: infos.userId,
+							wx: infos.wx,
 						}
-						info.activityIncome=_this.xdUniUtils.IsNullOrEmpty(info.activityIncome)?"":info.activityIncome;
-						info.activityPhone=_this.xdUniUtils.IsNullOrEmpty(info.activityPhone)?"":info.activityPhone;
-						info.joinActivity=_this.xdUniUtils.IsNullOrEmpty(info.joinActivity)?"":info.joinActivity;
-						info.myActivity=_this.xdUniUtils.IsNullOrEmpty(info.myActivity)?"":info.myActivity;
-						info.phone=_this.xdUniUtils.IsNullOrEmpty(info.phone)?"":info.phone;
-						info.userId=_this.xdUniUtils.IsNullOrEmpty(info.userId)?"":info.userId;
-						info.wx=_this.xdUniUtils.IsNullOrEmpty(info.wx)?"":info.wx;
+						info.activityIncome = _this.xdUniUtils.IsNullOrEmpty(info.activityIncome) ? "" : info.activityIncome;
+						info.activityPhone = _this.xdUniUtils.IsNullOrEmpty(info.activityPhone) ? "" : info.activityPhone;
+						info.joinActivity = _this.xdUniUtils.IsNullOrEmpty(info.joinActivity) ? "" : info.joinActivity;
+						info.myActivity = _this.xdUniUtils.IsNullOrEmpty(info.myActivity) ? "" : info.myActivity;
+						info.phone = _this.xdUniUtils.IsNullOrEmpty(info.phone) ? "" : info.phone;
+						info.userId = _this.xdUniUtils.IsNullOrEmpty(info.userId) ? "" : info.userId;
+						info.wx = _this.xdUniUtils.IsNullOrEmpty(info.wx) ? "" : info.wx;
 						_this.shInfo = info;
 						_this.userInfolist[0].Value = info.phone;
 						_this.userInfolist[1].Value = info.activityPhone;
 						_this.userInfolist[2].Value = info.wx;
 					}
-						
+
 				})
 			},
 			//编辑商户信息
 			saveSHInfo() {
 				let _this = this;
-				let infos={token: uni.getStorageSync('token')};
-				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
-				_this.getShInfo();
+				let infos = {
+					token: uni.getStorageSync('token')
+				};
+				this.xd_request_get(this.xdServerUrls.xd_baseSaveSHInfo, infos, true).then((res) => {
+					_this.getShInfo();
 				}).catch(err => {});
 			},
 		},

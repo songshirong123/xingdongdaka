@@ -112,9 +112,13 @@ const serverUrls = { //根据接口具体配置
 	xd_quitByUserId: serverBaseUrl + '/room/quitByUserId',//退出小组
 	
 	xd_selectSHInfo: serverBaseUrl + '/Activity/select',//查询商户信息
+	xd_baseSelectSHInfo: serverBaseUrl + '/Activity/baseSelect',//查询商户信息
 	xd_updateSHInfo: serverBaseUrl + '/Activity/update',//更新商户信息
+	xd_baseUpdateSHInfo: serverBaseUrl + '/Activity/baseUpdate',//更新商户信息
 	xd_saveSHInfo: serverBaseUrl + '/Activity/save',//保存商户信息
+	xd_baseSaveSHInfo: serverBaseUrl + '/Activity/baseSave',//保存商户信息
 	xd_selectSHList: serverBaseUrl + '/Activity/selectList',//首页展示商户活动列表
+	xd_joinActivity: serverBaseUrl + '/Activity/joinActivity',//首页展示商户活动列表
 }
 export default {
 	serverUrls,
