@@ -260,6 +260,13 @@
 					"navigationBarTitleText": "编辑信息",
 					"enablePullDownRefresh": false
 				}
+			}, {
+				"path": "merchant/merchantMyAction",
+				"style": {
+					"navigationBarTitleText": "我的活动",
+					"enablePullDownRefresh": false
+				}
+
 			}
 		]
 	}],

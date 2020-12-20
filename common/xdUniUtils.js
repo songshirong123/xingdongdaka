@@ -44,6 +44,13 @@ function xd_showToast(title, time,icon, callbackFun) {
 		}
 	});
 }
+
+function xd_showToastNew(showIcon,content,mathde) {
+	uni.showToast({
+		title: content,
+		icon: "none"
+	});
+}
 // // 弹出框:操作成功
 // function xd_showToast_success(title, callbackFun) {
 // 	uni.showToast({
@@ -495,6 +502,7 @@ export default {
 	xd_setAccessToken,
 	xd_getAccessToken,
 	xd_showToast,
+	xd_showToastNew,
 	// xd_showToast_success,
 	// xd_showToast_success_redirectTo,
 	// xd_showToast_success_navigateBack,

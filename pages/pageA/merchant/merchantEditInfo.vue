@@ -49,7 +49,7 @@
 				info["token"] =  uni.getStorageSync('token');
 				console.log("xd_updateSHInfo")
 				console.log(info);
-				this.xd_request_get(this.xdServerUrls.xd_updateSHInfo, info, true).then((res) => {
+				this.xd_request_get(this.xdServerUrls.xd_baseUpdateSHInfo, info, true).then((res) => {
 					let contents = "编辑成功！";
 					if (res.resultCode == 10000) {
 						contents = res.msg;
