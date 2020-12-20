@@ -16,7 +16,7 @@
 						</view>
 						<view >
 							<view v-if="showHzGroup" class="cu-tag line-orange radius" @tap="clickGroup(pusCardLists.userId)" >互助小组</view>
-							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">{{guanzhu}}</view>
+							<view class="cu-tag  radius" :class="guanzhu=='关注'?'line-orange':'line-gray'" v-if="guanzhu.length > 0" @tap="tags">{{guanzhu}}</view>
 						</view>
 					</view>
 				</view>				
@@ -93,7 +93,8 @@
 									</view>
 								</view>
 								<view class="text-content text-df commenttext">
-									{{item.content}}
+									<text>{{item.content}}</text>
+									
 								</view>
 								<view class="flex flex-wrap">
 									<view class="text-gray text-df">{{item.createTimeStr}}</view>
@@ -110,7 +111,7 @@
 										<view class="" v-else>{{items.userName }} </view>
 										<view class="text-bold margin-lr-xs" @tap="goUser(items.replayUserId)"> 回复 </view>
 										<text class=""> {{ item.userName}}：</text>
-										<view class="flex-sub">{{items.content}}</view>
+										<view class="flex-sub"><text>{{items.content}}</text></view>
 									</view>
 								</view>
 							</view>
@@ -190,9 +191,9 @@
 						</view>
 						<view class="action flex flex-direction " @tap="lookerClick(pusCardLists)">
 							<text class="lg text-black cuIcon-friendfavor"></text>
-							<text class="text-xs" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
-							<text class="text-xs text-red" v-else-if="pusCardLists.onlooker">已围观</text>
-							<text class="text-xs" v-else  >围观分钱</text>
+							<text class="text-xs text-red" v-if="pusCardLists.userId!=userId && !pusCardLists.onlooker&&pusCardLists.challengeRmb<=0" >围观</text>
+							<text class="text-xs " v-else-if="pusCardLists.onlooker">已围观</text>
+							<text class="text-xs text-red" v-else  >围观分钱</text>
 							<view class="cu-tag badge tagcss ">{{pusCardLists.onlookerCount}}</view>
 						</view>
 					</block>
@@ -380,46 +381,63 @@
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				that.userId=uni.getStorageSync('id');
-				that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
-					
-					pushId:list.id,
-					lookUserId:that.userId,
-				},false
-				   ).then(res => {	
-				
-						   if(res.resultCode==0){
-							   that.pusCardLists.onlooker=true
-							   that.pusCardLists.onlookerCount++;
-							  if(uni.getStorageSync(new Date().toLocaleDateString()+"dycwgKey") != 1){
-								   uni.showModal({
-										 content: that.xdCommon.gzsm_wgglts,
-										 showCancel: false,
-										 buttonText: '知道了',
-										 success: (res) => {
-										   if (res.confirm) {
-											 uni.setStorageSync(new Date().toLocaleDateString()+'dycwgKey',1);
-										   } else if (res.cancel) {
-											 uni.setStorageSync(new Date().toLocaleDateString()+'dycwgKey',1);
-										   }
-										 }
-									})
-							  }else{
-								  uni.showToast({
-										title:'围观成功',
-										 duration: 1000,
-										 icon:'none',
-								  }) 
-							  }
-						   }else{
-							   uni.showToast({
-								title: res.msg,
+				if(that.pusCardLists.onlooker==true){
+					that.xd_request_post(that.xdServerUrls.xd_cancelLooker,{
+						pushId:that.pusCardLists.id,
+						lookUserId:that.userId,
+					},true
+					   ).then(res => {
+			
+						   that.pusCardLists.onlooker=false
+						   that.pusCardLists.onlookerCount--;
+						   uni.showToast({
+								title:'已取消围观',
 								 duration: 1000,
 								 icon:'none',
-							   })
-						   }
-						   
+						   }) 
+						   })
+				}else{
+					that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
+						
+						pushId:list.id,
+						lookUserId:that.userId,
+					},false
+					   ).then(res => {	
 					
-				})
+							   if(res.resultCode==0){
+								   that.pusCardLists.onlooker=true
+								   that.pusCardLists.onlookerCount++;
+								  if(uni.getStorageSync(new Date().toLocaleDateString()+"dycwgKey") != 1){
+									   uni.showModal({
+											 content: that.xdCommon.gzsm_wgglts,
+											 showCancel: false,
+											 buttonText: '知道了',
+											 success: (res) => {
+											   if (res.confirm) {
+												 uni.setStorageSync(new Date().toLocaleDateString()+'dycwgKey',1);
+											   } else if (res.cancel) {
+												 uni.setStorageSync(new Date().toLocaleDateString()+'dycwgKey',1);
+											   }
+											 }
+										})
+								  }else{
+									  uni.showToast({
+											title:'围观成功',
+											 duration: 1000,
+											 icon:'none',
+									  }) 
+								  }
+							   }else{
+								   uni.showToast({
+									title: res.msg,
+									 duration: 1000,
+									 icon:'none',
+								   })
+							   }
+							   
+						
+					})
+				}
 			},
 			goAction(e){
 				uni.navigateTo({
@@ -633,7 +651,25 @@
 			},
 			tags(){
 				if(this.guanzhu =='已关注'){
-					return
+					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
+						userId:uni.getStorageSync('id'),
+						attentionUserId:this.pusCardLists.userId,		
+						
+					},true).then(res=>{
+						if(res.resultCode == 0){
+							 this.guanzhu="关注"
+							 uni.showToast({
+							 	icon:'none',
+							   title: '取消关注',
+							 })
+						}else{
+							uni.showToast({
+								icon:'none',
+							  title: res.msg,
+							})
+						}
+					})
+					return false;
 				}
 				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
 					userId:uni.getStorageSync('id'),
@@ -816,7 +852,7 @@
 		    -webkit-align-items: center;
 		    align-items: center;
 		    margin: 0 20rpx;
-		   width: 55%;
+		   width: 54%;
 	}
 	.texticon{
 		display: inline-flex;

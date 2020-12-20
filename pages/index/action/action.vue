@@ -12,7 +12,7 @@
 						<view>
 						<!-- 	<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">赞助</view> -->
 							<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">互助小组</view>
-							<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="tags">
+							<view class="cu-tag  radius" :class="guanzhu=='关注'?'line-orange':'line-gray'" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
 							
@@ -27,7 +27,7 @@
 								<view class="margin-left-xs cu-tag bg-grey radio">{{pushList.label}}</view>
 							</view>
 						</view>
-						<view class="flex light bg-red radius ">
+						<view class="flex light bg-orange radius ">
 							<view class="widthtext padding-sm">
 								<view class="text-black text-sm ">
 									阶段期限：{{pushList.createTime}}--{{pushList.endTime}}
@@ -51,13 +51,13 @@
 								</view>
 							
 							</view>
-							<view class='xd-flex flex-direction bg-pink align-center widthtext-b radius' >
-								<view v-if="userId==pushList.userId && pushList.challengeRmb>0" >
+							<view class='xd-flex flex-direction bg-pink align-center widthtext-b radius' v-if="pushList.challengeRmb>0" >
+								<view v-if="userId==pushList.userId " >
 									<view :class="pushList.challengeRmb>10?'textlinhet-a':'textlinhet'" @click="gotoSponsor(pushList)">
 										保证金￥{{pushList.challengeRmb}}
 									</view>
 								</view>
-								<view v-if="userId!==pushList.userId && pushList.challengeRmb>0" >
+								<view v-if="userId!==pushList.userId" >
 									<view :class="pushList.challengeRmb>10?'textlinhet-a':'textlinhet'" @click="gotoSponsor(pushList)">
 										保证金￥{{pushList.challengeRmb+sponsorRmb}}
 									</view>
@@ -77,14 +77,14 @@
 								</view> -->
 							</view>
 						</view>
-						<view class="widthtext margin-top-sm">
-							<view class="text-gray text-sm flex flex-wrap align-center testdonli" @tap="showModal(1)">
+						<view class="widthtext margin-top-sm text-black">
+							<view class=" text-sm flex flex-wrap align-center testdonli" @tap="showModal(1)">
 								<view class="text-xl">
 									<text class="lg text-gray cuIcon-write"></text>
 								</view>
 								<text class=" margin-left-xs testcontentshow">动力：{{pushList.dongLi?pushList.dongLi:""}}</text>
 							</view>
-							<view class="text-gray text-sm margin-top-sm flex flex-wrap align-center testdonli" @tap="showModal">
+							<view class=" text-sm margin-top-sm flex flex-wrap align-center testdonli" @tap="showModal">
 								<view class="text-xl">
 									<text class="lg text-gray cuIcon-write"></text>
 								</view>
@@ -727,8 +727,7 @@
 			  	},true).then(res=>{	
 					if(res.resultCode==0){
 						var data=res.obj;
-						console.log("行动详情")
-						console.log(data)
+						
 						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime)
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime)
 						data.challengeRmb=res.obj.challengeRmb/100;
@@ -809,7 +808,25 @@
 									return false
 				}
 				if(this.guanzhu =='已关注'){
-					return
+					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
+						userId:uni.getStorageSync('id'),
+						attentionUserId:this.pushList.userId,		
+						
+					},true).then(res=>{
+						if(res.resultCode == 0){
+							 this.guanzhu="关注"
+							 uni.showToast({
+							 	icon:'none',
+							   title: '取消关注',
+							 })
+						}else{
+							uni.showToast({
+								icon:'none',
+							  title: res.msg,
+							})
+						}
+					})
+					return false;
 				}
 				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
 					userId:uni.getStorageSync('id'),

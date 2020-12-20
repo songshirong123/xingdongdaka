@@ -23,8 +23,8 @@
 								<text class="province" v-if="attention.province">{{attention.province}}.{{attention.city}}</text>
 							</view>
 						</view>
-						<view class="lli-main-content" v-if="userId">
-							<text class="lli-main-content-text">已关注</text>
+						<view class="lli-main-content" v-if="userId" >
+							<text class="lli-main-content-text" >已关注</text>
 						</view>
 					</view>
 				</view>
@@ -91,6 +91,7 @@
 			
 		},
 		methods: {
+		
 			goPageImg(e,index){
 				this.xdUniUtils.xd_showImg(e,index)
 			},

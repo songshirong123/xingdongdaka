@@ -20,7 +20,7 @@
 								<text class="province">{{attention.province}}.{{attention.city}}</text>
 							</view>
 						</view>
-						<view class="lli-main-content">
+						<view class="lli-main-content" @click="tags(attention)">
 							<text class="lli-main-content-text">已关注</text>
 						</view>
 					</view>
@@ -67,6 +67,27 @@
 			this.getShowFollow();
 		},
 		methods: {
+			tags(e){
+				console.log(e)
+					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
+						userId:e.userId,
+						attentionUserId:e.attentionUserId,		
+						
+					},true).then(res=>{
+						if(res.resultCode == 0){
+							this.getShowFollow();
+							 uni.showToast({
+							 	icon:'none',
+							   title: '取消关注',
+							 })
+						}else{
+							uni.showToast({
+								icon:'none',
+							  title: res.msg,
+							})
+						}
+					})
+			},
 			goPageImg(e,index){
 				this.xdUniUtils.xd_showImg(e,index)
 			},

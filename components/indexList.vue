@@ -16,26 +16,35 @@
 								{{list.pushCardList[0].address}}
 							</view>
 						</view>
-						<view v-if="list.challengeRmb>0">
-							<view v-if="list.belongOwn" class="cu-tag light bg-red radius" >
+					</view>
+				</view>
+				
+				<view class=" text-content margin-top-sm padding-bottom-sm" @tap="goComentConten(list)">	
+					<view class="flex flex-wrap align-center">
+						<view class="cu-tag bg-pink radius sm" >打卡</view>
+						<view class= "cu-tag margin-left-xs light bg-red sm" v-if="list.challengeRmb>0">
+							<view v-if="list.belongOwn" class="cu-tag light bg-red radius sm" >
 								保证金￥{{list.challengeRmb}}
 							</view>
-							<view v-else class="cu-tag light bg-red radius" >
+							<view v-else class="cu-tag light bg-red radius sm" >
 								保证金￥{{list.challengeRmb+Math.round(list.sponsorRmb/100)}}
 							</view>
 						</view>
 					</view>
-				</view>
-				
-				<view class="text-content margin-top-sm padding-bottom-sm" @tap="goComentConten(list)">				
-					<view class="cu-tag bg-pink radius sm" >打卡</view>
 					<text class="contentext"  style="padding-left: 5px;">{{list.pushCardList[0].content}}</text>
 				</view>
-				<view class="text-content margin-top-sm padding-bottom-sm"  @tap="goPageCard(list)" v-if="list.pushCardCount.length==0">
+			<!-- 	<view class="text-content margin-top-sm padding-bottom-sm"  @tap="goPageCard(list)" v-if="list.pushCardCount.length==0">
 					<view class="cu-tag bg-green radius sm" >行动</view>
+					<view v-if="list.challengeRmb>0">
+						<view v-if="list.belongOwn" class="cu-tag light bg-red radius sm" >
+							保证金￥{{list.challengeRmb}}
+						</view>
+						<view v-else class="cu-tag light bg-red radius sm" >
+							保证金￥{{list.challengeRmb+Math.round(list.sponsorRmb/100)}}
+						</view>
+					</view>
 					<text class="contentext" style="padding-left: 5px;">{{list.content}}</text>
-				</view>
-				
+				</view>	 -->
 				<view class="grid flex-sub padding-lr " :class="list.pushCardList[0].videos!=''?'col-3 grid-square':'col-1'" v-if="list.pushCardList[0].videos!=undefined && list.pushCardList[0].videos!=null && list.pushCardList[0].videos!=''">
 					<video  id="videowhind" class="videowhind" :src="list.pushCardList[0].videos" controls></video>
 				</view>
@@ -85,15 +94,14 @@
 						<button class="cu-btn bg-green sm round"  @click="addRankin" >选择该行动加入</button>
 					</view>
 					
-					<view class="action flex flex-wrap align-center " v-else >
+					<view class="action flex flex-wrap align-center " v-else   @tap="lookerClick(list,index)">
 						<view class="text-lg">
 							<text class="lg text-black cuIcon-friendfavor"></text>
 						</view>
-						<text class="text-sm marginxs" v-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0" :id="index"  @tap="lookerClick(list,index)" >围观</text>
-						<text class="text-sm marginxs" v-else-if="!list.onlooker" @tap="lookerClick(list,index)" >围观分钱</text>
+						<text class="text-sm marginxs text-red" v-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0" :id="index"   >围观</text>
+						<text class="text-sm marginxs text-red" v-else-if="!list.onlooker" >围观分钱</text>
 						<text class="text-sm marginxs" v-else-if="list.onlooker">已围观</text>
-	
-						<view class="cu-tag badge tagcss ">{{list.onlookerCount}}</view>
+						<text class="text-gray text-sm " v-if="list.onlookerCount>0">{{list.onlookerCount}}</text>
 					</view>
 					
 					<!-- <view class='xd-flex'>

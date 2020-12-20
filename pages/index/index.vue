@@ -238,7 +238,7 @@
 				}, {
 					ID: 1,
 					Name: "商家活动",
-					IsOpen: true,
+					IsOpen: false,
 					Checked: false
 				}, {
 					ID: 2,
@@ -580,6 +580,22 @@
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				that.userId = uni.getStorageSync('id');
+				if( that.listsTab[index].onlooker==true){
+					that.xd_request_post(that.xdServerUrls.xd_cancelLooker,{
+						pushId:list.id,
+						lookUserId:that.userId,
+					},true
+					   ).then(res => {
+							
+						   that.listsTab[index].onlooker = false
+						   that.listsTab[index].onlookerCount--;
+						   uni.showToast({
+								title:'已取消围观',
+								 duration: 1000,
+								 icon:'none',
+						   }) 
+						   })
+				}else{
 				that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
 
 					pushId: list.id,
@@ -620,6 +636,7 @@
 
 
 				})
+				}
 			},
 
 			showNew: function() {

@@ -24,6 +24,7 @@ const serverUrls = { //根据接口具体配置
 	xd_getAttentionList: serverBaseUrl + '/attention/getAttentionList' ,//获取关注列表
 	xd_getFansList: serverBaseUrl + '/attention/getFansList' ,//获取粉丝列表
 	xd_saveAttention: serverBaseUrl + '/attention/saveAttention' ,//保存关注
+	xd_cancelAttention: serverBaseUrl + '/attention/cancelAttention' ,//取消关注
 	xd_getLookerCountByUserId: serverBaseUrl + '/attention/getLookerCountByUserId' ,//根据用户id获取关注数量和粉丝数量
 	
 	xd_lookerPushListByUserId: serverBaseUrl + '/publishTarget/lookerPushListByUserId' ,//当前用户围观的行动项计划
@@ -37,6 +38,7 @@ const serverUrls = { //根据接口具体配置
 	
 	xd_getLookerByPushId: serverBaseUrl + '/looker/getLookerByPushId' ,//根据行动项id查看围观人
 	xd_saveLooker: serverBaseUrl + '/looker/saveLooker' ,//保存围观信息
+	xd_cancelLooker: serverBaseUrl + '/looker/cancelLooker' ,//取消围观
 	xd_getLookerByUserId: serverBaseUrl + '/looker/getLookerByUserId' ,//根据用户id获取围观数据
 	xd_getLookerCountInfoByPushIdAndUserId: serverBaseUrl + '/looker/getLookerCountInfoByPushIdAndUserId' ,//根据行动项id和围观用户id查看点击数详情
 	
