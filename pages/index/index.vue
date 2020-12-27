@@ -158,6 +158,12 @@
 											<text class="text-sm marginxs"></text> -->
 										</view>
 
+
+
+
+
+
+
 										<view class=" flex flex-wrap justify-end" style="flex: 1">
 											<view class="text-lg">
 												<text class="lg text-black cuIcon-friendfavor"></text>
