@@ -85,4 +85,5 @@
 		height: 320upx;
 		width: 100%;
 	}
+	
 </style>

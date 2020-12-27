@@ -132,7 +132,7 @@
 						<block v-for="(list, index) in merchantList" :key="index">
 							<view class="cu-card dynamic">
 								<view class="cu-item shadow">
-									<view class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+									<view @tap="activityDetail(list)" class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
 										<view class="xd-rows">
 											<text class="text-orange">进行中……</text>
 											<text style="margin-left: 3px;">{{list.labels}}</text>
@@ -143,7 +143,7 @@
 										</view>
 										<view style="height: 7px;"></view>
 									</view>
-									<view class="text-contents contentext">
+									<view class="text-contents contentext" @tap="activityDetail(list)">
 										<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
 									</view>
 									<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
@@ -157,13 +157,6 @@
 											</view>
 											<text class="text-sm marginxs"></text> -->
 										</view>
-
-
-
-
-
-
-
 										<view class=" flex flex-wrap justify-end" style="flex: 1">
 											<view class="text-lg">
 												<text class="lg text-black cuIcon-friendfavor"></text>
@@ -372,6 +365,13 @@
 			goRanking(e) {
 				uni.navigateTo({
 					url: '../pageA/ranking/rankinAdd?id=' + e
+				})
+			},
+			
+			//活动详情
+			activityDetail(event) {
+				uni.navigateTo({
+					url: '../pageA/merchant/merchantDetail?activity=' + JSON.stringify(event)
 				})
 			},
 
@@ -667,62 +667,61 @@
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				that.userId = uni.getStorageSync('id');
-				if( that.listsTab[index].onlooker==true){
-					that.xd_request_post(that.xdServerUrls.xd_cancelLooker,{
-						pushId:list.id,
-						lookUserId:that.userId,
-					},true
-					   ).then(res => {
-							
-						   that.listsTab[index].onlooker = false
-						   that.listsTab[index].onlookerCount--;
-						   uni.showToast({
-								title:'已取消围观',
-								 duration: 1000,
-								 icon:'none',
-						   }) 
-						   })
-				}else{
-				that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
+				if (that.listsTab[index].onlooker == true) {
+					that.xd_request_post(that.xdServerUrls.xd_cancelLooker, {
+						pushId: list.id,
+						lookUserId: that.userId,
+					}, true).then(res => {
 
-					pushId: list.id,
-					lookUserId: that.userId,
-				}, false).then(res => {
+						that.listsTab[index].onlooker = false
+						that.listsTab[index].onlookerCount--;
+						uni.showToast({
+							title: '已取消围观',
+							duration: 1000,
+							icon: 'none',
+						})
+					})
+				} else {
+					that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
 
-					if (res.resultCode == 0) {
-						that.listsTab[index].onlooker = true
-						that.listsTab[index].onlookerCount++;
+						pushId: list.id,
+						lookUserId: that.userId,
+					}, false).then(res => {
 
-						if (uni.getStorageSync(new Date().toLocaleDateString() + "dycwgKey") != 1) {
-							uni.showModal({
-								content: that.xdCommon.gzsm_wgglts,
-								showCancel: false,
-								buttonText: '知道了',
-								success: (res) => {
-									if (res.confirm) {
-										uni.setStorageSync(new Date().toLocaleDateString() + 'dycwgKey', 1);
-									} else if (res.cancel) {
-										uni.setStorageSync(new Date().toLocaleDateString() + 'dycwgKey', 1);
+						if (res.resultCode == 0) {
+							that.listsTab[index].onlooker = true
+							that.listsTab[index].onlookerCount++;
+
+							if (uni.getStorageSync(new Date().toLocaleDateString() + "dycwgKey") != 1) {
+								uni.showModal({
+									content: that.xdCommon.gzsm_wgglts,
+									showCancel: false,
+									buttonText: '知道了',
+									success: (res) => {
+										if (res.confirm) {
+											uni.setStorageSync(new Date().toLocaleDateString() + 'dycwgKey', 1);
+										} else if (res.cancel) {
+											uni.setStorageSync(new Date().toLocaleDateString() + 'dycwgKey', 1);
+										}
 									}
-								}
-							})
-						} else {
+								})
+							} else {
+								uni.showToast({
+									title: '围观成功',
+									duration: 1000,
+									icon: 'none',
+								})
+							}
+						} else if (res.resultCode == 10015) {
 							uni.showToast({
-								title: '围观成功',
+								title: '您已经围观了',
 								duration: 1000,
 								icon: 'none',
 							})
 						}
-					} else if (res.resultCode == 10015) {
-						uni.showToast({
-							title: '您已经围观了',
-							duration: 1000,
-							icon: 'none',
-						})
-					}
 
 
-				})
+					})
 				}
 			},
 

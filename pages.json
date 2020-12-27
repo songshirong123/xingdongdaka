@@ -267,6 +267,12 @@
 					"enablePullDownRefresh": false
 				}
 
+			}, {
+				"path": "merchant/merchantDetail",
+				"style": {
+					"navigationBarTitleText": "活动详情",
+					"enablePullDownRefresh": false
+				}
 			}
 		]
 	}],
