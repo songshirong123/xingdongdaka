@@ -80,6 +80,45 @@
 			}
 		},
 		methods: {
+			//添加活动
+			addActivity(event) {
+				let _this = this;
+				uni.showModal({
+					title: '温馨提示',
+					content: "您确定要加入该活动吗？？",
+					showCancel: false,
+					success: function(res) {
+						if (res.confirm) {
+							_this.addActivityToUser(event);
+						}
+					}
+				});
+			},
+			//加入活动
+			addActivityToUser(event) {
+				let _this = this;
+				let info = {
+					activityId: event.id,
+					userId: uni.getStorageSync('id'),
+					token: uni.getStorageSync('token')
+				}
+				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
+					let contents = "加入成功！";
+					if (res.resultCode == 10000) {
+						contents = res.msg;
+					}
+			
+					uni.showModal({
+						title: '温馨提示',
+						content: contents,
+						showCancel: false,
+						confirmText: "我知道了"
+					});
+				}).catch(err => {});
+			},
+			
+			
+			
 			//标签选择
 			tabs(e) {
 				this.tab = e;
