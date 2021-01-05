@@ -251,7 +251,7 @@
 				"path": "merchant/merchantActionList",
 				"style": {
 					"navigationBarTitleText": "参与活动",
-					"enablePullDownRefresh": false
+					"enablePullDownRefresh": true
 				}
 
 			}, {

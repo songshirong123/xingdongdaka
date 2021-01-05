@@ -4,7 +4,7 @@
 			<block v-for="(list, index) in merchantList" :key="index">
 				<view class="cu-card dynamic">
 					<view class="cu-item shadow">
-						<view class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+						<view  @tap="activityDetail(list)"  class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
 							<view class="xd-rows">
 								<text class="text-orange">进行中……</text>
 								<text style="margin-left: 3px;">{{list.labels}}</text>
@@ -15,7 +15,7 @@
 							</view>
 							<view style="height: 7px;"></view>
 						</view>
-						<view class="text-contents contentext">
+						<view  @tap="activityDetail(list)"  class="text-contents contentext">
 							<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
 						</view>
 						<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
@@ -48,6 +48,12 @@
 			}
 		},
 		methods: {
+			//活动详情
+			activityDetail(event) {
+				uni.navigateTo({
+					url: './merchantDetail?activity=' + JSON.stringify(event)
+				})
+			},
 			goPageImgHD(e, index) {
 				this.xdUniUtils.xd_showImg(e, index)
 			},

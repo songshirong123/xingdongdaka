@@ -122,6 +122,8 @@ const serverUrls = { //根据接口具体配置
 	xd_selectSHList: serverBaseUrl + '/Activity/selectList',//首页展示商户活动列表
 	xd_joinActivity: serverBaseUrl + '/Activity/joinActivity',//首页展示商户活动列表
 	xd_joinActivityUserList: serverBaseUrl + '/Activity/joinActivityUserList',//加入活动的人列表
+	xd_checkList: serverBaseUrl + '/Activity/checkList',//审核列表
+	xd_checkReason: serverBaseUrl + '/Activity/checkReason',//审核操作
 	
 }
 export default {
