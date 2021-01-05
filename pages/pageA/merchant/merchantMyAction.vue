@@ -22,17 +22,6 @@
 							<image class="bg-img imgheit" :src="list.imgs" mode="aspectFill" @tap="goPageImgHD(list.imgs)">
 							</image>
 						</view>
-						<!-- <view class="flex padding-sm">
-							<view style="flex: 1;">
-							</view>
-		
-							<view class=" flex flex-wrap justify-end" style="flex: 1">
-								<view class="text-lg">
-									<text class="lg text-black cuIcon-friendfavor"></text>
-								</view>
-								<text class="text-sm marginxs" @tap="addActivity(list)">加入活动</text>
-							</view>
-						</view> -->
 					</view>
 				</view>
 			</block>

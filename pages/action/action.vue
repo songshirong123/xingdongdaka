@@ -3,11 +3,19 @@
 		<view class="actionInfo">
 					<view class="tabbar bg-white">
 						<view class="tab " :class="tab===0?'active':''" @click="tabs(0)">
-							<text>行动 ({{total}})</text>
+							<!-- <text>行动 ({{total}})</text> -->
+							<text>行动</text>
 						</view>
 						<view class="tab" :class="tab===1?'active':''" @click="tabs(1)">
-							<text v-if="looktotal != ''">我围观行动({{looktotal}})</text>
-							<text v-if="looktotal == ''">我围观行动</text>
+							<!-- <text v-if="looktotal != ''">我围观行动({{looktotal}})</text>
+							<text v-if="looktotal == ''">我围观行动</text> -->
+							<text>我围观行动</text>
+						</view>
+						<view class="tab " :class="tab===2?'active':''" @click="tabs(2)">
+							<text>参与的活动</text>
+						</view>
+						<view class="tab " :class="tab===3?'active':''" @click="tabs(3)">
+							<text>发起的活动</text>
 						</view>
 					</view>
 					<view class="actionTabList">
