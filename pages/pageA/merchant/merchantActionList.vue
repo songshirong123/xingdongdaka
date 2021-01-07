@@ -58,18 +58,21 @@
 			},
 			tabSelect(e) {
 				this.TabCur = e.target.id;
-				this.checkType = e.target.id+1;
+				this.checkType = parseInt(e.target.id) +1;
 				this.pageNum = 1;
 				this.getAction();
 			},
 			getAction() {
 				let _this = this;
-				this.xd_request_get(this.xdServerUrls.xd_checkList, {
+				let info = {
 					token: uni.getStorageSync('token'),
 					pageNum: _this.pageNum,
 					pageSize: 10,
 					type: _this.checkType
-				}, true).then((res) => {
+				}
+				console.log("xd_checkList参数")
+				console.log(info);
+				this.xd_request_get(this.xdServerUrls.xd_checkList, info, true).then((res) => {
 					console.log("xd_checkList")
 					console.log(res);
 					let list = res.obj.list;

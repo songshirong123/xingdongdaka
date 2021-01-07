@@ -43,8 +43,8 @@
 				<view class="tab" :class="tab===1?'active':''" @click="tabs(1)">参与者</view>
 			</view>
 		</view>
-		
-		<view v-if="tab===1" v-for="(attention,index) in activityUserList" @tap="selectGroup(item)" :key="index" >
+
+		<view v-if="tab===1" v-for="(attention,index) in activityUserList" @tap="selectGroup(item)" :key="index">
 			<view class="ali-main bg-white">
 				<view class="ali-main-img">
 					<image class='xd-mag' :src="attention.userHead"></image>
@@ -62,9 +62,9 @@
 					<view class="ali-main-list-num">共打卡{{attention.pushCard}}次</view>
 				</view>
 			</view>
-		
+
 		</view>
-		
+
 
 	</view>
 </template>
@@ -107,7 +107,7 @@
 					if (res.resultCode == 10000) {
 						contents = res.msg;
 					}
-			
+
 					uni.showModal({
 						title: '温馨提示',
 						content: contents,
@@ -116,9 +116,9 @@
 					});
 				}).catch(err => {});
 			},
-			
-			
-			
+
+
+
 			//标签选择
 			tabs(e) {
 				this.tab = e;
@@ -129,10 +129,34 @@
 			//获取数据（参与活动和参与者）
 			getData() {
 				if (this.tab == 0) {
-
+					this.getActivityByUserId();
 				} else {
 					this.getActivityUserList();
 				}
+			},
+			
+			//参与活动
+			getActivityByUserId() {
+				if (this.pageNum == 0) {
+					return this.xdUniUtils.showToast(false, "没有更多数据了！", "");
+				}
+
+				let info = {
+					token: uni.getStorageSync('token'),
+					pageNum: this.pageNum,
+					pageSize: 10
+				}
+				uni.showLoading({
+					title: '加载中..',
+				})
+				let _this = this;
+				console.log("参与者参数", info);
+				this.xd_request_get(this.xdServerUrls.xd_getActivityByUserId, info, true).then((res) => {
+					uni.hideLoading();
+					console.log("参与的活动", res);
+					let list = res.obj.list;
+					_this.pageNum = res.obj.nextPage;
+				}).catch(err => {});
 			},
 
 			//参与者列表
@@ -205,8 +229,7 @@
 			margin-left: 10%;
 			line-height: 130rpx;
 
-			.ali-main-list-num {
-			}
+			.ali-main-list-num {}
 		}
 
 		.ali-main-img .xd-mag {
