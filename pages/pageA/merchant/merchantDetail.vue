@@ -43,6 +43,30 @@
 				<view class="tab" :class="tab===1?'active':''" @click="tabs(1)">参与者</view>
 			</view>
 		</view>
+		<view  v-if="tab===0" v-for="(activity,index) in activityByUserId" :key="index">
+			<view class="cu-card dynamic">
+				<view class="cu-item shadow">
+					<view class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+						<view class="xd-rows">
+							<text class="text-orange">进行中……</text>
+							<text style="margin-left: 3px;">{{activity.labels}}</text>
+						</view>
+						<view class="xd-rows">
+							<text>打卡天数：{{activity.planDay}} 可休假天数：{{activity.holidayDay}}</text>
+							<text style="margin-left: 3px;">保证金：￥{{activity.baoZhengJin}}</text>
+						</view>
+						<view style="height: 7px;"></view>
+					</view>
+					<view class="text-contents contentext">
+						<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
+					</view>
+					<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
+						<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
+						</image>
+					</view>
+				</view>
+			</view>
+		</view>
 
 		<view v-if="tab===1" v-for="(attention,index) in activityUserList" @tap="selectGroup(item)" :key="index">
 			<view class="ali-main bg-white">
@@ -76,6 +100,7 @@
 				tab: 1,
 				pageNum: 1,
 				activity: {},
+				activityByUserId:[],
 				activityUserList: []
 			}
 		},
@@ -155,6 +180,7 @@
 					uni.hideLoading();
 					console.log("参与的活动", res);
 					let list = res.obj.list;
+					_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
 					_this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
 			},

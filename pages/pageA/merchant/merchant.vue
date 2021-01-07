@@ -94,12 +94,14 @@
 					Name: "活动收入",
 					Value: "",
 					Icon: "cuIcon-activity"
-				}, {
-					ID: 5,
-					Name: "参与活动",
-					Value: "",
-					Icon: "cuIcon-activity"
-				}],
+				}
+				// , {
+				// 	ID: 5,
+				// 	Name: "参与活动",
+				// 	Value: "",
+				// 	Icon: "cuIcon-activity"
+				// },
+				],
 			}
 		},
 		computed: {

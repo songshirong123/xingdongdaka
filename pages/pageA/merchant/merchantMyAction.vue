@@ -22,6 +22,12 @@
 							<image class="bg-img imgheit" :src="list.imgs" mode="aspectFill" @tap="goPageImgHD(list.imgs)">
 							</image>
 						</view>
+						<view  class="flex padding-sm">
+							<view style="flex: 1;"></view>
+							<view class=" flex flex-wrap justify-end" style="flex: 1">
+								<text class="text-sm marginxs" @tap="addActivity(list)">活动情况</text>
+							</view>
+						</view>
 					</view>
 				</view>
 			</block>
@@ -41,6 +47,12 @@
 			activityDetail(event) {
 				uni.navigateTo({
 					url: './merchantDetail?activity=' + JSON.stringify(event)
+				})
+			},
+			//添加活动
+			addActivity(event) {
+				uni.navigateTo({
+					url: './merchantActionList?activity' + + JSON.stringify(event)
 				})
 			},
 			goPageImgHD(e, index) {
