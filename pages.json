@@ -251,7 +251,7 @@
 				"path": "merchant/merchantActionList",
 				"style": {
 					"navigationBarTitleText": "参与活动",
-					"enablePullDownRefresh": false
+					"enablePullDownRefresh": true
 				}
 
 			}, {
@@ -267,6 +267,12 @@
 					"enablePullDownRefresh": false
 				}
 
+			}, {
+				"path": "merchant/merchantDetail",
+				"style": {
+					"navigationBarTitleText": "活动详情",
+					"enablePullDownRefresh": false
+				}
 			}
 		]
 	}],
