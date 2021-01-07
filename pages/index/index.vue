@@ -280,7 +280,7 @@
 				}, {
 					ID: 2,
 					Name: "挑战赛",
-					IsOpen: false,
+					IsOpen: true,
 					Checked: false
 				}]
 			};
@@ -322,13 +322,31 @@
 			// },2000)
 
 		},
-
+		//#ifdef MP-WEIXIN
+		onShareTimeline(){
+			let that = this;
+				return {
+					// title: ,
+					query: 'share='+uni.getStorageSync('id'),
+					imageUrl:that.xdUniUtils.xd_randomImg(1),
+				}
+				
+		},
+		//#endif
 		onLoad(option) {
 			//#ifdef MP-WEIXIN
 			wx.showShareMenu({
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
+			console.log(option)
+			if(option.share!=undefined){
+				try{												
+				 uni.setStorageSync('share',option.share);
+				}catch(e){
+					console.log(Error)
+				};
+			}
 			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)) {
 				this.isGroupLable = option.isGroupLable;
 				let activtyList = this.activityList;
