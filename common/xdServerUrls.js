@@ -120,12 +120,12 @@ const serverUrls = { //根据接口具体配置
 	xd_saveSHInfo: serverBaseUrl + '/Activity/save',//保存商户信息
 	xd_baseSaveSHInfo: serverBaseUrl + '/Activity/baseSave',//保存商户信息
 	xd_selectSHList: serverBaseUrl + '/Activity/selectList',//首页展示商户活动列表
-	xd_joinActivity: serverBaseUrl + '/Activity/joinActivity',//首页展示商户活动列表
+	xd_joinActivity: serverBaseUrl + '/Activity/joinActivity',//加入活动
 	xd_joinActivityUserList: serverBaseUrl + '/Activity/joinActivityUserList',//加入活动的人列表
 	xd_checkList: serverBaseUrl + '/Activity/checkList',//审核列表
 	xd_checkReason: serverBaseUrl + '/Activity/checkReason',//审核操作
 	xd_getActivityByUserId: serverBaseUrl + '/Activity/getActivityByUserId',//加入的活动列表
-	
+	xd_selectByActivityId: serverBaseUrl + '/Activity/selectByActivityId',//根据活动id获取详情
 }
 export default {
 	serverUrls,

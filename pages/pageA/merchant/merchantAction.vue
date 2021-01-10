@@ -101,6 +101,21 @@
 					</view>
 				</view>
 			</view>
+			<view class=" flex flex-wrap padding solid-top align-center">
+				<view class="text-xl">
+					<text class="lg text-gray cuIcon-calendar"></text>
+				</view>
+				<view class="title margin-left-xs">截止日期</view>
+				<view class="xd-flex-end label-left  radius " style="flex: 1;">
+					<view class="flex flex-wrap  bg-gray radius align-center data-time-left">
+						<picker mode="date" :value="pikerdate" :start="pikerdate" :end="2050-01-01" @change="bindDateChange">
+							<view class="uni-input">{{pikerdate}}</view>
+						</picker>
+					</view>
+
+
+				</view>
+			</view>
 
 			<view class="padding solid-top">
 				<view class="flex flex-wrap">
@@ -134,8 +149,13 @@
 
 <script>
 	export default {
+
 		data() {
+			const currentDate = this.getDate({
+				format: true
+			})
 			return {
+				pikerdate: currentDate,
 				switchA: 0,
 				switchB: 0,
 				content: '',
@@ -180,13 +200,31 @@
 			}
 		},
 		onLoad(option) {
-			this.userInfo =JSON.parse(option.userInfo);
+			this.userInfo = JSON.parse(option.userInfo);
 		},
-		
+
 		onShow() {
 			this.tabs();
 		},
 		methods: {
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
+			bindDateChange: function(e) {
+				this.pikerdate = e.target.value
+			},
 			showradios(e) {
 				if (e == 1) {
 					for (var i = 0; i < this.pickerlabel.length; ++i) {
@@ -224,29 +262,33 @@
 				let pictures = this.param.pictures; //封面图片
 				if (this.xdUniUtils.IsNullOrEmpty(pictures))
 					return this.xdUniUtils.showToast(false, "请上传封面图片！", "");
-
+console.log("this.pikerdate")
+console.log(this.pikerdate)
 				let infos = {
 					token: uni.getStorageSync('token'),
-					userId:uni.getStorageSync('id'),
-					labels:labelCodes,
-					activityContent:actitivtyContent,
-					baoZhengJin:inputAmout,
-					planDay:targetDay,
-					holidayDay:holidayDay,
-					imgs:pictures,
-					phone:this.userInfo[0],
-					activityPhone:this.userInfo[1],
-					wx:this.userInfo[2]
+					userId: uni.getStorageSync('id'),
+					labels: labelCodes,
+					activityContent: actitivtyContent,
+					baoZhengJin: inputAmout,
+					planDay: targetDay,
+					holidayDay: holidayDay,
+					imgs: pictures,
+					phone: this.userInfo[0].Value,
+					activityPhone: this.userInfo[1].Value,
+					activityEndTime: this.pikerdate,
+					wx: this.userInfo[2].Value
 				};
-				let that =this;
+				console.log("this.pikerdate")
+				console.log(infos)
+				let that = this;
 				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
 					console.log("xd_saveSHInfo");
 					console.log(res);
-					let msg="活动创建成功！";
-					if(res.msg!="成功"){
-						msg="活动创建成失败！";
+					let msg = "活动创建成功！";
+					if (res.msg != "成功") {
+						msg = "活动创建成失败！";
 					}
-					
+
 					uni.showModal({
 						title: '温馨提示',
 						content: msg,
@@ -258,7 +300,7 @@
 								that.xdUniUtils.xd_navigateBack(1);
 							}
 						},
-								
+
 					});
 				}).catch(err => {});
 			},

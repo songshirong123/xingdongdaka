@@ -1,9 +1,9 @@
 <template>
 	<view>
 		<!-- 组名称 -->
-		<view class="label-hint">组名称</view>
+		<view class="label-hint">圈名称</view>
 		<view class="label-hint infos">
-			<input placeholder="组名称,不低于20个字" @input="inputGroupName" />
+			<input placeholder="圈名称,不低于5个字" @input="inputGroupName" />
 		</view>
 		<!-- 诚意金 -->
 		<view class="label-hint">诚意金</view>
@@ -16,19 +16,19 @@
 		<view class="label-hint">标签</view>
 		<view class="label-hint infos" @click="getLable()">
 			<view v-if="lable!=null" class="nav-item">{{lable.labelName}}</view>
-			<input v-else placeholder="添加标签对小组进行分类" disabled="true" />
+			<input v-else placeholder="添加标签对小圈进行分类" disabled="true" />
 		</view>
 
 		<!-- 标签选择 -->
 		<view class="label-hint">描述</view>
 		<view class="label-hint infos">
-			<input placeholder="添加更多描述信息,说明小组功能作用" @input="inputGroupDescribe" />
+			<input placeholder="添加更多描述信息,说明小圈功能作用" @input="inputGroupDescribe" />
 		</view>
 		<!-- 图片 -->
 		<view class="label-hint photoly">
 			<view class="photo_border" @click="popUpImg()">
 				<image v-if="photo!=''" :src="photo"></image>
-				<input v-else placeholder="添加小组图片" disabled="true" />
+				<input v-else placeholder="添加小圈图片" disabled="true" />
 			</view>
 		</view>
 
@@ -78,10 +78,10 @@
 				
 				let groupName = this.groupName;//群名称
 				if(this.xdUniUtils.IsNullOrEmpty(groupName)){
-					return this.xdUniUtils.showToast(false,"组名称不能为空！","");
+					return this.xdUniUtils.showToast(false,"圈名称不能为空！","");
 				}
-				if(groupName.length<20){
-					return this.xdUniUtils.showToast(false,"组名不能低于二十个字","");
+				if(groupName.length<5){
+					return this.xdUniUtils.showToast(false,"圈名不能低于五个字","");
 				}
 				
 				let lable = this.lable;//标签类型
@@ -91,12 +91,12 @@
 				
 				let photo = this.photo;//群头像
 				if(this.xdUniUtils.IsNullOrEmpty(photo)){
-					return this.xdUniUtils.showToast(false,"组图片不能为空！","");
+					return this.xdUniUtils.showToast(false,"圈图片不能为空！","");
 				}
 				
 				let groupDescribe = this.groupDescribe;//群描述
 				if(this.xdUniUtils.IsNullOrEmpty(groupDescribe)){
-					return this.xdUniUtils.showToast(false,"群描述不能为空！","");
+					return this.xdUniUtils.showToast(false,"圈描述不能为空！","");
 				}
 				
 				let info ={

@@ -15,7 +15,7 @@
 							</view>
 						</view>
 						<view >
-							<view v-if="showHzGroup" class="cu-tag line-orange radius" @tap="clickGroup(pusCardLists.userId)" >互助小组</view>
+							<view v-if="showHzGroup" class="cu-tag line-orange radius" @tap="clickGroup(pusCardLists.userId)" >互助小圈</view>
 							<view class="cu-tag  radius" :class="guanzhu=='关注'?'line-orange':'line-gray'" v-if="guanzhu.length > 0" @tap="tags">{{guanzhu}}</view>
 						</view>
 					</view>

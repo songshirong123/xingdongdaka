@@ -131,17 +131,30 @@
 					<view v-else-if="isMerchant">
 						<block v-for="(list, index) in merchantList" :key="index">
 							<view class="cu-card dynamic">
-								<view class="cu-item shadow">
-									<view @tap="activityDetail(list)" class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+
+								<view class="cu-item ">
+									<view class="cu-list menu-avatar">
+										<view class="cu-item">
+											<view class="cu-avatar round lg" :style="{backgroundImage: 'url(' +list.userHead + ')'}" @tap="goPageImg(list.userHead)"></view>
+											<!-- class="content flex-sub" -->
+											<view class="xd-columns" style="position: absolute;left: 146upx;" @tap="goPage(list)">
+												<view>{{list.userName}}</view>
+												<!-- 打卡地址 -->
+												<view class="text-gray text-sm flex justify-between" style="color: #1cbbb4;font-size: 8px;">
+													{{list.province}}
+												</view>
+											</view>
+										</view>
+									</view>
+									<view @tap="activityDetail(list)" class="text-content margin-top-sm">
+										<text class="text-orange">{{list.statusName}}</text>
 										<view class="xd-rows">
-											<text class="text-orange">进行中……</text>
+											<text class="cu-tag light bg-red radius">保证金：￥{{list.baoZhengJin}}</text>
 											<text style="margin-left: 3px;">{{list.labels}}</text>
 										</view>
 										<view class="xd-rows">
-											<text>打卡天数：{{list.planDay}} 可休假天数：{{list.holidayDay}}</text>
-											<text style="margin-left: 3px;">保证金：￥{{list.baoZhengJin}}</text>
+											<text style="font-size: 10px;color: #999999;">截止日期：{{list.activityEndTime}} 计划天数：{{list.planDay}} 可休假天数：{{list.holidayDay}}</text>
 										</view>
-										<view style="height: 7px;"></view>
 									</view>
 									<view class="text-contents contentext" @tap="activityDetail(list)">
 										<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
@@ -151,17 +164,17 @@
 										</image>
 									</view>
 									<view class="flex padding-sm">
-										<view style="flex: 1;">
-											<!-- <view class="text-lg">
-												<text class="lg text-black cuIcon-mark"></text>
-											</view>
-											<text class="text-sm marginxs"></text> -->
+										<view @click="merchant" style="flex: 1;" class="xd-rows">
+											<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
+											<text style="margin-left: 3px;">我要发布</text>
 										</view>
-										<view class=" flex flex-wrap justify-end" style="flex: 1">
-											<view class="text-lg">
-												<text class="lg text-black cuIcon-friendfavor"></text>
-											</view>
-											<text class="text-sm marginxs" @tap="addActivity(list)">加入活动</text>
+										<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
+											<text class="lg text-black cuIcon-forward" style="margin-top: 2px;"></text>
+											<text style="margin-left: 3px;">分享活动</text>
+										</view>
+										<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;" class="xd-rows">
+											<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
+											<text style="margin-left: 3px;" @tap="addActivity(list)">参与活动 {{list.joinCount}}</text>
 										</view>
 
 									</view>
@@ -211,6 +224,7 @@
 		<view class="start-add" v-if="scrollTop<2000">
 			<text v-if="isGroupLable" class="cuIcon-friendadd" @tap="groupAdd()" style="font-size: 20px;"></text>
 			<image v-else-if="isRankingLable" src="../../static/images/Body.png" @tap="rankingAdd" mode="widthFix"></image>
+			<image v-else-if="isMerchant" src="../../static/images/icon/add.png" @tap="merchant" mode="widthFix"></image>
 			<image v-else src="../../static/images/icon/add.png" @tap="goPage('/pages/action/step1')" mode="widthFix"></image>
 		</view>
 	</view>
@@ -244,10 +258,9 @@
 				labelId: 1,
 				bannerList: [],
 				tabs: [],
-				listnotice: [
-
-				],
+				listnotice: [],
 				listsTab: [],
+				userBean: {},
 				attentionList: [],
 				token: uni.getStorageSync('token'),
 				pageNum: 1, //当前页数
@@ -261,6 +274,7 @@
 				scrollTopinfo: true,
 				listnoticedata: '',
 				adHeight: '',
+				selectHD: {},
 				isGroupLable: false, //是否展示互助小组内容
 				isRankingLable: false, //是否展示挑战赛内容
 				isMerchant: false, //是否展示商家活动内容
@@ -268,7 +282,7 @@
 				merchantList: [], //商家活动内容
 				activityList: [{
 					ID: 0,
-					Name: "互助小组",
+					Name: "互助小圈",
 					IsOpen: this.xdUniUtils.showHzGroup(),
 					Checked: false
 				}, {
@@ -279,7 +293,7 @@
 				}, {
 					ID: 2,
 					Name: "挑战赛",
-					IsOpen: true,
+					IsOpen: false,
 					Checked: false
 				}]
 			};
@@ -322,14 +336,14 @@
 
 		},
 		//#ifdef MP-WEIXIN
-		onShareTimeline(){
+		onShareTimeline() {
 			let that = this;
-				return {
-					// title: ,
-					query: 'share='+uni.getStorageSync('id'),
-					imageUrl:that.xdUniUtils.xd_randomImg(1),
-				}
-				
+			return {
+				// title: ,
+				query: 'share=' + uni.getStorageSync('id'),
+				imageUrl: that.xdUniUtils.xd_randomImg(1),
+			}
+
 		},
 		//#endif
 		onLoad(option) {
@@ -339,10 +353,10 @@
 			})
 			//#endif
 			console.log(option)
-			if(option.share!=undefined){
-				try{												
-				 uni.setStorageSync('share',option.share);
-				}catch(e){
+			if (option.share != undefined) {
+				try {
+					uni.setStorageSync('share', option.share);
+				} catch (e) {
 					console.log(Error)
 				};
 			}
@@ -385,11 +399,11 @@
 					url: '../pageA/ranking/rankinAdd?id=' + e
 				})
 			},
-			
+
 			//活动详情
 			activityDetail(event) {
 				uni.navigateTo({
-					url: '../pageA/merchant/merchantDetail?activity=' + JSON.stringify(event)
+					url: '../pageA/merchant/merchantDetail?activityid=' + event.id
 				})
 			},
 
@@ -402,6 +416,7 @@
 					showCancel: false,
 					success: function(res) {
 						if (res.confirm) {
+							_this.selectHD = event;
 							_this.addActivityToUser(event);
 						}
 					}
@@ -416,18 +431,110 @@
 					token: uni.getStorageSync('token')
 				}
 				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
-					let contents = "加入成功！";
-					if (res.resultCode == 10000) {
-						contents = res.msg;
+					console.log("加入活动")
+					console.log(res)
+					_this.savePush(res.obj, event);
+				}).catch(err => {});
+			},
+			savePush(saveData, event) {
+
+				let info = {
+					label: saveData.label,
+					content: saveData.content,
+					dongLi: "",
+					xinXin: "",
+					isopen: saveData.isopen,
+					subscribeType: saveData.subscribeType,
+					targetDay: saveData.targetDay,
+					holidayDay: saveData.holidayDay,
+					pictures: saveData.pictures,
+					challengeRmb: saveData.challengeRmb,
+					userId: saveData.userId,
+					token: uni.getStorageSync('token'),
+					activityId: event.id
+				}
+
+				console.log("saveData info")
+				console.log(info)
+				let _this = this;
+				this.xd_request_post(this.xdServerUrls.xd_savePush, info, true).then(res => {
+					console.log("xd_savePush")
+					console.log(res)
+					if (res.resultCode == 0) {
+						if (res.obj.payWay != 1) {
+							_this.goPay(res.obj);
+						} else {
+							uni.showModal({
+								title: '温馨提示',
+								content: "加入成功！",
+								showCancel: false,
+								confirmText: "我知道了",
+								success: function() {
+									uni.switchTab({
+										url: "../action/action"
+									})
+								}
+							});
+						}
+
+					} else {
+						_this.xdUniUtils.showToast(false, res.msg, "");
+					}
+				})
+			},
+
+
+			goPay(saveData) {
+				var that = this;
+				let userInfo = {};
+				try {
+					userInfo = uni.getStorageSync('userInfo');
+				} catch (e) {
+					//TODO handle the exception
+				};
+				var data = {
+					id: uni.getStorageSync('id'),
+					userName: '',
+					token: uni.getStorageSync('token'),
+					unionId: userInfo.unionId,
+					openid: userInfo.openId,
+					city: '',
+					province: '',
+					payRmb: saveData.challengeRmb,
+					pushId: saveData.id,
+				};
+
+				wx.getSetting({
+					success: res => {
+						if (res.authSetting['scope.userInfo']) {
+							that.xd_request_post(that.xdServerUrls.xd_pay, data, false).then(res => {
+								uni.requestPayment({
+									'appId': res.obj.appId,
+									'timeStamp': res.obj.timeStamp,
+									'nonceStr': res.obj.nonceStr,
+									'package': res.obj.packageAlias,
+									'signType': 'MD5',
+									'paySign': res.obj.paySign,
+									success: function(re) {
+										uni.showModal({
+											title: '温馨提示',
+											content: "加入成功！",
+											showCancel: false,
+											confirmText: "我知道了",
+											success: function() {
+												uni.switchTab({
+													url: "../action/action"
+												})
+											}
+										});
+									},
+									fail: function(err) {}
+								});
+							})
+						}
 					}
 
-					uni.showModal({
-						title: '温馨提示',
-						content: contents,
-						showCancel: false,
-						confirmText: "我知道了"
-					});
-				}).catch(err => {});
+				})
 			},
 
 
@@ -513,6 +620,8 @@
 					console.log("商家活动信息结果", res);
 					let list = res.obj.list;
 					for (let i in list) {
+						list[i].statusName = list[i].status == 0 ? "已结束" : "进行中…";
+						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
 						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
@@ -878,6 +987,7 @@
 					this.getGroupList();
 				} else if (id == 1) { //商家活动 
 					this.isMerchant = true;
+					this.getBalance();
 					this.getMerchantList();
 				} else if (id == 2) { //挑战赛
 					this.isRankingLable = true;
@@ -1024,6 +1134,40 @@
 				uni.navigateTo({
 					url: '../web/webShow?url=' + url
 				});
+			},
+			merchant() {
+				let userBean = this.userBean;
+				if (!this.xdUniUtils.IsNullOrEmpty(userBean)) {
+					let merchantType = userBean.merchantType;
+					if (merchantType == 0) {
+						uni.showModal({
+							title: '温馨提示',
+							content: '您尚未开通审核权限，是否开通？',
+							confirmText: "去开通",
+							cancelText: "暂不开通",
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '../pageA/merchant/merchantPay'
+									});
+								}
+							},
+						});
+					} else if (merchantType == 1) {
+						uni.navigateTo({
+							url: '../pageA/merchant/merchantAction'
+						});
+					}
+				}
+			},
+			getBalance() {
+				this.xd_request_post(this.xdServerUrls.xd_inquireBalance, {
+					token: uni.getStorageSync('token'),
+				}, true).then((res) => {
+					console.log("xd_inquireBalance");
+					console.log(res);
+					this.userBean = res.obj.userBean;
+				})
 			},
 			burieInit() {
 				this.xd_request_post(this.xdServerUrls.xd_selectBurieStatistics, {}, true).then((res) => {

@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<!-- 小组简介 -->
+		<!-- 小圈简介 -->
 		<view>
 			<!-- 群组名称和图片 -->
 			<view class="label-hint infos">
@@ -32,12 +32,12 @@
 			<view v-if="custState!=1">
 				<view class="label-hint">提供</view>
 				<view class="label-hint infos xd-rows" @tap="editInfo(1)">
-					<input disabled="true" placeholder="您能为本小组提供什么信息" :value="postInfo" style="width: 100%;" />
+					<input disabled="true" placeholder="您能为本小圈提供什么信息" :value="postInfo" style="width: 100%;" />
 					<text class="text-cuIcon-right cuIcon-right"></text>
 				</view>
 				<view class="label-hint">需要</view>
 				<view class="label-hint infos xd-rows" @tap="editInfo(2)">
-					<input disabled="true" placeholder="您想从本小组得到什么信息" :value="getInfo" style="width: 100%;" />
+					<input disabled="true" placeholder="您想从本小圈得到什么信息" :value="getInfo" style="width: 100%;" />
 					<text class="text-cuIcon-right cuIcon-right"></text>
 				</view>
 			</view>
@@ -45,7 +45,7 @@
 			<!-- 标签选择 -->
 			<view class="label-hint">描述</view>
 			<view class="label-hint infos xd-rows" @tap="editInfo(3)">
-				<input disabled="true" placeholder="更多小组信息,说明小组功能作用" :value="roomDesc" style="width: 100%;" />
+				<input disabled="true" placeholder="更多小圈信息,说明小圈功能作用" :value="roomDesc" style="width: 100%;" />
 				<!-- <text v-if="custState==1" class="text-cuIcon-right cuIcon-right"></text> -->
 			</view>
 			
@@ -140,12 +140,12 @@
 				//1群主 2群成员 3游客
 				let _this = this;
 				let state = this.custState;
-				if (state == 1) { //解散小组
+				if (state == 1) { //解散小圈
 					return this.xdUniUtils.showToast(false, "暂不能解散！", "");
-				} else if (state == 2) { //退出小组
+				} else if (state == 2) { //退出小圈
 					uni.showModal({
 						title: '温馨提示',
-						content: "您确定要退出该小组吗？",
+						content: "您确定要退出该小圈吗？",
 						showCancel: true,
 						success: function(res) {
 							if (res.confirm) {
@@ -153,7 +153,7 @@
 							}
 						}
 					});
-				} else if (state == 3) { //加入小组
+				} else if (state == 3) { //加入小圈
 					let postinfo = this.postInfo;
 					if (this.xdUniUtils.IsNullOrEmpty(postinfo))
 						return this.xdUniUtils.showToast(false, "提供内容不能为空！", "");
@@ -279,7 +279,7 @@
 					uni.hideLoading();
 				});
 			},
-			//退出小组
+			//退出小圈
 			userDetateGroup() {
 				let info = {
 					roomId: this.group.id
@@ -289,7 +289,7 @@
 				this.xd_request_post(this.xdServerUrls.xd_quitByUserId, info, true).then((res) => {
 					uni.showModal({
 						title: '提示',
-						content: "已经退出该小组！",
+						content: "已经退出该小圈！",
 						showCancel: false,
 						success: function(res) {
 							if (res.confirm) {
@@ -299,7 +299,7 @@
 					});
 				}).catch(err => {});
 			},
-			//获取用户在这个小组的状态
+			//获取用户在这个小圈的状态
 			getCustomerGroupState() {
 				let info = {
 					roomId: this.group.id
@@ -311,11 +311,11 @@
 					let names = "申请加入",
 						titleName = "申请加入";
 					if (states == 1) {
-						names = "解散小组";
-						titleName = "查看小组信息"
+						names = "解散小圈";
+						titleName = "查看小圈信息"
 					} else if (states == 2) {
-						names = "退出小组";
-						titleName = "查看小组信息"
+						names = "退出小圈";
+						titleName = "查看小圈信息"
 					}
 					_this.butName = names;
 					uni.setNavigationBarTitle({
@@ -338,7 +338,7 @@
 				}
 				let _this = this;
 				this.xd_request_post(this.xdServerUrls.xd_myRoomByType, info, true).then((res) => {
-					console.log("这个人小组信息", res);
+					console.log("这个人小圈信息", res);
 					let userGroupInfo = res.obj.list[0];
 					_this.postInfo = _this.xdUniUtils.IsNullOrEmpty(userGroupInfo.offer) ? "" : userGroupInfo.offer;
 					_this.getInfo = _this.xdUniUtils.IsNullOrEmpty(userGroupInfo.need) ? "" : userGroupInfo.need;
