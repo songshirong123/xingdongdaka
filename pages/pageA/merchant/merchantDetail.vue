@@ -121,11 +121,14 @@
 		methods: {
 			//添加活动
 			addActivity(event) {
+				if(event.status==1)
+					return this.xdUniUtils.showToast(false, "活动已结束！", "");
+					
 				let _this = this;
 				uni.showModal({
 					title: '温馨提示',
 					content: "您确定要加入该活动吗？？",
-					showCancel: false,
+					showCancel: true,
 					success: function(res) {
 						if (res.confirm) {
 							_this.addActivityToUser(event);

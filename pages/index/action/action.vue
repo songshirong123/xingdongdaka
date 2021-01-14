@@ -449,8 +449,8 @@
 				const parm = {
 					token: uni.getStorageSync('token'), 
 					pageSize: 99 , 
-					pageNum: 0 , 
-					pushId: uni.getStorageSync('pushId') ,       // 行动项id
+					pageNum: 1 , 
+					pushId: this.pushId,       // 行动项id
 				} 
 				const {resultCode,obj,msg} = await that.xd_request_post(that.xdServerUrls.xd_getActSponsor,parm)
 				

@@ -372,8 +372,8 @@
 				const parm = {
 					token: uni.getStorageSync('token'),
 					pageSize: 99,
-					pageNum: 0,
-					pushId: uni.getStorageSync('pushId'), // 行动项id
+					pageNum: 1,
+					pushId: this.userId, // 行动项id
 				}
 				const {
 					resultCode,

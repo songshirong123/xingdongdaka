@@ -409,11 +409,15 @@
 
 			//添加活动
 			addActivity(event) {
+				if(event.status==1)
+					return this.xdUniUtils.showToast(false, "活动已结束！", "");
+				
+				
 				let _this = this;
 				uni.showModal({
 					title: '温馨提示',
 					content: "您确定要加入该活动吗？？",
-					showCancel: false,
+					showCancel: true,
 					success: function(res) {
 						if (res.confirm) {
 							_this.selectHD = event;
@@ -620,7 +624,7 @@
 					console.log("商家活动信息结果", res);
 					let list = res.obj.list;
 					for (let i in list) {
-						list[i].statusName = list[i].status == 0 ? "已结束" : "进行中…";
+						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
 						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
 						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
