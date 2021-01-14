@@ -145,9 +145,16 @@
 					token: uni.getStorageSync('token')
 				}
 				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
+					
 					console.log("加入活动")
 					console.log(res)
-					_this.savePush(res.obj, event);
+					if (res.resultCode == "10000" ) {
+						_this.xdUniUtils.showToast(false, res.obj, "");
+					}else if(res.resultCode == "10038"){
+						_this.xdUniUtils.showToast(false, res.msg, "");
+					} else {
+						_this.savePush(res.obj, event);
+					}
 				}).catch(err => {});
 			},
 			savePush(saveData, event) {

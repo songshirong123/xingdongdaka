@@ -409,10 +409,10 @@
 
 			//添加活动
 			addActivity(event) {
-				if(event.status==1)
+				if (event.status == 1)
 					return this.xdUniUtils.showToast(false, "活动已结束！", "");
-				
-				
+
+
 				let _this = this;
 				uni.showModal({
 					title: '温馨提示',
@@ -437,7 +437,15 @@
 				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
 					console.log("加入活动")
 					console.log(res)
-					_this.savePush(res.obj, event);
+					if (res.resultCode == "10000" ) {
+						_this.xdUniUtils.showToast(false, res.obj, "");
+					}else if(res.resultCode == "10038"){
+						_this.xdUniUtils.showToast(false, res.msg, "");
+					}else {
+						console.log(res)
+						_this.savePush(res.obj, event);
+					}
+
 				}).catch(err => {});
 			},
 			savePush(saveData, event) {

@@ -57,8 +57,11 @@
 			</view>
 		</view>
 
-		<view class="xd-common-bottom-ly" style="background-color: #FFFFFF;padding: 5px">
+		<view class="xd-common-bottom-ly xd-columns" style="background-color: #FFFFFF;padding: 5px">
 			<view style="flex: 1">
+				<button class="bg-black" hover-class="xd-but-active" @tap="userSubmitSQ">申请体验</button>
+			</view>
+			<view style="flex: 1;margin-top: 5px;">
 				<button class="bg-orange" hover-class="xd-but-active" @tap="userSubmit">立即开通</button>
 			</view>
 		</view>
@@ -85,6 +88,11 @@
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
+			userSubmitSQ(){
+				uni.navigateTo({
+					url: './merchantWeb'
+				});
+			},
 			//确认开通
 			userSubmit() {
 				let userInfo = uni.getStorageSync('userInfo');

@@ -273,6 +273,12 @@
 					"navigationBarTitleText": "活动详情",
 					"enablePullDownRefresh": false
 				}
+			}, {
+				"path": "merchant/merchantWeb",
+				"style": {
+					"navigationBarTitleText": "申请体验",
+					"enablePullDownRefresh": false
+				}
 			}
 		]
 	}],

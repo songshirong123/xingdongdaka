@@ -57,7 +57,7 @@
 
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
 					<view class="flex flex-wrap">
-						<input @input="onInputAmout" type="number" min="1" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;" />
+						<input @input="onInputAmout" type="number" min="0" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;" />
 						<text class="lg text-gray cuIcon-triangledownfill" style="margin-top: 6px;"></text>
 					</view>
 				</view>
