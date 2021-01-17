@@ -31,27 +31,29 @@
 					<text>2.获取分享后行动项的收入权，获得保证金的特别分配收入。</text>
 					<view class="xd-rows">
 						<text>3.详细情况可咨询客服。</text>
-						<button style="background-color: #FFFFFF;border:1px solid #ffffff; height:40upx;box-shadow: none;line-height: 1;font-size: 32upx;margin-left: 1px;" open-type="contact">
+						<button style="background-color: #FFFFFF;border:1px solid #ffffff; height:40upx;box-shadow: none;line-height: 1;font-size: 32upx;margin-left: 1px;"
+						 open-type="contact">
 							<text class="cuIcon-service"></text>
 						</button>
 					</view>
-					
-					
+
+
 				</view>
 				<!-- 支付金额列表-->
 				<view class="main-tabbar">
 					<!-- <scroll-view :class="['xd-nav-bar', isCenter ? 'xd-nav-center' : '']"  scroll-x="true" show-scrollbar="false"> -->
-						<view class="xd-nav-bar solid-bottom"  v-for="(item, index) in payList">
-							<view :class="['nav-item', currentIndex == item.ID ? 'nav-active' : '']" :id="'tab-'+index"
-							 :key="index" :data-index="index" :data-id="item.ID" @tap="navChange(item)">
-								<view class="nav-item-title xd-columns">
-									<text style="font-size: 20px;font-weight: 700;">{{item.pay}}<text v-if="item.type==1" style="font-size: 12px;font-weight: 300;">/月</text><text v-if="item.type==2||item.type==3" style="font-size: 12px;font-weight: 300;">/年</text></text>
-									<text style="margin-top: 3px;">活动收入返点\n可高达{{item.rateDes}}%</text>
-								</view>
+					<view class="xd-nav-bar solid-bottom" v-for="(item, index) in payList">
+						<view :class="['nav-item', currentIndex == item.ID ? 'nav-active' : '']" :id="'tab-'+index" :key="index"
+						 :data-index="index" :data-id="item.ID" @tap="navChange(item)">
+							<view class="nav-item-title xd-columns">
+								<text style="font-size: 20px;font-weight: 700;">{{item.pay}}<text v-if="item.type==1" style="font-size: 12px;font-weight: 300;">/月</text><text
+									 v-if="item.type==2||item.type==3" style="font-size: 12px;font-weight: 300;">/年</text></text>
+								<text style="margin-top: 3px;">活动收入返点\n可高达{{item.rateDes}}%</text>
 							</view>
 						</view>
-						
-						
+					</view>
+
+
 					<!-- </scroll-view> -->
 				</view>
 			</view>
@@ -59,7 +61,7 @@
 
 		<view class="xd-common-bottom-ly xd-columns" style="background-color: #FFFFFF;padding: 5px">
 			<view style="flex: 1">
-				<button class="bg-black" hover-class="xd-but-active" @tap="userSubmitSQ">申请体验</button>
+				<button class="bg-black" hover-class="xd-but-active" @tap="userSubmitSQ">申请体验<text style="font-size: 13px;margin-left: 5px;">{{Times}}</text></button>
 			</view>
 			<view style="flex: 1;margin-top: 5px;">
 				<button class="bg-orange" hover-class="xd-but-active" @tap="userSubmit">立即开通</button>
@@ -77,26 +79,75 @@
 	export default {
 		data() {
 			return {
-				isCenter:true,
-				currentIndex:0,
+				isCenter: true,
+				currentIndex: 0,
+				tyInfo: {},
 				newList: {},
 				payList: [],
-				selectPay:{}
+				selectPay: {},
+				Times:""
 			}
 		},
 		computed: {
 			...mapState(['hasLogin', 'userInfo'])
 		},
 		methods: {
-			userSubmitSQ(){
+			userSubmitSQ() {
 				uni.navigateTo({
-					url: './merchantWeb'
+					url: './merchantWeb?tyInfo=' + JSON.stringify(this.tyInfo)
 				});
+			},
+			setTimes(times) {
+				let that = this;
+				this.dateFormat(times);
+				setTimeout(function() {
+					times--;
+					that.setTimes(times);
+				}, 1000)
+			},
+			dateFormat(second) {
+				var dd, hh, mm, ss;
+				second = typeof second === 'string' ? parseInt(second) : second;
+				if (!second || second < 0) {
+					return;
+				}
+				//天  
+				dd = second / (24 * 3600) | 0;
+				second = Math.round(second) - dd * 24 * 3600;
+				//小时  
+				hh = second / 3600 | 0;
+				second = Math.round(second) - hh * 3600;
+				//分  
+				mm = second / 60 | 0;
+				//秒  
+				ss = Math.round(second) - mm * 60;
+
+				if (Math.round(dd) < 10) {
+					dd = dd > 0 ? '0' + dd : '0';
+				}
+
+				if (Math.round(hh) < 10) {
+					hh = '0' + hh;
+				}
+
+				if (Math.round(mm) < 10) {
+					mm = '0' + mm;
+				}
+				if (Math.round(ss) < 10) {
+					ss = '0' + ss;
+				}
+				 this.Times = dd + '天' + hh + '时' + mm + '分' + ss+"秒";
 			},
 			//确认开通
 			userSubmit() {
 				let userInfo = uni.getStorageSync('userInfo');
 				var that = this;
+				let selectPay = this.selectPay;
+				let payAmout = selectPay.pay;
+				if (selectPay.expFlag) {
+					payAmout = parseFloat(selectPay.tyrate) * payAmout
+				}
+
 				var data = {
 					id: uni.getStorageSync('id'),
 					userName: '',
@@ -104,21 +155,21 @@
 					openid: userInfo.openId,
 					city: '',
 					province: '',
-					payRmb: (parseFloat(this.selectPay.pay) * 100),
-					merchantType:1,
-					type:6
+					payRmb: (parseFloat(payAmout) * 100),
+					merchantType: 1,
+					type: 6
 				};
 				console.log("xd_generalPay 参数", data)
 				uni.showLoading({
-					title:"请稍后"
+					title: "请稍后"
 				})
 				this.xd_request_post(this.xdServerUrls.xd_generalPay, data, true).then(res => {
 					uni.hideLoading();
 					console.log("xd_generalPay 结果", res)
-					if(res.resultCode=='400' || res.resultCode=='10016')
-						return  that.xdUniUtils.showToast(false, res.msg+JSON.stringify(res.obj), "");
-					
-					
+					if (res.resultCode == '400' || res.resultCode == '10016')
+						return that.xdUniUtils.showToast(false, res.msg + JSON.stringify(res.obj), "");
+
+
 					uni.requestPayment({
 						'appId': res.obj.appId,
 						'timeStamp': res.obj.timeStamp,
@@ -143,35 +194,49 @@
 										that.xdUniUtils.xd_navigateBack(1);
 									}
 								},
-			
+
 							});
 						}
 					});
 				})
 			},
-			
-			
-			// 金额选择
-			navChange(item){
-				this.selectPay = item;
-				this.currentIndex =item.ID;
-				
+			getTimeInit() {
+				let _this = this;
+				this.xd_request_get(this.xdServerUrls.xd_init, {
+					token: uni.getStorageSync('token')
+				}, true).then((res) => {
+					_this.tyInfo = res.obj;
+					console.log("xd_init")
+					console.log(res);
+					let times = res.obj.time;
+					if(times>0){
+						_this.setTimes(times);
+					}
+					
+				})
 			},
-			
+
+			// 金额选择
+			navChange(item) {
+				this.selectPay = item;
+				this.currentIndex = item.ID;
+
+			},
+
 			//金额列表
 			getMerchantConfig() {
 				let that = this;
 				this.xd_request_get(this.xdServerUrls.xd_getVal, {
-					key: "merchant_config"
+					key: "merchant_config",
+					token: uni.getStorageSync('token')
 				}, true).then((res) => {
 					console.log("xd_getVal res.obj")
 					console.log(res.obj)
 					let pays = JSON.parse(res.obj);
-					if(!that.xdUniUtils.IsNullOrEmpty(pays)){
-						let pays = JSON.parse(res.obj);
+					if (!that.xdUniUtils.IsNullOrEmpty(pays)) {
 						for (let i in pays) {
-							pays[i].ID=i;
-							pays[i].rateDes = pays[i].rate*100;
+							pays[i].ID = i;
+							pays[i].rateDes = pays[i].rate * 100;
 						}
 						that.selectPay = pays[0];
 						that.payList = pays;
@@ -182,6 +247,7 @@
 		},
 		onShow() {
 			this.getMerchantConfig();
+			this.getTimeInit();
 			if (!this.hasLogin) {
 				return this.xdUniUtils.xd_login(this.hasLogin);
 			}
@@ -198,7 +264,6 @@
 </script>
 
 <style scoped lang="scss">
-	
 	.xd-info-main {
 		width: 100%;
 
@@ -208,6 +273,7 @@
 			border-bottom: 1px solid #efe5e8;
 			// padding: 20upx 3upx 20upx 3upx;
 			background-color: #FFFFFF;
+
 			.xd-nav-bar {
 				width: 100%;
 				display: flex;
@@ -235,13 +301,14 @@
 						line-height: 36rpx;
 						width: 100%;
 						color: #626466;
-						
+
 					}
 				}
 
 				.nav-item.nav-active {
 					border: 1px solid #fd5107;
 					background-color: #FFFFFF;
+
 					.nav-item-title {
 						color: #fd5107;
 					}

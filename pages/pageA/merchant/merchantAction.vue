@@ -117,7 +117,7 @@
 				</view>
 			</view>
 
-			<view class="padding solid-top">
+			<view class="padding solid-top" style="margin-bottom: 80px;">
 				<view class="flex flex-wrap">
 					<view class="text-xl">
 						<text class="lg text-gray cuIcon-camera"></text>
@@ -172,6 +172,7 @@
 				param: {
 					pictures: ""
 				},
+				shInfo: {},
 				pickerlabel: [],
 				picker: [
 					"一周",
@@ -200,7 +201,8 @@
 			}
 		},
 		onLoad(option) {
-			this.userInfo = JSON.parse(option.userInfo);
+			// this.userInfo = JSON.parse(option.userInfo);
+			this.getShInfo();
 		},
 
 		onShow() {
@@ -243,6 +245,26 @@
 
 				});
 			},
+			getShInfo() {
+				let _this = this;
+				this.xd_request_get(this.xdServerUrls.xd_baseSelectSHInfo, {
+					token: uni.getStorageSync('token')
+				}, true).then((res) => {
+					let infos = res.obj;
+					let info = {
+						id: infos.id,
+						type: infos.type,
+						activityIncome: infos.activityIncome,
+						activityPhone: infos.activityPhone,
+						joinActivity: infos.joinActivity,
+						myActivity: infos.myActivity,
+						phone: infos.phone,
+						userId: infos.userId,
+						wx: infos.wx,
+					}
+					_this.shInfo = info;
+				})
+			},
 			//发起活动
 			formSubmit() {
 				let labelCodes = this.labeldata; //数组 分类
@@ -262,8 +284,9 @@
 				let pictures = this.param.pictures; //封面图片
 				if (this.xdUniUtils.IsNullOrEmpty(pictures))
 					return this.xdUniUtils.showToast(false, "请上传封面图片！", "");
-console.log("this.pikerdate")
-console.log(this.pikerdate)
+
+				let shInfo = this.shInfo;
+
 				let infos = {
 					token: uni.getStorageSync('token'),
 					userId: uni.getStorageSync('id'),
@@ -273,10 +296,10 @@ console.log(this.pikerdate)
 					planDay: targetDay,
 					holidayDay: holidayDay,
 					imgs: pictures,
-					phone: this.userInfo[0].Value,
-					activityPhone: this.userInfo[1].Value,
+					phone: shInfo.phone,
+					activityPhone: shInfo.activityPhone,
 					activityEndTime: this.pikerdate,
-					wx: this.userInfo[2].Value
+					wx: shInfo.wx
 				};
 				console.log("this.pikerdate")
 				console.log(infos)

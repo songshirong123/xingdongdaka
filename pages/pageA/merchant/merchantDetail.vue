@@ -121,20 +121,21 @@
 		methods: {
 			//添加活动
 			addActivity(event) {
-				if(event.status==1)
+				if (event.status == 1)
 					return this.xdUniUtils.showToast(false, "活动已结束！", "");
-					
-				let _this = this;
-				uni.showModal({
-					title: '温馨提示',
-					content: "您确定要加入该活动吗？？",
-					showCancel: true,
-					success: function(res) {
-						if (res.confirm) {
-							_this.addActivityToUser(event);
-						}
-					}
-				});
+
+				this.addActivityToUser(event);
+				// let _this = this;
+				// uni.showModal({
+				// 	title: '温馨提示',
+				// 	content: "您确定要加入该活动吗？？",
+				// 	showCancel: true,
+				// 	success: function(res) {
+				// 		if (res.confirm) {
+				// 			_this.addActivityToUser(event);
+				// 		}
+				// 	}
+				// });
 			},
 			//加入活动
 			addActivityToUser(event) {
@@ -145,20 +146,26 @@
 					token: uni.getStorageSync('token')
 				}
 				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
-					
+
 					console.log("加入活动")
 					console.log(res)
-					if (res.resultCode == "10000" ) {
+					if (res.resultCode == "10000") {
 						_this.xdUniUtils.showToast(false, res.obj, "");
-					}else if(res.resultCode == "10038"){
+					} else if (res.resultCode == "10038") {
 						_this.xdUniUtils.showToast(false, res.msg, "");
 					} else {
-						_this.savePush(res.obj, event);
+						let objs = res.obj;
+						objs.activityEndTime =event.activityEndTime;
+						objs.baozhengjin =event.baozhengjin;
+						uni.navigateTo({
+							url: "./merchantActionEdit?actionid=" + event.id + "&fromInfo=" + JSON.stringify(objs)
+						})
+						// _this.savePush(res.obj, event);
 					}
 				}).catch(err => {});
 			},
 			savePush(saveData, event) {
-			
+
 				let info = {
 					label: saveData.label,
 					content: saveData.content,
@@ -174,7 +181,7 @@
 					token: uni.getStorageSync('token'),
 					activityId: event.id
 				}
-			
+
 				console.log("saveData info")
 				console.log(info)
 				let _this = this;
@@ -197,14 +204,14 @@
 								}
 							});
 						}
-			
+
 					} else {
 						_this.xdUniUtils.showToast(false, res.msg, "");
 					}
 				})
 			},
-			
-			
+
+
 			goPay(saveData) {
 				var that = this;
 				let userInfo = {};
@@ -224,7 +231,7 @@
 					payRmb: saveData.challengeRmb,
 					pushId: saveData.id,
 				};
-			
+
 				wx.getSetting({
 					success: res => {
 						if (res.authSetting['scope.userInfo']) {
@@ -254,11 +261,11 @@
 							})
 						}
 					}
-			
+
 				})
 			},
-			
-			
+
+
 
 			//获取活动详情
 			selectByActivityId() {

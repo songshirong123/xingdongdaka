@@ -391,7 +391,7 @@
 				 if (tab == 0){
 					uni.navigateToMiniProgram({
 					  appId: 'wxf9286c35b3f9d0d0',
-					  path: 'pages/index/index'
+					  path: 'main/index'
 					})
 					 
 				 } else if (tab == 1) {

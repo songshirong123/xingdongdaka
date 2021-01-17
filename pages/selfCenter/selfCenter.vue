@@ -171,7 +171,7 @@
 			//审核权限
 			merchant() {
 				// uni.navigateTo({
-				// 	url: '../pageA/merchant/merchant'
+				// 	url: '../pageA/merchant/merchantPay'
 				// });
 				
 				let userBean = this.userBean;

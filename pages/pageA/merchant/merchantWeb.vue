@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<web-view :webview-styles="webviewStyles" src="http://zhidashixun.mikecrm.com/gTo9azg"></web-view>
+		<web-view :webview-styles="webviewStyles" :src="tyInfo.url"></web-view>
 
 	</view>
 </template>
@@ -14,10 +14,13 @@
 						color: '#FF3333'
 					}
 				},
+				tyInfo:{},
 				urlinfo: "http://zhidashixun.mikecrm.com/gTo9azg"
 			}
 		},
-		onLoad(option) {},
+		onLoad(option) {
+			this.tyInfo = JSON.parse(option.tyInfo);
+		},
 		methods: {
 
 		}
