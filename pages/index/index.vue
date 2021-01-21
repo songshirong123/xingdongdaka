@@ -164,15 +164,15 @@
 										</image>
 									</view>
 									<view class="flex padding-sm">
-										<view @click="merchant" style="flex: 1;" class="xd-rows">
+										<view @click="merchant" style="flex: 1;margin-top: 5px;" class="xd-rows">
 											<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
 											<text style="margin-left: 3px;">我要发布</text>
 										</view>
 										<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-											<text class="lg text-black cuIcon-forward" style="margin-top: 2px;"></text>
-											<text style="margin-left: 3px;">分享活动</text>
+											<button class="cu-btn bg-light-blue" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+												 style="margin-top: 2px;"></text>分享活动</button>
 										</view>
-										<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;" class="xd-rows">
+										<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
 											<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
 											<text style="margin-left: 3px;" @tap="addActivity(list)">参与活动 {{list.joinCount}}</text>
 										</view>
@@ -317,16 +317,33 @@
 			if (res.from == "menu") {
 				return that.xdUniUtils.xd_onShare();
 			} else {
-				that.setSaveShareInfo(res);
-				return {
-					title: that.listsTab[res.target.id].userId == that.userId ? '第' + that.listsTab[res.target.id].pushCardCishuCount +
-						'次打卡:' + that.listsTab[res.target.id].pushCardList[0].content : '我为@' + that.listsTab[res.target.id].userName +
-						'打Call：' + that.listsTab[res.target.id].pushCardList[0].content,
-					path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync('id') +
-						'&isopen=' + that.listsTab[res.target.id].isopen,
-					imageUrl: that.listsTab[res.target.id].pushCardList[0].pictures[0] ? that.listsTab[res.target.id].pushCardList[0].pictures[
-						0] : that.xdUniUtils.xd_randomImg(1),
+				if (this.isMerchant) {
+					console.log(that.merchantList[res.target.id]);
+					let imgs = that.merchantList[res.target.id].imgs;
+					if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
+						imgs = that.xdUniUtils.xd_randomImg(1);
+					}
+					return {
+						title: that.merchantList[res.target.id].activityContent,
+						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.merchantList[res.target.id].id,
+						imageUrl: imgs,
+					}
+				} else {
+					that.setSaveShareInfo(res);
+					return {
+						title: that.listsTab[res.target.id].userId == that.userId ? '第' + that.listsTab[res.target.id].pushCardCishuCount +
+							'次打卡:' + that.listsTab[res.target.id].pushCardList[0].content : '我为@' + that.listsTab[res.target.id].userName +
+							'打Call：' + that.listsTab[res.target.id].pushCardList[0].content,
+						path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync(
+								'id') +
+							'&isopen=' + that.listsTab[res.target.id].isopen,
+						imageUrl: that.listsTab[res.target.id].pushCardList[0].pictures[0] ? that.listsTab[res.target.id].pushCardList[0]
+							.pictures[
+								0] : that.xdUniUtils.xd_randomImg(1),
+					}
 				}
+
+
 			}
 		},
 		onReady() {
@@ -412,6 +429,10 @@
 				if (event.status == 1)
 					return this.xdUniUtils.showToast(false, "活动已结束！", "");
 
+				if (event.userId == uni.getStorageSync('id'))
+					return this.xdUniUtils.showToast(false, "自己发布的活动不能自己参与！", "");
+
+
 				this.selectHD = event;
 				this.addActivityToUser(event);
 
@@ -447,8 +468,8 @@
 						_this.xdUniUtils.showToast(false, res.msg, "");
 					} else {
 						let objs = res.obj;
-						objs.activityEndTime =event.activityEndTime;
-						objs.baozhengjin =event.baoZhengJin;
+						objs.activityEndTime = event.activityEndTime;
+						objs.baozhengjin = event.baoZhengJin;
 						uni.navigateTo({
 							url: "../pageA/merchant/merchantActionEdit?actionid=" + event.id + "&fromInfo=" + JSON.stringify(objs)
 						})

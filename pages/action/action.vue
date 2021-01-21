@@ -36,14 +36,15 @@
 				<view v-if="tab===3 || tab===4" v-for="(activity,index) in activityByUserId" :key="index">
 					<view class="cu-card dynamic">
 						<view class="cu-item shadow">
-							<view  @click="addActivity(activity,0)" class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+							<view @click="addActivity(activity,0)" class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
 								<text class="text-orange">{{activity.statusName}}</text>
 								<view class="xd-rows">
-									<text class="cu-tag light bg-red radius" >保证金：￥{{activity.baoZhengJin}}</text>
+									<text class="cu-tag light bg-red radius">保证金：￥{{activity.baoZhengJin}}</text>
 									<text style="margin-left: 3px;">{{activity.labels}}</text>
 								</view>
 								<view class="xd-rows">
-									<text style="font-size: 10px;color: #999999;">截止日期：{{activity.activityEndTime}}  计划天数：{{activity.planDay}} 可休假天数：{{activity.holidayDay}}</text>
+									<text style="font-size: 10px;color: #999999;">截止日期：{{activity.activityEndTime}} 计划天数：{{activity.planDay}}
+										可休假天数：{{activity.holidayDay}}</text>
 								</view>
 								<view style="height: 7px;"></view>
 							</view>
@@ -55,14 +56,14 @@
 								</image>
 							</view>
 							<view v-if="tab===4" class="flex padding-sm">
-								<view style="flex: 1;" @click="addActivity(activity,1)">
+								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,1)">
 									<text>待审核<text style="color: red;margin-left: 3px;">{{activity.joinCount}}</text></text>
-									</view>
-								<view style="flex: 1;" @click="addActivity(activity,2)">未达成</view>
-								<view style="flex: 1;" @click="addActivity(activity,3)">已通过</view>
-								<view style="flex: 1;jjustify-items: flex-end;justify-content: flex-end;" class="xd-rows">
-									<text class="lg text-black cuIcon-forward" style="margin-top: 2px;"></text>
-									<text style="margin-left: 3px;">分享活动</text>
+								</view>
+								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,2)">未达成</view>
+								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,3)">已通过</view>
+								<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;" class="xd-rows">
+									<button class="cu-btn bg-light-blue" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+										 style="margin-top: 2px;"></text>分享活动</button>
 								</view>
 							</view>
 						</view>
@@ -113,10 +114,10 @@
 				userId: uni.getStorageSync('id'),
 				cardList: [],
 				lookerList: [],
-				activityByUserId:[],
+				activityByUserId: [],
 				maskState: 0,
 				nextPage: 1, //当前页数
-				pageNum:1,
+				pageNum: 1,
 				pageSize: 10, //每页条数
 				nextPageTwo: '',
 				total: '',
@@ -194,6 +195,17 @@
 						imageUrl: that.lookerList[res.target.id].pictures ? that.lookerList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(
 							1),
 					}
+				}else if (that.tab == 3 || that.tab == 4) {
+					console.log(that.activityByUserId[res.target.id]);
+					let imgs = that.activityByUserId[res.target.id].imgs;
+					if(this.xdUniUtils.IsNullOrEmpty(imgs)){
+						 imgs =that.xdUniUtils.xd_randomImg(1);
+					}
+					return {
+						title: that.activityByUserId[res.target.id].activityContent,
+						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.activityByUserId[res.target.id].id,
+						imageUrl: imgs,
+					}
 				}
 
 			}
@@ -212,11 +224,6 @@
 				this.tab = e;
 				this.pageNum = 1;
 				this.inDada(e);
-				// if (e == 0) {
-				// 	this.inDada(0);
-				// } else if (e == 1) {
-				// 	this.inDada(1);
-				// }
 			},
 			setSaveShareInfo(res) {
 				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
@@ -388,13 +395,13 @@
 				} catch (e) {
 					//TODO handle the exception
 				}
-				 if (tab == 0){
+				if (tab == 0) {
 					uni.navigateToMiniProgram({
-					  appId: 'wxf9286c35b3f9d0d0',
-					  path: 'main/index'
+						appId: 'wxf9286c35b3f9d0d0',
+						path: 'main/index'
 					})
-					 
-				 } else if (tab == 1) {
+
+				} else if (tab == 1) {
 					that.xd_request_post(that.xdServerUrls.xd_pushByUserIdList, {
 							token: token,
 							userId: id,
@@ -406,12 +413,12 @@
 					).then(res => {
 						that.cardList = that.dataPaly(res);
 						that.nextPage = res.obj.nextPage;
-						that.pageNum =res.obj.nextPage;
+						that.pageNum = res.obj.nextPage;
 						that.total = res.obj.total;
 					}).catch(Error => {
 						console.log(Error)
 					})
-				} else if(tab==2){
+				} else if (tab == 2) {
 					that.xd_request_post(that.xdServerUrls.xd_lookerPushListByUserId, {
 							userId: uni.getStorageSync("id"),
 							pageNum: 1,
@@ -421,7 +428,7 @@
 
 						that.lookerList = res.obj.list;
 						that.nextPageTwo = res.obj.nextPage;
-						that.pageNum =res.obj.nextPage;
+						that.pageNum = res.obj.nextPage;
 						that.looktotal = res.obj.total;
 						that.lookerList.forEach(function(item) {
 							if (typeof item.challengeRmb != 'undefined' && item.challengeRmb != '' && item.challengeRmb != '0') {
@@ -439,9 +446,9 @@
 					}).catch(Error => {
 						console.log(Error)
 					})
-				}else if(tab==3){
+				} else if (tab == 3) {
 					that.getActivityByUserId();
-				}else if(tab==4){
+				} else if (tab == 4) {
 					that.getAction();
 				}
 			},
@@ -449,12 +456,12 @@
 				this.xdUniUtils.xd_showImg(e, index)
 			},
 			//添加活动
-			addActivity(event,selectType) {
-				if(this.tab==3){
+			addActivity(event, selectType) {
+				if (this.tab == 3) {
 					this.activityDetail(event);
-				}else if(this.tab==4){
+				} else if (this.tab == 4) {
 					uni.navigateTo({
-						url: '../pageA/merchant/merchantActionList?activityid=' + event.id+"&selectType="+selectType
+						url: '../pageA/merchant/merchantActionList?activityid=' + event.id + "&selectType=" + selectType
 					})
 				}
 			},
@@ -469,14 +476,14 @@
 				let _this = this;
 				this.xd_request_get(this.xdServerUrls.xd_selectSHInfo, {
 					token: uni.getStorageSync('token'),
-					userId:uni.getStorageSync('id')
+					userId: uni.getStorageSync('id')
 				}, true).then((res) => {
 					console.log("xd_selectSHInfo")
 					console.log(res);
 					let list = res.obj;
 					for (let i in list) {
-						list[i].statusName=list[i].status==0?"进行中…":"已结束";
-						list[i].activityEndTime=_this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
+						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
+						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
 						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
@@ -493,7 +500,7 @@
 				if (this.pageNum == 0) {
 					return this.xdUniUtils.showToast(false, "没有更多数据了！", "");
 				}
-			
+
 				let info = {
 					token: uni.getStorageSync('token'),
 					pageNum: this.pageNum,
@@ -509,8 +516,8 @@
 					console.log("参与的活动", res);
 					let list = res.obj.list;
 					for (let i in list) {
-						list[i].statusName=list[i].status==0?"进行中…":"已结束";
-						list[i].activityEndTime=_this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
+						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
+						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
 						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
@@ -523,7 +530,7 @@
 					_this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
 			},
-			
+
 			getReachList() {
 				let that = this;
 				if (that.tab == 1) {
@@ -599,9 +606,9 @@
 					}).catch(Error => {
 						console.log(Error)
 					})
-				}else if(that.tab == 3){
+				} else if (that.tab == 3) {
 					that.getActivityByUserId();
-				}else if(that.tab==4){
+				} else if (that.tab == 4) {
 					that.getAction();
 				}
 			},
@@ -741,7 +748,8 @@
 		display: flex;
 		flex-direction: column;
 	}
-.imgheit {
+
+	.imgheit {
 		height: 320upx;
 		width: 100%;
 	}

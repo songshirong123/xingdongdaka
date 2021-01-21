@@ -21,15 +21,15 @@
 					</image>
 				</view>
 				<view class="flex padding-sm">
-					<view @click="merchant" style="flex: 1;" class="xd-rows">
+					<view @click="merchant" style="flex: 1;margin-top: 5px;" class="xd-rows">
 						<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
 						<text style="margin-left: 3px;">我要发布</text>
 					</view>
 					<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-						<text class="lg text-black cuIcon-forward" style="margin-top: 2px;"></text>
-						<text style="margin-left: 3px;">分享活动</text>
+						<button class="cu-btn bg-light-blue" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+							 style="margin-top: 2px;"></text>分享活动</button>
 					</view>
-					<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;" class="xd-rows">
+					<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
 						<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
 						<text style="margin-left: 3px;" @tap="addActivity(activity)">参与活动 {{activity.joinCount}}</text>
 					</view>
@@ -124,6 +124,10 @@
 				if (event.status == 1)
 					return this.xdUniUtils.showToast(false, "活动已结束！", "");
 
+				if (event.userId == uni.getStorageSync('id'))
+					return this.xdUniUtils.showToast(false, "自己发布的活动不能自己参与！", "");
+
+
 				this.addActivityToUser(event);
 				// let _this = this;
 				// uni.showModal({
@@ -155,8 +159,8 @@
 						_this.xdUniUtils.showToast(false, res.msg, "");
 					} else {
 						let objs = res.obj;
-						objs.activityEndTime =event.activityEndTime;
-						objs.baozhengjin =event.baozhengjin;
+						objs.activityEndTime = event.activityEndTime;
+						objs.baozhengjin = event.baozhengjin;
 						uni.navigateTo({
 							url: "./merchantActionEdit?actionid=" + event.id + "&fromInfo=" + JSON.stringify(objs)
 						})
@@ -405,7 +409,23 @@
 			this.selectByActivityId();
 			this.getData();
 			this.getBalance()
-		}
+		},
+		onShareAppMessage(res) {
+			console.log("onShareAppMessage");
+			console.log(res);
+
+			let activity = this.activity;
+			let imgs = activity.imgs;
+			if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
+				imgs = this.xdUniUtils.xd_randomImg(1);
+			}
+			return {
+				title: activity.activityContent,
+				path: '/pages/pageA/merchant/merchantDetail?activityid=' + activity.id,
+				imageUrl: imgs,
+			}
+		},
+
 	}
 </script>
 
