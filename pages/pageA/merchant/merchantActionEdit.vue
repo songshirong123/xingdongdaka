@@ -177,6 +177,8 @@
 			}
 		},
 		methods: {
+			//活动内容
+		
 			savePush() {
 				let saveData = this.fromInfo;
 				let info = {
@@ -202,7 +204,7 @@
 					console.log("xd_savePush")
 					console.log(res)
 					if (res.resultCode == 0) {
-						if (res.obj.payWay != 1) {
+						if (res.obj.payWay != 1 &&res.obj.payWay != -1) {
 							_this.goPay(res.obj);
 						} else {
 							uni.showModal({
@@ -211,9 +213,7 @@
 								showCancel: false,
 								confirmText: "我知道了",
 								success: function() {
-									uni.switchTab({
-										url: "../action/action"
-									})
+									_this.getPages(res.obj);
 								}
 							});
 						}
@@ -303,6 +303,9 @@
 			//打卡天数
 			targetDayinput(e) {
 				this.fromInfo.targetDay = e.detail.value;
+			},
+			onInputActivity(e) {
+				this.fromInfo.content = e.detail.value;
 			},
 			
 			setPickerChange(targetDay) {
@@ -395,9 +398,7 @@
 											showCancel: false,
 											confirmText: "我知道了",
 											success: function() {
-												uni.switchTab({
-													url: "../action/action"
-												})
+												that.getPages(saveData);
 											}
 										});
 									},
@@ -407,6 +408,12 @@
 						}
 					}
 			
+				})
+			},
+			
+			getPages(objs){
+				uni.redirectTo({
+					url:'./merchantDetail?selectType=0&activityid='+objs.activityId
 				})
 			},
 			

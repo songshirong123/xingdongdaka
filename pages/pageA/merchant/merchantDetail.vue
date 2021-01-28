@@ -16,6 +16,18 @@
 				<view class="text-contents contentext">
 					<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 				</view>
+				
+				<view class="flex text-contents contentext">
+					<view  @click="callPhone(activity.phone)" style="flex: 1;font-weight: 700;font-size: 16px;" class="xd-rows">
+						<text class="lg text-black cuIcon-phone" style="margin-top: 3px;color: #007AFF;"></text>
+						<text style="margin-left: 3px;">：{{activity.phone}}</text>
+					</view>
+					<view style="flex: 1;font-weight: 700;font-size: 16px;" class="xd-rows">
+						<text class="lg text-black cuIcon-weixin" style="margin-top: 3px;color: #39B54A;"></text>
+						<text style="margin-left: 3px;">：{{activity.wx}}</text>
+					</view>
+				
+				</view>
 				<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
 					<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
 					</image>
@@ -26,7 +38,7 @@
 						<text style="margin-left: 3px;">我要发布</text>
 					</view>
 					<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-						<button class="cu-btn bg-light-blue" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+						<button class="cu-btn bg-white" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
 							 style="margin-top: 2px;"></text>分享活动</button>
 					</view>
 					<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
@@ -119,6 +131,14 @@
 			}
 		},
 		methods: {
+			callPhone(phoneNumber){
+				if(this.xdUniUtils.IsNullOrEmpty(phoneNumber))
+					return;
+				
+				uni.makePhoneCall({
+				    phoneNumber: phoneNumber //仅为示例
+				});
+			},
 			//添加活动
 			addActivity(event) {
 				if (event.status == 1)
@@ -160,7 +180,7 @@
 					} else {
 						let objs = res.obj;
 						objs.activityEndTime = event.activityEndTime;
-						objs.baozhengjin = event.baozhengjin;
+						objs.baozhengjin = event.baoZhengJin;
 						uni.navigateTo({
 							url: "./merchantActionEdit?actionid=" + event.id + "&fromInfo=" + JSON.stringify(objs)
 						})
@@ -306,7 +326,7 @@
 						});
 					} else if (merchantType == 1) {
 						uni.navigateTo({
-							url: './merchantAction'
+							url: './merchantAction?souce=1'
 						});
 					}
 				}

@@ -169,7 +169,7 @@
 											<text style="margin-left: 3px;">我要发布</text>
 										</view>
 										<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-											<button class="cu-btn bg-light-blue" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+											<button class="cu-btn bg-white" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
 												 style="margin-top: 2px;"></text>分享活动</button>
 										</view>
 										<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
@@ -387,15 +387,15 @@
 					}
 				}
 			}
-			this.indexData();
+			// this.indexData();
 			this.burieInit();
 			this.getnotic();
 
 		},
 		onShow(option) {
-			// this.currentIndex=-1;
-			// this.active=1;
-			// this.indexData();
+			this.currentIndex=-1;
+			this.active=1;
+			this.indexData();
 		},
 
 		computed: {
@@ -650,7 +650,8 @@
 				}
 				let info = {
 					pageNum: this.pageNum,
-					pageSize: 10
+					pageSize: 10,
+					token:uni.getStorageSync('token')
 				}
 				uni.showLoading({
 					title: '加载中..',
@@ -815,9 +816,15 @@
 					this.isRankingLable = false;
 					this.pageNum = 1;
 					this.getGroupList();
-				} else { //加载打卡列表
+				} else if(this.isMerchant){
+					this.isGroupLable =false;
+					this.isRankingLable = false;
+					this.pageNum = 1;
+					this.getMerchantList();
+				}else{ //加载打卡列表
 					this.getShowRecommend();
 				}
+				
 			},
 			// 赞助
 			gotoSponsor(list, index) {
@@ -1197,7 +1204,7 @@
 						});
 					} else if (merchantType == 1) {
 						uni.navigateTo({
-							url: '../pageA/merchant/merchantAction'
+							url: '../pageA/merchant/merchantAction?souce=0'
 						});
 					}
 				}

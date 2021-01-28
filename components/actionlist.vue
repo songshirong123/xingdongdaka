@@ -2,12 +2,12 @@
 	<view class="">
 		<view class="cu-item shadow margin-bottom-sm bg-white">
 			<view class="cu-list menu-avatar">
-				<view class="cu-item " v-if="tab==1">
+				<view class="cu-item " v-if="tab==2">
 					<view @tap="goUser(item.userId)" class="cu-avatar round lg" :style="{backgroundImage: 'url(' +item.userHead + ')'}" ></view>
 					<view class="content flex-sub">
 						<view @tap="goUser(item.userId)">{{item.userName}}</view>
 					</view>
-					<view  v-if="tab>1">
+					<view  v-if="tab>2">
 						<view class="cu-tag line-orange radius"  @tap="tags">
 							关注
 						</view>
@@ -42,7 +42,7 @@
 							保证金￥{{item.challengeRmb}}
 						</view>
 					</view>
-					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==0">
+					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==1">
 						<text class="cuIcon-moreandroid" ></text>
 					</view>
 					

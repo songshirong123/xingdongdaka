@@ -88,17 +88,17 @@
 						</image>
 					</view>
 					<view class="flex padding-sm">
-						<view v-if="list.reason!=null" style="flex: 1;">
-							<text v-if="list.reason=='已通过'" style="color: #39B54A;">{{list.reason}}</text>
-							<view v-else class="xd-columns">
+						<view style="flex: 1;">
+							<text v-if="list.statusName=='已完成'" style="color: #39B54A;">{{list.reason}}</text>
+							<view v-else-if="list.statusName=='未完成'" class="xd-columns">
 								<text style="color: red;">参与活动失败</text>
 								<text>失败原因：{{list.reason}}</text>
 							</view>
 						</view>
-						<view v-if="list.pushCardStatus==1 ||list.pushCardStatus==3" style="flex: 1;justify-items: center;justify-content: center;text-align: center;">
+						<view v-if="list.statusName=='已完成' ||list.statusName=='进行中'" style="flex: 1;justify-items: center;justify-content: center;text-align: center;">
 							<button size="mini" type="warn" @tap="addActivityNo(list)">审核不通过</button>
 						</view>
-						<view v-if="list.pushCardStatus==1 ||list.pushCardStatus==2" style="flex: 1;justify-items: center;justify-content: center;text-align: center;">
+						<view v-if="list.statusName=='进行中' ||list.statusName=='未完成'" style="flex: 1;justify-items: center;justify-content: center;text-align: center;">
 							<button size="mini" type="primary" @tap="addActivityOk(list)">审核通过</button>
 						</view>
 					</view>
@@ -254,7 +254,7 @@
 					console.log(res);
 					let list = res.obj.list;
 					for (let i in list) {
-						list[i].statusName = _this.getStateName(list[i].pushCardStatus);
+						list[i].statusName = _this.getStateName(list[i].reason, list[i].pushCardStatus);
 						list[i].reason = _this.getStateReason(list[i].reason, list[i].pushCardStatus);
 					}
 					_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
@@ -287,29 +287,46 @@
 			},
 			getStateReason(reason, id) {
 				if (id == 1) {
-					if (reason == "已通过")
-						reason = "打卡进行中,审核不通过";
-					else
-						reason = "打卡进行中";
+					reason = "打卡进行中";
 				} else if (id == 2) {
-					if (reason == "已通过")
-						reason = "打卡未完成,审核不通过";
+					if (this.xdUniUtils.IsNullOrEmpty(reason))
+						reason = "进行中";
+					else if (reason == "已通过")
+						reason = "审核已通过";
 					else
-						reason = "打卡未完成";
+						reason = reason;
+
 				} else if (id == 3) {
 					reason = "审核" + reason;
 				}
 				return reason;
 			},
-			getStateName(id) {
+			getStateName(reason, id) {
 				if (id == 1) {
-					return "进行中…";
+					return "进行中";
 				} else if (id == 2) {
-					return "未完成";
+					if (this.xdUniUtils.IsNullOrEmpty(reason))
+						return "进行中";
+					else if (reason == "已通过")
+						return "已完成";
+					else
+						return "未完成";
 				} else if (id == 3) {
-					return "已完成";
+					if ((reason == "已通过"))
+						return "已完成";
+					else
+						return "未完成";
 				}
 				return "";
+
+				// if (id == 1) {
+				// 	return "进行中…";
+				// } else if (id == 2) {
+				// 	return "未完成";
+				// } else if (id == 3) {
+				// 	return "已完成";
+				// }
+				// return "";
 			},
 		},
 		onLoad(option) {

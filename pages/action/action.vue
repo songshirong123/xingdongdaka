@@ -62,7 +62,7 @@
 								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,2)">未达成</view>
 								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,3)">已通过</view>
 								<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;" class="xd-rows">
-									<button class="cu-btn bg-light-blue" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+									<button class="cu-btn bg-white" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
 										 style="margin-top: 2px;"></text>分享活动</button>
 								</view>
 							</view>

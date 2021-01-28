@@ -201,6 +201,7 @@
 			}
 		},
 		onLoad(option) {
+			this.souce=option.souce;
 			// this.userInfo = JSON.parse(option.userInfo);
 			this.getShInfo();
 		},
@@ -275,7 +276,7 @@
 				if (this.xdUniUtils.IsNullOrEmpty(actitivtyContent))
 					return this.xdUniUtils.showToast(false, "活动内容不能为空！", "");
 				let inputAmout = this.inputAmout; //保证金
-				if (this.xdUniUtils.IsNullOrEmpty(inputAmout) || inputAmout <= 0)
+				if (this.xdUniUtils.IsNullOrEmpty(inputAmout) )
 					return this.xdUniUtils.showToast(false, "保证金不能为空！", "");
 				let targetDay = this.targetDay; //计划打卡天数
 				if (this.xdUniUtils.IsNullOrEmpty(targetDay))
@@ -320,7 +321,9 @@
 						image: '/static/images/icon/clock.png',
 						success: function(ress) {
 							if (ress.confirm) {
-								that.xdUniUtils.xd_navigateBack(1);
+								uni.redirectTo({
+									url:'./merchantActionList?selectType=0&activityid='+res.obj.id
+								})
 							}
 						},
 

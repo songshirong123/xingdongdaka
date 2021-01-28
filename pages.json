@@ -250,7 +250,7 @@
 			}, {
 				"path": "merchant/merchantActionList",
 				"style": {
-					"navigationBarTitleText": "参与活动",
+					"navigationBarTitleText": "发起活动详情",
 					"enablePullDownRefresh": true
 				}
 
@@ -270,7 +270,7 @@
 			}, {
 				"path": "merchant/merchantDetail",
 				"style": {
-					"navigationBarTitleText": "活动详情",
+					"navigationBarTitleText": "参与活动详情",
 					"enablePullDownRefresh": false
 				}
 			}, {
