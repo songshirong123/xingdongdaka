@@ -256,18 +256,21 @@ function xd_navigateBack(delta) {
 	})
 }
 //时间处理
- function xd_timestampToTime(timestamp,times,times1,times2) {
+ function xd_timestampToTime(timestamp,times,times1,times2,times3) {
   var date = new Date(timestamp);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-  var Y = date.getFullYear() + '-';
-  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
-  var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
   if(times){
-	  var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
-	  var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
+	  var Y = date.getFullYear() + '-';
+	  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
+	  var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
+	  // var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
+	  // var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
 	  // var s = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds() ;
-	   return M+D+ ' '+h+m;
+	   return Y+M+D;
   }
   if(times1){
+	  var Y = date.getFullYear() + '-';
+	  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
+	  var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
   	
 	 var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
 	 var m = date.getMinutes() < 10 ? '0' + date.getMinutes() + ':' : date.getMinutes() + ':';
@@ -275,12 +278,28 @@ function xd_navigateBack(delta) {
   	  return Y+M+D+ ' ' + h+m+s;
   }
   if(times2){
-  	
+  	var Y = date.getFullYear() + '-';
+  	var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
+  	var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
 	 var h = date.getHours() < 10 ? '0' + date.getHours() + ':' : date.getHours() + ':';
 	 var m = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes() ;
   	 return Y+M+D + ' '+ h+m;
   }
-  return Y+M+D;
+  if(times3){
+	var todate = new Date()
+	if(date.getFullYear()==todate.getFullYear()){
+		var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1) : date.getMonth()+1) + '月';
+		var D = date.getDate() < 10 ? '0'+ date.getDate()+'日' : date.getDate();
+		return M+D;
+	}else{
+		var Y = date.getFullYear() + '年';
+		var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) +'月';
+		var D = date.getDate() < 10 ? '0'+ date.getDate()+'日' : date.getDate()+'日';
+		 return Y+M+D;
+	}
+  	
+  	
+  }
 }
 //获取今天只后日期
 

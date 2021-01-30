@@ -104,22 +104,12 @@
 						<text class="text-gray text-sm " v-if="list.onlookerCount>0">{{list.onlookerCount}}</text>
 					</view>
 					
-					<!-- <view class='xd-flex'>
-				
-					</view>
 					
-					<view v-else>
-						<button class="cu-btn bg-light-blue sm round" v-if="list.userId==userId"  :id="index" open-type="share">分享邀请</button>
-						<button class="cu-btn bg-orange sm round  " v-else-if="list.onlooker"  :id="index"  open-type="share">为TA打Call</button>
-						<button class="cu-btn bg-green sm round  " v-else-if="list.userId!=userId && !list.onlooker&&list.challengeRmb<=0" :id="index"  @tap="lookerClick(list,index)">围观</button>
-						<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(list,index)">围观分钱</button>
-						<text class="text-gray text-df ">{{list.onlookerCount}}</text>
-					</view> -->
 				
 				</view>
 			</view>
 			<view class="padding-top-xs padding-bottom-xs" v-if="index==4||index==7&&adshow">
-				<ad unit-id="adunit-e54424897d34c95f" ad-type="video" ad-intervals="31" @load='adload' @error='aderror'></ad>
+				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
 			</view>
 		</view>
 	</view>

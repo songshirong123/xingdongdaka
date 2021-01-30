@@ -608,7 +608,12 @@
 					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
 					data.createTime=time;
 					this.pusCardLists=data;
-					this.pushCardCreateTime=this.xdUniUtils.xd_timestampToTime(this.pusCardLists.pushCardList[0].createTime,false,true,false)
+					data.pushCardList.forEach(item=>{
+						if(item.id==this.cardId){
+							this.pushCardCreateTime=this.xdUniUtils.xd_timestampToTime(item.createTime,false,true,false)
+							
+						}
+					})
 					if(data.userId == uni.getStorageSync('id')){
 						this.guanzhu =''
 					}else{

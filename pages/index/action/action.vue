@@ -103,20 +103,46 @@
 				<image class="bg-img imgheit" :src="audioPlaySrc" mode="aspectFill" @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 				</image>
 			</view>
-			<view class="flex padding justify-between">
-				<view>
-					<button class="cu-btn bg-light-blue sm round" v-if="pushList.userId==userId" :id="index" open-type="share">分享邀请</button>
-					<button class="cu-btn bg-orange sm round" v-else-if="pushList.onlooker" :id="index" open-type="share">为TA打Call</button>
-					<button class="cu-btn bg-green sm round  " v-else-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0"
-					 @tap="lookerClick(pushList,index)">围观</button>
-					<button class="cu-btn bg-green sm round  " v-else @tap="lookerClick(pushList,index)">围观分钱</button>
-					<text class="text-gray text-df ">{{pushList.onlookerCount}}</text>
+			<view class="flex padding justify-around align-center">
+				<view class="action flex flex-wrap align-center" @tap="gotoSponsor(pushList,index)">
+					<view class="text-lg">
+						<text class="lg text-black cuIcon-moneybag"></text>
+					</view>
+					
+					<text class="text-sm marginxs">赞助</text>
+					<text v-if="pushList.sponsorCount>0" class="text-gray text-sm ">{{pushList.sponsorCount}}</text>
 				</view>
-
-				<view class="text-xxl">
-					<button class="cu-btn line-green sm round  " @click="goSteps" v-if="userId==pushList.userId">立即打卡</button>
-					<button class="cu-btn line-green sm round  " @click="gostep" v-else>一起行动</button>
+				<button class="cu-btns" :id="index"  open-type="share">
+					<view class="flex flex-wrap align-center ">
+						<view class="text-black text-lg">
+							<text class="lg text-black cuIcon-forward"></text>
+						</view>
+						<text class="text-sm marginxs" v-if="pushList.userId==userId ">分享邀请</text>
+						<text class="text-sm marginxs" v-else>为TA打Call</text>
+					</view>
+				</button>
+				<view class="" v-if="isRanking">
+					<button class="cu-btn bg-green sm round"  @click="addRankin" >选择该行动加入</button>
 				</view>
+				
+				<view class="action flex flex-wrap align-center " v-else   @tap="lookerClick(pushList,index)">
+					<view class="text-lg">
+						<text class="lg text-black cuIcon-friendfavor"></text>
+					</view>
+					<text class="text-sm marginxs text-red" v-if="pushList.userId!=userId && !pushList.onlooker&&pushList.challengeRmb<=0" :id="index"   >围观</text>
+					<text class="text-sm marginxs text-red" v-else-if="!pushList.onlooker" >围观分钱</text>
+					<text class="text-sm marginxs" v-else-if="pushList.onlooker">已围观</text>
+					<text class="text-gray text-sm " v-if="pushList.onlookerCount>0">{{pushList.onlookerCount}}</text>
+				</view>
+				<view class="action flex flex-wrap align-center" >
+					<view class="text-lg">
+						<text class="lg text-black cuIcon-activityfill"></text>
+					</view>
+					
+					<text class="text-sm marginxs" @click="goSteps" v-if="userId==pushList.userId">立即打卡</text>
+					<text class="text-sm marginxs" @click="gostep" v-else>一起行动</text>
+				</view>
+				
 
 			</view>
 		</view>
@@ -130,7 +156,7 @@
 		</scroll-view>
 		<block v-for="(item,index) in pusCardList" :key="index" v-if="TabCur==0">
 			<view class="cu-timeline">
-				<view class="cu-time" v-if="index == 0 || compareDate(pusCardList[index-1],item)">{{item.createTime}}</view>
+				<view class="cu-time" v-if="index==0||compareDate(pusCardList[index-1],item)">{{item.createTime}}</view>
 				<view class="cu-item">
 					<view class="content">
 						<view class="">
@@ -504,7 +530,8 @@
 				if(typeof d2 == 'undefined'){
 					return true
 				}
-				return this.xdUniUtils.xd_timestampToTime(d1.createTime,false,false,false) > this.xdUniUtils.xd_timestampToTime(d2.createTime,false,false,false)
+				
+				return d1.createTime != d2.createTime
 			},
 			gostep(){
 				if(!uni.getStorageSync('token')){
@@ -728,8 +755,8 @@
 					if(res.resultCode==0){
 						var data=res.obj;
 						
-						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime)
-						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime)
+						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,true)
+						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime,true)
 						data.challengeRmb=res.obj.challengeRmb/100;
 						this.pushList=data;
 						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
@@ -775,11 +802,10 @@
 		async	getPushCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId,{
 					pushId:this.pushId,		
-					
 				},true).then(res=>{
 					var data=res.obj.list;
 					for(let i=0;i<res.obj.list.length;i++){
-						data[i].createTime=this.xdUniUtils.xd_timestampToTime(data[i].createTime,false,false,false);
+						data[i].createTime=this.xdUniUtils.xd_timestampToTime(data[i].createTime,false,false,false,true);
 						if(res.obj.list[i].pictures!=""){
 							data[i].pictures=res.obj.list[i].pictures.split(',')
 						}
@@ -1027,5 +1053,20 @@
 	margin-top: 20%;
 	margin-left: 20%;
 }
+button::after{
+		border:none;
+	}
+	.cu-btns{
+		margin-left: unset;
+		margin-right: unset;
+		background-color: #FFFFFF;
+		line-height: unset;
+		padding-left: unset;
+		padding-right: unset;
+		color: #333333;
+	}
+	.marginxs{
+		margin-left: 4upx;
+	}
 
 </style>
