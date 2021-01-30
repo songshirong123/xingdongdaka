@@ -293,7 +293,7 @@
 				}, {
 					ID: 2,
 					Name: "挑战赛",
-					IsOpen: false,
+					IsOpen: true,
 					Checked: false
 				}]
 			};

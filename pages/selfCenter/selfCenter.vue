@@ -121,13 +121,13 @@
 		methods: {
 			...mapMutations(['logOut']),
 			async getBalance() {
-				console.log("xd_inquireBalance");
-				console.log(uni.getStorageSync('token'));
+				if (!uni.getStorageSync('token')) {
+					return this.xdUniUtils.xd_login(false);
+				}
 				this.xd_request_post(this.xdServerUrls.xd_inquireBalance, {
 					token: uni.getStorageSync('token'),
 				}, true).then((res) => {
-					console.log("xd_inquireBalance");
-					console.log(res);
+					
 					if (typeof res.obj.rmb !== undefined) {
 						this.rmb = res.obj.rmb / 100;
 					}
