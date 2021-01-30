@@ -94,12 +94,14 @@
 					Name: "活动收入",
 					Value: "",
 					Icon: "cuIcon-activity"
-				}, {
-					ID: 5,
-					Name: "参与活动",
-					Value: "",
-					Icon: "cuIcon-activity"
-				}],
+				}
+				// , {
+				// 	ID: 5,
+				// 	Name: "参与活动",
+				// 	Value: "",
+				// 	Icon: "cuIcon-activity"
+				// },
+				],
 			}
 		},
 		computed: {
@@ -151,9 +153,8 @@
 				let wx = this.userInfolist[2].Value;
 				if (wx == "暂无" || wx == "")
 					return this.xdUniUtils.xd_showToastNew(false, "活动微信不能为空！！", "");
-
 				uni.navigateTo({
-					url: './merchantAction?userInfo=' + JSON.stringify(this.userInfolist)
+					url: './merchantAction?souce=2&userInfo=' + JSON.stringify(this.userInfolist)
 				})
 			},
 			//获取余额 如果没有余额或者余额不够支付 用微信支付否则用余额支付
@@ -205,6 +206,7 @@
 
 				})
 			},
+			
 			//编辑商户信息
 			saveSHInfo() {
 				let _this = this;

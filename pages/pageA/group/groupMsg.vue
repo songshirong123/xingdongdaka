@@ -1,6 +1,6 @@
 <template>
 	<view>
-		<!-- 小组简介 -->
+		<!-- 小圈简介 -->
 		<view style="padding: 10px;border-bottom: 1px solid #f0f0f0;background-color: #FFFFFF;">
 			<!-- 群组名称和图片 -->
 			<view class="xd-rows">
@@ -156,7 +156,7 @@
 
 				}).catch(err => {});
 			},
-			//获取用户在这个小组的状态
+			//获取用户在这个小圈的状态
 			getCustomerGroupState() {
 				let info = {
 					roomId: this.group.id

@@ -48,7 +48,7 @@
 				this.getGroupList();
 			},
 
-			//添加小组
+			//添加小圈
 			groupAdd() {
 				uni.navigateTo({
 					url:"./groupAdd?group=&isadd=true"

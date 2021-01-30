@@ -57,7 +57,7 @@
 
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
 					<view class="flex flex-wrap">
-						<input @input="onInputAmout" type="number" min="1" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;" />
+						<input @input="onInputAmout" type="number" min="0" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;" />
 						<text class="lg text-gray cuIcon-triangledownfill" style="margin-top: 6px;"></text>
 					</view>
 				</view>
@@ -101,8 +101,23 @@
 					</view>
 				</view>
 			</view>
+			<view class=" flex flex-wrap padding solid-top align-center">
+				<view class="text-xl">
+					<text class="lg text-gray cuIcon-calendar"></text>
+				</view>
+				<view class="title margin-left-xs">截止日期</view>
+				<view class="xd-flex-end label-left  radius " style="flex: 1;">
+					<view class="flex flex-wrap  bg-gray radius align-center data-time-left">
+						<picker mode="date" :value="pikerdate" :start="pikerdate" :end="2050-01-01" @change="bindDateChange">
+							<view class="uni-input">{{pikerdate}}</view>
+						</picker>
+					</view>
 
-			<view class="padding solid-top">
+
+				</view>
+			</view>
+
+			<view class="padding solid-top" style="margin-bottom: 80px;">
 				<view class="flex flex-wrap">
 					<view class="text-xl">
 						<text class="lg text-gray cuIcon-camera"></text>
@@ -134,8 +149,13 @@
 
 <script>
 	export default {
+
 		data() {
+			const currentDate = this.getDate({
+				format: true
+			})
 			return {
+				pikerdate: currentDate,
 				switchA: 0,
 				switchB: 0,
 				content: '',
@@ -152,6 +172,7 @@
 				param: {
 					pictures: ""
 				},
+				shInfo: {},
 				pickerlabel: [],
 				picker: [
 					"一周",
@@ -180,13 +201,33 @@
 			}
 		},
 		onLoad(option) {
-			this.userInfo =JSON.parse(option.userInfo);
+			this.souce=option.souce;
+			// this.userInfo = JSON.parse(option.userInfo);
+			this.getShInfo();
 		},
-		
+
 		onShow() {
 			this.tabs();
 		},
 		methods: {
+			getDate(type) {
+				const date = new Date();
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+
+				if (type === 'start') {
+					year = year - 60;
+				} else if (type === 'end') {
+					year = year + 2;
+				}
+				month = month > 9 ? month : '0' + month;;
+				day = day > 9 ? day : '0' + day;
+				return `${year}-${month}-${day}`;
+			},
+			bindDateChange: function(e) {
+				this.pikerdate = e.target.value
+			},
 			showradios(e) {
 				if (e == 1) {
 					for (var i = 0; i < this.pickerlabel.length; ++i) {
@@ -205,6 +246,26 @@
 
 				});
 			},
+			getShInfo() {
+				let _this = this;
+				this.xd_request_get(this.xdServerUrls.xd_baseSelectSHInfo, {
+					token: uni.getStorageSync('token')
+				}, true).then((res) => {
+					let infos = res.obj;
+					let info = {
+						id: infos.id,
+						type: infos.type,
+						activityIncome: infos.activityIncome,
+						activityPhone: infos.activityPhone,
+						joinActivity: infos.joinActivity,
+						myActivity: infos.myActivity,
+						phone: infos.phone,
+						userId: infos.userId,
+						wx: infos.wx,
+					}
+					_this.shInfo = info;
+				})
+			},
 			//发起活动
 			formSubmit() {
 				let labelCodes = this.labeldata; //数组 分类
@@ -215,7 +276,7 @@
 				if (this.xdUniUtils.IsNullOrEmpty(actitivtyContent))
 					return this.xdUniUtils.showToast(false, "活动内容不能为空！", "");
 				let inputAmout = this.inputAmout; //保证金
-				if (this.xdUniUtils.IsNullOrEmpty(inputAmout) || inputAmout <= 0)
+				if (this.xdUniUtils.IsNullOrEmpty(inputAmout) )
 					return this.xdUniUtils.showToast(false, "保证金不能为空！", "");
 				let targetDay = this.targetDay; //计划打卡天数
 				if (this.xdUniUtils.IsNullOrEmpty(targetDay))
@@ -225,28 +286,33 @@
 				if (this.xdUniUtils.IsNullOrEmpty(pictures))
 					return this.xdUniUtils.showToast(false, "请上传封面图片！", "");
 
+				let shInfo = this.shInfo;
+
 				let infos = {
 					token: uni.getStorageSync('token'),
-					userId:uni.getStorageSync('id'),
-					labels:labelCodes,
-					activityContent:actitivtyContent,
-					baoZhengJin:inputAmout,
-					planDay:targetDay,
-					holidayDay:holidayDay,
-					imgs:pictures,
-					phone:this.userInfo[0],
-					activityPhone:this.userInfo[1],
-					wx:this.userInfo[2]
+					userId: uni.getStorageSync('id'),
+					labels: labelCodes,
+					activityContent: actitivtyContent,
+					baoZhengJin: inputAmout,
+					planDay: targetDay,
+					holidayDay: holidayDay,
+					imgs: pictures,
+					phone: shInfo.phone,
+					activityPhone: shInfo.activityPhone,
+					activityEndTime: this.pikerdate,
+					wx: shInfo.wx
 				};
-				let that =this;
+				console.log("this.pikerdate")
+				console.log(infos)
+				let that = this;
 				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
 					console.log("xd_saveSHInfo");
 					console.log(res);
-					let msg="活动创建成功！";
-					if(res.msg!="成功"){
-						msg="活动创建成失败！";
+					let msg = "活动创建成功！";
+					if (res.msg != "成功") {
+						msg = "活动创建成失败！";
 					}
-					
+
 					uni.showModal({
 						title: '温馨提示',
 						content: msg,
@@ -255,10 +321,12 @@
 						image: '/static/images/icon/clock.png',
 						success: function(ress) {
 							if (ress.confirm) {
-								that.xdUniUtils.xd_navigateBack(1);
+								uni.redirectTo({
+									url:'./merchantActionList?selectType=0&activityid='+res.obj.id
+								})
 							}
 						},
-								
+
 					});
 				}).catch(err => {});
 			},

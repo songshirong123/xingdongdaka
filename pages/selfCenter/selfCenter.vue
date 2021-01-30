@@ -32,8 +32,8 @@
 				<view v-if="showHzGroup"  class="user_column_item"  @tap="gogroup">
 					    <button class='content cu-btn'>
 						      <text class="lg text-gray cuIcon-group"></text>
-						      <text class='thin'>互助小组</text>
-						    </button>
+						      <text class='thin'>互助小圈</text>
+						  </button>
 				</view>
 				<view class="user_column_item"  @tap="merchant">
 					    <button class='content cu-btn'>
@@ -170,33 +170,33 @@
 			},
 			//审核权限
 			merchant() {
-				uni.navigateTo({
-					url: '../pageA/merchant/merchant'
-				});
+				// uni.navigateTo({
+				// 	url: '../pageA/merchant/merchantPay'
+				// });
 				
-				// let userBean = this.userBean;
-				// if (!this.xdUniUtils.IsNullOrEmpty(userBean)) {
-				// 	let merchantType = userBean.merchantType;
-				// 	if (merchantType == 0) {
-				// 		uni.showModal({
-				// 			title: '温馨提示',
-				// 			content: '您尚未开通审核权限，是否开通？',
-				// 			confirmText: "去开通",
-				// 			cancelText: "暂不开通",
-				// 			success: function(res) {
-				// 				if (res.confirm) {
-				// 					uni.navigateTo({
-				// 						url: '../pageA/merchant/merchantPay'
-				// 					});
-				// 				}
-				// 			},
-				// 		});
-				// 	} else if (merchantType == 1) {
-				// 		uni.navigateTo({
-				// 			url: '../pageA/merchant/merchant'
-				// 		});
-				// 	}
-				// }
+				let userBean = this.userBean;
+				if (!this.xdUniUtils.IsNullOrEmpty(userBean)) {
+					let merchantType = userBean.merchantType;
+					if (merchantType == 0) {
+						uni.showModal({
+							title: '温馨提示',
+							content: '您尚未开通审核权限，是否开通？',
+							confirmText: "去开通",
+							cancelText: "暂不开通",
+							success: function(res) {
+								if (res.confirm) {
+									uni.navigateTo({
+										url: '../pageA/merchant/merchantPay'
+									});
+								}
+							},
+						});
+					} else if (merchantType == 1) {
+						uni.navigateTo({
+							url: '../pageA/merchant/merchant'
+						});
+					}
+				}
 			},
 			//去互助小组列表
 			gogroup() {

@@ -7,7 +7,7 @@
 			<image :src="group.roomHead" style="width: 30px;height: 30px;"></image>
 			<input style="width: 100%;padding-left: 10px;margin-top: 5px;" :value="group.showInfo" placeholder="请输入" @input="inputInfo" />
 		</view>
-		<text style="padding: 5px;">小组名称：{{group.roomName}}</text>
+		<text style="padding: 5px;">小圈名称：{{group.roomName}}</text>
 		<view style="padding: 5px;">
 			<button class="bg-orange" hover-class="xd-but-active" @tap="userSubmit">完成</button>
 		</view>

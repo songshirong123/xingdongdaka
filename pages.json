@@ -170,13 +170,13 @@
 			}, {
 				"path": "group/groupList",
 				"style": {
-					"navigationBarTitleText": "互助小组",
+					"navigationBarTitleText": "互助小圈",
 					"enablePullDownRefresh": true
 				}
 			}, {
 				"path": "group/groupAdd",
 				"style": {
-					"navigationBarTitleText": "添加小组"
+					"navigationBarTitleText": "添加小圈"
 				}
 			}, {
 				"path": "group/groupMsg",
@@ -250,7 +250,7 @@
 			}, {
 				"path": "merchant/merchantActionList",
 				"style": {
-					"navigationBarTitleText": "参与活动",
+					"navigationBarTitleText": "发起活动详情",
 					"enablePullDownRefresh": true
 				}
 
@@ -270,7 +270,19 @@
 			}, {
 				"path": "merchant/merchantDetail",
 				"style": {
-					"navigationBarTitleText": "活动详情",
+					"navigationBarTitleText": "参与活动详情",
+					"enablePullDownRefresh": false
+				}
+			}, {
+				"path": "merchant/merchantWeb",
+				"style": {
+					"navigationBarTitleText": "申请体验",
+					"enablePullDownRefresh": false
+				}
+			}, {
+				"path": "merchant/merchantActionEdit",
+				"style": {
+					"navigationBarTitleText": "参与活动",
 					"enablePullDownRefresh": false
 				}
 			}

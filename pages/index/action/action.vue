@@ -11,7 +11,7 @@
 						</view>
 						<view>
 						<!-- 	<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">赞助</view> -->
-							<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">互助小组</view>
+							<view class="cu-tag line-orange radius" @tap="clickGroup(pushList.userId)">互助小圈</view>
 							<view class="cu-tag  radius" :class="guanzhu=='关注'?'line-orange':'line-gray'" v-if="guanzhu.length > 0" @tap="tags">
 								{{guanzhu}}
 							</view>
@@ -475,8 +475,8 @@
 				const parm = {
 					token: uni.getStorageSync('token'), 
 					pageSize: 99 , 
-					pageNum: 0 , 
-					pushId: uni.getStorageSync('pushId') ,       // 行动项id
+					pageNum: 1 , 
+					pushId: this.pushId,       // 行动项id
 				} 
 				const {resultCode,obj,msg} = await that.xd_request_post(that.xdServerUrls.xd_getActSponsor,parm)
 				
