@@ -11,6 +11,7 @@
 		},
 
 		onLaunch: function() {
+			
 			uni.getSystemInfo({
 				success: function(e) {
 					// #ifndef MP

@@ -35,6 +35,21 @@
 .videowhind {
   width: 100%;
 }
+button::after {
+  border: none;
+}
+.cu-btns {
+  margin-left: unset;
+  margin-right: unset;
+  background-color: #FFFFFF;
+  line-height: unset;
+  padding-left: unset;
+  padding-right: unset;
+  color: #333333;
+}
+.marginxs {
+  margin-left: 4rpx;
+}
 
 @charset "UTF-8";
 /**

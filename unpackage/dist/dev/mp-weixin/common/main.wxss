@@ -4494,27 +4494,31 @@ scroll-view.cu-steps .cu-item {
 .cuIcon-moneybagfill:before {
 	content: "\e7ce";
 }
-.cuIcon-usefullfill:before {
+/* .cuIcon-usefullfill:before {
 	content: "\e7cf";
 }
+
 .cuIcon-usefull:before {
 	content: "\e7d0";
 }
+ */
 .cuIcon-moneybag:before {
 	content: "\e7d1";
 }
 .cuIcon-redpacket_fill:before {
 	content: "\e7d3";
 }
-.cuIcon-subscription:before {
+/* .cuIcon-subscription:before {
 	content: "\e7d4";
 }
+
 .cuIcon-loading1:before {
 	content: "\e633";
 }
+
 .cuIcon-github:before {
 	content: "\e692";
-}
+} */
 .cuIcon-global:before {
 	content: "\e7eb";
 }
@@ -4524,51 +4528,61 @@ scroll-view.cu-steps .cu-item {
 .cuIcon-back_android:before {
 	content: "\e7ed";
 }
-.cuIcon-expressman:before {
+/* .cuIcon-expressman:before {
 	content: "\e7ef";
-}
+} */
 .cuIcon-evaluate_fill:before {
 	content: "\e7f0";
 }
 .cuIcon-group_fill:before {
 	content: "\e7f5";
 }
-.cuIcon-play_forward_fill:before {
+/* .cuIcon-play_forward_fill:before {
 	content: "\e7f6";
 }
+
 .cuIcon-deliver_fill:before {
 	content: "\e7f7";
 }
+
 .cuIcon-notice_forbid_fill:before {
 	content: "\e7f8";
 }
+
 .cuIcon-fork:before {
 	content: "\e60c";
-}
-.cuIcon-pick:before {
+} */
+/* .cuIcon-pick:before {
 	content: "\e7fa";
 }
+
 .cuIcon-wenzi:before {
 	content: "\e6a7";
 }
+
 .cuIcon-ellipse:before {
 	content: "\e600";
-}
+} */
+/* 
 .cuIcon-qr_code:before {
 	content: "\e61b";
 }
-.cuIcon-dianhua:before {
+ */
+/* .cuIcon-dianhua:before {
 	content: "\e64d";
 }
+
 .cuIcon-cuIcon:before {
 	content: "\e602";
 }
+
 .cuIcon-loading2:before {
 	content: "\e7f1";
 }
+
 .cuIcon-btn:before {
 	content: "\e601";
-}
+} */
 /* xiaofang:20191224 */
 /* 自定义全局css */
 .xd-common-bottom-ly {

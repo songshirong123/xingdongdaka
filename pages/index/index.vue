@@ -338,10 +338,10 @@
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
-			console.log(option)
-			if(option.share!=undefined){
+			
+			if(wx.getLaunchOptionsSync().query.share!=undefined){
 				try{												
-				 uni.setStorageSync('share',option.share);
+				 uni.setStorageSync('share',wx.getLaunchOptionsSync().query.share);
 				}catch(e){
 					console.log(Error)
 				};

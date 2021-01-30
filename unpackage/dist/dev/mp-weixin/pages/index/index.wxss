@@ -25,6 +25,10 @@
 /* 透明度 */
 /* 文章场景相关 */
 /*公共样式*/
+.imgheit.data-v-57280228 {
+  height: 320rpx;
+  width: 100%;
+}
 .group-lable.data-v-57280228 {
   display: -webkit-inline-box;
   display: -webkit-inline-flex;
@@ -41,12 +45,15 @@
   padding-bottom: 3px;
   background: #FFFFFF;
   border-radius: 30rpx;
-  border: 1px solid #626466;
+  border: 1px solid #fd5107;
   font-size: 12px;
+  background: #fbf3e6;
+  color: #fd5107;
 }
 .group-active.data-v-57280228 {
   border: 1px solid #fd5107;
-  color: #fd5107;
+  background: #fd5107;
+  color: #FFFFFF;
 }
 .xd-body.data-v-57280228 {
   box-sizing: border-box;

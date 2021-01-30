@@ -33,7 +33,6 @@
   width: 80%;
   overflow: hidden;
   text-overflow: ellipsis;
-  display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
 }
@@ -57,9 +56,6 @@
 .margincardlist.data-v-085dabaf {
   margin-top: 10rpx;
 }
-.commenttext.data-v-085dabaf {
-  margin-left: 30rpx;
-}
 .bg-light-blue.data-v-085dabaf {
   background-color: #007AFF;
 }
@@ -70,13 +66,137 @@
 .thanktext.data-v-085dabaf {
   float: right;
 }
-.textareawhit.data-v-085dabaf {
-  padding-top: 10rpx;
-  width: 70%;
-  height: 100rpx;
-  font-size: 30rpx;
-}
 .textplo.data-v-085dabaf {
   color: #007AFF;
+}
+.dakacishu.data-v-085dabaf {
+  width: 20%;
+}
+.dakacishus.data-v-085dabaf {
+  width: 30%;
+}
+.tagcss.data-v-085dabaf {
+  top: 12rpx;
+  right: 50rpx;
+}
+.cu-btns.data-v-085dabaf {
+  background-color: #FFFFFF;
+  padding-left: 1rpx;
+  padding-right: 1rpx;
+  line-height: 1.1;
+}
+button.data-v-085dabaf::after {
+  border: none;
+}
+.adcus.data-v-085dabaf {
+  padding-bottom: 105rpx;
+}
+.underconten.data-v-085dabaf {
+  height: 300rpx;
+}
+.underconten .underconten-a.data-v-085dabaf {
+  text-align: center;
+  padding-top: 10%;
+}
+.underconten .undercontenbutton.data-v-085dabaf {
+  margin-left: 40%;
+  width: 20%;
+}
+.cur.data-v-085dabaf {
+  padding-bottom: 18rpx;
+  border-bottom: 4rpx solid;
+}
+.defaultthank.data-v-085dabaf {
+  padding-top: 30rpx;
+}
+.defaultbut.data-v-085dabaf {
+  border: 1rpx solid #f37b1d;
+  color: #f37b1d;
+  background-color: #FFFFFF;
+  height: 60rpx;
+  line-height: 2.5;
+  font-size: 14px;
+}
+.actionLi.data-v-085dabaf {
+  padding-bottom: 10rpx;
+}
+.ali-main.data-v-085dabaf {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  padding: 20rpx;
+}
+.ali-main .ali-main-list.data-v-085dabaf {
+  color: #f37b1d;
+  margin-left: 10%;
+  line-height: 130rpx;
+  width: 140rpx;
+}
+.ali-main .ali-main-list .ali-main-list-num.data-v-085dabaf {
+  margin-left: 40%;
+}
+.ali-main .ali-main-img .xd-mag.data-v-085dabaf {
+  border-radius: 100%;
+  height: 125rpx;
+  width: 125rpx;
+}
+.ali-main .lli-main-content .boy.data-v-085dabaf {
+  background: #66CCFF;
+  color: #fff;
+  display: inline-block;
+  padding: 0 12rpx;
+  border-radius: 100%;
+  font-size: 25rpx;
+  margin-left: 14rpx;
+}
+.ali-main .lli-main-content .lli-main-content-text.data-v-085dabaf {
+  line-height: 90rpx;
+  margin-right: 20rpx;
+}
+.ali-main .lli-main-content .moreInfoIn .address.data-v-085dabaf {
+  width: 30rpx;
+  height: 30rpx;
+}
+.ali-main .lli-main-content .moreInfoIn .province.data-v-085dabaf {
+  font-size: 28rpx;
+  margin-left: 6rpx;
+}
+.textarea-text.data-v-085dabaf {
+  background-color: #f5f5f5;
+  height: 64rpx;
+  font-size: 28rpx;
+  color: #333333;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+  margin: 0 20rpx;
+  width: 54%;
+}
+.texticon.data-v-085dabaf {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  position: absolute;
+  color: #f37b1d;
+  font-size: 35rpx;
+  white-space: nowrap;
+  -webkit-transform: rotate(-50deg);
+  z-index: 10;
+}
+.textnum.data-v-085dabaf {
+  display: -webkit-inline-box;
+  display: -webkit-inline-flex;
+  display: inline-flex;
+  position: absolute;
+  color: #FFFFFF;
+  background-color: #f37b1d;
+  white-space: nowrap;
+  z-index: 10;
+  border-radius: 200rpx;
+  padding: 0rpx 10rpx;
+  height: 28rpx;
 }
 
