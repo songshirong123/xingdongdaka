@@ -108,7 +108,7 @@
 				
 				</view>
 			</view>
-			<view class="padding-top-xs padding-bottom-xs" v-if="index==4||index==7&&adshow">
+			<view class="padding-top-xs padding-bottom-xs" v-if="index==4||index==7||index==20||index==30">
 				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
 			</view>
 		</view>
@@ -122,7 +122,7 @@
 		data() {
 			return {
 				audioPlaySrc:'../static/images/icon/img/title.png',
-				adshow:false,
+				// adshow:false,
 			};
 		},
 		// watch:{
@@ -137,13 +137,13 @@
 		// 	  },
 		// },
 		methods:{
-			adload(e){
-				this.adshow=true;
+			// adload(e){
+			// 	this.adshow=true;
 				
-			},
-			aderror(e){
-				this.adshow=false;
-			},
+			// },
+			// aderror(e){
+			// 	this.adshow=false;
+			// },
 			getcreat(){
 				var query = uni.createSelectorQuery();
 				 query.selectAll('#videowhind').boundingClientRect()

@@ -608,9 +608,11 @@
 					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
 					data.createTime=time;
 					this.pusCardLists=data;
-					data.pushCardList.forEach(item=>{
+					
+					data.pushCardList.reverse().forEach((item,index)=>{
 						if(item.id==this.cardId){
 							this.pushCardCreateTime=this.xdUniUtils.xd_timestampToTime(item.createTime,false,true,false)
+							this.dakacishu = index+1
 							
 						}
 					})
@@ -630,17 +632,17 @@
 							
 						})
 					}
-					if(typeof data.pushCardList !== undefined){
-						data.pushCardList.forEach(item =>{
-							if(this.cardId == item.id){
-								this.dakacishu = item.cardIndex
-							}
-						});
-						if(this.dakacishu == 0){
-							//兼容之前的数据
-							this.dakacishu = this.pusCardLists.pushCardCishuCount
-						}
-					}
+					// if(typeof data.pushCardList !== undefined){
+					// 	data.pushCardList.forEach(item =>{
+					// 		if(this.cardId == item.id){
+					// 			this.dakacishu = item.cardIndex
+					// 		}
+					// 	});
+					// 	if(this.dakacishu == 0){
+					// 		//兼容之前的数据
+					// 		this.dakacishu = this.pusCardLists.pushCardCishuCount
+					// 	}
+					// }
 					
 				})
 			},
