@@ -385,15 +385,15 @@
 			wx.showShareMenu({
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
-			//#endif
-			console.log(option)
-			if (option.share != undefined) {
-				try {
-					uni.setStorageSync('share', option.share);
-				} catch (e) {
-					console.log(Error)
-				};
+			if(wx.getLaunchOptionsSync().query.share!=undefined){
+				try{												
+				 uni.setStorageSync('share',wx.getLaunchOptionsSync().query.share);
+				}catch(e){
+			
 			}
+			}
+			//#endif
+			
 			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)) {
 				this.isGroupLable = option.isGroupLable;
 				let activtyList = this.activityList;
