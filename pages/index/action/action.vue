@@ -330,11 +330,11 @@
 			let img='';
 			if(that.pusCardList.length>0){
 				 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
-				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
+				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
 				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1);
 			}
 		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
-		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen;
+		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
 		    let	img2=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1);
 			if(res.from=="menu"){
 				
@@ -365,7 +365,7 @@
 				that.setSaveShareInfo();
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
-					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
+					query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
 					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1),
 				}
 				
@@ -373,7 +373,7 @@
 				that.setSaveShareInfo();
 				return {
 					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
-					query: 'pushId='+ that.pushList.id+'&share='+that.pushList.userId+'&isopen='+that.pushList.isopen,
+					query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
 					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1),
 				}
 				
