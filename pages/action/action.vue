@@ -48,13 +48,22 @@
 								</view>
 								<view style="height: 7px;"></view>
 							</view>
+							<view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+								<view class="swiper-banner">
+									<swiper class="swiper" autoplay="true" circular="true" >
+										<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
+											<image class="swiper-item" :src="item" v-model="aspectFill"></image>
+										</swiper-item>
+									</swiper>
+								</view>
+							</view>
 							<view @click="addActivity(activity,0)" class="text-contents contentext">
 								<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 							</view>
-							<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
+							<!-- <view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
 								<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
 								</image>
-							</view>
+							</view> -->
 							<view v-if="tab===4" class="flex padding-sm">
 								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,1)">
 									<text>待审核<text style="color: red;margin-left: 3px;">{{activity.joinCount}}</text></text>
@@ -484,13 +493,14 @@
 					for (let i in list) {
 						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
 						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
+						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg() : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
 						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
 						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
 						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+					    list[i].imgsUrl = list[i].imgs.split(",");
 					}
 					_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
 				})
@@ -518,13 +528,14 @@
 					for (let i in list) {
 						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
 						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
+						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg() : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
 						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
 						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
 						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+					    list[i].imgsUrl = list[i].imgs.split(",");
 					}
 					_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
 					_this.pageNum = res.obj.nextPage;
@@ -662,6 +673,23 @@
 	.action {
 		padding: 0 10rpx 0 10rpx;
 		font-size: 30rpx;
+	}
+	.swiper-banner {
+		width: 100%;
+	
+		height: auto;
+		padding-top: 10upx;
+	
+		.swiper {
+			width: 100%;
+	
+			// min-height: 208upx;max-height: 270upx;
+			swiper-item image {
+				width: 100%;
+				height: 100%;
+				border-radius: 10upx;
+			}
+		}
 	}
 
 	.actionInfo {

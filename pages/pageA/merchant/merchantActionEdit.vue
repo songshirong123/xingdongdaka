@@ -120,9 +120,29 @@
 						<view class="text-xl">
 							<text class="lg text-gray cuIcon-camera"></text>
 						</view>
-						<text class="margin-left-xs">上传封面</text>
+						<text class="margin-left-xs">上传图片</text>
 					</view>
-					<view style="margin-top: 10px;">
+					<view >
+						<view class="padding bg-white" v-if="loading>1">
+							<view class="cu-progress round sm striped active">
+								<view class="bg-green" :style="[{ width:loading+'%'}]"></view>
+							</view>
+						</view>
+						<view style="margin-top: 10px;">
+							<view class="grid col-4 grid-square flex-sub">
+								<view class="bg-img" v-for="(item,index) in fromInfo.pictures" :key="index" @tap="DelImg(index)"  v-if="fromInfo.pictures.length>0">
+									<image :src="item" mode="aspectFill"></image>
+									<view class="cu-tag bg-red">
+										<text class='cuIcon-close'></text>
+									</view>
+								</view>
+								<view class="solids" @tap="popUpImg" v-if="fromInfo.pictures.length<9">
+									<text class='cuIcon-cameraadd'></text>
+								</view>
+							</view>
+						</view>
+					</view>
+					<!-- <view style="margin-top: 10px;">
 						<view class="cu-form-group">
 							<view class="grid col-4 grid-square flex-sub">
 								<view class="bg-img" :data-url="fromInfo.pictures" v-if="fromInfo.pictures!=''">
@@ -136,7 +156,7 @@
 								</view>
 							</view>
 						</view>
-					</view>
+					</view> -->
 				</view>
 				<view class="btn_bar">
 					<button class="bg-orange " @click="savePush">参与活动</button>
@@ -155,6 +175,9 @@
 				indextime: 0,
 				indexholiday: 0,
 				pickerlabel: [],
+				tempFilePaths:[],
+				j:0,
+				loading:0,
 				picker: [
 					"一周",
 					"一个月",
@@ -190,7 +213,7 @@
 					subscribeType: saveData.subscribeType,
 					targetDay: saveData.targetDay,
 					holidayDay: saveData.holidayDay,
-					pictures: saveData.pictures,
+					pictures: saveData.pictures.join(","),
 					challengeRmb: saveData.challengeRmb,
 					userId: saveData.userId,
 					token: uni.getStorageSync('token'),
@@ -418,48 +441,93 @@
 			},
 			
 			popUpImg() {
+				// pages/pageA/merchant/merchantAction
 				const that = this;
 				uni.chooseImage({
-					count: 1, //默认9
+					count: 9, //默认9
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: function(res) {
-						let tempFilePaths = res.tempFilePaths;
-						that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res => {
-							if (res) {
-								uni.uploadFile({
-									url: that.xdServerUrls.xd_uploadFile,
-									filePath: tempFilePaths[0],
-									name: 'files',
-									formData: {
-										'userId': uni.getStorageSync('id'),
-									},
-									success: (uploadFileRes) => {
-			
-										that.fromInfo.pictures = JSON.parse(uploadFileRes.data).obj[0];
-										console.log(that.fromInfo.pictures)
-									}
-								});
-							} else {
-								uni.showToast({
-									title: '内容包含敏感内容',
-									mask: true,
-									duration: 2000,
-			
-								});
-								return false
-							}
-						});
-			
+						that.tempFilePaths = res.tempFilePaths;
+						that.j = 0;
+						that.getImg();
+						// for (let i in tempFilePaths) {
+						// 	that.xdUniUtils.xd_request_img(tempFilePaths[i]).then(res => {
+						// 		if (res) {
+						// 			uni.uploadFile({
+						// 				url: that.xdServerUrls.xd_uploadFile,
+						// 				filePath: tempFilePaths[i],
+						// 				name: 'files',
+						// 				formData: {
+						// 					'userId': uni.getStorageSync('id'),
+						// 				},
+						// 				success: (uploadFileRes) => {
+						// 					// that.fromInfo.pictures = JSON.parse(uploadFileRes.data).obj[0];
+						// 					if (that.xdUniUtils.IsNullOrEmpty(that.fromInfo.pictures)) {
+						// 						that.fromInfo.pictures = JSON.parse(uploadFileRes.data).obj[0]
+						// 					} else {
+						// 						that.fromInfo.pictures = that.fromInfo.pictures.concat(","+JSON.parse(uploadFileRes.data).obj[0]);
+						// 					}
+						// 					console.log(that.fromInfo.pictures)
+						// 				}
+						// 			});
+						// 		} else {
+						// 			uni.showToast({
+						// 				title: '内容包含敏感内容',
+						// 				mask: true,
+						// 				duration: 2000,
+										
+						// 			});
+						// 			return false
+						// 		}
+						// 	});
+						// }
 					}
 				});
 			},
-			DelImg() {
-				this.fromInfo.pictures = '';
+			getImg() {
+				const that = this;
+				if (that.j >= that.tempFilePaths.length) {
+					return false
+				}
+				that.xdUniUtils.xd_request_img(that.tempFilePaths[that.j]).then(res => {
+					if (res) {
+						const uploadTask = uni.uploadFile({
+							url: that.xdServerUrls.xd_uploadFile,
+							filePath: that.tempFilePaths[that.j],
+							name: 'files',
+							formData: {
+								'userId': uni.getStorageSync('id'),
+							},
+							success: (uploadFileRes) => {
+								if (JSON.parse(uploadFileRes.data).resultCode == 0) {
+									that.fromInfo.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);
+									that.j++
+									that.getImg();
+								}
+				
+							}
+						});
+						uploadTask.onProgressUpdate((res) => {
+							that.loading = res.progress
+							if (that.loading >= 100) {
+								setTimeout(function() {
+									that.loading = 0;
+								}, 1000);
+							}
+				
+						});
+					}
+				});
+			},
+			DelImg(e) {
+				// this.pictures = '';
+				this.fromInfo.pictures.splice(e, 1);
 			},
 		},
 		onLoad(option) {
 			let fromInfo = JSON.parse(option.fromInfo);
+			fromInfo.pictures =fromInfo.pictures.split(",");
 			// fromInfo.baozhengjin=fromInfo/100;
 			this.fromInfo = fromInfo;
 			

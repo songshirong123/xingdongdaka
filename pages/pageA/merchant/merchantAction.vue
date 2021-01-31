@@ -122,18 +122,24 @@
 					<view class="text-xl">
 						<text class="lg text-gray cuIcon-camera"></text>
 					</view>
-					<text class="margin-left-xs">上传封面</text>
+					<text class="margin-left-xs">上传图片</text>
 				</view>
-				<view style="margin-top: 10px;">
-					<view class="cu-form-group">
+				<view >
+					<view class="padding bg-white" v-if="loading>1">
+						<view class="cu-progress round sm striped active">
+							<view class="bg-green" :style="[{ width:loading+'%'}]"></view>
+						</view>
+					</view>
+					<view style="margin-top: 10px;">
 						<view class="grid col-4 grid-square flex-sub">
-							<view class="bg-img" :data-url="param.pictures" v-if="param.pictures!=''">
-								<image :src="param.pictures" mode="aspectFill"></image>
-								<view class="cu-tag bg-red" @tap.stop="DelImg">
+							<view class="bg-img" v-for="(item,index) in pictures" :key="index" @tap="DelImg(index)" :data-url="pictures"
+							 v-if="pictures.length>0">
+								<image :src="item" mode="aspectFill"></image>
+								<view class="cu-tag bg-red">
 									<text class='cuIcon-close'></text>
 								</view>
 							</view>
-							<view class="solids" @tap="popUpImg" v-if="param.pictures==''">
+							<view class="solids" @tap="popUpImg" v-if="pictures.length<9">
 								<text class='cuIcon-cameraadd'></text>
 							</view>
 						</view>
@@ -169,9 +175,10 @@
 				time: '12:00',
 				indexholiday: 0,
 				modalNamecheckbox: false,
-				param: {
-					pictures: ""
-				},
+				pictures: [],
+				tempFilePaths:[],
+				j:0,
+				loading:0,
 				shInfo: {},
 				pickerlabel: [],
 				picker: [
@@ -201,7 +208,7 @@
 			}
 		},
 		onLoad(option) {
-			this.souce=option.souce;
+			this.souce = option.souce;
 			// this.userInfo = JSON.parse(option.userInfo);
 			this.getShInfo();
 		},
@@ -276,13 +283,13 @@
 				if (this.xdUniUtils.IsNullOrEmpty(actitivtyContent))
 					return this.xdUniUtils.showToast(false, "活动内容不能为空！", "");
 				let inputAmout = this.inputAmout; //保证金
-				if (this.xdUniUtils.IsNullOrEmpty(inputAmout) )
+				if (this.xdUniUtils.IsNullOrEmpty(inputAmout))
 					return this.xdUniUtils.showToast(false, "保证金不能为空！", "");
 				let targetDay = this.targetDay; //计划打卡天数
 				if (this.xdUniUtils.IsNullOrEmpty(targetDay))
 					return this.xdUniUtils.showToast(false, "打卡天数不能为空！", "");
 				let holidayDay = this.holidayDay; //可休息天数
-				let pictures = this.param.pictures; //封面图片
+				let pictures = this.pictures.join(","); //封面图片
 				if (this.xdUniUtils.IsNullOrEmpty(pictures))
 					return this.xdUniUtils.showToast(false, "请上传封面图片！", "");
 
@@ -322,7 +329,7 @@
 						success: function(ress) {
 							if (ress.confirm) {
 								uni.redirectTo({
-									url:'./merchantActionList?selectType=0&activityid='+res.obj.id
+									url: './merchantActionList?selectType=0&activityid=' + res.obj.id
 								})
 							}
 						},
@@ -347,48 +354,91 @@
 			onInputActivity(e) {
 				this.inputActivity = e.detail.value;
 			},
-
-
-
 			popUpImg() {
 				const that = this;
 				uni.chooseImage({
-					count: 1, //默认9
+					count: 9, //默认9
 					sizeType: ['original', 'compressed'], //可以指定是原图还是压缩图，默认二者都有
 					sourceType: ['album'], //从相册选择
 					success: function(res) {
-						let tempFilePaths = res.tempFilePaths;
-						that.xdUniUtils.xd_request_img(res.tempFilePaths[0]).then(res => {
-							if (res) {
-								uni.uploadFile({
-									url: that.xdServerUrls.xd_uploadFile,
-									filePath: tempFilePaths[0],
-									name: 'files',
-									formData: {
-										'userId': uni.getStorageSync('id'),
-									},
-									success: (uploadFileRes) => {
+						that.tempFilePaths = res.tempFilePaths;
+						that.j = 0;
+						that.getImg();
+						// for (let i in tempFilePaths) {
+						// 	that.xdUniUtils.xd_request_img(tempFilePaths[i]).then(res => {
+						// 		if (res) {
+						// 			uni.uploadFile({
+						// 				url: that.xdServerUrls.xd_uploadFile,
+						// 				filePath: tempFilePaths[i],
+						// 				name: 'files',
+						// 				formData: {
+						// 					'userId': uni.getStorageSync('id'),
+						// 				},
+						// 				success: (uploadFileRes) => {
 
-										that.param.pictures = JSON.parse(uploadFileRes.data).obj[0];
-										console.log(that.param.pictures)
-									}
-								});
-							} else {
-								uni.showToast({
-									title: '内容包含敏感内容',
-									mask: true,
-									duration: 2000,
+						// 					if (that.xdUniUtils.IsNullOrEmpty(that.pictures)) {
+						// 						that.pictures = JSON.parse(uploadFileRes.data).obj[0]
+						// 					} else {
+						// 						that.pictures = that.pictures.concat("," + JSON.parse(uploadFileRes.data).obj[0]);
+						// 					}
+						// 					console.log(that.pictures)
+						// 				}
+						// 			});
+						// 		} else {
+						// 			uni.showToast({
+						// 				title: '内容包含敏感内容',
+						// 				mask: true,
+						// 				duration: 2000,
 
-								});
-								return false
-							}
-						});
+						// 			});
+						// 			return false
+						// 		}
+						// 	});
+						// }
+						// console.log(that.pictures)
+						// that.pictures = that.pictures.split(",");
 
 					}
 				});
 			},
-			DelImg() {
-				this.param.pictures = '';
+			getImg() {
+				const that = this;
+				if (that.j >= that.tempFilePaths.length) {
+					return false
+				}
+				that.xdUniUtils.xd_request_img(that.tempFilePaths[that.j]).then(res => {
+					if (res) {
+						const uploadTask = uni.uploadFile({
+							url: that.xdServerUrls.xd_uploadFile,
+							filePath: that.tempFilePaths[that.j],
+							name: 'files',
+							formData: {
+								'userId': uni.getStorageSync('id'),
+							},
+							success: (uploadFileRes) => {
+								if (JSON.parse(uploadFileRes.data).resultCode == 0) {
+									that.pictures.push(JSON.parse(uploadFileRes.data).obj[0]);
+									that.j++
+									that.getImg();
+								}
+				
+							}
+						});
+						uploadTask.onProgressUpdate((res) => {
+							that.loading = res.progress
+							if (that.loading >= 100) {
+								setTimeout(function() {
+									that.loading = 0;
+								}, 1000);
+							}
+				
+						});
+					}
+				});
+			},
+			DelImg(e) {
+				// this.pictures = '';
+				this.pictures.splice(e, 1);
 			},
 
 			//休息天数

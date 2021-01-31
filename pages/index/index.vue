@@ -129,11 +129,15 @@
 					</view>
 					<!-- 商家活动 -->
 					<view v-else-if="isMerchant">
+
+						<!-- 推荐项 -->
+
 						<block v-for="(list, index) in merchantList" :key="index">
+
 							<view class="cu-card dynamic">
 
 								<view class="cu-item ">
-									<view class="cu-list menu-avatar">
+									<view @tap="activityUser(list)" class="cu-list menu-avatar">
 										<view class="cu-item">
 											<view class="cu-avatar round lg" :style="{backgroundImage: 'url(' +list.userHead + ')'}" @tap="goPageImg(list.userHead)"></view>
 											<!-- class="content flex-sub" -->
@@ -156,13 +160,19 @@
 											<text style="font-size: 10px;color: #999999;">截止日期：{{list.activityEndTime}} 计划天数：{{list.planDay}} 可休假天数：{{list.holidayDay}}</text>
 										</view>
 									</view>
+									<view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+										<view class="swiper-banner">
+											<swiper class="swiper" autoplay="true" circular="true" >
+												<swiper-item v-for="(item ,index)  in list.imgsUrl" :key="item">
+													<image class="swiper-item" :src="item" v-model="aspectFill"></image>
+												</swiper-item>
+											</swiper>
+										</view>
+									</view>
 									<view class="text-contents contentext" @tap="activityDetail(list)">
 										<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
 									</view>
-									<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
-										<image class="bg-img imgheit" :src="list.imgs" mode="aspectFill" @tap="goPageImgHD(list.imgs)">
-										</image>
-									</view>
+									
 									<view class="flex padding-sm">
 										<view @click="merchant" style="flex: 1;margin-top: 5px;" class="xd-rows">
 											<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
@@ -280,6 +290,13 @@
 				isMerchant: false, //是否展示商家活动内容
 				groupList: [], //互助小组内容
 				merchantList: [], //商家活动内容
+				activityHDImgList: [
+					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg",
+					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611456459031.jpg",
+					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611390055210.png",
+					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg",
+					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg"
+				],
 				activityList: [{
 					ID: 0,
 					Name: "互助小圈",
@@ -293,7 +310,7 @@
 				}, {
 					ID: 2,
 					Name: "挑战赛",
-					IsOpen: true,
+					IsOpen: false,
 					Checked: false
 				}]
 			};
@@ -369,14 +386,13 @@
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
-
-			
-			if(wx.getLaunchOptionsSync().query.share!=undefined){
-				try{												
-				 uni.setStorageSync('share',wx.getLaunchOptionsSync().query.share);
-				}catch(e){
-
-			}
+			console.log(option)
+			if (option.share != undefined) {
+				try {
+					uni.setStorageSync('share', option.share);
+				} catch (e) {
+					console.log(Error)
+				};
 			}
 			if (!this.xdUniUtils.IsNullOrEmpty(option.isGroupLable)) {
 				this.isGroupLable = option.isGroupLable;
@@ -394,8 +410,8 @@
 
 		},
 		onShow(option) {
-			this.currentIndex=-1;
-			this.active=1;
+			this.currentIndex = -1;
+			this.active = 1;
 			this.indexData();
 		},
 
@@ -417,7 +433,15 @@
 					url: '../pageA/ranking/rankinAdd?id=' + e
 				})
 			},
-
+			//商家活动商家点击事件
+			activityUser(event) {
+				let userId = event.userId;
+				if (!this.xdUniUtils.IsNullOrEmpty(userId)) {
+					uni.navigateTo({
+						url: '../selfCenter/selfView?userId=' + userId
+					})
+				}
+			},
 			//活动详情
 			activityDetail(event) {
 				uni.navigateTo({
@@ -652,7 +676,7 @@
 				let info = {
 					pageNum: this.pageNum,
 					pageSize: 10,
-					token:uni.getStorageSync('token')
+					token: uni.getStorageSync('token')
 				}
 				uni.showLoading({
 					title: '加载中..',
@@ -666,13 +690,14 @@
 					for (let i in list) {
 						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
 						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.audioPlaySrc : list[i].imgs;
+						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.xdUniUtils.xd_randomImg() : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
 						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
 						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
 						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+						list[i].imgsUrl = list[i].imgs.split(",");
 					}
 					_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
 					_this.pageNum = res.obj.nextPage;
@@ -817,15 +842,15 @@
 					this.isRankingLable = false;
 					this.pageNum = 1;
 					this.getGroupList();
-				} else if(this.isMerchant){
-					this.isGroupLable =false;
+				} else if (this.isMerchant) {
+					this.isGroupLable = false;
 					this.isRankingLable = false;
 					this.pageNum = 1;
 					this.getMerchantList();
-				}else{ //加载打卡列表
+				} else { //加载打卡列表
 					this.getShowRecommend();
 				}
-				
+
 			},
 			// 赞助
 			gotoSponsor(list, index) {
@@ -1279,6 +1304,7 @@
 		height: 320upx;
 		width: 100%;
 	}
+
 
 	.group-lable {
 		display: inline-flex;

@@ -13,6 +13,19 @@
 					</view>
 					<view style="height: 7px;"></view>
 				</view>
+				<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+					<view class="swiper-banner">
+						<swiper class="swiper" autoplay="true" circular="true">
+							<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
+								<image class="swiper-item" :src="item" v-model="aspectFill"></image>
+							</swiper-item>
+						</swiper>
+					</view>
+				</view>
+				<!-- <view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
+					<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
+					</image>
+				</view> -->
 				<view class="text-contents contentext">
 					<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 				</view>
@@ -28,10 +41,7 @@
 					</view>
 				
 				</view>
-				<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
-					<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
-					</image>
-				</view>
+				
 				<view class="flex padding-sm">
 					<view @click="merchant" style="flex: 1;margin-top: 5px;" class="xd-rows">
 						<text class="lg text-black cuIcon-friendfavor" style="margin-top: 2px;"></text>
@@ -58,7 +68,7 @@
 		<block v-if="tab==0" v-for="(userlist, index) in activityByUserId" :key="index">
 			<view class="cu-card dynamic">
 				<view class="cu-item shadow">
-					<view class="cu-list menu-avatar">
+					<view class="cu-list menu-avatar" @tap="activityUser(userlist)">
 						<view class="cu-item">
 							<view class="cu-avatar round lg" :style="{backgroundImage: 'url(' +userlist.userHead + ')'}" @tap="goPageImg(userlist.userHead)"></view>
 							<!-- class="content flex-sub" -->
@@ -81,20 +91,30 @@
 							<text style="font-size: 10px;color: #999999;">截止日期：{{activity.activityEndTime}} 计划天数：{{activity.planDay}} 可休假天数：{{activity.holidayDay}}</text>
 						</view>
 					</view>
+					<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+						<view class="swiper-banner">
+							<swiper class="swiper" autoplay="true" circular="true">
+								<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
+									<image class="swiper-item" :src="item" v-model="aspectFill"></image>
+								</swiper-item>
+							</swiper>
+						</view>
+					</view>
+					<!-- view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
+						<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
+						</image>
+					</view> -->
 					<view class="text-contents contentext">
 						<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 					</view>
-					<view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
-						<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
-						</image>
-					</view>
+					
 				</view>
 
 			</view>
 		</block>
 
-		<view v-if="tab==1" v-for="(attention,index) in activityUserList" @tap="selectGroup(item)" :key="index">
-			<view class="ali-main bg-white">
+		<view v-if="tab==1" v-for="(attention,index) in activityUserList"  :key="index">
+			<view class="ali-main bg-white" @tap="activityUser(attention)">
 				<view class="ali-main-img">
 					<image class='xd-mag' :src="attention.userHead"></image>
 				</view>
@@ -122,7 +142,7 @@
 	export default {
 		data() {
 			return {
-				tab: 1,
+				tab: 0,
 				pageNum: 1,
 				activity: {},
 				activityId: "",
@@ -138,6 +158,15 @@
 				uni.makePhoneCall({
 				    phoneNumber: phoneNumber //仅为示例
 				});
+			},
+			//商家活动商家点击事件
+			activityUser(event) {
+				let userId = event.userId;
+				if (!this.xdUniUtils.IsNullOrEmpty(userId)) {
+					uni.navigateTo({
+						url: '../../selfCenter/selfView?userId=' + userId
+					})
+				}
 			},
 			//添加活动
 			addActivity(event) {
@@ -301,6 +330,8 @@
 				this.xd_request_get(this.xdServerUrls.xd_selectByActivityId, info, true).then((res) => {
 					console.log("获取活动详情", res);
 					let Acobj = res.obj;
+					Acobj.imgs = _this.xdUniUtils.IsNullOrEmpty(Acobj.imgs) ? _this.xdUniUtils.xd_randomImg() : Acobj.imgs;
+					Acobj.imgsUrl = Acobj.imgs.split(",");
 					Acobj.activityEndTime = _this.xdUniUtils.xd_timestampToTime(Acobj.activityEndTime, false, false, false);
 					Acobj.statusName = Acobj.status == 0 ? "进行中…" : "已结束";
 					_this.activity = Acobj;
@@ -405,7 +436,8 @@
 				let info = {
 					activityId: this.activityId,
 					pageNum: this.pageNum,
-					pageSize: 10
+					pageSize: 10,
+					token: uni.getStorageSync('token')
 				}
 				uni.showLoading({
 					title: '加载中..',
@@ -450,6 +482,23 @@
 </script>
 
 <style lang="scss">
+	.swiper-banner {
+		width: 100%;
+	
+		height: auto;
+		padding-top: 10upx;
+	
+		.swiper {
+			width: 100%;
+	
+			// min-height: 208upx;max-height: 270upx;
+			swiper-item image {
+				width: 100%;
+				height: 100%;
+				border-radius: 10upx;
+			}
+		}
+	}
 	.actionInfo {
 		.tabbar {
 			font-size: 28rpx;
