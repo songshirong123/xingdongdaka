@@ -42,7 +42,7 @@
 							保证金￥{{item.challengeRmb}}
 						</view>
 					</view>
-					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==1">
+					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==1&&!isRanking">
 						<text class="cuIcon-moreandroid" ></text>
 					</view>
 					
@@ -54,24 +54,24 @@
 			</view>
 			<view class="grid flex-sub  padding-lr"  >
 				<image class="imgheit"  :src="item.pictures" mode="aspectFill"
-				 @tap="goPageCard(item)" v-if="item.pictures!=''" >
+				 @tap="goPageCard(item)" v-if="item.pictures" >
 				</image>
 				<image class="imgheit"  :src="audioPlaySrc" mode="aspectFill"
 				 @tap="goPageCard(item)" v-else @error="error">
 				</image>
 			</view>
 			<view class="flex padding justify-between" >
-				<view>
+				<view v-if="!isRanking">
 					<button class="cu-btn bg-light-blue sm round" v-if="item.userId==userId "  :id="index" open-type="share">分享邀请</button>
 					<button class="cu-btn bg-orange sm round  " v-else-if="item.onlooker" :id="index" open-type="share">为TA打Call</button>
-					<button class="cu-btn bg-green sm round  " v-else-if="item.userId!=userId && !item.onlooker&&item.challengeRmb<=0" :id="index"  @tap="lookerClick(item,indexs)">围观</button>
-					<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(item,indexs)">围观分钱</button>
+					<button class="cu-btn bg-green sm round  " v-else-if="item.userId!=userId && !item.onlooker&&item.challengeRmb<=0" :id="index"  @tap="lookerClick(item,index)">围观</button>
+					<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(item,index)">围观分钱</button>
 					<text class="text-gray text-df ">{{item.onlookerCount}}</text>
 				</view>
-				<!-- <view class="text-xxl" @click="gothank(item)" v-if="userId==item.userId" >
-					<button class="cu-btn line-green sm round  "  >我要感谢</button>
-				</view> -->
-				<view class="text-xxl" @click="goPage(item)" v-if="userId==item.userId" >
+				<view class="" v-if="isRanking">
+					<button class="cu-btn bg-green sm round"  @click="addRankin(item,index)" >选择该行动加入</button>
+				</view>
+				<view class="text-xxl" @click="goPage(item)" v-if="userId==item.userId&& !isRanking" >
 					<button class="cu-btn line-green sm round  "  >立即打卡</button>
 				</view>
 			
@@ -83,7 +83,7 @@
 <script>
 	export default {
 		name:"actionlist",
-		props:['tab','item','showBut','index','userId'],
+		props:['tab','item','showBut','index','userId','isRanking'],
 		
 		data(){
 			return {
@@ -165,6 +165,10 @@
 			
 			goPageImg(e){
 				this.xdUniUtils.xd_showImg(e)
+			},
+			addRankin(e,index){
+				
+				this.$emit('addRankin',e,index);
 			},
 			lookerClick(list,indexs){
 				

@@ -2,7 +2,7 @@
 	<view >
 		<view id="dynamic" class="cu-card dynamic " :class="list.pushCardList[0].pictures.length>1?'no-card':''">
 			<view class="cu-item shadow">
-				<view class="cu-list menu-avatar">
+				<view class="cu-list menu-avatar" >
 					<view class="cu-item">
 						<view class="cu-avatar round lg"  :style="{backgroundImage: 'url(' +list.userHead + ')'}" @tap="goPageImg(list.userHead)"></view>
 						<!-- class="content flex-sub" -->
@@ -81,7 +81,7 @@
 						<text class="text-sm marginxs">赞助</text>
 						<text v-if="list.sponsorCount>0" class="text-gray text-sm ">{{list.sponsorCount}}</text>
 					</view>
-					<button class="cu-btns" :id="index"  open-type="share">
+					<button class="cu-btns" :id="index"   @tap="share(list,index)">
 						<view class="flex flex-wrap align-center ">
 							<view class="text-black text-lg">
 								<text class="lg text-black cuIcon-forward"></text>
@@ -90,11 +90,7 @@
 							<text class="text-sm marginxs" v-else>为TA打Call</text>
 						</view>
 					</button>
-					<view class="" v-if="isRanking">
-						<button class="cu-btn bg-green sm round"  @click="addRankin" >选择该行动加入</button>
-					</view>
-					
-					<view class="action flex flex-wrap align-center " v-else   @tap="lookerClick(list,index)">
+					<view class="action flex flex-wrap align-center "    @tap="lookerClick(list,index)">
 						<view class="text-lg">
 							<text class="lg text-black cuIcon-friendfavor"></text>
 						</view>
@@ -103,13 +99,12 @@
 						<text class="text-sm marginxs" v-else-if="list.onlooker">已围观</text>
 						<text class="text-gray text-sm " v-if="list.onlookerCount>0">{{list.onlookerCount}}</text>
 					</view>
-					
-					
-				
+
 				</view>
 			</view>
-			<view class="padding-top-xs padding-bottom-xs" v-if="index==4||index==7||index==20||index==30">
-				<ad-custom unit-id="adunit-8354389cd1f86a3f" ad-intervals="31" ></ad-custom>
+			<view class="padding-top-xs padding-bottom-xs"  v-if="index==4||index==7 ">
+				<ad-custom v-if="active==0"  :unit-id="adList[index%2]" ad-intervals="31" ></ad-custom>
+				<ad-custom  v-else :unit-id="adLists[index%2]" ad-intervals="31" ></ad-custom>
 			</view>
 		</view>
 	</view>
@@ -118,10 +113,12 @@
 <script>
 	export default {
 		name:"actionlist",
-		props:['list','index','hasLogin','userId','isRanking'],
+		props:['list','index','hasLogin','userId','isRanking','active'],
 		data() {
 			return {
 				audioPlaySrc:'../static/images/icon/img/title.png',
+				adList:['adunit-73360e20595db52c','adunit-9fd077ffaafb3ee5'],
+				adLists:['adunit-6da3956e24c7352a','adunit-1fa4e569a99f2ac6']
 				// adshow:false,
 			};
 		},
@@ -148,7 +145,7 @@
 				var query = uni.createSelectorQuery();
 				 query.selectAll('#videowhind').boundingClientRect()
 				 query.exec(res => {
-				       console.log(res)
+				       // console.log(res)
 					    })
 			},
 			error: function() {
@@ -160,9 +157,8 @@
 			lookerClick(list,index){
 				this.$emit('lookerClick',list,index);
 			},
-			loveClick(e,index){
-				
-				this.$emit('loveclick',e,index);
+			share(list,index){
+				this.$emit('share',list,index);
 			},
 			goComent(e){
 				if(!e.pushCardList||e.pushCardList.length==0){

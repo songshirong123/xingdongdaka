@@ -171,7 +171,7 @@
 		onLoad() {
 			//#ifdef MP-WEIXIN
 			wx.showShareMenu({
-				menus: ['shareAppMessage', 'shareTimeline']
+				menus: ['shareAppMessage']
 			})
 			//#endif
 
@@ -185,27 +185,27 @@
 			let that = this;
 			if (res.from == "menu") {
 				return that.xdUniUtils.xd_onShare(
-					'', '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'), ''
+					'我不加油，你们就围观分钱', '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'), ''
 				);
 			} else {
-				if (that.tab == 0) {
+				if (that.tab == 1) {
 					return {
-						title: '第' + that.cardList[res.target.id].pushCardCishuCount + '次打卡:' + that.cardList[res.target.id].content,
+						title: '我不加油,你们就围观分钱:' + that.cardList[res.target.id].content,
 						path: '/pages/index/action/action?pushId=' + that.cardList[res.target.id].id + '&share=' + uni.getStorageSync(
 							'id') + '&isopen=' + that.cardList[res.target.id].isopen,
 						imageUrl: that.cardList[res.target.id].pictures ? that.cardList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(
 							1),
 					}
-				} else if (that.tab == 1) {
+				} else if (that.tab == 2) {
 					return {
-						title: '我为@' + that.lookerList[res.target.id].userName + '打Call：' + that.lookerList[res.target.id].content,
+						title: '@'+ that.lookerList[res.target.id].userName + '你不加油,我们就围观分钱:' + that.lookerList[res.target.id].content,
 						path: '/pages/index/action/action?pushId=' + that.lookerList[res.target.id].id + '&share=' + uni.getStorageSync(
 							'id') + '&isopen=' + that.lookerList[res.target.id].isopen,
 						imageUrl: that.lookerList[res.target.id].pictures ? that.lookerList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(
 							1),
 					}
 				}else if (that.tab == 3 || that.tab == 4) {
-					console.log(that.activityByUserId[res.target.id]);
+					
 					let imgs = that.activityByUserId[res.target.id].imgs;
 					if(this.xdUniUtils.IsNullOrEmpty(imgs)){
 						 imgs =that.xdUniUtils.xd_randomImg(1);
@@ -219,14 +219,16 @@
 
 			}
 		}, //#ifdef MP-WEIXIN
-		onShareTimeline() {
-			let that = this;
-			return {
-				query: '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'),
-			}
+		// onShareTimeline() {
+		// 	let that = this;
+		// 	return {
+		// 		title: "我不加油，你们就围观分钱",
+		// 		query: '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'),
+		// 		imageUrl: that.xdUniUtils.xd_randomImg(1),
+		// 	}
 
 
-		},
+		// },
 		//#endif
 		methods: {
 			tabs(e) {

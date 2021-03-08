@@ -328,14 +328,27 @@
 			let tit='';
 			let path='';
 			let img='';
-			if(that.pusCardList.length>0){
-				 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
-				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
-				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1);
+			if(that.pushList.challengeRmb>0){
+				if(that.pusCardList.length>0){
+					 tit=that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content;
+					 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
+					 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1);
+				}
+					let	tit2= that.pushList.userId==that.userId? that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content;
+					let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
+					let	img2=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1);
+				
+			}else{
+				if(that.pusCardList.length>0){
+					 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
+					 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
+					 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1);
+				}
+					let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
+					let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
+					let	img2=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1);
 			}
-		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
-		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
-		    let	img2=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1);
+			
 			if(res.from=="menu"){
 				
 			if(that.pusCardList.length>0){
@@ -361,23 +374,44 @@
 		//#ifdef MP-WEIXIN
 		onShareTimeline(){
 			let that = this;
-			if(that.pusCardList.length>0){
-				that.setSaveShareInfo();
-				return {
-					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
-					query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1),
+			if(that.pushList.challengeRmb>0){
+				if(that.pusCardList.length>0){
+					that.setSaveShareInfo();
+					return {
+						title: that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
+						query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
+						imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1),
+					}
+					
+				}else{
+					that.setSaveShareInfo();
+					return {
+						title: that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content,
+						query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
+						imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1),
+					}
+					
 				}
-				
 			}else{
-				that.setSaveShareInfo();
-				return {
-					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
-					query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1),
+				if(that.pusCardList.length>0){
+					that.setSaveShareInfo();
+					return {
+						title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content,
+						query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
+						imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1),
+					}
+					
+				}else{
+					that.setSaveShareInfo();
+					return {
+						title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
+						query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
+						imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1),
+					}
+					
 				}
-				
 			}
+			
 		},
 		//#endif
 		methods:{

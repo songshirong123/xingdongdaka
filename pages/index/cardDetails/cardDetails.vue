@@ -210,11 +210,10 @@
 
 <script>
 	import{ mapState,mapMutations} from 'vuex'
-	import imtAudio from 'components/imt-audio/imt-audio'
-	const audio = uni.createInnerAudioContext(); //创建音频
+	// import imtAudio from 'components/imt-audio/imt-audio'
+	// const audio = uni.createInnerAudioContext(); //创建音频
 	export default {
 		components:{
-			imtAudio
 			
 		},
 		data() {
@@ -261,15 +260,22 @@
 		           ...mapState(['hasLogin'])  
 		       },  
 		onShareAppMessage(res) {
-			
-
 			let that = this;
+			let text=''
+			let pathText='/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pusCardLists.isopen;
+			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1);
+			
 			if(!that.hasLogin){
 				return that.xdUniUtils.xd_login(that.hasLogin);
 			}
-			let text=that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content;
-			let pathText='/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pusCardLists.isopen;
-			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1);
+			if(that.pusCardLists.challengeRmb>0){
+				 text=that.pusCardLists.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'@'+that.pusCardLists.userName+'你不加油,我们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content;
+				
+			}else{
+				 text=that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[this.dakacishu-1].content;
+				
+			}
+			console.log(text)
 			if(res.from=="menu"){
 			return	that.xdUniUtils.xd_onShare(text,pathText,img
 			);
@@ -282,11 +288,20 @@
 		onShareTimeline(){
 			let that = this;
 			that.setSaveShareInfo();
-			return {
-				title:that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content,
-				query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
-				imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1),
+			if(that.pusCardLists.challengeRmb>0){
+				return {
+					title:that.pusCardLists.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'@'+that.pusCardLists.userName+'你不加油,我们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content,
+					query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
+					imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1),
+				}
+			}else{
+				return {
+					title:that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[this.dakacishu-1].content,
+					query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
+					imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1),
+				}
 			}
+			
 				
 			
 		},
@@ -482,9 +497,9 @@
 			 goPageImg(e,index){
 				this.xdUniUtils.xd_showImg(e,index);
 			},
-			error: function() {
-				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
-			            }  ,
+			// error: function() {
+			// 	this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
+			//             }  ,
 			
 			getshowCardComment(){
 				this.xd_request_post(this.xdServerUrls.xd_showCardComment,{

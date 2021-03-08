@@ -155,14 +155,9 @@ function xd_request(url, method, params, headers) {
 	})
 }
 // 简单request get
-function xd_request_get(url, params, withToken) {
+function xd_request_get(url, params) {
 	var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-	if (withToken !== false) {
-		var accessToken = xd_getAccessToken(); // token
-		headers = { // application/json
-			'access_token': accessToken // accessToken
-		};
-	}
+	
 	return xd_request(url, 'GET', params, headers);
 }
 // post请求 url：请求路径，请求header，params请求参数

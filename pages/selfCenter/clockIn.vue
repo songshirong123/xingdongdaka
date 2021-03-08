@@ -118,7 +118,7 @@
 				</view>
 			</view>
 		</view>
-		<view class="cu-modal bottom-modal" :class="showmp3?'show':''">
+	<!-- 	<view class="cu-modal bottom-modal" :class="showmp3?'show':''">
 			<view class="cu-dialog">
 				<view class="padding-xl flex flex-direction justify-center">
 					<view class="">
@@ -135,7 +135,7 @@
 
 				</view>
 			</view>
-		</view>
+		</view> -->
 	</view>
 </template>
 
@@ -144,14 +144,14 @@
 		mapState,
 		mapMutations
 	} from 'vuex'
-	import imtAudio from 'components/imt-audio/imt-audio'
+	// import imtAudio from 'components/imt-audio/imt-audio'
 	const recorderManager = uni.getRecorderManager();
 	const innerAudioContext = uni.createInnerAudioContext();
 	var QQMapWX = require('../../utils/qqmap-wx-jssdk.js');
 	var qqmapsdk = null;
 	export default {
 		components: {
-			imtAudio
+		
 
 		},
 		data() {
@@ -653,13 +653,13 @@
 		max-height: 300upx;
 	}
 
-	.mp3img {
-		position: absolute;
-		width: 100%;
-		height: 300upx;
-		bottom: 0;
-		z-index: 999;
-	}
+	// .mp3img {
+	// 	position: absolute;
+	// 	width: 100%;
+	// 	height: 300upx;
+	// 	bottom: 0;
+	// 	z-index: 999;
+	// }
 
 	#canvas {
 		position: relative;
@@ -668,20 +668,20 @@
 		z-index: 10;
 	}
 
-	.recording-button {
-		position: absolute;
-		box-sizing: border-box;
-		display: inline-block;
-		width: 90upx;
-		height: 90upx;
-		border: 1px dashed #1296DB;
-		border-radius: 100upx;
-		background: url(../../static/images/icon/recording.png) no-repeat 50% 50%;
-		background-size: 50% 50%;
-		z-index: 100;
-		right: 10upx;
-		top: 10upx;
-	}
+	// .recording-button {
+	// 	position: absolute;
+	// 	box-sizing: border-box;
+	// 	display: inline-block;
+	// 	width: 90upx;
+	// 	height: 90upx;
+	// 	border: 1px dashed #1296DB;
+	// 	border-radius: 100upx;
+	// 	background: url(../../static/images/icon/recording.png) no-repeat 50% 50%;
+	// 	background-size: 50% 50%;
+	// 	z-index: 100;
+	// 	right: 10upx;
+	// 	top: 10upx;
+	// }
 
 	.marginbottom {
 		margin-bottom: 30upx;
