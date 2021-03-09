@@ -332,10 +332,15 @@
 				return that.xdUniUtils.xd_login(that.hasLogin);
 			}
 			if (res.from == "menu") {
-				return that.xdUniUtils.xd_onShare();
+				
+				return {
+					
+					path: '/pages/index/indexx?share=' + uni.getStorageSync('id') ,
+					imageUrl: that.xdUniUtils.xd_randomImg(1),
+				}
 			} else {
 				if (this.isMerchant) {
-					console.log(that.merchantList[res.target.id]);
+					
 					let imgs = that.merchantList[res.target.id].imgs;
 					if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
 						imgs = that.xdUniUtils.xd_randomImg(1);
@@ -372,8 +377,9 @@
 		//#ifdef MP-WEIXIN
 		onShareTimeline() {
 			let that = this;
+			
 			return {
-				// title: ,
+				
 				query: 'share=' + uni.getStorageSync('id'),
 				imageUrl: that.xdUniUtils.xd_randomImg(1),
 			}

@@ -4,11 +4,11 @@
 			<view class="uni-form-item uni-column">
 				<view class="form-item"><input :value="rmb.challengeRmb" type="number" class="digit" name="challengeRmb"
 					 placeholder="请输入保障金数额" maxlength="5" /></view>
-				<view class="pricelis">
+				<view class="pricelis"> 
 					<view class="priceli" @click="priceRmb(6)"><text>6元</text></view>
 					<view class="priceli" @click="priceRmb(10)"><text>10元</text></view>
 					<view class="priceli" @click="priceRmb(18)"><text>18元</text></view>
-					<view class="priceli" @click="priceRmb(66)"><text>66元</text></view>
+					<view class="priceli" @click="priceRmb(66)"><text>66元</text></view>  
 					<view class="priceli" @click="priceRmb(188)"><text>188元</text></view>
 					<view class="priceli" @click="priceRmb(888)"><text>888元</text></view>
 				</view>
@@ -155,6 +155,14 @@
 
 				var that = this;
 				that.saveData.challengeRmb = that.saveData.challengeRmb * 100;
+				if (that.saveData.targetDay < 30 || that.saveData.challengeRmb >= that.saveData.targetDay * 100) {
+					uni.showToast({
+						title: '打卡时间小于30天或输入金额大于等于打卡天数，请重新输入！',
+						mask: true,
+						duration: 2000,
+						icon: 'none'
+					});
+				} else {
 				console.log('getPushId----------', that.saveData);
 				this.xd_request_post(this.xdServerUrls.xd_savePush, this.saveData, true).then(res => {
 					console.log('xd_request_post----------', res);
@@ -192,6 +200,7 @@
 					}
 
 				})
+				}
 			},
 			priceRmb(e) {
 				this.rmb.challengeRmb = e
