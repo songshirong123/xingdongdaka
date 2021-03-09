@@ -92,8 +92,8 @@
 									<view class="text-grey" @tap="goUser(item.userId)">{{item.userName}}  
 									</view>
 								</view>
-								<view style="user-select: text;" class="text-content text-df commenttext">
-									<text>{{item.content}}</text>
+								<view style="user-select: text;-webkit-user-select:text;" class="text-content text-df commenttext">
+									<text user-select>{{item.content}}</text>
 									
 								</view>
 								<view class="flex flex-wrap">
