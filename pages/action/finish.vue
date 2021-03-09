@@ -155,12 +155,12 @@
 
 				var that = this;
 				that.saveData.challengeRmb = that.saveData.challengeRmb * 100;
-				if (that.saveData.targetDay < 30 || that.saveData.challengeRmb >= that.saveData.targetDay * 100) {
-					uni.showToast({
-						title: '打卡时间小于30天或输入金额大于等于打卡天数，请重新输入！',
-						mask: true,
-						duration: 2000,
-						icon: 'none'
+				if (that.saveData.targetDay >= 30 && that.saveData.challengeRmb < that.saveData.targetDay * 100) {
+					uni.showModal({
+						title: '提示',
+						content: '当计划天数大于等于30天时，保证金金额需大于计划天数！',
+						showCancel:false,
+						confirmColor:'#00ff00'
 					});
 				} else {
 				console.log('getPushId----------', that.saveData);
