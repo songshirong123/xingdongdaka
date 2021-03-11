@@ -48,7 +48,15 @@
 								</view>
 								<view style="height: 7px;"></view>
 							</view>
-							<view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+							<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+								<view class="bg-img" :class="activity.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+								 v-for="(item,indexs) in activity.imgsUrl" :key="indexs" @tap="goPageImgHD(activity.imgsUrl,indexs)" v-if="activity.imgsUrl.length>0">
+								</view>
+								<image class="bg-img imgheit "  :src="activity.imgsUrl[0]" v-if="activity.imgsUrl.length==0" mode="aspectFill"
+								 @tap="goPageImgHD(activity.imgsUrl)"  @error="error">
+								</image>
+							</view>
+							<!-- <view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 								<view class="swiper-banner">
 									<swiper class="swiper" autoplay="true" circular="true" >
 										<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
@@ -56,7 +64,7 @@
 										</swiper-item>
 									</swiper>
 								</view>
-							</view>
+							</view> -->
 							<view @click="addActivity(activity,0)" class="text-contents contentext">
 								<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 							</view>
@@ -206,13 +214,13 @@
 					}
 				}else if (that.tab == 3 || that.tab == 4) {
 					console.log(that.activityByUserId[res.target.id]);
-					let imgs = that.activityByUserId[res.target.id].imgs;
+					let imgs = that.activityByUserId[res.target.id].imgsUrl[0];
 					if(this.xdUniUtils.IsNullOrEmpty(imgs)){
 						 imgs =that.xdUniUtils.xd_randomImg(1);
 					}
 					return {
 						title: that.activityByUserId[res.target.id].activityContent,
-						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.activityByUserId[res.target.id].id,
+						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.activityByUserId[res.target.id].id+"&share="+ uni.getStorageSync('id'),
 						imageUrl: imgs,
 					}
 				}

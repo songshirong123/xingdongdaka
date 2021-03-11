@@ -160,15 +160,23 @@
 											<text style="font-size: 10px;color: #999999;">截止日期：{{list.activityEndTime}} 计划天数：{{list.planDay}} 可休假天数：{{list.holidayDay}}</text>
 										</view>
 									</view>
-									<view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+									<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="list.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+										<view class="bg-img" :class="list.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+										 v-for="(item,indexs) in list.imgsUrl" :key="indexs" @tap="goPageImgHD(list.imgsUrl,indexs)" v-if="list.imgsUrl.length>0">
+										</view>
+										<image class="bg-img imgheit "  :src="list.imgsUrl[0]" v-if="list.imgsUrl.length==0" mode="aspectFill"
+										 @tap="goPageImgHD(list.imgsUrl)"  @error="error">
+										</image>
+									</view>
+									<!-- <view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 										<view class="swiper-banner">
 											<swiper class="swiper" autoplay="true" circular="true" >
 												<swiper-item v-for="(item ,index)  in list.imgsUrl" :key="item">
-													<image class="swiper-item" :src="item" v-model="aspectFill"></image>
+													<image class="swiper-item" :src="item" :model="center" @tap="goPageImgHD(list.imgsUrl,index)"></image>
 												</swiper-item>
 											</swiper>
 										</view>
-									</view>
+									</view> -->
 									<view class="text-contents contentext" @tap="activityDetail(list)">
 										<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
 									</view>
@@ -335,19 +343,19 @@
 				
 				return {
 					
-					path: '/pages/index/indexx?share=' + uni.getStorageSync('id') ,
+					path: '/pages/index/index?share=' + uni.getStorageSync('id') ,
 					imageUrl: that.xdUniUtils.xd_randomImg(1),
 				}
 			} else {
 				if (this.isMerchant) {
 					
-					let imgs = that.merchantList[res.target.id].imgs;
+					let imgs = that.merchantList[res.target.id].imgsUrl[0];
 					if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
 						imgs = that.xdUniUtils.xd_randomImg(1);
 					}
 					return {
 						title: that.merchantList[res.target.id].activityContent,
-						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.merchantList[res.target.id].id,
+						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.merchantList[res.target.id].id+"&share="+ uni.getStorageSync('id'),
 						imageUrl: imgs,
 					}
 				} else {
@@ -1009,6 +1017,9 @@
 			},
 			goPageImgHD(e, index) {
 				this.xdUniUtils.xd_showImg(e, index)
+			},
+			goPageImg(e,index){
+				this.xdUniUtils.xd_showImg(e,index)
 			},
 			// 关注
 			showFollow: function() {

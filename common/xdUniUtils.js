@@ -297,9 +297,12 @@ function xd_navigateBack(delta) {
 		var D = date.getDate() < 10 ? '0'+ date.getDate()+'日' : date.getDate()+'日';
 		 return Y+M+D;
 	}
-  	
-  	
   }
+  
+  var Y = date.getFullYear() + '-';
+  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
+  var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
+   return Y+M+D;
 }
 //获取今天只后日期
 
