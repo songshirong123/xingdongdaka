@@ -240,10 +240,10 @@
 		<!-- 分享 -->
 		<share 
 			ref="share" 
-			:contentHeight="470"
-			:shareList="shareList"
+			:contentHeight="400"
 			:urldata='sharePath'
 			:name="shareTitle"
+			:scen="scen"
 		></share>
 	</view>
 </template>
@@ -273,16 +273,6 @@
 				inimg: '',
 				adtime: 31,
 				active: 1,
-				shareList:[{
-					text:'海报',
-					icon:'cuIcon-forward'
-				},{
-					text:'分享邀请',
-					icon:'cuIcon-forward'
-				}
-				
-				],
-
 				// adid: [],
 				adid: ['adunit-694551ca7bf1d034', 'adunit-ceaf57e168a329aa', 'adunit-a1ac7b29661ff452'],
 				currentIndex: -1,
@@ -313,15 +303,9 @@
 				groupList: [], //互助小组内容
 				merchantList: [], //商家活动内容
 				rankinImg:'../../imges.png',
-				// activityHDImgList: [
-				// 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg",
-				// 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611456459031.jpg",
-				// 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611390055210.png",
-				// 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg",
-				// 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg"
-				// ],
 				shareImg:'',
 				sharePath:'',
+				scen:'',
 				shareTitle:'',
 				activityList: [{
 					ID: 0,
@@ -354,9 +338,6 @@
 		},
 		onShareAppMessage(res) {
 			let that = this;
-			if (!that.hasLogin) {
-				return that.xdUniUtils.xd_login(that.hasLogin);
-			}
 			if (res.from == "menu") {
 				return {
 					title: "科学乐趣达目标,志趣相投交朋友",
@@ -378,7 +359,7 @@
 						that.setSaveShareInfo();
 						return {
 							title: that.shareTitle,
-							path: that.sharePath,
+							path: that.sharePath+'?'+that.scen,
 							imageUrl: that.shareImg,
 						   }
 						}
@@ -450,25 +431,22 @@
 			//分享
 			share(list,index){
 				let that = this;
+				if (!that.hasLogin) {
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
+				that.sharePath= '/pages/index/action/action'
+				that.scen='pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync('id') +'&isopen=' + that.listsTab[index].isopen
+				that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.listsTab[index].pushCardList[0]
+						.pictures[0] : that.xdUniUtils.xd_randomImg(1)
 				if(that.listsTab[index].challengeRmb>0){
 					that.shareTitle=that.listsTab[index].userId == that.userId ? '我不加油,你们就围观分钱:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
 							'你不加油,我们就围观分钱:' + that.listsTab[index].pushCardList[0].content
-					that.sharePath= '/pages/index/action/action?pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync(
-								'id') +
-							'&isopen=' + that.listsTab[index].isopen
-					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.listsTab[index].pushCardList[0]
-							.pictures[0] : that.xdUniUtils.xd_randomImg(1)
-								
+									
 				}else{
 					that.shareTitle= that.listsTab[index].userId == that.userId ? '第' + that.listsTab[index].pushCardCishuCount +
 						'次打卡:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
 						'打Call：' + that.listsTab[index].pushCardList[0].content
-					that.sharePath= '/pages/index/action/action?pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync(
-							'id') +
-						'&isopen=' + that.listsTab[index].isopen
-					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.listsTab[index].pushCardList[0]
-						.pictures[0] : that.xdUniUtils.xd_randomImg(1)
-							
+				
 				}
 				that.indexDatas=index
 				that.$refs.share.toggleMask(list,index);	
