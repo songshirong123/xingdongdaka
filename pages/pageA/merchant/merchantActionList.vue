@@ -13,7 +13,16 @@
 					</view>
 					<view style="height: 7px;"></view>
 				</view>
-				<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+				<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+					<view class="bg-img" :class="activity.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+					 v-for="(item,index) in activity.imgsUrl" :key="index" @tap="goPageImgHD(activity.imgsUrl,index)" v-if="activity.imgsUrl.length>0">
+					</view>
+					<image class="bg-img imgheit "  :src="activity.imgsUrl[0]" v-if="activity.imgsUrl.length==0" mode="aspectFill"
+					 @tap="goPageImgHD(activity.imgsUrl)"  @error="error">
+					</image>
+				</view>
+				
+				<!-- <view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 					<view class="swiper-banner">
 						<swiper class="swiper" autoplay="true" circular="true">
 							<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
@@ -21,7 +30,7 @@
 							</swiper-item>
 						</swiper>
 					</view>
-				</view>
+				</view> -->
 				<view class="text-contents contentext">
 					<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 				</view>
@@ -48,6 +57,7 @@
 				</view>
 				<view class="lli-main-content">
 					<view class="xd-list-title-text">
+						<text  v-if="attention.isMerchanrUser" style="color:red;font-size: 15px;padding-right: 5px;margin-top: 5px;">*</text>
 						<text>{{attention.userName}}</text>
 					</view>
 					<view class="moreInfoIn">
@@ -89,7 +99,15 @@
 							<text style="font-size: 10px;color: #999999;">截止日期：{{activity.activityEndTime}} 计划天数：{{activity.planDay}} 可休假天数：{{activity.holidayDay}}</text>
 						</view>
 					</view>
-					<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+					<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+						<view class="bg-img" :class="activity.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+						 v-for="(item,indexs) in activity.imgsUrl" :key="indexs" @tap="goPageImgHD(activity.imgsUrl,indexs)" v-if="activity.imgsUrl.length>0">
+						</view>
+						<image class="bg-img imgheit "  :src="activity.imgsUrl[0]" v-if="activity.imgsUrl.length==0" mode="aspectFill"
+						 @tap="goPageImgHD(activity.imgsUrl)"  @error="error">
+						</image>
+					</view>
+					<!-- <view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 						<view class="swiper-banner">
 							<swiper class="swiper" autoplay="true" circular="true">
 								<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
@@ -97,7 +115,7 @@
 								</swiper-item>
 							</swiper>
 						</view>
-					</view>
+					</view> -->
 					<view @tap="activityDetail(activity)" class="text-contents contentext">
 						<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 					</view>
@@ -311,6 +329,15 @@
 					uni.hideLoading();
 					console.log("参与者结果", res);
 					let list = res.obj.list;
+					for (let i in list) {
+						
+						list[i].isMerchanrUser=false;
+						if(!_this.xdUniUtils.IsNullOrEmpty(list[i].userBean)){
+							if(list[i].userBean.id==uni.getStorageSync('id'))
+								list[i].isMerchanrUser=true;
+						}
+					}
+					
 					_this.activityUserList = _this.pageNum == 1 ? list : _this.activityUserList.concat(list);
 					_this.pageNum = res.obj.nextPage;
 				}).catch(err => {});

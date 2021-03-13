@@ -292,9 +292,12 @@ function xd_navigateBack(delta) {
 		var D = date.getDate() < 10 ? '0'+ date.getDate()+'日' : date.getDate()+'日';
 		 return Y+M+D;
 	}
-  	
-  	
   }
+  
+  var Y = date.getFullYear() + '-';
+  var M = (date.getMonth()+1 < 10 ? '0'+(date.getMonth()+1)  : date.getMonth()+1) + '-';
+  var D = date.getDate() < 10 ? '0'+ date.getDate() : date.getDate();
+   return Y+M+D;
 }
 //获取今天只后日期
 
@@ -335,14 +338,14 @@ function xd_showImg(list,num) {
   })
 }
 //随机图片
-function xd_randomImg(index) {
-	var ig=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187912470.png",
-	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187930074.png"
-	];
+function xd_randomImg(index,imgDate) {
+	// var ig=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+	// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+	// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+	// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+	// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187912470.png",
+	// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187930074.png"
+	// ];
 	var imges=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605794511337.png",
 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605794534523.png",
 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605794556624.png",
@@ -350,11 +353,19 @@ function xd_randomImg(index) {
 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605794592931.png",
 	"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605794613523.png"
 	];
-	var num=Math.floor(Math.random()*5+1);
 	if(index==1){
+		var num=Math.floor(Math.random()*5+1);
 		return imges[num]
 	}else{
-		return ig[num]
+		
+		if(imgDate.length>1){
+			var num
+			num=Math.floor(Math.random()*imgDate.length+1);
+			return imgDate[num]
+		}else{
+			return imgDate[0]
+		}
+		
 	}
 }
 //分享

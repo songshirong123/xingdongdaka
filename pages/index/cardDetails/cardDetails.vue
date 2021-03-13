@@ -23,7 +23,7 @@
 				<view class="text-contents margin-top-sm flex flex-direction">
 					<view class="cu-tag bg-gray radius sm dakacishu" >第{{dakacishu}}次打卡</view>
 					<view class="padding-top-sm">
-						<text class="contentext" style="padding-left: 5px;">{{showCardCommentlist.pushCard.content}}</text>			
+						<text class="contentext" style="padding-left: 5px;" @longpress="copyContent">{{showCardCommentlist.pushCard.content}}</text>			
 					</view>
 					
 				</view>	
@@ -92,8 +92,8 @@
 									<view class="text-grey" @tap="goUser(item.userId)">{{item.userName}}  
 									</view>
 								</view>
-								<view class="text-content text-df commenttext">
-									<text>{{item.content}}</text>
+								<view style="user-select: text;-webkit-user-select:text;" class="text-content text-df commenttext">
+									<text user-select>{{item.content}}</text>
 									
 								</view>
 								<view class="flex flex-wrap">
@@ -305,8 +305,10 @@
 			this.getpushList();
 			this.getLookerList();
 			
+			
 		},
 		methods: {
+
 			//分享
 			shareBt(){
 				let that = this;
@@ -318,7 +320,7 @@
 			getshare(){
 				let that = this;
 				that.scen='pushId='+ that.pusCardLists.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pusCardLists.isopen
-				that.shareImg= that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1)
+				that.shareImg= that.showCardCommentlist.pushCard.pictures[0]?that.xdUniUtils.xd_randomImg('',that.showCardCommentlist.pushCard.pictures):that.xdUniUtils.xd_randomImg(1)
 				that.sharePath= '/pages/index/action/action'
 				if(that.pusCardLists.challengeRmb>0){
 					that.shareTitle=that.pusCardLists.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'@'+that.pusCardLists.userName+'你不加油,我们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
@@ -327,6 +329,26 @@
 					
 				}
 			},
+
+			copyContent(e){
+				// console.log(this.pusCardLists.id)
+				// console.log(this.id)
+				if (this.pusCardLists.id == this.id) {
+					uni.setClipboardData({
+						data: this.showCardCommentlist.pushCard.content,
+						success: function(res) {
+							uni.getClipboardData({
+								success: function(res) {
+									uni.showToast({
+										title: '已复制到剪贴板'
+									});
+								}
+							});
+						}
+					});
+				}
+			},
+			
 			tabSelect(e){
 				this.TabCur=e;
 				if(this.TabCur ==1){

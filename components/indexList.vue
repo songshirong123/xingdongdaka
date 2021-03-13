@@ -81,7 +81,7 @@
 						<text class="text-sm marginxs">赞助</text>
 						<text v-if="list.sponsorCount>0" class="text-gray text-sm ">{{list.sponsorCount}}</text>
 					</view>
-					<button class="cu-btns" :id="index"   @tap="share(list,index)">
+					<button class="cu-btns"   @tap="share(list,index)">
 						<view class="flex flex-wrap align-center ">
 							<view class="text-black text-lg">
 								<text class="lg text-black cuIcon-forward"></text>
@@ -149,7 +149,7 @@
 					    })
 			},
 			error: function() {
-				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
+				this.audioPlaySrc=this.xdUniUtils.xd_randomImg(1);
 			            }  ,
 			gotoSponsor(list,index){
 				this.$emit('gotoSponsor',list,index);

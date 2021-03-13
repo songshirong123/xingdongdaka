@@ -545,7 +545,7 @@
 				this.xdUniUtils.xd_showImg(e, index);
 			},
 			error: function() {
-				this.audioPlaySrc = this.xdUniUtils.xd_randomImg();
+				this.audioPlaySrc = this.xdUniUtils.xd_randomImg(1);
 			},
 
 			gocardComentList(e, index) {

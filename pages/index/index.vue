@@ -161,15 +161,23 @@
 											<text style="font-size: 10px;color: #999999;">截止日期：{{list.activityEndTime}} 计划天数：{{list.planDay}} 可休假天数：{{list.holidayDay}}</text>
 										</view>
 									</view>
-									<view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+									<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="list.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+										<view class="bg-img" :class="list.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+										 v-for="(item,indexs) in list.imgsUrl" :key="indexs" @tap="goPageImgHD(list.imgsUrl,indexs)" v-if="list.imgsUrl.length>0">
+										</view>
+										<image class="bg-img imgheit "  :src="list.imgsUrl[0]" v-if="list.imgsUrl.length==0" mode="aspectFill"
+										 @tap="goPageImgHD(list.imgsUrl)"  @error="error">
+										</image>
+									</view>
+									<!-- <view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 										<view class="swiper-banner">
 											<swiper class="swiper" autoplay="true" circular="true" >
 												<swiper-item v-for="(item ,index)  in list.imgsUrl" :key="item">
-													<image class="swiper-item" :src="item" v-model="aspectFill"></image>
+													<image class="swiper-item" :src="item" :model="center" @tap="goPageImgHD(list.imgsUrl,index)"></image>
 												</swiper-item>
 											</swiper>
 										</view>
-									</view>
+									</view> -->
 									<view class="text-contents contentext" @tap="activityDetail(list)">
 										<text style="font-size: 14px;font-weight: 700;">{{list.activityContent}}</text>
 									</view>
@@ -180,7 +188,7 @@
 											<text style="margin-left: 3px;">我要发布</text>
 										</view>
 										<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-											<button class="cu-btn bg-white" style="padding: 0px;" :id="index" @tap="share"><text class="lg text-black cuIcon-forward"
+											<button class="cu-btn bg-white" style="padding: 0px;" :id="index" @tap="share(list,index)"><text class="lg text-black cuIcon-forward"
 												 style="margin-top: 2px;"></text>分享活动</button>
 										</view>
 										<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
@@ -345,27 +353,15 @@
 					imageUrl: that.xdUniUtils.xd_randomImg(1),
 				}
 			} else {
-					if (this.isMerchant) {
-						let imgs = that.merchantList[that.indexDatas].imgs;
-						if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
-							imgs = that.xdUniUtils.xd_randomImg(1);
-						}
-						return {
-							title: that.merchantList[that.indexDatas].activityContent,
-							path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.merchantList[that.indexDatas].id,
-							imageUrl: imgs,
-						}
-					} else {
-						that.setSaveShareInfo();
-						return {
-							title: that.shareTitle,
-							path: that.sharePath+'?'+that.scen,
-							imageUrl: that.shareImg,
-						   }
-						}
-				
-				
-			}
+				that.setSaveShareInfo();
+				return {
+					title: that.shareTitle,
+					path: that.sharePath+'?'+that.scen,
+					imageUrl: that.shareImg,
+				   }
+
+				}
+			
 		},
 		onReady() {
 			// setTimeout(()=>{
@@ -376,13 +372,11 @@
 		//#ifdef MP-WEIXIN
 		onShareTimeline() {
 			let that = this;
-			
 			return {
 				title: "科学乐趣达目标,志趣相投交朋友",
 				query: 'share=' + uni.getStorageSync('id'),
 				imageUrl: that.xdUniUtils.xd_randomImg(1),
 			}
-
 		},
 		//#endif
 		onLoad(option) {
@@ -434,21 +428,33 @@
 				if (!that.hasLogin) {
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
-				that.sharePath= '/pages/index/action/action'
-				that.scen='pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync('id') +'&isopen=' + that.listsTab[index].isopen
-				that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.listsTab[index].pushCardList[0]
-						.pictures[0] : that.xdUniUtils.xd_randomImg(1)
-				if(that.listsTab[index].challengeRmb>0){
-					that.shareTitle=that.listsTab[index].userId == that.userId ? '我不加油,你们就围观分钱:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
-							'你不加油,我们就围观分钱:' + that.listsTab[index].pushCardList[0].content
-									
-				}else{
-					that.shareTitle= that.listsTab[index].userId == that.userId ? '第' + that.listsTab[index].pushCardCishuCount +
-						'次打卡:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
-						'打Call：' + that.listsTab[index].pushCardList[0].content
 				
+				if(this.isMerchant){
+					if (this.xdUniUtils.IsNullOrEmpty(that.merchantList[index].imgsUrl)) {
+						that.shareImg = that.xdUniUtils.xd_randomImg(1);
+					}else{
+						that.shareImg = that.xdUniUtils.xd_randomImg('',that.merchantList[index].imgsUrl);
+					}
+					that.shareTitle= that.merchantList[index].activityContent
+					that.sharePath='/pages/pageA/merchant/merchantDetail'
+					that.scen='activityid=' + that.merchantList[index].id
+				}else{
+					that.sharePath= '/pages/index/action/action'
+					that.scen='pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync('id') +'&isopen=' + that.listsTab[index].isopen
+					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.xdUniUtils.xd_randomImg('',that.listsTab[index].pushCardList[0]
+							.pictures): that.xdUniUtils.xd_randomImg(1)
+					if(that.listsTab[index].challengeRmb>0){
+						that.shareTitle=that.listsTab[index].userId == that.userId ? '我不加油,你们就围观分钱:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
+								'你不加油,我们就围观分钱:' + that.listsTab[index].pushCardList[0].content
+										
+					}else{
+						that.shareTitle= that.listsTab[index].userId == that.userId ? '第' + that.listsTab[index].pushCardCishuCount +
+							'次打卡:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
+							'打Call：' + that.listsTab[index].pushCardList[0].content
+					
+					}
 				}
-				that.indexDatas=index
+				this.indexDatas=index
 				that.$refs.share.toggleMask(list,index);	
 			},
 			bindload() {
@@ -1064,6 +1070,9 @@
 			},
 			goPageImgHD(e, index) {
 				this.xdUniUtils.xd_showImg(e, index)
+			},
+			goPageImg(e,index){
+				this.xdUniUtils.xd_showImg(e,index)
 			},
 			// 关注
 			showFollow: function() {

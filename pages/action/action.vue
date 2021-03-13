@@ -48,7 +48,15 @@
 								</view>
 								<view style="height: 7px;"></view>
 							</view>
-							<view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+							<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+								<view class="bg-img" :class="activity.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+								 v-for="(item,indexs) in activity.imgsUrl" :key="indexs" @tap="goPageImgHD(activity.imgsUrl,indexs)" v-if="activity.imgsUrl.length>0">
+								</view>
+								<image class="bg-img imgheit "  :src="activity.imgsUrl[0]" v-if="activity.imgsUrl.length==0" mode="aspectFill"
+								 @tap="goPageImgHD(activity.imgsUrl)"  @error="error">
+								</image>
+							</view>
+							<!-- <view  class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 								<view class="swiper-banner">
 									<swiper class="swiper" autoplay="true" circular="true" >
 										<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
@@ -56,7 +64,7 @@
 										</swiper-item>
 									</swiper>
 								</view>
-							</view>
+							</view> -->
 							<view @click="addActivity(activity,0)" class="text-contents contentext">
 								<text style="font-size: 14px;font-weight: 700;">{{activity.activityContent}}</text>
 							</view>
@@ -205,14 +213,16 @@
 							1),
 					}
 				}else if (that.tab == 3 || that.tab == 4) {
-					
-					let imgs = that.activityByUserId[res.target.id].imgs;
-					if(this.xdUniUtils.IsNullOrEmpty(imgs)){
+
+					let imgs 
+					if(this.xdUniUtils.IsNullOrEmpty(that.activityByUserId[res.target.id].imgsUrl)){
 						 imgs =that.xdUniUtils.xd_randomImg(1);
+					}else{
+						 imgs =that.xdUniUtils.xd_randomImg('',that.activityByUserId[res.target.id].imgsUrl);
 					}
 					return {
 						title: that.activityByUserId[res.target.id].activityContent,
-						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.activityByUserId[res.target.id].id,
+						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.activityByUserId[res.target.id].id+"&share="+ uni.getStorageSync('id'),
 						imageUrl: imgs,
 					}
 				}
@@ -446,7 +456,7 @@
 								item.challengeRmb = Math.floor(item.challengeRmb / 100);
 							}
 							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								item.pictures = that.xdUniUtils.xd_randomImg();
+								item.pictures = that.xdUniUtils.xd_randomImg(1);
 							} else {
 								if (item.pictures.indexOf(",") > -1) {
 									item.pictures = item.pictures.split(",")[0]
@@ -495,7 +505,7 @@
 					for (let i in list) {
 						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
 						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg() : list[i].imgs;
+						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg(1) : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
 						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
@@ -530,7 +540,7 @@
 					for (let i in list) {
 						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
 						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg() : list[i].imgs;
+						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg(1) : list[i].imgs;
 						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
 						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
 						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
@@ -605,7 +615,7 @@
 								item.challengeRmb = Math.floor(item.challengeRmb / 100);
 							}
 							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								item.pictures = that.xdUniUtils.xd_randomImg();
+								item.pictures = that.xdUniUtils.xd_randomImg(1);
 							} else {
 								if (item.pictures.indexOf(",") > -1) {
 									item.pictures = item.pictures.split(",")[0]

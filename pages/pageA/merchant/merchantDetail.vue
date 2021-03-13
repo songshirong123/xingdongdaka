@@ -13,7 +13,16 @@
 					</view>
 					<view style="height: 7px;"></view>
 				</view>
-				<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+				<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+					<view class="bg-img" :class="activity.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+					 v-for="(item,index) in activity.imgsUrl" :key="index" @tap="goPageImgHD(activity.imgsUrl,index)" v-if="activity.imgsUrl.length>0">
+					</view>
+					<image class="bg-img imgheit "  :src="activity.imgsUrl[0]" v-if="activity.imgsUrl.length==0" mode="aspectFill"
+					 @tap="goPageImgHD(activity.imgsUrl)"  @error="error">
+					</image>
+				</view>
+				
+				<!-- <view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 					<view class="swiper-banner">
 						<swiper class="swiper" autoplay="true" circular="true">
 							<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
@@ -21,7 +30,7 @@
 							</swiper-item>
 						</swiper>
 					</view>
-				</view>
+				</view> -->
 				<!-- <view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
 					<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
 					</image>
@@ -91,7 +100,16 @@
 							<text style="font-size: 10px;color: #999999;">截止日期：{{activity.activityEndTime}} 计划天数：{{activity.planDay}} 可休假天数：{{activity.holidayDay}}</text>
 						</view>
 					</view>
-					<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
+					<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
+						<view class="bg-img" :class="activity.imgsUrl.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+						 v-for="(item,indexs) in activity.imgsUrl" :key="indexs" @tap="goPageImgHD(activity.imgsUrl,indexs)" v-if="activity.imgsUrl.length>0">
+						</view>
+						<image class="bg-img imgheit "  :src="activity.imgsUrl[0]" v-if="activity.imgsUrl.length==0" mode="aspectFill"
+						 @tap="goPageImgHD(activity.imgsUrl)"  @error="error">
+						</image>
+					</view>
+					
+					<!-- <view class="grid flex-sub padding-lr" style="margin-bottom: 5px;">
 						<view class="swiper-banner">
 							<swiper class="swiper" autoplay="true" circular="true">
 								<swiper-item v-for="(item ,index)  in activity.imgsUrl" :key="item">
@@ -99,7 +117,7 @@
 								</swiper-item>
 							</swiper>
 						</view>
-					</view>
+					</view> -->
 					<!-- view class="grid flex-sub padding-lr" style="margin-top: 5px;margin-bottom: 5px;">
 						<image class="bg-img imgheit" :src="activity.imgs" mode="aspectFill" @tap="goPageImgHD(activity.imgs)">
 						</image>
@@ -458,6 +476,11 @@
 		},
 		onLoad(option) {
 			this.activityId = option.activityid;
+			let share = option.share;
+			if(!this.xdUniUtils.IsNullOrEmpty(share)){
+				uni.setStorageSync('share', share);
+			}
+			
 			this.selectByActivityId();
 			this.getData();
 			this.getBalance()
@@ -467,7 +490,7 @@
 			console.log(res);
 
 			let activity = this.activity;
-			let imgs = activity.imgs;
+			let imgs = activity.imgsUrl[0];
 			if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
 				imgs = this.xdUniUtils.xd_randomImg(1);
 			}
