@@ -420,7 +420,7 @@
 		methods: {
 			...mapMutations(['logIn', 'logOut', 'IndexlogIn']),
 			error: function() {
-				this.rankinImg=this.xdUniUtils.xd_randomImg();
+				this.rankinImg=this.xdUniUtils.xd_randomImg(1);
 			            }  ,
 			//分享
 			share(list,index){
