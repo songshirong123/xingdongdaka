@@ -248,10 +248,7 @@
 		<!-- 分享 -->
 		<share 
 			ref="share" 
-			:contentHeight="400"
-			:urldata='sharePath'
-			:name="shareTitle"
-			:scen="scen"
+			:contentHeight="950"
 		></share>
 	</view>
 </template>
@@ -346,6 +343,7 @@
 		},
 		onShareAppMessage(res) {
 			let that = this;
+			that.$refs.share.hideModal();	
 			if (res.from == "menu") {
 				return {
 					title: "科学乐趣达目标,志趣相投交朋友",
@@ -429,8 +427,8 @@
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				
-				if(this.isMerchant){
-					if (this.xdUniUtils.IsNullOrEmpty(that.merchantList[index].imgsUrl)) {
+				if(that.isMerchant){
+					if (that.xdUniUtils.IsNullOrEmpty(that.merchantList[index].imgsUrl)) {
 						that.shareImg = that.xdUniUtils.xd_randomImg(1);
 					}else{
 						that.shareImg = that.xdUniUtils.xd_randomImg('',that.merchantList[index].imgsUrl);
@@ -454,8 +452,9 @@
 					
 					}
 				}
-				this.indexDatas=index
-				that.$refs.share.toggleMask(list,index);	
+				that.indexDatas=index
+			
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
 			},
 			bindload() {
 				var that = this;

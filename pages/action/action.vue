@@ -27,11 +27,11 @@
 				</view>
 				<view class="actionMy" v-show="tab===1">
 					<actionlist v-for="(item,index) in cardList" :item="item" :key="index" :tab="tab" :index='index' v-on:toggleMask="toggleMask"
-					 :userId="userId"></actionlist>
+					 :userId="userId" v-on:share="share"></actionlist>
 				</view>
 				<view class="actionLook" v-show="tab===2">
 					<actionlist v-for="(item,index) in lookerList" :item="item" :key="index" :tab="tab" :index='index' v-on:toggleMask="toggleMask"
-					 :userId="userId"></actionlist>
+					 :userId="userId" v-on:share="share"></actionlist>
 				</view>
 				<view v-if="tab===3 || tab===4" v-for="(activity,index) in activityByUserId" :key="index">
 					<view class="cu-card dynamic">
@@ -79,7 +79,7 @@
 								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,2)">未达成</view>
 								<view style="flex: 1;margin-top: 5px;" @click="addActivity(activity,3)">已通过</view>
 								<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;" class="xd-rows">
-									<button class="cu-btn bg-white" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+									<button class="cu-btn bg-white" style="padding: 0px;"  @click="share(index)"><text class="lg text-black cuIcon-forward"
 										 style="margin-top: 2px;"></text>分享活动</button>
 								</view>
 							</view>
@@ -107,7 +107,11 @@
 				</view>
 			</view>
 		</view>
-
+        <share 
+				ref="share" 
+				:contentHeight="950"
+			></share>
+			
 	</view>
 </template>
 
@@ -118,14 +122,20 @@
 	} from 'vuex'
 	import actionlist from "@/components/actionlist.vue";
 	import backTop from "@/components/backTop.vue"
+	import share from "@/components/share.vue"
 
 	export default {
 		components: {
 			actionlist,
-			backTop
+			backTop,
+			share
 		},
 		data() {
 			return {
+				shareImg:'',
+				sharePath:'',
+				scen:'',
+				shareTitle:'',
 				vi: 1,
 				tab: 1, //行动，围观，收藏
 				userId: uni.getStorageSync('id'),
@@ -196,51 +206,39 @@
 					'我不加油，你们就围观分钱', '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'), ''
 				);
 			} else {
-				if (that.tab == 1) {
-					return {
-						title: '我不加油,你们就围观分钱:' + that.cardList[res.target.id].content,
-						path: '/pages/index/action/action?pushId=' + that.cardList[res.target.id].id + '&share=' + uni.getStorageSync(
-							'id') + '&isopen=' + that.cardList[res.target.id].isopen,
-						imageUrl: that.cardList[res.target.id].pictures ? that.cardList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(
-							1),
-					}
-				} else if (that.tab == 2) {
-					return {
-						title: '@'+ that.lookerList[res.target.id].userName + '你不加油,我们就围观分钱:' + that.lookerList[res.target.id].content,
-						path: '/pages/index/action/action?pushId=' + that.lookerList[res.target.id].id + '&share=' + uni.getStorageSync(
-							'id') + '&isopen=' + that.lookerList[res.target.id].isopen,
-						imageUrl: that.lookerList[res.target.id].pictures ? that.lookerList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(
-							1),
-					}
-				}else if (that.tab == 3 || that.tab == 4) {
-
-					let imgs 
-					if(this.xdUniUtils.IsNullOrEmpty(that.activityByUserId[res.target.id].imgsUrl)){
-						 imgs =that.xdUniUtils.xd_randomImg(1);
-					}else{
-						 imgs =that.xdUniUtils.xd_randomImg('',that.activityByUserId[res.target.id].imgsUrl);
-					}
-					return {
-						title: that.activityByUserId[res.target.id].activityContent,
-						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.activityByUserId[res.target.id].id+"&share="+ uni.getStorageSync('id'),
-						imageUrl: imgs,
-					}
-				}
-
+				that.$refs.share.hideModal();
+				return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
 			}
-		}, //#ifdef MP-WEIXIN
-		// onShareTimeline() {
-		// 	let that = this;
-		// 	return {
-		// 		title: "我不加油，你们就围观分钱",
-		// 		query: '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'),
-		// 		imageUrl: that.xdUniUtils.xd_randomImg(1),
-		// 	}
-
-
-		// },
-		//#endif
+		}, 
 		methods: {
+			share(index){
+				let that = this;
+				that.sharePath='/pages/index/action/action'
+				if (!that.hasLogin) {
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
+				if(that.tab == 1){
+					that.scen='pushId=' + that.cardList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.cardList[index].isopen
+					that.shareImg=that.cardList[index].pictures ? that.cardList[index].pictures : that.xdUniUtils.xd_randomImg(1)
+					that.shareTitle='我不加油,你们就围观分钱:' + that.cardList[index].content
+
+				}else if(that.tab == 2){
+					that.scen='pushId=' + that.lookerList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.lookerList[index].isopen
+					that.shareImg=that.lookerList[index].pictures ? that.lookerList[index].pictures : that.xdUniUtils.xd_randomImg(1)
+					that.shareTitle='@'+ that.lookerList[index].userName + '你不加油,我们就围观分钱:' + that.lookerList[index].content
+				}else if(that.tab == 3 || that.tab == 4){
+					that.sharePath='/pages/pageA/merchant/merchantDetail'
+					that.scen='activityid=' + that.activityByUserId[index].id+"&share="+ uni.getStorageSync('id')
+	
+					if(this.xdUniUtils.IsNullOrEmpty(that.activityByUserId[index].imgsUrl)){
+						that.shareImg= that.xdUniUtils.xd_randomImg(1)
+					}else{
+						that.shareImg=that.xdUniUtils.xd_randomImg('',that.activityByUserId[index].imgsUrl);
+					}
+					
+				}
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
+			},
 			tabs(e) {
 				this.tab = e;
 				this.pageNum = 1;

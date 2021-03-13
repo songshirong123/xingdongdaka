@@ -237,10 +237,7 @@
 			<!-- 分享 -->
 			<share 
 				ref="share" 
-				:contentHeight="400"
-				:urldata='sharePath'
-				:name="shareTitle"
-				:scen="scen"
+				:contentHeight="950"
 			></share>
 		</view>
 	</view>
@@ -331,6 +328,7 @@
 		
 		onShareAppMessage(res) {
 			let that = this;
+			that.$refs.share.hideModal();
 			that.setSaveShareInfo();
 			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);	
 				
@@ -353,7 +351,7 @@
 				if(!that.hasLogin){
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
-				that.$refs.share.toggleMask();	
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
 			},
 			getshare(){
 				let that = this;
