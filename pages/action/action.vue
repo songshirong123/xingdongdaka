@@ -237,6 +237,7 @@
 					}
 					
 				}
+				
 				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
 			},
 			tabs(e) {
