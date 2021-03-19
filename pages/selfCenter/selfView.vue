@@ -220,8 +220,7 @@
 				}, true).then(res => {
 
 					if (res.resultCode == 0) {
-						console.log(index)
-						console.log(that.list)
+						
 						that.list[index].onlooker = true
 						that.list[index].onlookerCount++;
 						
@@ -285,7 +284,12 @@
 				let dataList = res.obj.list;
 				for (var i = 0; i < res.obj.list.length; i++) {
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
-
+					if(dataList[i].pictures){
+						dataList[i].pictures=dataList[i].pictures.split(',')
+						
+					}else{
+						dataList[i].pictures=[]
+					}
 				}
 				return dataList;
 			},
@@ -293,20 +297,20 @@
 				this.xd_request_post(this.xdServerUrls.xd_lookerPushListByUserId, {
 						userId: this.userId,
 						pageNum: 1,
-						pageSize: 10,
+						pageSize: 20,
 					}, true)
 					.then(res => {
 						this.lookerList = this.timeStamp(res);
 						this.lookTotal = res.obj.total
-						this.lookerList.forEach(function(item) {
-							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								item.pictures = '../../static/images/icon/img/title1.png'
-							} else {
-								if (item.pictures.indexOf(",") > -1) {
-									item.pictures = item.pictures.split(",")[0]
-								}
-							}
-						})
+						// this.lookerList.forEach(function(item) {
+						// 	if (typeof item.pictures === 'undefined' || item.pictures == '') {
+						// 		item.pictures = '../../static/images/icon/img/title1.png'
+						// 	} else {
+						// 		if (item.pictures.indexOf(",") > -1) {
+						// 			item.pictures = item.pictures.split(",")[0]
+						// 		}
+						// 	}
+						// })
 
 					})
 			},

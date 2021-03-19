@@ -455,13 +455,16 @@
 								item.challengeRmb = Math.floor(item.challengeRmb / 100);
 							}
 							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								item.pictures = that.xdUniUtils.xd_randomImg(1);
+								var img=[]
+								img.push(that.xdUniUtils.xd_randomImg(1));
+								item.pictures =img
 							} else {
-								if (item.pictures.indexOf(",") > -1) {
-									item.pictures = item.pictures.split(",")[0]
-								}
+								
+									item.pictures = item.pictures.split(",")
+								
 							}
 						})
+						console.log(that.lookerList)
 
 					}).catch(Error => {
 						console.log(Error)
@@ -614,11 +617,13 @@
 								item.challengeRmb = Math.floor(item.challengeRmb / 100);
 							}
 							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								item.pictures = that.xdUniUtils.xd_randomImg(1);
+								var img=[]
+								img.push(that.xdUniUtils.xd_randomImg(1));
+								item.pictures =img 
 							} else {
-								if (item.pictures.indexOf(",") > -1) {
-									item.pictures = item.pictures.split(",")[0]
-								}
+								
+									item.pictures = item.pictures.split(",")
+								
 							}
 						})
 						that.lookerList = that.lookerList.concat(data);
@@ -641,28 +646,22 @@
 
 				date = date.getTime();
 				for (var i = 0; i < dataList.length; i++) {
-
-					// var num=dataList[i].targetDay-dataList[i].pushCardCount;
-					// var num2=dataList[i].targetDay;
-					// var num3=dataList[i].targetDay+dataList[i].holidayDay
-					// var num4=dataList[i].pushCardCount;
-
-					// let d = new Date(dataList[i].createTime);
-					// let newD = new Date(d.setDate(d.getDate() + num3));
-
-					// newD=newD.getTime()
-
-					// let dd=Math.round((date-newD) / (1000 * 60 * 60 * 24));
-					// if(num>0 && dd<=0 ){
-					// 	dataList[i].btn=0//立即打卡
-					// }else if(num2>num4 && dd>0){
-					// 	dataList[i].btn=1}//未达成
-					// 	else if(num==0&&num2==num4){
-					// 		dataList[i].btn=2}	//已完成    
-
+					if(dataList[i].pictures){
+						dataList[i].pictures=dataList[i].pictures.split(',')
+						
+					}else{
+						dataList[i].pictures=[]
+					}
+					
+					// dataList[i].pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+					// ];
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
 				}
+				console.log(dataList)
 				return dataList;
 			}
 

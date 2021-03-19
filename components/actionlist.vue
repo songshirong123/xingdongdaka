@@ -52,9 +52,14 @@
 			<view class="text-content padding-lr textcen">
 				<text class="contentext" @tap="goPageCard(item)" >{{item.content}}</text>
 			</view>
-			<view class="grid flex-sub  padding-lr"  >
-				<image class="imgheit"  :src="item.pictures" mode="aspectFill"
-				 @tap="goPageCard(item)" v-if="item.pictures" >
+			<view class="grid flex-sub padding-lr" :class="item.pictures.length>1?'col-3 grid-square':'col-1'" v-if="item.pictures.length>1" >
+				<view class="bg-img" :class="item.pictures.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+				 v-for="(item,index) in item.pictures" :key="index" @tap="goPageCard(item)" >
+				</view>
+			</view>
+			<view class="grid flex-sub  padding-lr"  v-else>
+				<image class="imgheit"  :src="item.pictures[0]" mode="aspectFill"
+				 @tap="goPageCard(item)"  v-if="item.pictures.length>0">
 				</image>
 				<image class="imgheit"  :src="audioPlaySrc" mode="aspectFill"
 				 @tap="goPageCard(item)" v-else @error="error">
@@ -87,7 +92,7 @@
 		
 		data(){
 			return {
-				audioPlaySrc:"1"
+				audioPlaySrc:"../static/images/icon/img/title.png"
 			}
 		},
 		methods:{

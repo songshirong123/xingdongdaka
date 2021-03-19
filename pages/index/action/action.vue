@@ -97,8 +97,13 @@
 			<view class="text-contents contentext">
 				<text style="font-size: 14px;font-weight: 700;">{{pushList.content}}</text>
 			</view>
-			<view class="grid flex-sub padding-lr" style="margin-top: 5px;">
-				<image class="bg-img imgheit" :src="pushList.pictures" mode="aspectFill" @tap="goPageImg(pushList.pictures)" v-if="pushList.pictures!=''">
+			<view class="grid flex-sub padding-lr" style="margin-top: 5px;" :class="pushList.pictures.length>1?'col-3 grid-square':'col-1'" v-if="pushList.pictures.length>1">
+				<view class="bg-img" :class="pushList.pictures.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+				 v-for="(item,index) in pushList.pictures" :key="index" @tap="goPageImg(pushList.pictures,index)" >
+				</view>
+			</view>
+			<view class="grid flex-sub padding-lr" style="margin-top: 5px;" v-else >
+				<image class="bg-img imgheit" :src="pushList.pictures[0]" mode="aspectFill" @tap="goPageImg(pushList.pictures[0])" v-if="pushList.pictures[0]!=''">
 				</image>
 				<image class="bg-img imgheit" :src="audioPlaySrc" mode="aspectFill" @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 				</image>
@@ -363,7 +368,6 @@
 					
 					that.shareTitle=that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
 					if(that.pusCardList.length>0){
-						
 						that.shareImg=that.pusCardList[0].pictures[0]?that.xdUniUtils.xd_randomImg('',that.pusCardList[0].pictures):that.xdUniUtils.xd_randomImg(1)
 					}else{
 						
@@ -758,8 +762,13 @@
 						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,true)
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime,true)
 						data.challengeRmb=res.obj.challengeRmb/100;
+						data.pictures=res.obj.pictures.split(',')
+						// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+						// ];
 						this.pushList=data;
-						
 						this.getshare();
 						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
 						

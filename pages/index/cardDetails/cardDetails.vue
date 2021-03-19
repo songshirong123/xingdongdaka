@@ -61,8 +61,8 @@
 						</view>
 					</view>
 					<view class=" flex  padding">
-						<image class="bg-img imgheit"  :src="pusCardLists.pictures" mode="aspectFill"
-						 @tap="goPageImg(pusCardLists.pictures)" v-if="pusCardLists.pictures!=''">
+						<image class="bg-img imgheit"  :src="pusCardLists.pictures[0]" mode="aspectFill"
+						 @tap="goPageImg(pusCardLists.pictures[0])" v-if="pusCardLists.pictures[0]!=''">
 						</image>
 						<image class="bg-img imgheit"  :src="audioPlaySrc" mode="aspectFill"
 						 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
@@ -645,6 +645,12 @@
 					data.challengeRmb=res.obj.challengeRmb/100;
 					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
 					data.createTime=time;
+					data.pictures=res.obj.pictures.split(',')
+					// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+					// ];
 					this.pusCardLists=data;
 					
 					data.pushCardList.reverse().forEach((item,index)=>{
