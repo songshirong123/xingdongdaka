@@ -454,7 +454,7 @@
 				}
 				that.indexDatas=index
 			
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
 			},
 			bindload() {
 				var that = this;

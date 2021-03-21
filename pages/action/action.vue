@@ -238,7 +238,7 @@
 					
 				}
 				
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
 			},
 			tabs(e) {
 				this.tab = e;

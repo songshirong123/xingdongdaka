@@ -356,7 +356,7 @@
 				if(!that.hasLogin){
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
 			},
 			getshare(){
 				let that = this;

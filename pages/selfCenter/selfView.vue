@@ -162,7 +162,7 @@
 							 that.lookerList[index].content : '@' + that.lookerList[index].userName + '你不加油,我们就围观分钱:' +
 							that.lookerList[index].content
 				}
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen);	
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
 			},
 			lookerCountData() {
 				var that = this;
