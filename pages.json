@@ -50,6 +50,14 @@
 				"enablePullDownRefresh": true
 			}
 		},
+		
+		{
+			"path": "pages/selfCenter/message",
+			"style": {
+				"navigationBarTitleText": "消息提醒",
+				"enablePullDownRefresh": true
+			}
+		},
 
 		{
 			"path": "pages/action/action",
