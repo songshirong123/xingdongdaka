@@ -6,7 +6,7 @@
 		</view>
 		<view class="msgContent">
 			<view class="myMsg msgCon" :class="{dis: num == 0}">
-				<view class="myMsgItem">
+				<!-- <view class="myMsgItem">
 					<view class="header">
 						<image style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #333;"></image>
 					</view>
@@ -47,13 +47,13 @@
 						<text style="color: #9f9fa4; margin: 0 6px;">09:41</text>
 						<text style="color: #9f9fa4;">></text>
 					</view>
-				</view>
+				</view> -->
 			</view>
 			<!--                              我的提醒                                  -->
 			<view class="myTips msgCon" :class="{dis: num == 1}">
 				<view class="myMsgItem borderLine" v-for="(item, index) in tipsList" :key = 'index'>
 					<view class="msgbody">
-						<text style="display: block;">{{getMsgType(item.typename)}}提醒 {{item.describes}}</text>
+						<text style="display: block;">{{getMsgType(item.typename)}}提醒 【{{item.describes}}】</text>
 						<text style="display: block;">{{xdUniUtils.xd_timestampToTime(item.updateTime,false,true,false) }}</text>
 					</view>
 					<view class="right">
