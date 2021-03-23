@@ -109,7 +109,7 @@
 				wx.request({
 				url: 'http://39.106.107.255:10065/msg/getSummaryMsg', //仅为示例，并非真实的接口地址
 				data: {
-				    userId: 11089
+				    userId
 				},
 				header: {
 				    // 'content-type': 'application/json' // 默认值
