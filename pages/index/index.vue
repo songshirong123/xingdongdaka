@@ -22,8 +22,8 @@
 				  <indexList  :list="list" :index="index" v-on:loveclick='loveClick' :hasLogin="hasLogin" :userId='userId' v-on:lookerClick="lookerClick" :inimg='inimg' :Off="Off"></indexList> -->
 
 
-					<indexList @gotoSponsor='gotoSponsor' :list="list" :index="index" v-on:loveclick='loveClick' :hasLogin="hasLogin"
-					 :userId='userId' v-on:lookerClick="lookerClick" :inimg='inimg'></indexList>
+					<indexList @gotoSponsor='gotoSponsor' :list="list" :index="index"  :hasLogin="hasLogin"
+					 :userId='userId' v-on:lookerClick="lookerClick" :inimg='inimg' :active='active' v-on:share="share"></indexList>
 
 				</block>
 			</view>
@@ -98,13 +98,14 @@
 						</view>
 					</view>
 					<!-- 挑战赛 -->
-					<view class="cu-card case " v-else-if="isRankingLable" v-for="(rankinItem,rangkingindex) in listsTab" :key="rangkingindex">
+					<view class="cu-card case " v-else-if="isRankingLable" v-for="(rankinItem,rangkingindex) in listRankin" :key="rangkingindex">
 						<view class="cu-item shadow">
 							<view class=" flex justify-center " @tap="rankingGoDet()">
 								<view class="image cu-item-imggs ">
-									<image :src="rankinItem.pictures" mode="aspectFill"></image>
+									<image v-if="rankinItem.pictures" :src="rankinItem.pictures" mode="aspectFill"></image>
+									<image v-else :src="rankinImg" mode="aspectFill" @error="error"></image>
 									<view class="cu-tag bg-orange text-bold">挑战赛</view>
-									<view class="cu-bar bg-shadeBottom"> <text class="text-cut">{{rankinItem.label}}</text></view>
+									<view class="cu-bar bg-shadeBottom"> <text class="text-cut">{{rankinItem.content}}</text></view>
 								</view>
 							</view>
 							<view class="cu-list menu-avatar rankinglist">
@@ -113,14 +114,14 @@
 										<view style="font-size: 30px;">
 											<text class="lg text-orange cuIcon-upstage"></text>
 										</view>
-										<text>￥123</text>
+										<text>￥{{rankinItem.challengeRmb}}</text>
 									</view>
 									<view class="cu-capsule round margin-right-sm">
 										<view class='cu-tag bg-orange ' @tap="goRanking(rankinItem.id)">
 											加入
 										</view>
 										<view class="cu-tag line-orange">
-											999+
+											{{rankinItem.pushCardCishuCount}}
 										</view>
 									</view>
 								</view>
@@ -187,7 +188,7 @@
 											<text style="margin-left: 3px;">我要发布</text>
 										</view>
 										<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-											<button class="cu-btn bg-white" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+											<button class="cu-btn bg-white" style="padding: 0px;" :id="index" @tap="share(list,index)"><text class="lg text-black cuIcon-forward"
 												 style="margin-top: 2px;"></text>分享活动</button>
 										</view>
 										<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
@@ -200,11 +201,10 @@
 							</view>
 						</block>
 					</view>
-
 					<view v-else>
 						<block v-for="(list, index) in listsTab" :key="index">
-							<indexList id="indexList" :list="list" :index="index" @gotoSponsor='gotoSponsor' v-on:loveclick='loveClick'
-							 v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' :inimg='inimg'></indexList>
+							<indexList id="indexList" :list="list" :index="index" @gotoSponsor='gotoSponsor' 
+							 v-on:lookerClick="lookerClick" :hasLogin="hasLogin" :userId='userId' :inimg='inimg' :active='active' v-on:share="share"></indexList>
 						</block>
 					</view>
 				</view>
@@ -245,6 +245,11 @@
 			<image v-else-if="isMerchant" src="../../static/images/icon/add.png" @tap="merchant" mode="widthFix"></image>
 			<image v-else src="../../static/images/icon/add.png" @tap="goPage('/pages/action/step1')" mode="widthFix"></image>
 		</view>
+		<!-- 分享 -->
+		<share 
+			ref="share" 
+			:contentHeight="950"
+		></share>
 	</view>
 </template>
 
@@ -256,16 +261,19 @@
 	import indexList from "@/components/indexList.vue";
 	import backTop from "@/components/backTop.vue";
 	import wybNoticeBar from '@/components/wyb-noticeBar/wyb-noticeBar.vue'
+	import share from "@/components/share.vue"
 
 	export default {
 		components: {
 			indexList,
 			backTop,
 			wybNoticeBar,
+			share
 
 		},
 		data() {
 			return {
+				indexDatas:'',
 				audioPlaySrc: '../../static/images/icon/img/xddak.png',
 				inimg: '',
 				adtime: 31,
@@ -278,6 +286,7 @@
 				tabs: [],
 				listnotice: [],
 				listsTab: [],
+				listRankin:[],
 				userBean: {},
 				attentionList: [],
 				token: uni.getStorageSync('token'),
@@ -298,13 +307,11 @@
 				isMerchant: false, //是否展示商家活动内容
 				groupList: [], //互助小组内容
 				merchantList: [], //商家活动内容
-				activityHDImgList: [
-					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg",
-					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611456459031.jpg",
-					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611390055210.png",
-					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg",
-					"https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1611630676459.jpg"
-				],
+				rankinImg:'../../imges.png',
+				shareImg:'',
+				sharePath:'',
+				scen:'',
+				shareTitle:'',
 				activityList: [{
 					ID: 0,
 					Name: "互助小圈",
@@ -336,45 +343,23 @@
 		},
 		onShareAppMessage(res) {
 			let that = this;
-			if (!that.hasLogin) {
-				return that.xdUniUtils.xd_login(that.hasLogin);
-			}
+			that.$refs.share.hideModal();	
 			if (res.from == "menu") {
-				
 				return {
-					
-					path: '/pages/index/index?share=' + uni.getStorageSync('id') ,
+					title: "科学乐趣达目标,志趣相投交朋友",
+					path: '/pages/index/index?share='+uni.getStorageSync('id'),
 					imageUrl: that.xdUniUtils.xd_randomImg(1),
 				}
 			} else {
-				if (this.isMerchant) {
-					
-					let imgs = that.merchantList[res.target.id].imgsUrl[0];
-					if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
-						imgs = that.xdUniUtils.xd_randomImg(1);
-					}
-					return {
-						title: that.merchantList[res.target.id].activityContent,
-						path: '/pages/pageA/merchant/merchantDetail?activityid=' + that.merchantList[res.target.id].id+"&share="+ uni.getStorageSync('id'),
-						imageUrl: imgs,
-					}
-				} else {
-					that.setSaveShareInfo(res);
-					return {
-						title: that.listsTab[res.target.id].userId == that.userId ? '第' + that.listsTab[res.target.id].pushCardCishuCount +
-							'次打卡:' + that.listsTab[res.target.id].pushCardList[0].content : '我为@' + that.listsTab[res.target.id].userName +
-							'打Call：' + that.listsTab[res.target.id].pushCardList[0].content,
-						path: '/pages/index/action/action?pushId=' + that.listsTab[res.target.id].id + '&share=' + uni.getStorageSync(
-								'id') +
-							'&isopen=' + that.listsTab[res.target.id].isopen,
-						imageUrl: that.listsTab[res.target.id].pushCardList[0].pictures[0] ? that.listsTab[res.target.id].pushCardList[0]
-							.pictures[
-								0] : that.xdUniUtils.xd_randomImg(1),
-					}
+				that.setSaveShareInfo();
+				return {
+					title: that.shareTitle,
+					path: that.sharePath+'?'+that.scen,
+					imageUrl: that.shareImg,
+				   }
+
 				}
-
-
-			}
+			
 		},
 		onReady() {
 			// setTimeout(()=>{
@@ -385,13 +370,11 @@
 		//#ifdef MP-WEIXIN
 		onShareTimeline() {
 			let that = this;
-			
 			return {
-				
+				title: "科学乐趣达目标,志趣相投交朋友",
 				query: 'share=' + uni.getStorageSync('id'),
 				imageUrl: that.xdUniUtils.xd_randomImg(1),
 			}
-
 		},
 		//#endif
 		onLoad(option) {
@@ -399,7 +382,7 @@
 			wx.showShareMenu({
 				menus: ['shareAppMessage', 'shareTimeline']
 			})
-			if(wx.getLaunchOptionsSync().query.share!=undefined){
+			if(wx.getLaunchOptionsSync().query.share){
 				try{												
 				 uni.setStorageSync('share',wx.getLaunchOptionsSync().query.share);
 				}catch(e){
@@ -418,15 +401,15 @@
 					}
 				}
 			}
-			// this.indexData();
+			this.indexData();
 			this.burieInit();
 			this.getnotic();
 
 		},
 		onShow(option) {
-			this.currentIndex = -1;
-			this.active = 1;
-			this.indexData();
+			// this.currentIndex = -1;
+			// this.active = 1;
+			// this.indexData();
 		},
 
 		computed: {
@@ -434,6 +417,45 @@
 		},
 		methods: {
 			...mapMutations(['logIn', 'logOut', 'IndexlogIn']),
+			error: function() {
+				this.rankinImg=this.xdUniUtils.xd_randomImg(1);
+			            }  ,
+			//分享
+			share(list,index){
+				let that = this;
+				if (!that.hasLogin) {
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
+				
+				if(that.isMerchant){
+					if (that.xdUniUtils.IsNullOrEmpty(that.merchantList[index].imgsUrl)) {
+						that.shareImg = that.xdUniUtils.xd_randomImg(1);
+					}else{
+						that.shareImg = that.xdUniUtils.xd_randomImg('',that.merchantList[index].imgsUrl);
+					}
+					that.shareTitle= that.merchantList[index].activityContent
+					that.sharePath='/pages/pageA/merchant/merchantDetail'
+					that.scen='activityid=' + that.merchantList[index].id
+				}else{
+					that.sharePath= '/pages/index/action/action'
+					that.scen='pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync('id') +'&isopen=' + that.listsTab[index].isopen
+					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.xdUniUtils.xd_randomImg('',that.listsTab[index].pushCardList[0]
+							.pictures): that.xdUniUtils.xd_randomImg(1)
+					if(that.listsTab[index].challengeRmb>0){
+						that.shareTitle=that.listsTab[index].userId == that.userId ? '我不加油,你们就围观分钱:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
+								'你不加油,我们就围观分钱:' + that.listsTab[index].pushCardList[0].content
+										
+					}else{
+						that.shareTitle= that.listsTab[index].userId == that.userId ? '第' + that.listsTab[index].pushCardCishuCount +
+							'次打卡:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
+							'打Call：' + that.listsTab[index].pushCardList[0].content
+					
+					}
+				}
+				that.indexDatas=index
+			
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+			},
 			bindload() {
 				var that = this;
 				let info = uni.createSelectorQuery().select("#ads");
@@ -496,11 +518,11 @@
 					userId: uni.getStorageSync('id'),
 					token: uni.getStorageSync('token')
 				}
-				console.log("加入活动222")
-				console.log(event)
+				// console.log("加入活动222")
+				// console.log(event)
 				this.xd_request_get(this.xdServerUrls.xd_joinActivity, info, true).then((res) => {
-					console.log("加入活动")
-					console.log(res)
+					// console.log("加入活动")
+					// console.log(res)
 					if (res.resultCode == "10000") {
 						_this.xdUniUtils.showToast(false, res.obj, "");
 					} else if (res.resultCode == "10038") {
@@ -535,12 +557,12 @@
 					activityId: event.id
 				}
 
-				console.log("saveData info")
-				console.log(info)
+				// console.log("saveData info")
+				// console.log(info)
 				let _this = this;
 				this.xd_request_post(this.xdServerUrls.xd_savePush, info, true).then(res => {
-					console.log("xd_savePush")
-					console.log(res)
+					// console.log("xd_savePush")
+					// console.log(res)
 					if (res.resultCode == 0) {
 						if (res.obj.payWay != 1) {
 							_this.goPay(res.obj);
@@ -650,6 +672,36 @@
 				uni.navigateTo({
 					url: "../pageA/group/groupMsg?group=" + encodeURIComponent(JSON.stringify(group))
 				})
+			},
+			//获取小组列表
+			getRanking() {
+				if (this.pageNum == 0) {
+					return this.xdUniUtils.showToast(false, "没有更多数据了！", "");
+				}
+				let info = {
+					pageNum: this.pageNum,
+					pageSize: 10,
+					token: uni.getStorageSync('token'),
+				}
+				// if (this.currentIndex != -1 && this.currentIndex != -10) {
+				// 	info["type"] = this.currentIndex;
+				// }
+			
+				uni.showLoading({
+					title: '加载中..',
+				})
+				let _this = this;
+				console.log("挑战", info);
+				this.xd_request_post(this.xdServerUrls.xd_challenge, info).then((res) => {
+					uni.hideLoading();
+					// console.log("挑战", res);
+					let list = res.obj.list;
+					for (let i in list) {
+						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+					}
+					_this.listRankin = _this.pageNum == 1 ? list : _this.listRankin.concat(list);
+					_this.pageNum = res.obj.nextPage;
+				}).catch(err => {});
 			},
 			//获取小组列表
 			getGroupList() {
@@ -797,7 +849,7 @@
 			//分享记录
 			setSaveShareInfo(res) {
 				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
-					pushId: this.listsTab[res.target.id].id,
+					pushId: this.listsTab[this.indexDatas].id,
 					shareUserId: uni.getStorageSync('id'),
 				}, true).then(res => {
 
@@ -982,8 +1034,8 @@
 					},
 					true
 				).then((res) => {
-					console.log("打卡内容")
-					console.log(res.obj.list)
+					// console.log("打卡内容")
+					// console.log(res.obj.list)
 					this.listsTab = this.timeStamp(res.obj.list);
 					this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
@@ -1083,6 +1135,7 @@
 					this.getMerchantList();
 				} else if (id == 2) { //挑战赛
 					this.isRankingLable = true;
+					this.getRanking()
 
 				}
 
@@ -1114,6 +1167,8 @@
 
 
 			},
+			//挑战赛
+			
 			getNewList() {},
 			getReachList() {
 				var data = {};
@@ -1308,7 +1363,9 @@
 				this.getGroupList();
 			} else if (isMerchant) {
 				this.getMerchantList();
-			} else {
+			} else if(this.isRankingLable) {
+				this.getRanking()
+			}else{
 				this.getReachList();
 			}
 

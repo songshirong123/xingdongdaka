@@ -20,24 +20,28 @@
 
 		<view class="actionInfo">
 			<view class="tabbar bg-white">
-				<view class="tab " :class="tab===0?'active':''" @click="tab=0">
+				<view class="tab " :class="tab===1?'active':''" @click="tab=1">
 					<text>行动 ({{total}})</text>
 				</view>
-				<view class="tab" :class="tab===1?'active':''" @click="tab=1">
+				<view class="tab" :class="tab===2?'active':''" @click="tab=2">
 					<text v-if="userId==user">围观的行动({{lookTotal}})</text>
 					<text v-else>TA围观的行动({{lookTotal}})</text>
 				</view>
 			</view>
 			<view class="actionTabList">
-				<view class="actionMy" v-show="tab===0">
+				<view class="actionMy" v-show="tab===1">
 					<actionlist v-for="(item,index) in list" :key="index" :tab="tab" :showBut='1' :item='item' :index='index'
-					 v-on:lookerClick="lookerClick" :userId="user"></actionlist>
+					 v-on:lookerClick="lookerClick" :userId="user" v-on:share="share"></actionlist>
 				</view>
-				<view class="actionLook" v-show="tab===1">
+				<view class="actionLook" v-show="tab===2">
 					<actionlist v-for="(item,index) in lookerList" :key="index" :tab="tab" :showBut='1' :item='item' :index='index'
-					 v-on:lookerClick="lookerClick" :userId="user"></actionlist>
+					 v-on:lookerClick="lookerClick" :userId="user" v-on:share="share"></actionlist>
 				</view>
 			</view>
+			<share
+					ref="share" 
+					:contentHeight="950"
+				></share>
 		</view>
 	</view>
 </template>
@@ -45,6 +49,7 @@
 <script>
 	import actionlist from "@/components/actionlist.vue"
 	import usershow from "@/components/usershow.vue"
+	import share from "@/components/share.vue"
 	import {
 		mapState,
 		mapMutations
@@ -52,11 +57,16 @@
 	export default {
 		components: {
 			usershow,
-			actionlist
+			actionlist,
+			share
 		},
 		data() {
 			return {
-				tab: 0, //行动，围观，收藏
+				shareImg:'',
+				sharePath:'',
+				scen:'',
+				shareTitle:'',
+				tab: 1, //行动，围观，收藏
 				list: [],
 				userId: '',
 				roomId: "",
@@ -81,31 +91,36 @@
 		onShareAppMessage(res) {
 			let that = this;
 			if (res.from == "menu") {
-				return that.xdUniUtils.xd_onShare();
-			} else {
-				if (that.tab == 0) {
-					return {
-
-						title: that.list[res.target.id].userId == that.user ? '第' + that.list[res.target.id].pushCardCishuCount + '次打卡:' +
-							that.list[res.target.id].content : '我为@' + that.list[res.target.id].userName + '打Call：' + that.list[res.target.id]
-							.content,
-						path: '/pages/index/action/action?pushId=' + that.list[res.target.id].id + '&share=' + uni.getStorageSync('id') +
-							'&isopen=' + that.list[res.target.id].isopen,
-						imageUrl: that.list[res.target.id].pictures ? that.list[res.target.id].pictures : that.xdUniUtils.xd_randomImg(1),
-					}
-				} else if (that.tab == 1) {
-					return {
-
-						title: that.lookerList[res.target.id].userId == that.user ? '第' + that.lookerList[res.target.id].pushCardCishuCount +
-							'次打卡:' + that.lookerList[res.target.id].content : '我为@' + that.lookerList[res.target.id].userName + '打Call：' +
-							that.lookerList[res.target.id].content,
-						path: '/pages/index/action/action?pushId=' + that.lookerList[res.target.id].id + '&share=' + uni.getStorageSync(
-							'id') + '&isopen=' + that.lookerList[res.target.id].isopen,
-						imageUrl: that.lookerList[res.target.id].pictures ? that.lookerList[res.target.id].pictures : that.xdUniUtils.xd_randomImg(1),
-					}
+				if(that.lookerList[0].userId == that.user){
+					return that.xdUniUtils.xd_onShare('我不加油,你们就围观分钱','pages/selfCenter/selfView?pushId=' + that.userId);
+				}else{
+					return that.xdUniUtils.xd_onShare('你不加油,我们就围观分钱@'+that.userInfo.userName,'pages/selfCenter/selfView?pushId=' + that.userId);
 				}
+			} else {
+				that.$refs.share.hideModal();
+				return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
 			}
 		},
+		//#ifdef MP-WEIXIN
+		onShareTimeline() {
+			let that = this;
+			if(that.lookerList[0].userId == that.user||that.list[0].userId == that.user){
+				return {
+					title: "我不加油,你们就围观分钱",
+					query: 'userId=' + that.userId,
+					imageUrl: that.xdUniUtils.xd_randomImg(1),
+				}
+			}else{
+				return {
+					title: '你不加油,我们就围观分钱@'+that.userInfo.userName,
+					query: 'userId=' + that.userId,
+					imageUrl: that.xdUniUtils.xd_randomImg(1),
+				}
+			}
+			
+		
+		},
+		//#endif
 		onShow() {
 			if (this.showInfo) {
 				this.getGroupUserInfo();
@@ -114,7 +129,7 @@
 		onLoad(option) {
 			//#ifdef MP-WEIXIN
 			wx.showShareMenu({
-				menus: ['shareAppMessage', 'shareTimeline']
+				menus: ['shareAppMessage']
 			})
 			//#endif
 			this.userId = option.userId;
@@ -127,6 +142,28 @@
 			this.lookerCountData();
 		},
 		methods: {
+			share(index){
+				let that = this;
+				that.sharePath='/pages/index/action/action'
+				if (!that.hasLogin) {
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
+				if(that.tab == 1){
+					that.scen='pushId=' + that.list[index].id + '&share=' + uni.getStorageSync('id') +
+							'&isopen=' + that.list[index].isopen
+					that.shareImg=that.list[index].pictures ? that.list[index].pictures : that.xdUniUtils.xd_randomImg(1)
+					that.shareTitle=that.list[index].userId == that.user ? '我不加油,你们就围观分钱' + that.list[index].pushCardCishuCount+
+							that.list[index].content : '@' + that.list[index].userName + '你不加油,我们就围观分钱:' + that.list[index]
+							.content
+				}else if(that.tab == 2){
+					that.scen='pushId=' + that.lookerList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.lookerList[index].isopen
+					that.shareImg=that.lookerList[index].pictures ? that.lookerList[index].pictures : that.xdUniUtils.xd_randomImg(1)
+					that.shareTitle=that.lookerList[index].userId == that.user ? '我不加油,你们就围观分钱' + that.lookerList[index].pushCardCishuCount +
+							 that.lookerList[index].content : '@' + that.lookerList[index].userName + '你不加油,我们就围观分钱:' +
+							that.lookerList[index].content
+				}
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+			},
 			lookerCountData() {
 				var that = this;
 				that.xd_request_post(that.xdServerUrls.xd_getLookerCountByUserId, {
@@ -167,7 +204,7 @@
 				});
 			},
 			//围观
-			lookerClick: function(list, index) {
+			lookerClick: function(item, index) {
 				var that = this;
 				if (!uni.getStorageSync('token')) {
 					uni.navigateTo({
@@ -178,13 +215,15 @@
 				that.userId = uni.getStorageSync('id');
 				that.xd_request_post(that.xdServerUrls.xd_saveLooker, {
 
-					pushId: list.id,
+					pushId: item.id,
 					lookUserId: that.userId,
 				}, true).then(res => {
 
 					if (res.resultCode == 0) {
+						
 						that.list[index].onlooker = true
-						that.list[index].lookerCount++;
+						that.list[index].onlookerCount++;
+						
 						uni.showToast({
 							title: '围观成功',
 							duration: 1000,
@@ -245,7 +284,12 @@
 				let dataList = res.obj.list;
 				for (var i = 0; i < res.obj.list.length; i++) {
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
-
+					if(dataList[i].pictures){
+						dataList[i].pictures=dataList[i].pictures.split(',')
+						
+					}else{
+						dataList[i].pictures=[]
+					}
 				}
 				return dataList;
 			},
@@ -253,20 +297,20 @@
 				this.xd_request_post(this.xdServerUrls.xd_lookerPushListByUserId, {
 						userId: this.userId,
 						pageNum: 1,
-						pageSize: 10,
+						pageSize: 20,
 					}, true)
 					.then(res => {
 						this.lookerList = this.timeStamp(res);
 						this.lookTotal = res.obj.total
-						this.lookerList.forEach(function(item) {
-							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								item.pictures = '../../static/images/icon/img/title1.png'
-							} else {
-								if (item.pictures.indexOf(",") > -1) {
-									item.pictures = item.pictures.split(",")[0]
-								}
-							}
-						})
+						// this.lookerList.forEach(function(item) {
+						// 	if (typeof item.pictures === 'undefined' || item.pictures == '') {
+						// 		item.pictures = '../../static/images/icon/img/title1.png'
+						// 	} else {
+						// 		if (item.pictures.indexOf(",") > -1) {
+						// 			item.pictures = item.pictures.split(",")[0]
+						// 		}
+						// 	}
+						// })
 
 					})
 			},

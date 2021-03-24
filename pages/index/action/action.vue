@@ -97,8 +97,13 @@
 			<view class="text-contents contentext">
 				<text style="font-size: 14px;font-weight: 700;">{{pushList.content}}</text>
 			</view>
-			<view class="grid flex-sub padding-lr" style="margin-top: 5px;">
-				<image class="bg-img imgheit" :src="pushList.pictures" mode="aspectFill" @tap="goPageImg(pushList.pictures)" v-if="pushList.pictures!=''">
+			<view class="grid flex-sub padding-lr" style="margin-top: 5px;" :class="pushList.pictures.length>1?'col-3 grid-square':'col-1'" v-if="pushList.pictures.length>1">
+				<view class="bg-img" :class="pushList.pictures.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+				 v-for="(item,index) in pushList.pictures" :key="index" @tap="goPageImg(pushList.pictures,index)" >
+				</view>
+			</view>
+			<view class="grid flex-sub padding-lr" style="margin-top: 5px;" v-else >
+				<image class="bg-img imgheit" :src="pushList.pictures[0]" mode="aspectFill" @tap="goPageImg(pushList.pictures[0])" v-if="pushList.pictures[0]!=''">
 				</image>
 				<image class="bg-img imgheit" :src="audioPlaySrc" mode="aspectFill" @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 				</image>
@@ -112,7 +117,7 @@
 					<text class="text-sm marginxs">赞助</text>
 					<text v-if="pushList.sponsorCount>0" class="text-gray text-sm ">{{pushList.sponsorCount}}</text>
 				</view>
-				<button class="cu-btns" :id="index"  open-type="share">
+				<button class="cu-btns" :id="index"  @click="shareBt">
 					<view class="flex flex-wrap align-center ">
 						<view class="text-black text-lg">
 							<text class="lg text-black cuIcon-forward"></text>
@@ -234,6 +239,11 @@
 			<view class="start-add" @tap="goPage('/pages/action/step1')" v-if="scrollTop<2000">
 				<image src="../../../static/images/icon/add.png" mode="widthFix"></image>
 			</view>
+			<!-- 分享 -->
+			<share 
+				ref="share" 
+				:contentHeight="950"
+			></share>
 		</view>
 	</view>
 </template>
@@ -242,13 +252,19 @@
 	import lookerCountInfo from "@/components/lookerCountInfo.vue"
 	import{ mapState,mapMutations} from 'vuex'
 	import backTop from "@/components/backTop.vue"
+	import share from "@/components/share.vue"
 	export default {
 		components:{
 			lookerCountInfo,
-			backTop
+			backTop,
+			share
 		},
 		data() {
 			return {
+				shareImg:'',
+				sharePath:'',
+				scen:'',
+				shareTitle:'',
 				TabCur: 0,
 				pushComentList:[],
 				pusCardList:[],
@@ -297,7 +313,28 @@
 			  menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
-			if(option.pushList==undefined){
+			if(option.scene){
+				 var id=decodeURIComponent(option.scene);	
+							  console.log(id)
+				 var  ids= id.split('&')
+				 var    pushIds =  ids[0].split('=')
+			     var   shares=    ids[1].split('=')
+			     var     isopens=  ids[2].split('=')
+				   if(pushIds[0]=='pushId'){
+					   this.pushId=pushIds[1]
+				   }
+				   if(shares[0]=='share'){
+				   			try{
+				   			 uni.setStorageSync('share',shares[1]);
+				   			}catch(e){
+				   				console.log(Error)
+				   			};
+				   }
+				   if(isopens[0]=='isopen'){
+				   		this.isShare=isopens[1]?isopens[1]:0
+				   }
+				
+			}else if(option.pushList==undefined){
 				
 				this.pushId=option.pushId;
 				this.isShare=option.isopen?option.isopen:0;
@@ -312,76 +349,67 @@
 				this.getPushCardList();
 				this.clickSaveShareInfo();
 			}
+		
+		
+			
 			
 		},
-		/* watch: {
-			hasLogin() {
-				setTimeout(() => {
-					this.clickSaveShareInfo();
-
-				}, 100);
-			},
-		}, */
-	
+		
 		onShareAppMessage(res) {
 			let that = this;
-			let tit='';
-			let path='';
-			let img='';
-			if(that.pusCardList.length>0){
-				 tit=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content;
-				 path='/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
-				 img=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1);
-			}
-		    let	tit2= that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content;
-		    let	path2= '/pages/index/action/action?pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen;
-		    let	img2=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1);
-			if(res.from=="menu"){
+			that.$refs.share.hideModal();
+			that.setSaveShareInfo();
+			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);	
 				
-			if(that.pusCardList.length>0){
-				that.setSaveShareInfo();
-				return	that.xdUniUtils.xd_onShare(tit,path,img);
-				
-			}else{
-				that.setSaveShareInfo();
-				return	that.xdUniUtils.xd_onShare(tit2,path2,img2);	
-			}
-			}else{
-				if(that.pusCardList.length>0){
-					that.setSaveShareInfo();
-					return	that.xdUniUtils.xd_onShare(tit,path,img);
-					
-				}else{
-					
-					that.setSaveShareInfo();
-					return	that.xdUniUtils.xd_onShare(tit2,path2,img2);	
-				}
-			}		
 		},
 		//#ifdef MP-WEIXIN
 		onShareTimeline(){
 			let that = this;
-			if(that.pusCardList.length>0){
 				that.setSaveShareInfo();
 				return {
-					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content,
-					query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1),
+					title: that.shareTitle,
+					query: that.scen,
+					imageUrl:that.shareImg,
 				}
-				
-			}else{
-				that.setSaveShareInfo();
-				return {
-					title: that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content,
-					query: 'pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen,
-					imageUrl:that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1),
-				}
-				
-			}
 		},
 		//#endif
 		methods:{
-			
+			//分享
+			shareBt(){
+				let that = this;
+				if(!that.hasLogin){
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+			},
+			getshare(){
+				let that = this;
+				
+				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
+				that.sharePath= '/pages/index/action/action'
+				
+				if(that.pushList.challengeRmb>0){
+					
+					that.shareTitle=that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
+					if(that.pusCardList.length>0){
+						that.shareImg=that.pusCardList[0].pictures[0]?that.xdUniUtils.xd_randomImg('',that.pusCardList[0].pictures):that.xdUniUtils.xd_randomImg(1)
+					}else{
+						
+						that.shareImg=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1)
+					}
+				
+				}else{
+					
+					if(that.pusCardList.length>0){
+						that.shareTitle=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content
+						that.shareImg=that.pusCardList[0].pictures[0]?that.xdUniUtils.xd_randomImg('',that.pusCardList[0].pictures):that.xdUniUtils.xd_randomImg(1)
+					}else{
+						that.shareTitle=that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content
+						that.shareImg=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1)
+					}
+					
+				}
+			},
 			//互助小组点击事件
 			clickGroup(userid){
 				if(userid == uni.getStorageSync('id')){
@@ -688,7 +716,7 @@
 				this.xdUniUtils.xd_showImg(e,index);
 			},
 			error: function() {
-				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
+				this.audioPlaySrc=this.xdUniUtils.xd_randomImg(1);
 			       }  ,
 						
 			gocardComentList(e,index){
@@ -758,8 +786,16 @@
 						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,true)
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime,true)
 						data.challengeRmb=res.obj.challengeRmb/100;
+						data.pictures=res.obj.pictures.split(',')
+						// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+						// ];
 						this.pushList=data;
+						this.getshare();
 						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
+						
 						if(this.pushList.userId == uni.getStorageSync('id')){
 							this.guanzhu =''
 						}else{
@@ -776,6 +812,7 @@
 								
 							})
 						}
+						
 					}else{
 						// uni.showToast({
 						// 	title:res.msg,
@@ -811,6 +848,7 @@
 						}
 					}
 					this.pusCardList=data;
+					
 				})
 			},
 			// 打卡
