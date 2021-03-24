@@ -313,7 +313,28 @@
 			  menus: ['shareAppMessage', 'shareTimeline']
 			})
 			//#endif
-			if(option.pushList==undefined){
+			if(option.scene){
+				 var id=decodeURIComponent(option.scene);	
+							  console.log(id)
+				 var  ids= id.split('&')
+				 var    pushIds =  ids[0].split('=')
+			     var   shares=    ids[1].split('=')
+			     var     isopens=  ids[2].split('=')
+				   if(pushIds[0]=='pushId'){
+					   this.pushId=pushIds[1]
+				   }
+				   if(shares[0]=='share'){
+				   			try{
+				   			 uni.setStorageSync('share',shares[1]);
+				   			}catch(e){
+				   				console.log(Error)
+				   			};
+				   }
+				   if(isopens[0]=='isopen'){
+				   		this.isShare=isopens[1]?isopens[1]:0
+				   }
+				
+			}else if(option.pushList==undefined){
 				
 				this.pushId=option.pushId;
 				this.isShare=option.isopen?option.isopen:0;
@@ -328,6 +349,9 @@
 				this.getPushCardList();
 				this.clickSaveShareInfo();
 			}
+		
+		
+			
 			
 		},
 		
