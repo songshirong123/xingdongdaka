@@ -333,6 +333,9 @@
 				   if(isopens[0]=='isopen'){
 				   		this.isShare=isopens[1]?isopens[1]:0
 				   }
+				   this.getpushList();
+				   this.getPushCardList();
+				   this.clickSaveShareInfo();
 				
 			}else if(option.pushList==undefined){
 				
