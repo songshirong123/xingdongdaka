@@ -14,8 +14,10 @@
 			
 			uni.getSystemInfo({
 				success: function(e) {
+					
 					// #ifndef MP
 					Vue.prototype.StatusBar = e.statusBarHeight;
+				
 					if (e.platform == 'android') {
 						Vue.prototype.CustomBar = e.statusBarHeight + 50;
 					} else {
@@ -24,6 +26,7 @@
 					// #endif
 					
 					// #ifdef MP-WEIXIN
+					Vue.prototype.safeAreaHeight = e.safeArea.height;
 					Vue.prototype.StatusBar = e.statusBarHeight;
 					let custom = wx.getMenuButtonBoundingClientRect();
 					Vue.prototype.Custom = custom;
