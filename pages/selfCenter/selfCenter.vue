@@ -7,7 +7,7 @@
 				<view class="user_column_item" @tap="gomessage">
 					    <button class='content cu-btn' open-type="msgcount">
 						      <text class="lg text-gray cuIcon-mail" style="color: red;"></text>
-						      <text class='thin'>消息提醒 <text style="margin-left: 200px; background-color: #ff6600; color: #fff; display: inline-block; border-radius: 5px; width: 20px;">{{unreadMsg}}</text> </text>
+						      <text class='thin'>消息提醒 <text v-if="unreadMsg !== 0" style="margin-left: 200px; background-color: #ff6600; color: #fff; display: inline-block; border-radius: 5px; width: 20px;">{{unreadMsg}}</text> </text>
 						    </button>
 				</view>
 				<view class="user_column_item" @tap="gomoney">
