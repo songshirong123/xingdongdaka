@@ -1,9 +1,15 @@
 <template>
 	<view>
 		<usershow :list="userInfos" :userId="id" :guanzhu="guanzhu" :looktotals="looktotals" :lookerCount="lookerCount"
-		 :likeCount="likeCount" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe" :isEditInfo='true'></usershow>
+		 :likeCount="likeCount" :newFans="newFans" v-on:clidtags='clidtags' :num="num" v-on:clickMe="clickMe" :isEditInfo='true'></usershow>
 		<view class="moreInfo">
 			<view class="moreInfoRow2">
+				<view class="user_column_item" @tap="gomessage">
+					    <button class='content cu-btn' open-type="msgcount">
+						      <text class="lg text-gray cuIcon-mail" style="color: red;"></text>
+						      <text class='thin'>消息提醒 <text style="margin-left: 200px; background-color: #ff6600; color: #fff; display: inline-block; border-radius: 5px; width: 20px;">{{unreadMsg}}</text> </text>
+						    </button>
+				</view>
 				<view class="user_column_item" @tap="gomoney">
 					<button class='content cu-btn'>
 						      <text class="lg text-gray cuIcon-moneybag"></text>
@@ -78,6 +84,8 @@
 				// onOff: true,
 				// env:uni.getStorageSync('env'),
 				rmb: 0.00,
+				unreadMsg:0, //未读消息数
+				newFans: 0, //新增粉丝数
 				id: uni.getStorageSync('id'),
 				userId: '',
 				guanzhu: '',
@@ -104,6 +112,8 @@
 			this.lookerCountData();
 			this.burieInit();
 			this.getShowFollow();
+			this.getUnreadMsgCount(this.id);
+			this.getLikeCount(uni.getStorageSync('token'), this.id);
 		},
 
 		onLoad() {
@@ -119,6 +129,51 @@
 
 		},
 		methods: {
+			// 获取粉丝数量
+			getLikeCount(token,userId) {
+				var that = this
+				wx.request({
+				  url: 'http://39.106.107.255:10065/attention/getLookerCountByUserId', //仅为示例，并非真实的接口地址
+				  data: {
+					token,
+				    userId
+				  },
+				  header: {
+				    // 'content-type': 'application/json' // 默认值
+					'content-type': 'application/x-www-form-urlencoded'
+				  },
+				  method: 'POST',
+				  success: function(res) {
+				    console.log(res.data)
+					// console.log(that)
+					var count = res.data.obj.likeCount
+					that.$data.likeCount = count
+				  }
+				})
+			},
+			// 获取未读消息数量
+			getUnreadMsgCount(userId) {
+				var that = this
+				wx.request({
+				  url: 'http://39.106.107.255:10065/msg/getUnreadMsgCount', //仅为示例，并非真实的接口地址
+				  data: {
+				     userId
+				  },
+				  header: {
+				    'content-type': 'application/json' // 默认值
+				  },
+				  method: 'GET',
+				  success: function(res) {
+				    console.log(res.data)
+					var newFans = res.data.obj.attention.unreadcount
+					var count = res.data.obj.comment.unreadcount /*+ res.data.obj.like.unreadcount */+ res.data.obj.looker.unreadcount + res.data.obj.replay.unreadcount
+					console.log(count)
+					that.$data.unreadMsg = count,
+					that.$data.newFans = newFans
+				  }
+				})
+			}
+			,
 			...mapMutations(['logOut']),
 			async getBalance() {
 				if (!uni.getStorageSync('token')) {
@@ -217,6 +272,13 @@
 					url: './income'
 				});
 			},
+			// 跳转消息提醒页面
+			gomessage() {
+				uni.navigateTo({
+					url: './message'
+				});
+			},
+				
 			goPage(url) {
 				uni.navigateTo({
 					url
