@@ -291,6 +291,10 @@
 		           ...mapState(['hasLogin'])  
 		       },  
 		onLoad(option) {
+			console.log(option)
+			if(option.tabId){
+				this.TabCur = 1
+			}
 			this.getActSponsor()
 			//#ifdef MP-WEIXIN
 			wx.showShareMenu({
@@ -308,6 +312,7 @@
 						console.log(Error)
 					};
 				}
+				this.getLookerList()
 				this.getpushList();
 				this.getPushCardList();
 				this.clickSaveShareInfo();
@@ -479,7 +484,7 @@
 					pushId: this.pushId,       // 行动项id
 				} 
 				const {resultCode,obj,msg} = await that.xd_request_post(that.xdServerUrls.xd_getActSponsor,parm)
-				
+				console.log(obj)
 				if(resultCode==='0'){
 					
 					if(obj.pageInfo && obj.pageInfo.list &&  Array.isArray(obj.pageInfo.list) && obj.pageInfo.list.length>0 ) {

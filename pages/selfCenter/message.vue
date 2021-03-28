@@ -70,6 +70,7 @@
 	export default {
 		data() {
 			return {
+				tabId: 'looker',
 				unreadMsg: 0,
 				num: 0,
 				dis: 'none',
@@ -127,18 +128,19 @@
 			// 跳转至详情
 			goDetails(e,index) {
 				var that = this
-				console.log(index)
-				if(e.typename === 'replay'||'comment'){
+				console.log(that)
+				if(e.cardId){
+					console.log('111')
 					uni.navigateTo({
-					url: '../index/cardDetails/cardDetails?pushId='+e.pushId+'&cardId='+e.pushId
+					url: '../index/cardDetails/cardDetails?pushId='+e.pushId+'&cardId='+e.cardId
 				});
 				} else {
+					console.log('222')
 					uni.navigateTo({
-						url: '../index/cardDetails/cardDetails?pushId='+e.pushId
+						url: '../index/action/action?pushId='+e.pushId+'&tabId='+that.tabId
 					})
 				}
 				console.log(e)
-				
 			},
 		},
 		
