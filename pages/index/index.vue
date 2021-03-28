@@ -431,16 +431,21 @@
 					if (that.xdUniUtils.IsNullOrEmpty(that.merchantList[index].imgsUrl)) {
 						that.shareImg = that.xdUniUtils.xd_randomImg(1);
 					}else{
-						that.shareImg = that.xdUniUtils.xd_randomImg('',that.merchantList[index].imgsUrl);
+						that.shareImg = that.merchantList[index].imgsUrl[0];
 					}
 					that.shareTitle= that.merchantList[index].activityContent
 					that.sharePath='/pages/pageA/merchant/merchantDetail'
 					that.scen='activityid=' + that.merchantList[index].id
+					if(that.merchantList[index].imgsUrl.length>0){
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+					}else{
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+					}
 				}else{
 					that.sharePath= '/pages/index/action/action'
 					that.scen='pushId=' + that.listsTab[index].id + '&share=' + uni.getStorageSync('id') +'&isopen=' + that.listsTab[index].isopen
-					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.xdUniUtils.xd_randomImg('',that.listsTab[index].pushCardList[0]
-							.pictures): that.xdUniUtils.xd_randomImg(1)
+					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.listsTab[index].pushCardList[0]
+							.pictures[0]: that.xdUniUtils.xd_randomImg(1)
 					if(that.listsTab[index].challengeRmb>0){
 						that.shareTitle=that.listsTab[index].userId == that.userId ? '我不加油,你们就围观分钱:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
 								'你不加油,我们就围观分钱:' + that.listsTab[index].pushCardList[0].content
@@ -448,13 +453,18 @@
 					}else{
 						that.shareTitle= that.listsTab[index].userId == that.userId ? '第' + that.listsTab[index].pushCardCishuCount +
 							'次打卡:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
-							'打Call：' + that.listsTab[index].pushCardList[0].content
+							'打Call:' + that.listsTab[index].pushCardList[0].content
 					
 					}
+					if(that.listsTab[index].pushCardList[0].pictures.length>0){
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+					}else{
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+					}
+					
 				}
 				that.indexDatas=index
 			
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
 			},
 			bindload() {
 				var that = this;

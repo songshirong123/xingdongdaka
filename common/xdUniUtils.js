@@ -380,13 +380,7 @@ function xd_onShare(title, path, imageUrl) {
     title: title ?title: defaultTitle,
     path: path ? path: defaultPath,
     imageUrl: imageUrl ?imageUrl: defaultImageUrl,
-    success(res) { 
-      console.log("转发成功！");
-    },
-    fail: function (res) {
-      console.log("转发失败！");
-    }
-  };
+  }
 }
 /**
  * 

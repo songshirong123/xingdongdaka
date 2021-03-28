@@ -361,19 +361,18 @@
 		onShareAppMessage(res) {
 			let that = this;
 			that.$refs.share.hideModal();
-			that.setSaveShareInfo();
-			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);	
-				
-		},
+			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg)
+			that.setSaveShareInfo()
+},
 		//#ifdef MP-WEIXIN
 		onShareTimeline(){
 			let that = this;
-				that.setSaveShareInfo();
 				return {
 					title: that.shareTitle,
 					query: that.scen,
 					imageUrl:that.shareImg,
 				}
+				that.setSaveShareInfo()
 		},
 		//#endif
 		methods:{
@@ -383,7 +382,12 @@
 				if(!that.hasLogin){
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+				if(that.pusCardList[0].pictures.length>0){
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				}else{
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,"");
+				}
+				
 			},
 			getshare(){
 				let that = this;
@@ -395,20 +399,20 @@
 					
 					that.shareTitle=that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
 					if(that.pusCardList.length>0){
-						that.shareImg=that.pusCardList[0].pictures[0]?that.xdUniUtils.xd_randomImg('',that.pusCardList[0].pictures):that.xdUniUtils.xd_randomImg(1)
+						that.shareImg=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1)
 					}else{
 						
-						that.shareImg=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1)
+						that.shareImg=that.pushList.pictures[0]?that.pushList.pictures[0]:that.xdUniUtils.xd_randomImg(1)
 					}
 				
 				}else{
 					
 					if(that.pusCardList.length>0){
-						that.shareTitle=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call：'+that.pusCardList[0].content
-						that.shareImg=that.pusCardList[0].pictures[0]?that.xdUniUtils.xd_randomImg('',that.pusCardList[0].pictures):that.xdUniUtils.xd_randomImg(1)
+						that.shareTitle=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
+						that.shareImg=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1)
 					}else{
-						that.shareTitle=that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call：'+that.pushList.content
-						that.shareImg=that.pushList.pictures?that.pushList.pictures:that.xdUniUtils.xd_randomImg(1)
+						that.shareTitle=that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call:'+that.pushList.content
+						that.shareImg=that.pushList.pictures[0]?that.pushList.pictures[0]:that.xdUniUtils.xd_randomImg(1)
 					}
 					
 				}
@@ -789,12 +793,11 @@
 						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,true)
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime,true)
 						data.challengeRmb=res.obj.challengeRmb/100;
-						data.pictures=res.obj.pictures.split(',')
-						// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
-						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
-						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
-						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
-						// ];
+						if(data.pictures){
+							data.pictures=res.obj.pictures.split(',')
+						}else{
+							data.pictures=[]
+						}
 						this.pushList=data;
 						this.getshare();
 						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
@@ -846,8 +849,10 @@
 					var data=res.obj.list;
 					for(let i=0;i<res.obj.list.length;i++){
 						data[i].createTime=this.xdUniUtils.xd_timestampToTime(data[i].createTime,false,false,false,true);
-						if(res.obj.list[i].pictures!=""){
+						if(res.obj.list[i].pictures){
 							data[i].pictures=res.obj.list[i].pictures.split(',')
+						}else{
+							data[i].pictures=[]
 						}
 					}
 					this.pusCardList=data;

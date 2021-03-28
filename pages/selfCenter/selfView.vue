@@ -151,18 +151,23 @@
 				if(that.tab == 1){
 					that.scen='pushId=' + that.list[index].id + '&share=' + uni.getStorageSync('id') +
 							'&isopen=' + that.list[index].isopen
-					that.shareImg=that.list[index].pictures ? that.list[index].pictures : that.xdUniUtils.xd_randomImg(1)
+					that.shareImg=that.list[index].pictures[0] ? that.list[index].pictures[0] : that.xdUniUtils.xd_randomImg(1)
 					that.shareTitle=that.list[index].userId == that.user ? '我不加油,你们就围观分钱' + that.list[index].pushCardCishuCount+
 							that.list[index].content : '@' + that.list[index].userName + '你不加油,我们就围观分钱:' + that.list[index]
 							.content
 				}else if(that.tab == 2){
 					that.scen='pushId=' + that.lookerList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.lookerList[index].isopen
-					that.shareImg=that.lookerList[index].pictures ? that.lookerList[index].pictures : that.xdUniUtils.xd_randomImg(1)
+					that.shareImg=that.lookerList[index].pictures[0] ? that.lookerList[index].pictures[0] : that.xdUniUtils.xd_randomImg(1)
 					that.shareTitle=that.lookerList[index].userId == that.user ? '我不加油,你们就围观分钱' + that.lookerList[index].pushCardCishuCount +
 							 that.lookerList[index].content : '@' + that.lookerList[index].userName + '你不加油,我们就围观分钱:' +
 							that.lookerList[index].content
 				}
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+				if(that.lookerList[index].pictures||that.list[index].pictures){
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+				}else{
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,"");	
+				}
+				
 			},
 			lookerCountData() {
 				var that = this;

@@ -213,32 +213,48 @@
 		methods: {
 			share(index){
 				let that = this;
+				console.log(that.cardList[index])
 				that.sharePath='/pages/index/action/action'
 				if (!that.hasLogin) {
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				if(that.tab == 1){
+					
 					that.scen='pushId=' + that.cardList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.cardList[index].isopen
-					that.shareImg=that.cardList[index].pictures ? that.cardList[index].pictures : that.xdUniUtils.xd_randomImg(1)
 					that.shareTitle='我不加油,你们就围观分钱:' + that.cardList[index].content
+					if(that.cardList[index].pictures){
+						that.shareImg=that.cardList[index].pictures[0]
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+					}else{
+						that.shareImg=that.xdUniUtils.xd_randomImg(1)
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+					}
 
 				}else if(that.tab == 2){
 					that.scen='pushId=' + that.lookerList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.lookerList[index].isopen
 					that.shareImg=that.lookerList[index].pictures ? that.lookerList[index].pictures : that.xdUniUtils.xd_randomImg(1)
 					that.shareTitle='@'+ that.lookerList[index].userName + '你不加油,我们就围观分钱:' + that.lookerList[index].content
+					if(that.lookerList[index].pictures){
+						that.shareImg=that.lookerList[index].pictures[0]
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+					}else{
+						that.shareImg=that.xdUniUtils.xd_randomImg(1)
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+					}	
 				}else if(that.tab == 3 || that.tab == 4){
 					that.sharePath='/pages/pageA/merchant/merchantDetail'
 					that.scen='activityid=' + that.activityByUserId[index].id+"&share="+ uni.getStorageSync('id')
 	
 					if(this.xdUniUtils.IsNullOrEmpty(that.activityByUserId[index].imgsUrl)){
 						that.shareImg= that.xdUniUtils.xd_randomImg(1)
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');	
 					}else{
-						that.shareImg=that.xdUniUtils.xd_randomImg('',that.activityByUserId[index].imgsUrl);
+						that.shareImg=that.activityByUserId[index].imgsUrl[0];
+						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
 					}
 					
 				}
-				
-				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
+			
 			},
 			tabs(e) {
 				this.tab = e;
@@ -653,11 +669,6 @@
 						dataList[i].pictures=[]
 					}
 					
-					// dataList[i].pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
-					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
-					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
-					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
-					// ];
 					dataList[i].challengeRmb = Math.floor(dataList[i].challengeRmb / 100);
 
 				}
