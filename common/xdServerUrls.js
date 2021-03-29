@@ -130,6 +130,9 @@ const serverUrls = { //根据接口具体配置
 
 	xd_getUnreadMsgCount: serverBaseUrl + '/msg/getUnreadMsgCount', //未读记录
 	xd_LookerCountByUserId: serverBaseUrl + '/attention/getLookerCountByUserId', //粉丝
+	xd_getMyTipsByUserId: serverBaseUrl + '/msg/getSummaryMsg', //提醒
+	xd_ignoreAllByUserId: serverBaseUrl + '/msg/ignoreAll', //已读
+	
 }
 export default {
 	serverUrls,

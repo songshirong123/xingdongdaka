@@ -51,13 +51,17 @@
 			</view>
 			<!--                              我的提醒                                  -->
 			<view class="myTips msgCon" :class="{dis: num == 1}">
+				<view class="msgTitle">
+					<text class="tips">全部提醒</text>
+					<text :class="{bgc: flag}" class="read" @tap="allRead(id)" >全部已读</text>
+				</view>
 				<view class="myMsgItem borderLine" v-for="(item, index) in tipsList" :key = 'index' @tap="goDetails(item,index)">
 					<view class="msgbody">
 						<text style="display: block;">{{getMsgType(item.typename)}}提醒 【{{item.describes}}】</text>
 						<text style="display: block;">{{xdUniUtils.xd_timestampToTime(item.updateTime,false,true,false) }}</text>
 					</view>
 					<view class="right">
-						<text class="rightCount">{{item.unreadcount}}</text>
+						<text v-if="!arr.includes(index)" class="rightCount">{{item.unreadcount}}</text>
 					</view>
 				</view>
 				
@@ -76,6 +80,8 @@
 				dis: 'none',
 				id: uni.getStorageSync('id'),
 				tipsList: [],
+				arr: [],
+				flag: false
 			};
 		},
 		onShow() {
@@ -106,24 +112,34 @@
 			},
 			// 获取【我的提醒】信息
 			getMyTips(userId) {
-				var that = this
-				console.log(that.id)
-				wx.request({
-				url: 'http://39.106.107.255:10065/msg/getSummaryMsg', //仅为示例，并非真实的接口地址
-				data: {
-				    userId:11089
+				this.xd_request_get(
+				this.xdServerUrls.xd_getMyTipsByUserId,
+				{
+					userId:11089
 				},
-				header: {
-				    // 'content-type': 'application/json' // 默认值
-					'content-type': 'application/json'
-				},
-				method: 'GET',
-				success: function(res) {
-					console.log(res.data)
-					that.$data.tipsList = res.data.obj
-					console.log(that.$data.tipsList)
-				},
-				})
+				true
+				).then((res => {
+					this.$data.tipsList = res.obj
+						console.log(this.$data.tipsList)
+				}))
+				// var that = this
+				// console.log(that.id)
+				// wx.request({
+				// url: 'http://39.106.107.255:10065/msg/getSummaryMsg', //仅为示例，并非真实的接口地址
+				// data: {
+				//     userId:11089
+				// },
+				// header: {
+				//     // 'content-type': 'application/json' // 默认值
+				// 	'content-type': 'application/json'
+				// },
+				// method: 'GET',
+				// success: function(res) {
+				// 	console.log(res.data)
+				// 	that.$data.tipsList = res.data.obj
+				// 	console.log(that.$data.tipsList)
+				// },
+				// })
 			},
 			// 跳转至详情
 			goDetails(e,index) {
@@ -141,7 +157,37 @@
 					})
 				}
 				console.log(e)
+				// 清除红点
+				this.$data.arr.push(index)
 			},
+			// 全部已读
+			allRead(userId){
+				this.xd_request_get(
+				this.xdServerUrls.xd_ignoreAllByUserId,
+				{
+					userId
+				},
+				true
+				).then((res => {
+					console.log('1111')
+					this.xd_request_get(
+					  this.xdServerUrls.xd_getUnreadMsgCount,
+					  {
+					    userId,
+					  },
+					  true
+					).then((res) => {
+						this.$data.arr = []
+						this.$data.tipsList.forEach((item,index) => {
+							this.$data.arr.push(index)
+							})
+							this.$data.flag = true
+							console.log(this.$data.tipsList)
+							console.log(this.$data.arr)
+							console.log(this.$data.arr)
+					});
+				}))
+			}
 		},
 		
 	}
@@ -219,8 +265,31 @@
 				margin-left: 20px;
 				padding:12rpx;
 			}
-			
+		}	
 			// -----------------------------------
+		.msgTitle{
+			margin: 0 20px 10px 20px;
+			width: auto;
+			height: 20px;
+			.bgc{
+				background-color: #ccc !important;
+			}
+			.tips{
+				border-radius: 10px ;
+				font-size: 12px;
+				line-height: 20px;
+				float: left;
+			}
+			.read{
+				padding: 0 10px;
+				border-radius: 10px ;
+				background-color: #ff6600;
+				color: #fff;
+				font-size: 12px;
+				line-height: 20px;
+				float: right;
+			}
 		}
+		
 	}
 </style>
