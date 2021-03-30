@@ -60,7 +60,7 @@
 						<text style="display: block;">{{getMsgType(item.typename)}}提醒 【{{item.describes}}】</text>
 						<text style="display: block;">{{xdUniUtils.xd_timestampToTime(item.updateTime,false,true,false) }}</text>
 					</view>
-					<view class="right">
+					<view v-if="item.unreadcount !== 0" class="right">
 						<text v-if="!arr.includes(index)" class="rightCount">{{item.unreadcount}}</text>
 					</view>
 				</view>
@@ -115,7 +115,7 @@
 				this.xd_request_get(
 				this.xdServerUrls.xd_getMyTipsByUserId,
 				{
-					userId:11089
+					userId
 				},
 				true
 				).then((res => {
@@ -169,25 +169,15 @@
 				},
 				true
 				).then((res => {
-					console.log('1111')
-					this.xd_request_get(
-					  this.xdServerUrls.xd_getUnreadMsgCount,
-					  {
-					    userId,
-					  },
-					  true
-					).then((res) => {
-						this.$data.arr = []
-						this.$data.tipsList.forEach((item,index) => {
-							this.$data.arr.push(index)
-							})
-							this.$data.flag = true
-							console.log(this.$data.tipsList)
-							console.log(this.$data.arr)
-							console.log(this.$data.arr)
-					});
+					this.$data.arr = []
+					this.$data.tipsList.forEach((item,index) => {
+						this.$data.arr.push(index)
+						})
+						this.$data.flag = true
+						console.log(this.$data.tipsList)
+						console.log(this.$data.arr)
 				}))
-			}
+			},
 		},
 		
 	}
