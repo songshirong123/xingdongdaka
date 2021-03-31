@@ -12,18 +12,6 @@
 				"navigationBarTitleText": "微信授权登录"
 			}
 		},
-		// {
-		// 	"path": "pages/msg/msg",
-		// 	"style": {
-		// 		"navigationBarTitleText": "消息"
-		// 	}
-		// }, 
-		{
-			"path": "pages/msg/talk",
-			"style": {
-				"navigationBarTitleText": "消息回复"
-			}
-		},
 		{
 			"path": "pages/selfCenter/clockIn",
 			"style": {
@@ -139,6 +127,12 @@
 		}
 	],
 	"subPackages": [{
+		"root": "pages/pageB",
+		"pages": [
+			{}
+		]
+	}],
+	"subPackages": [{
 		"root": "pages/pageA",
 		"pages": [{
 				"path": "thankmoney/thankmoney",
@@ -207,7 +201,7 @@
 				"path": "ranking/rangkinDet",
 				"style": {
 					"navigationBarTitleText": "挑战赛详情"
-
+	
 				}
 			},
 			{
@@ -254,14 +248,14 @@
 					"navigationBarTitleText": "发起活动",
 					"enablePullDownRefresh": false
 				}
-
+	
 			}, {
 				"path": "merchant/merchantActionList",
 				"style": {
 					"navigationBarTitleText": "发起活动详情",
 					"enablePullDownRefresh": true
 				}
-
+	
 			}, {
 				"path": "merchant/merchantEditInfo",
 				"style": {
@@ -274,7 +268,7 @@
 					"navigationBarTitleText": "我的活动",
 					"enablePullDownRefresh": false
 				}
-
+	
 			}, {
 				"path": "merchant/merchantDetail",
 				"style": {

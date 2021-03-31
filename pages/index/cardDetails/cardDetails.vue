@@ -61,8 +61,8 @@
 						</view>
 					</view>
 					<view class=" flex  padding">
-						<image class="bg-img imgheit"  :src="pusCardLists.pictures" mode="aspectFill"
-						 @tap="goPageImg(pusCardLists.pictures)" v-if="pusCardLists.pictures!=''">
+						<image class="bg-img imgheit"  :src="pusCardLists.pictures[0]" mode="aspectFill"
+						 @tap="goPageImg(pusCardLists.pictures[0])" v-if="pusCardLists.pictures[0]!=''">
 						</image>
 						<image class="bg-img imgheit"  :src="audioPlaySrc" mode="aspectFill"
 						 @tap="goPageImg(audioPlaySrc)" v-else @error="error">
@@ -180,7 +180,7 @@
 							<text class="text-xs">赞助</text>
 						</view>
 						<view class=" flex flex-direction">
-							<button class="cu-btns"  open-type="share">
+							<button class="cu-btns" @click="shareBt">
 								<view class="text-black text-xxl">
 									<text class="lg text-black cuIcon-forward"></text>
 								</view>
@@ -205,17 +205,20 @@
 				</view>
 			</form>
 		</view>
+		<!-- 分享 -->
+		<share 
+			ref="share" 
+			:contentHeight="950"
+		></share>
 	</view>
 </template>
 
 <script>
 	import{ mapState,mapMutations} from 'vuex'
-	import imtAudio from 'components/imt-audio/imt-audio'
-	const audio = uni.createInnerAudioContext(); //创建音频
+	import share from "@/components/share.vue"
 	export default {
 		components:{
-			imtAudio
-			
+			share
 		},
 		data() {
 			return {
@@ -241,7 +244,11 @@
 				guanzhu:'关注',
 				pushCardCreateTime:'',
 				dakacishu:0,
-				showHzGroup:this.xdUniUtils.showHzGroup()
+				showHzGroup:this.xdUniUtils.showHzGroup(),
+				shareImg:'',
+				sharePath:'',
+				shareTitle:'',
+				scen:'',
 			}
 		},
 		watch:{
@@ -253,6 +260,7 @@
 					let pages = getCurrentPages(); // 当前页面
 					let beforePage = pages[pages.length - 2]; // 前一个页面
 					beforePage.onLoad(); // 执行前一个页面的onLoad方法
+					that.getshare()
 					
 				}, 100);
 			},
@@ -261,33 +269,22 @@
 		           ...mapState(['hasLogin'])  
 		       },  
 		onShareAppMessage(res) {
-			
-
 			let that = this;
-			if(!that.hasLogin){
-				return that.xdUniUtils.xd_login(that.hasLogin);
-			}
-			let text=that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content;
-			let pathText='/pages/index/action/action?pushId='+ that.pusCardLists.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pusCardLists.isopen;
-			let  img=that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1);
-			if(res.from=="menu"){
-			return	that.xdUniUtils.xd_onShare(text,pathText,img
-			);
-			}else{
-				that.setSaveShareInfo();
-			return	that.xdUniUtils.xd_onShare(text,pathText,img);
-			}
+			that.$refs.share.hideModal();
+			
+			 return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
+			 that.setSaveShareInfo();
+			
 		},
 		//#ifdef MP-WEIXIN
 		onShareTimeline(){
 			let that = this;
 			that.setSaveShareInfo();
-			return {
-				title:that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[0].content:'我为@'+that.pusCardLists.userName+'打Call：'+that.pusCardLists.pushCardList[0].content,
-				query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
-				imageUrl:that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1),
-			}
-				
+				return {
+					title:that.shareTitle,
+					query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
+					imageUrl:that.shareImg,
+				}
 			
 		},
 		//#endif
@@ -310,6 +307,32 @@
 			
 		},
 		methods: {
+
+			//分享
+			shareBt(){
+				let that = this;
+				if(!that.hasLogin){
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
+				if(that.showCardCommentlist.pushCard.pictures.length>0){
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				}else{
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,"");
+				}
+			},
+			getshare(){
+				let that = this;
+				that.scen='pushId='+ that.pusCardLists.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pusCardLists.isopen
+				that.shareImg= that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1)
+				that.sharePath= '/pages/index/action/action'
+				if(that.pusCardLists.challengeRmb>0){
+					that.shareTitle=that.pusCardLists.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'@'+that.pusCardLists.userName+'你不加油,我们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
+				}else{
+					that.shareTitle= that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'我为@'+that.pusCardLists.userName+'打Call:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
+					
+				}
+			},
+
 			copyContent(e){
 				// console.log(this.pusCardLists.id)
 				// console.log(this.id)
@@ -502,9 +525,9 @@
 			 goPageImg(e,index){
 				this.xdUniUtils.xd_showImg(e,index);
 			},
-			error: function() {
-				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
-			            }  ,
+			// error: function() {
+			// 	this.audioPlaySrc=this.xdUniUtils.xd_randomImg();
+			//             }  ,
 			
 			getshowCardComment(){
 				this.xd_request_post(this.xdServerUrls.xd_showCardComment,{
@@ -627,6 +650,12 @@
 					data.challengeRmb=res.obj.challengeRmb/100;
 					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
 					data.createTime=time;
+					data.pictures=res.obj.pictures.split(',')
+					// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+					// ];
 					this.pusCardLists=data;
 					
 					data.pushCardList.reverse().forEach((item,index)=>{
@@ -663,7 +692,7 @@
 					// 		this.dakacishu = this.pusCardLists.pushCardCishuCount
 					// 	}
 					// }
-					
+					this.getshare()
 				})
 			},
 			strToArr(res){

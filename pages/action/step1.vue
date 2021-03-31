@@ -122,6 +122,7 @@
 						 maxlength="50" step="1" min="0"></input>
 					</view>
 				</view>
+				<text class="text-xs padding-xs"> 温馨提示：打卡起始日期为创建行动当天，如当天太晚不准备打卡，请将休假天数多设置1天。</text>
 			</view>
 
 			<view class="pading-time">

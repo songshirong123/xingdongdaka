@@ -1,21 +1,29 @@
 <template>
 	<view class="selfCenter">
 		<view class="actionInfo">
-			<text>选择需要加入挑战赛的行动、没有请新创建行动</text>
-			<view class="actionTabList">
-				<view class="actionMy" >
-					<block v-for="(item, index) in list" :key="index">
-						<indexList id="indexList" :list="item" :index="index" @gotoSponsor='gotoSponsor' 
-						 v-on:addRankin="addRankin" :hasLogin="hasLogin" :userId='userId' :isRanking='isRanking'></indexList>
-					</block>
+			<view class="cu-bar justify-center bg-white">
+				<view class="action border-title">
+					<text class="text-xl text-bold text-blue">选择需要加入挑战赛的行动、没有请新创建行动</text>
 				</view>
 			</view>
+			
+			<view class="actionTabList">
+				<view class="actionMy" >
+					
+						<actionlist v-for="(item,index) in list" :item="item" :key="index" tab="1" :index='index' v-on:addRankin="addRankin" 
+						 :userId="userId" :isRanking='isRanking'></actionlist>
+		
+				</view>
+			</view>
+		</view>
+		<view class="start-add" >
+			<image  src="../../../static/images/Body.png" @tap="goPage('/pages/action/step1')" mode="widthFix"></image>
 		</view>
 	</view>
 </template>
 
 <script>
-	import indexList from "@/components/indexList.vue";
+	import actionlist from "@/components/actionlist.vue";
 	
 	import {
 		mapState,
@@ -24,11 +32,11 @@
 	export default {
 		components:{
 		
-			indexList
+			actionlist
 		},
 		data() {
 			return {
-				isRanking:'true',
+				isRanking:true,
 				tab:0,//行动，围观，收藏
 				list:[],
 				userId:'',
@@ -55,21 +63,25 @@
 		
 		},
 		methods: {
-			
-			addRankin(e){
-				if(this.guanzhu=="已关注"){
-					return
+			goPage(url) {
+				if (!this.hasLogin) {
+					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
-				this.xd_request_post(this.xdServerUrls.xd_saveAttention,{
-					userId:uni.getStorageSync('id'),
-					attentionUserId:e.id,		
+				uni.navigateTo({
+					url
+				});
+			},
+			addRankin(list,index){
+				this.xd_request_get(this.xdServerUrls.xd_challengeSave,{
+					token:uni.getStorageSync('token'),
+					pushId:list.id,		
 					
 				},true).then(res=>{
 					if(res.resultCode == 0){
 						 this.guanzhu="已关注"
 						 uni.showToast({
 						 	icon:'none',
-						   title: '关注成功',
+						   title: '加入成功',
 						 })
 					}else{
 						uni.showToast({
@@ -80,7 +92,9 @@
 				})
 			},
 			getCardList(){
-				this.xd_request_post(this.xdServerUrls.xd_pushByCreateTimeList,{
+				this.xd_request_post(this.xdServerUrls.xd_pushByUserIdList,{
+					token: uni.getStorageSync('token'),
+					userId: uni.getStorageSync('id'),
 					pageNum: 1,
 					pageSize: 10,
 				},true)
@@ -97,7 +111,12 @@
 				}
 				return dataList;
 			},
-		}
+		},
+		// 上拉加载
+		onReachBottom() {
+			this.getCardList()
+		
+		},
 	}
 </script>
 
@@ -123,5 +142,25 @@
 		}
 	}
 }
+.start-add {
+		width: 100upx;
+		height: 100upx;
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		background: #ffe66f;
+		border: 2px solid #ffa700;
+		border-radius: 50%;
+		position: fixed;
+		bottom: 100upx;
+		right: 30upx;
+		z-index: 99;
+	}
+
+	.start-add image {
+		width: 48upx;
+		height: 48upx;
+	}
 
 </style>

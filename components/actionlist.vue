@@ -42,7 +42,7 @@
 							保证金￥{{item.challengeRmb}}
 						</view>
 					</view>
-					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==1">
+					<view class="ali_right moreandroidwhite" @click="toggleMask(item.id,index)" v-if="tab==1&&!isRanking">
 						<text class="cuIcon-moreandroid" ></text>
 					</view>
 					
@@ -52,26 +52,31 @@
 			<view class="text-content padding-lr textcen">
 				<text class="contentext" @tap="goPageCard(item)" >{{item.content}}</text>
 			</view>
-			<view class="grid flex-sub  padding-lr"  >
-				<image class="imgheit"  :src="item.pictures" mode="aspectFill"
-				 @tap="goPageCard(item)" v-if="item.pictures!=''" >
+			<view class="grid flex-sub padding-lr" :class="item.pictures.length>1?'col-3 grid-square':'col-1'" v-if="item.pictures.length>1" >
+				<view class="bg-img" :class="item.pictures.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"
+				 v-for="(item,index) in item.pictures" :key="index" @tap="goPageCard(item)" >
+				</view>
+			</view>
+			<view class="grid flex-sub  padding-lr"  v-else>
+				<image class="imgheit"  :src="item.pictures[0]" mode="aspectFill"
+				 @tap="goPageCard(item)"  v-if="item.pictures.length>0">
 				</image>
 				<image class="imgheit"  :src="audioPlaySrc" mode="aspectFill"
 				 @tap="goPageCard(item)" v-else @error="error">
 				</image>
 			</view>
 			<view class="flex padding justify-between" >
-				<view>
-					<button class="cu-btn bg-light-blue sm round" v-if="item.userId==userId "  :id="index" open-type="share">分享邀请</button>
-					<button class="cu-btn bg-orange sm round  " v-else-if="item.onlooker" :id="index" open-type="share">为TA打Call</button>
-					<button class="cu-btn bg-green sm round  " v-else-if="item.userId!=userId && !item.onlooker&&item.challengeRmb<=0" :id="index"  @tap="lookerClick(item,indexs)">围观</button>
-					<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(item,indexs)">围观分钱</button>
+				<view v-if="!isRanking">
+					<button class="cu-btn bg-light-blue sm round" v-if="item.userId==userId "  :id="index" @click="share(index)">分享邀请</button>
+					<button class="cu-btn bg-orange sm round  " v-else-if="item.onlooker" :id="index" @click="share(index)">为TA打Call</button>
+					<button class="cu-btn bg-green sm round  " v-else-if="item.userId!=userId && !item.onlooker&&item.challengeRmb<=0" :id="index"  @tap="lookerClick(item,index)">围观</button>
+					<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(item,index)">围观分钱</button>
 					<text class="text-gray text-df ">{{item.onlookerCount}}</text>
 				</view>
-				<!-- <view class="text-xxl" @click="gothank(item)" v-if="userId==item.userId" >
-					<button class="cu-btn line-green sm round  "  >我要感谢</button>
-				</view> -->
-				<view class="text-xxl" @click="goPage(item)" v-if="userId==item.userId" >
+				<view class="" v-if="isRanking">
+					<button class="cu-btn bg-green sm round"  @click="addRankin(item,index)" >选择该行动加入</button>
+				</view>
+				<view class="text-xxl" @click="goPage(item)" v-if="userId==item.userId&& !isRanking" >
 					<button class="cu-btn line-green sm round  "  >立即打卡</button>
 				</view>
 			
@@ -83,17 +88,20 @@
 <script>
 	export default {
 		name:"actionlist",
-		props:['tab','item','showBut','index','userId'],
+		props:['tab','item','showBut','index','userId','isRanking'],
 		
 		data(){
 			return {
-				audioPlaySrc:"1"
+				audioPlaySrc:"../static/images/icon/img/title.png"
 			}
 		},
 		methods:{
 			error: function() {
-				this.audioPlaySrc=this.xdUniUtils.xd_randomImg();	
+				this.audioPlaySrc=this.xdUniUtils.xd_randomImg(1);	
 			            } ,
+			share(index){
+				this.$emit('share',index);
+			},
 			goPage(item){
 				if(item.pushCardStatus==2||item.pushCardStatus==3){
 					uni.showModal({
@@ -165,6 +173,10 @@
 			
 			goPageImg(e){
 				this.xdUniUtils.xd_showImg(e)
+			},
+			addRankin(e,index){
+				
+				this.$emit('addRankin',e,index);
 			},
 			lookerClick(list,indexs){
 				

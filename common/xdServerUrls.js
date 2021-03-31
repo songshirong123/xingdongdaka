@@ -127,6 +127,15 @@ const serverUrls = { //根据接口具体配置
 	xd_getActivityByUserId: serverBaseUrl + '/Activity/getActivityByUserId', //加入的活动列表
 	xd_selectByActivityId: serverBaseUrl + '/Activity/selectByActivityId', //根据活动id获取详情
 	xd_init: serverBaseUrl + '/businessExp/init', //商家倒计时按钮
+	
+	xd_challenge: serverBaseUrl + '/challenge/getList', //获取挑战赛列表
+	xd_challengeSave: serverBaseUrl + '/challenge/save', //加入挑战
+	
+	xd_createQr: serverBaseUrl + '/qrCode/createQr', //生成海报
+	
+	
+	
+	
 
 	xd_getUnreadMsgCount: serverBaseUrl + '/msg/getUnreadMsgCount', //未读记录
 	xd_LookerCountByUserId: serverBaseUrl + '/attention/getLookerCountByUserId', //粉丝
