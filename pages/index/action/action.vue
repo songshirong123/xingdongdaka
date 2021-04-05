@@ -103,7 +103,7 @@
 				</view>
 			</view>
 			<view class="grid flex-sub padding-lr" style="margin-top: 5px;" v-else >
-				<image class="bg-img imgheit" :src="pushList.pictures[0]" mode="aspectFill" @tap="goPageImg(pushList.pictures[0])" v-if="pushList.pictures[0]!=''">
+				<image class="bg-img imgheit" :src="pushList.pictures[0]" mode="aspectFill" @tap="goPageImg(pushList.pictures[0])" v-if="pushList.pictures[0]">
 				</image>
 				<image class="bg-img imgheit" :src="audioPlaySrc" mode="aspectFill" @tap="goPageImg(audioPlaySrc)" v-else @error="error">
 				</image>
@@ -315,7 +315,6 @@
 			//#endif
 			if(option.scene){
 				 var id=decodeURIComponent(option.scene);	
-							  console.log(id)
 				 var  ids= id.split('&')
 				 var    pushIds =  ids[0].split('=')
 			     var   shares=    ids[1].split('=')
@@ -336,6 +335,7 @@
 				   this.getpushList();
 				   this.getPushCardList();
 				   this.clickSaveShareInfo();
+				 
 				
 			}else if(option.pushList==undefined){
 				
@@ -351,6 +351,7 @@
 				this.getpushList();
 				this.getPushCardList();
 				this.clickSaveShareInfo();
+				
 			}
 		
 		
@@ -361,7 +362,8 @@
 		onShareAppMessage(res) {
 			let that = this;
 			that.$refs.share.hideModal();
-			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg)
+			const img=that.shareImg?that.shareImg:that.xdUniUtils.xd_randomImg(1)
+			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,img)
 			that.setSaveShareInfo()
 },
 		//#ifdef MP-WEIXIN
@@ -370,52 +372,65 @@
 				return {
 					title: that.shareTitle,
 					query: that.scen,
-					imageUrl:that.shareImg,
+					imageUrl:that.shareImg?that.shareImg:that.xdUniUtils.xd_randomImg(1),
 				}
 				that.setSaveShareInfo()
 		},
 		//#endif
 		methods:{
 			//分享
+			
 			shareBt(){
 				let that = this;
-				if(!that.hasLogin){
-					return that.xdUniUtils.xd_login(that.hasLogin);
-				}
-				if(that.pusCardList[0].pictures.length>0){
-					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-				}else{
-					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,"");
-				}
-				
-			},
-			getshare(){
-				let that = this;
-				
+	
 				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
 				that.sharePath= '/pages/index/action/action'
 				
 				if(that.pushList.challengeRmb>0){
-					
-					that.shareTitle=that.pushList.userId==that.userId? '我不加油,你们就围观分钱:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
+	
+			
 					if(that.pusCardList.length>0){
-						that.shareImg=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1)
+						that.shareImg=that.pusCardList[0].pictures[0]
+						
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
+						if(that.shareImg){
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+						}else{
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+						}
 					}else{
 						
-						that.shareImg=that.pushList.pictures[0]?that.pushList.pictures[0]:that.xdUniUtils.xd_randomImg(1)
+						that.shareImg=that.pushList.pictures[0]
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
+						if(that.shareImg){
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+						}else{
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+						}
 					}
 				
 				}else{
 					
 					if(that.pusCardList.length>0){
-						that.shareTitle=that.pushList.userId==that.userId? '第'+that.pushList.pushCardCishuCount+'次打卡:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
-						that.shareImg=that.pusCardList[0].pictures[0]?that.pusCardList[0].pictures[0]:that.xdUniUtils.xd_randomImg(1)
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
+						that.shareImg=that.pusCardList[0].pictures[0]
+						if(that.shareImg){
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+						}else{
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+						}
 					}else{
-						that.shareTitle=that.pushList.userId==that.userId? that.pushList.content:'我为@'+that.pushList.userName+'打Call:'+that.pushList.content
-						that.shareImg=that.pushList.pictures[0]?that.pushList.pictures[0]:that.xdUniUtils.xd_randomImg(1)
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call:'+that.pushList.content
+						that.shareImg=that.pushList.pictures[0]
+						if(that.shareImg){
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+						}else{
+							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+						}
 					}
 					
 				}
+				
 			},
 			//互助小组点击事件
 			clickGroup(userid){
@@ -799,7 +814,6 @@
 							data.pictures=[]
 						}
 						this.pushList=data;
-						this.getshare();
 						this.surpassHolidayDay=Math.abs(this.pushList.surpassHolidayDay)
 						
 						if(this.pushList.userId == uni.getStorageSync('id')){

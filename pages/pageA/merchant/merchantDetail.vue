@@ -57,7 +57,7 @@
 						<text style="margin-left: 3px;">我要发布</text>
 					</view>
 					<view style="flex: 1;justify-items: center;justify-content: center;" class="xd-rows">
-						<button class="cu-btn bg-white" style="padding: 0px;" :id="index" open-type="share"><text class="lg text-black cuIcon-forward"
+						<button class="cu-btn bg-white" style="padding: 0px;" :id="index" @click="shareBt"><text class="lg text-black cuIcon-forward"
 							 style="margin-top: 2px;"></text>分享活动</button>
 					</view>
 					<view style="flex: 1;justify-items: flex-end;justify-content: flex-end;margin-top: 5px;" class="xd-rows">
@@ -151,13 +151,22 @@
 			</view>
 
 		</view>
-
+		<!-- 分享 -->
+		<share 
+			ref="share" 
+			:contentHeight="950"
+		></share>
 
 	</view>
 </template>
 
 <script>
+	import share from "@/components/share.vue"
 	export default {
+		components: {
+			share
+		
+		},
 		data() {
 			return {
 				tab: 0,
@@ -165,10 +174,53 @@
 				activity: {},
 				activityId: "",
 				activityByUserId: [],
-				activityUserList: []
+				activityUserList: [],
+				shareImg:'',
+				sharePath:'',
+				scen:'',
+				shareTitle:'',
 			}
 		},
+		//#ifdef MP-WEIXIN
+		onShareTimeline() {
+			let that = this;
+			return {
+				title: that.shareTitle,
+				query: that.scen,
+				imageUrl: that.shareImg,
+			}
+		},
+		//#endif
+		onShareAppMessage(res) {
+			let that = this;
+			that.$refs.share.hideModal();	
+			return {
+				title: that.shareTitle,
+				path: that.sharePath+'?'+that.scen,
+				imageUrl: that.shareImg,
+			   }
+		
+		},
 		methods: {
+			//分享
+			shareBt(){
+				let that = this;
+				
+				that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				
+			},
+			shares(e){
+				let that = this;
+					that.shareTitle= e.activityContent
+					that.sharePath='/pages/pageA/merchant/merchantDetail'
+					that.scen='activityid=' + e.id+"&share="+ uni.getStorageSync('id')
+					if(e.imgsUrl.length>0){
+						that.shareImg = e.imgsUrl[0];
+					}else{
+						that.shareImg = '';
+					}
+				
+			},
 			callPhone(phoneNumber){
 				if(this.xdUniUtils.IsNullOrEmpty(phoneNumber))
 					return;
@@ -353,6 +405,7 @@
 					Acobj.activityEndTime = _this.xdUniUtils.xd_timestampToTime(Acobj.activityEndTime, false, false, false);
 					Acobj.statusName = Acobj.status == 0 ? "进行中…" : "已结束";
 					_this.activity = Acobj;
+					_this.shares(Acobj)
 				}).catch(err => {});
 			},
 			merchant() {
@@ -475,30 +528,33 @@
 			},
 		},
 		onLoad(option) {
-			this.activityId = option.activityid;
+			//#ifdef MP-WEIXIN
+			wx.showShareMenu({
+				menus: ['shareAppMessage', 'shareTimeline']
+			})
+			//#endif
+			if(option.scene){
+				var id=decodeURIComponent(option.scene);	
+				var  ids= id.split('&')
+				var    pushIds =  ids[0].split('=')
+				 this.activityId=pushIds[1]
+				if(ids.length>1){
+					var   shares=  ids[1].split('=')
+					if(!this.xdUniUtils.IsNullOrEmpty(shares[1])){
+						uni.setStorageSync('share', shares[1]);
+					}
+				}
+				 console.log(pushIds[1])
+			}else{
+				this.activityId = option.activityid;
+			}
 			let share = option.share;
 			if(!this.xdUniUtils.IsNullOrEmpty(share)){
 				uni.setStorageSync('share', share);
 			}
-			
 			this.selectByActivityId();
 			this.getData();
 			this.getBalance()
-		},
-		onShareAppMessage(res) {
-			console.log("onShareAppMessage");
-			console.log(res);
-
-			let activity = this.activity;
-			let imgs = activity.imgsUrl[0];
-			if (this.xdUniUtils.IsNullOrEmpty(imgs)) {
-				imgs = this.xdUniUtils.xd_randomImg(1);
-			}
-			return {
-				title: activity.activityContent,
-				path: '/pages/pageA/merchant/merchantDetail?activityid=' + activity.id,
-				imageUrl: imgs,
-			}
 		},
 
 	}

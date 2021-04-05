@@ -426,7 +426,10 @@
 				if (!that.hasLogin) {
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
-				
+				that.shareImg=''
+				that.scen=''
+				that.sharePath=''
+				that.shareTitle=''
 				if(that.isMerchant){
 					if (that.xdUniUtils.IsNullOrEmpty(that.merchantList[index].imgsUrl)) {
 						that.shareImg = that.xdUniUtils.xd_randomImg(1);
@@ -435,7 +438,7 @@
 					}
 					that.shareTitle= that.merchantList[index].activityContent
 					that.sharePath='/pages/pageA/merchant/merchantDetail'
-					that.scen='activityid=' + that.merchantList[index].id
+					that.scen='activityid=' + that.merchantList[index].id+"&share="+ uni.getStorageSync('id')
 					if(that.merchantList[index].imgsUrl.length>0){
 						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
 					}else{
@@ -447,12 +450,11 @@
 					that.shareImg= that.listsTab[index].pushCardList[0].pictures[0] ? that.listsTab[index].pushCardList[0]
 							.pictures[0]: that.xdUniUtils.xd_randomImg(1)
 					if(that.listsTab[index].challengeRmb>0){
-						that.shareTitle=that.listsTab[index].userId == that.userId ? '我不加油,你们就围观分钱:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
+						that.shareTitle=that.listsTab[index].userId == that.userId ? '我没动力时,就想想围观分钱的你们:'+ that.listsTab[index].pushCardList[0].content : '@' + that.listsTab[index].userName +
 								'你不加油,我们就围观分钱:' + that.listsTab[index].pushCardList[0].content
 										
 					}else{
-						that.shareTitle= that.listsTab[index].userId == that.userId ? '第' + that.listsTab[index].pushCardCishuCount +
-							'次打卡:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
+						that.shareTitle= that.listsTab[index].userId == that.userId ? '我没动力时,就想想围观的你们:' + that.listsTab[index].pushCardList[0].content : '我为@' + that.listsTab[index].userName +
 							'打Call:' + that.listsTab[index].pushCardList[0].content
 					
 					}

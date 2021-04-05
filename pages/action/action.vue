@@ -213,7 +213,10 @@
 		methods: {
 			share(index){
 				let that = this;
-				console.log(that.cardList[index])
+				that.shareImg=''
+				that.scen=''
+				that.sharePath=''
+				that.shareTitle=''
 				that.sharePath='/pages/index/action/action'
 				if (!that.hasLogin) {
 					return that.xdUniUtils.xd_login(that.hasLogin);
@@ -221,7 +224,11 @@
 				if(that.tab == 1){
 					
 					that.scen='pushId=' + that.cardList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.cardList[index].isopen
-					that.shareTitle='我不加油,你们就围观分钱:' + that.cardList[index].content
+					if(that.cardList[index].challengeRmb>0){
+						that.shareTitle='我没动力时,就想想围观分钱的你们:' + that.cardList[index].content
+					}else{
+						that.shareTitle='我没动力时,就想想围观的你们:' + that.cardList[index].content
+					}
 					if(that.cardList[index].pictures){
 						that.shareImg=that.cardList[index].pictures[0]
 						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
@@ -233,7 +240,11 @@
 				}else if(that.tab == 2){
 					that.scen='pushId=' + that.lookerList[index].id + '&share=' + uni.getStorageSync('id') + '&isopen=' + that.lookerList[index].isopen
 					that.shareImg=that.lookerList[index].pictures ? that.lookerList[index].pictures : that.xdUniUtils.xd_randomImg(1)
-					that.shareTitle='@'+ that.lookerList[index].userName + '你不加油,我们就围观分钱:' + that.lookerList[index].content
+					if(that.lookerList[index].challengeRmb>0){
+						that.shareTitle='@'+ that.lookerList[index].userName + '你不加油,我们就围观分钱:' + that.lookerList[index].content
+					}else{
+						that.shareTitle='我为@'+ that.lookerList[index].userName + '打Call:' + that.lookerList[index].content
+					}
 					if(that.lookerList[index].pictures){
 						that.shareImg=that.lookerList[index].pictures[0]
 						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);	
@@ -244,8 +255,8 @@
 				}else if(that.tab == 3 || that.tab == 4){
 					that.sharePath='/pages/pageA/merchant/merchantDetail'
 					that.scen='activityid=' + that.activityByUserId[index].id+"&share="+ uni.getStorageSync('id')
-	
-					if(this.xdUniUtils.IsNullOrEmpty(that.activityByUserId[index].imgsUrl)){
+	                that.shareTitle=that.activityByUserId[index].activityContent
+					if(that.xdUniUtils.IsNullOrEmpty(that.activityByUserId[index].imgsUrl)){
 						that.shareImg= that.xdUniUtils.xd_randomImg(1)
 						that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');	
 					}else{

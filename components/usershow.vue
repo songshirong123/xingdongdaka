@@ -47,7 +47,7 @@
 				</view>
 				<view @click="clidgoPage(4,userId)" style="flex: 1;" class="div-info">
 					
-					<text>{{likeCount}} <text v-if="newFans !== 0" style="color: red;">+{{newFans}} </text></text>
+					<text>{{likeCount}} <text v-if="newFans > 0" style="color: red;">+{{newFans}} </text></text>
 					<text>粉丝</text>
 					<!-- <view class="cu-tag  tag-text bg-red" v-if="num>0&&num<100">{{num}}</view>
 					<view class="cu-tag  tag-text bg-red" v-if="num>=100">99+</view> -->

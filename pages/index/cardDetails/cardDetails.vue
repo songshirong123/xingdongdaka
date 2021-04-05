@@ -326,9 +326,9 @@
 				that.shareImg= that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1)
 				that.sharePath= '/pages/index/action/action'
 				if(that.pusCardLists.challengeRmb>0){
-					that.shareTitle=that.pusCardLists.userId==that.userId? '我不加油,你们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'@'+that.pusCardLists.userName+'你不加油,我们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
+					that.shareTitle=that.pusCardLists.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'@'+that.pusCardLists.userName+'你不加油,我们就围观分钱:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
 				}else{
-					that.shareTitle= that.pusCardLists.userId==that.userId? '第'+that.dakacishu+'次打卡:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'我为@'+that.pusCardLists.userName+'打Call:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
+					that.shareTitle= that.pusCardLists.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pusCardLists.pushCardList[this.dakacishu-1].content:'我为@'+that.pusCardLists.userName+'打Call:'+that.pusCardLists.pushCardList[this.dakacishu-1].content
 					
 				}
 			},
