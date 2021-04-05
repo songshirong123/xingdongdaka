@@ -51,13 +51,17 @@
 			</view>
 			<!--                              我的提醒                                  -->
 			<view class="myTips msgCon" :class="{dis: num == 1}">
-				<view class="myMsgItem borderLine" v-for="(item, index) in tipsList" :key = 'index'>
+				<view class="msgTitle">
+					<text class="tips">全部提醒</text>
+					<text :class="{bgc: flag}" class="read" @tap="allRead(id)" >全部已读</text>
+				</view>
+				<view class="myMsgItem borderLine" v-for="(item, index) in tipsList" :key = 'index' @tap="goDetails(item,index)">
 					<view class="msgbody">
 						<text style="display: block;">{{getMsgType(item.typename)}}提醒 【{{item.describes}}】</text>
 						<text style="display: block;">{{xdUniUtils.xd_timestampToTime(item.updateTime,false,true,false) }}</text>
 					</view>
-					<view class="right">
-						<text style="display: inline-block; background-color: #ff6600; color: #fff; border-radius: 10px; width: 30px; height: 20px;line-height: 20px;">{{item.unreadcount}}</text>
+					<view v-if="item.unreadcount !== 0" class="right">
+						<text v-if="!arr.includes(index)" class="rightCount">{{item.unreadcount}}</text>
 					</view>
 				</view>
 				
@@ -70,11 +74,14 @@
 	export default {
 		data() {
 			return {
+				tabId: 'looker',
 				unreadMsg: 0,
 				num: 0,
 				dis: 'none',
 				id: uni.getStorageSync('id'),
 				tipsList: [],
+				arr: [],
+				flag: false
 			};
 		},
 		onShow() {
@@ -84,6 +91,7 @@
 			// 	切换tab
 			change(x) {
 				this.num = x
+				
 			},
 			// 获取消息类型
 			getMsgType(type){
@@ -104,24 +112,71 @@
 			},
 			// 获取【我的提醒】信息
 			getMyTips(userId) {
+				this.xd_request_get(
+				this.xdServerUrls.xd_getMyTipsByUserId,
+				{
+					userId
+				},
+				true
+				).then((res => {
+					this.$data.tipsList = res.obj
+						console.log(this.$data.tipsList)
+				}))
+				// var that = this
+				// console.log(that.id)
+				// wx.request({
+				// url: 'http://39.106.107.255:10065/msg/getSummaryMsg', //仅为示例，并非真实的接口地址
+				// data: {
+				//     userId:11089
+				// },
+				// header: {
+				//     // 'content-type': 'application/json' // 默认值
+				// 	'content-type': 'application/json'
+				// },
+				// method: 'GET',
+				// success: function(res) {
+				// 	console.log(res.data)
+				// 	that.$data.tipsList = res.data.obj
+				// 	console.log(that.$data.tipsList)
+				// },
+				// })
+			},
+			// 跳转至详情
+			goDetails(e,index) {
 				var that = this
-				console.log(that.id)
-				wx.request({
-				url: 'http://39.106.107.255:10065/msg/getSummaryMsg', //仅为示例，并非真实的接口地址
-				data: {
-				    userId: 11089
+				console.log(that)
+				if(e.cardId){
+					console.log('111')
+					uni.navigateTo({
+					url: '../index/cardDetails/cardDetails?pushId='+e.pushId+'&cardId='+e.cardId
+				});
+				} else {
+					console.log('222')
+					uni.navigateTo({
+						url: '../index/action/action?pushId='+e.pushId+'&tabId='+that.tabId
+					})
+				}
+				console.log(e)
+				// 清除红点
+				this.$data.arr.push(index)
+			},
+			// 全部已读
+			allRead(userId){
+				this.xd_request_get(
+				this.xdServerUrls.xd_ignoreAllByUserId,
+				{
+					userId
 				},
-				header: {
-				    // 'content-type': 'application/json' // 默认值
-					'content-type': 'application/json'
-				},
-				method: 'GET',
-				success: function(res) {
-					console.log(res.data)
-					that.$data.tipsList = res.data.obj
-					console.log(that.$data.tipsList)
-				},
-				})
+				true
+				).then((res => {
+					this.$data.arr = []
+					this.$data.tipsList.forEach((item,index) => {
+						this.$data.arr.push(index)
+						})
+						this.$data.flag = true
+						console.log(this.$data.tipsList)
+						console.log(this.$data.arr)
+				}))
 			},
 		},
 		
@@ -163,6 +218,9 @@
 		.dis {
 			display: block;
 		}
+		.nodis{
+			opacity: 0;
+		}
 		.borderLine{
 			margin: 0 10px;
 			font-size: 14px;
@@ -179,7 +237,15 @@
 				top: 50%;
 				transform: translate(-10%, -50%);
 				position:absolute;
-				
+				.rightCount{
+					display: inline-block; 
+					background-color: #ff6600; 
+					color: #fff; 
+					border-radius: 10px; 
+					width: 30px; 
+					height: 20px;
+					line-height: 20px;
+				}
 			}
 			.msgbody{
 				margin: 0 30px 0 10px;
@@ -189,8 +255,31 @@
 				margin-left: 20px;
 				padding:12rpx;
 			}
-			
+		}	
 			// -----------------------------------
+		.msgTitle{
+			margin: 0 20px 10px 20px;
+			width: auto;
+			height: 20px;
+			.bgc{
+				background-color: #ccc !important;
+			}
+			.tips{
+				border-radius: 10px ;
+				font-size: 12px;
+				line-height: 20px;
+				float: left;
+			}
+			.read{
+				padding: 0 10px;
+				border-radius: 10px ;
+				background-color: #ff6600;
+				color: #fff;
+				font-size: 12px;
+				line-height: 20px;
+				float: right;
+			}
 		}
+		
 	}
 </style>
