@@ -46,7 +46,7 @@
 					<text class="margin-left-xs">活动内容</text>
 
 				</view>
-				<textarea @input="onInputActivity" placeholder="请输入活动内容" style="padding-top: 10px;padding-bottom: 10px;font-size: 12px;"></textarea>
+				<textarea :value="inputActivity" @input="onInputActivity" placeholder="请输入活动内容"  style="padding-top: 10px;padding-bottom: 10px;font-size: 12px;"></textarea>
 			</view>
 
 			<view class="flex flex-wrap padding solid-top align-center">
@@ -204,19 +204,102 @@
 				holidayDay: 1,
 				labeldata: [],
 				inputAmout: 5,
-				inputActivity: ""
+				inputActivity: "",
+				ActivityDataId:'',
+				types:0
 			}
 		},
 		onLoad(option) {
+			if(uni.getStorageSync('activityData')){
+				var data=uni.getStorageSync('activityData')
+				this.indexdata(data)
+			}
 			this.souce = option.souce;
 			// this.userInfo = JSON.parse(option.userInfo);
 			this.getShInfo();
+			
 		},
 
 		onShow() {
 			this.tabs();
 		},
 		methods: {
+			indexdata(data){
+				this.ActivityDataId=data.activity.id
+				this.inputActivity=data.activity.activityContent
+				this.inputAmout=data.activity.baoZhengJin
+				this.pictures=data.activity.imgsUrl
+				this.pikerdate=this.xdUniUtils.xd_timestampToTime(data.activity.activityEndTime,true)
+				this.labeldata=data.activity.labels.split(',')?data.activity.labels.split(','):data.activity.labels
+				switch (data.activity.holidayDay) {
+					case '1':
+						this.indexholiday = 0;
+						this.holidayDay = 1;
+						break;
+					case '2':
+						this.indexholiday = 1;
+						this.holidayDay = 2;
+						break;
+					case '3':
+						this.indexholiday = 2;
+						this.holidayDay = 3;
+						break;
+					case '4':
+						this.indexholiday = 3;
+						this.holidayDay = 4;
+						break;
+					case '5':
+						this.indexholiday = 4;
+						this.holidayDay = 5;
+						break;
+					case '6':
+						this.indexholiday = 5;
+						this.holidayDay = 6;
+						break;
+					case '7':
+						this.indexholiday = 6;
+						this.holidayDay = 7;
+						break;
+					case '30':
+						this.indexholiday = 7;
+						this.holidayDay = 30;
+						break;
+					default:
+						this.indexholiday = 8;
+						this.holidayDay =data.activity.holidayDay;
+						this.holidayf = true;
+						}
+				switch (data.activity.planDay) {
+					case '7':
+						this.indextime = 0;
+						this.targetDay = 7;
+						break;
+					case '30':
+						this.indextime = 1;
+						this.targetDay = 30;
+						break;
+					case '90':
+						this.indextime = 2;
+						this.targetDay = 90;
+						break;
+					case '180':
+						this.indextime = 3;
+						this.targetDay = 180;
+						break;
+					case '365':
+						this.indextime = 4;
+						this.targetDay = 365;
+						break;
+					default:
+						this.indextime = 5;
+						this.targetDay = data.activity.planDay;
+						this.targetDayf = true;
+						
+				}
+				this.indexholiday
+				this.types=data.type
+				
+			},
 			getDate(type) {
 				const date = new Date();
 				let year = date.getFullYear();
@@ -312,30 +395,59 @@
 				console.log("this.pikerdate")
 				console.log(infos)
 				let that = this;
-				this.xd_request_get(this.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
-					console.log("xd_saveSHInfo");
-					console.log(res);
-					let msg = "活动创建成功！";
-					if (res.msg != "成功") {
-						msg = "活动创建成失败！";
-					}
-
-					uni.showModal({
-						title: '温馨提示',
-						content: msg,
-						confirmText: '确定',
-						cancelText: '取消',
-						image: '/static/images/icon/clock.png',
-						success: function(ress) {
-							if (ress.confirm) {
-								uni.redirectTo({
-									url: './merchantActionList?selectType=0&activityid=' + res.obj.id
-								})
-							}
-						},
-
-					});
-				}).catch(err => {});
+				if(that.types===0){
+					that.xd_request_get(that.xdServerUrls.xd_saveSHInfo, infos, true).then((res) => {
+						console.log("xd_saveSHInfo");
+						console.log(res);
+						let msg = "活动创建成功！";
+						if (res.msg != "成功") {
+							msg = "活动创建成失败！";
+						}
+					
+						uni.showModal({
+							title: '温馨提示',
+							content: msg,
+							confirmText: '确定',
+							cancelText: '取消',
+							image: '/static/images/icon/clock.png',
+							success: function(ress) {
+								if (ress.confirm) {
+									uni.redirectTo({
+										url: './merchantActionList?selectType=0&activityid=' + res.obj.id
+									})
+								}
+							},
+					
+						});
+					}).catch(err => {});
+				}else{
+					infos.id=that.ActivityDataId
+					that.xd_request_get(that.xdServerUrls.xd_updateSHInfo, infos, true).then((res) => {
+						console.log("xd_saveSHInfo");
+						console.log(res);
+						let msg = "编辑成功！";
+						if (res.msg != "成功") {
+							msg = "编辑失败！";
+						}
+					
+						uni.showModal({
+							title: '温馨提示',
+							content: msg,
+							confirmText: '确定',
+							cancelText: '取消',
+							image: '/static/images/icon/clock.png',
+							success: function(ress) {
+								if (ress.confirm) {
+									uni.redirectTo({
+										url: './merchantActionList?selectType=0&activityid=' + that.ActivityDataId
+									})
+								}
+							},
+					
+						});
+					}).catch(err => {});
+				}
+				
 			},
 			//可休息天数
 			holidayDayinput(e) {

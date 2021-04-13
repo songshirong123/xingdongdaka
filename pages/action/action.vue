@@ -36,16 +36,23 @@
 				<view v-if="tab===3 || tab===4" v-for="(activity,index) in activityByUserId" :key="index">
 					<view class="cu-card dynamic">
 						<view class="cu-item shadow">
-							<view @click="addActivity(activity,0)" class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
-								<text class="text-orange">{{activity.statusName}}</text>
-								<view class="xd-rows">
+							<view  class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
+								<view class="flex flex-wrap justify-between">
+									<text class="text-orange">{{activity.statusName}}</text>
+									<view class="ali_right moreandroidwhite" @click="toggleMask(activity,index)" v-if="tab===4&&activity.status==0" >
+										<text class="cuIcon-moreandroid" ></text>
+									</view>
+								</view>
+								<view class="xd-rows" @click="addActivity(activity,0)">
 									<text class="cu-tag light bg-red radius">保证金：￥{{activity.baoZhengJin}}</text>
 									<text style="margin-left: 3px;">{{activity.labels}}</text>
+									
 								</view>
-								<view class="xd-rows">
+								<view class="xd-rows" @click="addActivity(activity,0)">
 									<text style="font-size: 10px;color: #999999;">截止日期：{{activity.activityEndTime}} 计划天数：{{activity.planDay}}
 										可休假天数：{{activity.holidayDay}}</text>
 								</view>
+								
 								<view style="height: 7px;"></view>
 							</view>
 							<view class="grid flex-sub padding-lr" style="margin-bottom: 5px;" :class="activity.imgsUrl.length>1?'col-3 grid-square':'col-1'" >
@@ -97,7 +104,15 @@
 		</view>
 		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
 			<view class="mask-content">
-				<view class="mask_top">
+				<view class="mask_top" v-if="tab===4">
+					<view class="mask_top_text" @tap="creatAC(1)">
+						<text class="mask_text">编辑</text>
+					</view>
+					<view class="mask_top_text" @tap="creatAC(0)">
+						<text class="mask_text">复用</text>
+					</view>
+				</view>
+				<view class="mask_top" v-else>
 					<view class="mask_top_text" @tap="creatXd(1)">
 						<text class="mask_text">重新编辑行动</text>
 					</view>
@@ -155,6 +170,7 @@
 				scrollTopinfo: true,
 				showlogin: true,
 				videoAd: '',
+				actvityDate:'',
 			};
 		},
 		onPageScroll(e) {
@@ -211,6 +227,8 @@
 			}
 		}, 
 		methods: {
+			
+			//分享
 			share(index){
 				let that = this;
 				that.shareImg=''
@@ -278,6 +296,23 @@
 					shareUserId: uni.getStorageSync('id'),
 				}, true).then(res => {
 
+				})
+			},
+			creatAC(e){
+				var  data={
+					type:'',
+					activity:''
+				}
+				data.type=e
+				data.activity=this.actvityDate
+				try {
+					uni.setStorageSync('activityData', data);
+				} catch (e) {
+					// error
+				}
+				
+				uni.navigateTo({
+					url: '../pageA/merchant/merchantAction'
 				})
 			},
 			creatXd(e) {
@@ -412,11 +447,15 @@
 				}
 			},
 			toggleMask(type, index) {
-				let timer = type >= 0 ? 10 : 300;
-				let state = type >= 0 ? 1 : 0;
+				let state = index>=0 ? 1 : 0;
+				if(this.tab===4){
+					this.actvityDate=type;
+				}else{
+					this.pushId = type;
+					this.index = index
+				}
 				this.maskState = 2;
-				this.pushId = type;
-				this.index = index
+				
 				setTimeout(() => {
 					this.maskState = state;
 				}, 10)
@@ -848,5 +887,8 @@
 	.start-add image {
 		width: 48upx;
 		height: 48upx;
+	}
+	.moreandroidwhite{
+		font-size: 40upx;
 	}
 </style>
