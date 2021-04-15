@@ -1,6 +1,4 @@
 {
   "navigationBarTitleText": "打卡",
-  "usingComponents": {
-    "imt-audio": "/components/imt-audio/imt-audio"
-  }
+  "usingComponents": {}
 }

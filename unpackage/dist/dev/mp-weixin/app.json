@@ -2,11 +2,11 @@
   "pages": [
     "pages/index/index",
     "pages/login/login",
-    "pages/msg/talk",
     "pages/selfCenter/clockIn",
     "pages/selfCenter/selfCenter",
     "pages/selfCenter/selfView",
     "pages/selfCenter/income",
+    "pages/selfCenter/message",
     "pages/action/action",
     "pages/action/step1",
     "pages/action/finish",
@@ -45,7 +45,9 @@
         "merchant/merchantActionList",
         "merchant/merchantEditInfo",
         "merchant/merchantMyAction",
-        "merchant/merchantDetail"
+        "merchant/merchantDetail",
+        "merchant/merchantWeb",
+        "merchant/merchantActionEdit"
       ]
     }
   ],
@@ -95,6 +97,5 @@
   "usingComponents": {
     "cu-custom": "/colorui/components/cu-custom",
     "sponsor": "/pages/sponsor/index"
-  },
-  "sitemapLocation": "sitemap59.json"
+  }
 }

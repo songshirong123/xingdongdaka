@@ -33,14 +33,14 @@
   font-size: 26rpx;
 }
 .moreInfo .user_column_item {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   height: 100rpx;
   line-height: 100rpx;
   padding-left: 20rpx;
-  border-bottom: 1px solid #F0F0F0;
+  border-bottom: 1px solid #f0f0f0;
 }
 .moreInfo .user_column_item .cu-btn {
-  background-color: #FFFFFF;
+  background-color: #ffffff;
   padding: 0;
 }
 .moreInfo .user_column_item .thin {

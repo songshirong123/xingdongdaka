@@ -741,6 +741,7 @@
 						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
 					}
 					_this.groupList = _this.pageNum == 1 ? list : _this.groupList.concat(list);
+					console.log('xdUniUtils', _this.groupList)
 					_this.pageNum = res.obj.nextPage;
 				}).catch(err => {});
 			},

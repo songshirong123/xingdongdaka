@@ -3,6 +3,7 @@
   "enablePullDownRefresh": true,
   "usingComponents": {
     "actionlist": "/components/actionlist",
-    "back-top": "/components/backTop"
+    "back-top": "/components/backTop",
+    "share": "/components/share"
   }
 }

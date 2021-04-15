@@ -12,7 +12,7 @@
 /******/ 		var moduleId, chunkId, i = 0, resolves = [];
 /******/ 		for(;i < chunkIds.length; i++) {
 /******/ 			chunkId = chunkIds[i];
-/******/ 			if(Object.prototype.hasOwnProperty.call(installedChunks, chunkId) && installedChunks[chunkId]) {
+/******/ 			if(installedChunks[chunkId]) {
 /******/ 				resolves.push(installedChunks[chunkId][0]);
 /******/ 			}
 /******/ 			installedChunks[chunkId] = 0;
@@ -48,7 +48,6 @@
 /******/ 				result = __webpack_require__(__webpack_require__.s = deferredModule[0]);
 /******/ 			}
 /******/ 		}
-/******/
 /******/ 		return result;
 /******/ 	}
 /******/
@@ -105,11 +104,11 @@
 /******/
 /******/
 /******/ 		// mini-css-extract-plugin CSS loading
-/******/ 		var cssChunks = {"components/backTop":1,"components/indexList":1,"components/wyb-noticeBar/wyb-noticeBar":1,"components/imt-audio/imt-audio":1,"components/usershow":1,"components/actionlist":1,"components/lookerCountInfo":1,"components/uni-grid-item/uni-grid-item":1,"components/uni-grid/uni-grid":1};
+/******/ 		var cssChunks = {"components/backTop":1,"components/indexList":1,"components/share":1,"components/wyb-noticeBar/wyb-noticeBar":1,"components/usershow":1,"components/actionlist":1,"components/lookerCountInfo":1,"components/uni-grid-item/uni-grid-item":1,"components/uni-grid/uni-grid":1};
 /******/ 		if(installedCssChunks[chunkId]) promises.push(installedCssChunks[chunkId]);
 /******/ 		else if(installedCssChunks[chunkId] !== 0 && cssChunks[chunkId]) {
 /******/ 			promises.push(installedCssChunks[chunkId] = new Promise(function(resolve, reject) {
-/******/ 				var href = "" + ({"colorui/components/cu-custom":"colorui/components/cu-custom","pages/sponsor/index":"pages/sponsor/index","components/backTop":"components/backTop","components/indexList":"components/indexList","components/wyb-noticeBar/wyb-noticeBar":"components/wyb-noticeBar/wyb-noticeBar","components/imt-audio/imt-audio":"components/imt-audio/imt-audio","components/usershow":"components/usershow","components/actionlist":"components/actionlist","components/lookerCountInfo":"components/lookerCountInfo","components/uni-grid-item/uni-grid-item":"components/uni-grid-item/uni-grid-item","components/uni-grid/uni-grid":"components/uni-grid/uni-grid"}[chunkId]||chunkId) + ".wxss";
+/******/ 				var href = "" + ({"colorui/components/cu-custom":"colorui/components/cu-custom","pages/sponsor/index":"pages/sponsor/index","components/backTop":"components/backTop","components/indexList":"components/indexList","components/share":"components/share","components/wyb-noticeBar/wyb-noticeBar":"components/wyb-noticeBar/wyb-noticeBar","components/usershow":"components/usershow","components/actionlist":"components/actionlist","components/lookerCountInfo":"components/lookerCountInfo","components/uni-grid-item/uni-grid-item":"components/uni-grid-item/uni-grid-item","components/uni-grid/uni-grid":"components/uni-grid/uni-grid"}[chunkId]||chunkId) + ".wxss";
 /******/ 				var fullhref = __webpack_require__.p + href;
 /******/ 				var existingLinkTags = document.getElementsByTagName("link");
 /******/ 				for(var i = 0; i < existingLinkTags.length; i++) {
@@ -171,8 +170,6 @@
 /******/ 				}
 /******/ 				script.src = jsonpScriptSrc(chunkId);
 /******/
-/******/ 				// create error before stack unwound to get useful stacktrace later
-/******/ 				var error = new Error();
 /******/ 				onScriptComplete = function (event) {
 /******/ 					// avoid mem leaks in IE.
 /******/ 					script.onerror = script.onload = null;
@@ -182,8 +179,7 @@
 /******/ 						if(chunk) {
 /******/ 							var errorType = event && (event.type === 'load' ? 'missing' : event.type);
 /******/ 							var realSrc = event && event.target && event.target.src;
-/******/ 							error.message = 'Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')';
-/******/ 							error.name = 'ChunkLoadError';
+/******/ 							var error = new Error('Loading chunk ' + chunkId + ' failed.\n(' + errorType + ': ' + realSrc + ')');
 /******/ 							error.type = errorType;
 /******/ 							error.request = realSrc;
 /******/ 							chunk[1](error);
