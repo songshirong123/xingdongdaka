@@ -68,7 +68,7 @@
 		},
 		methods: {
 			tags(e){
-				console.log(e)
+				// console.log(e)
 					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
 						userId:e.userId,
 						attentionUserId:e.attentionUserId,		

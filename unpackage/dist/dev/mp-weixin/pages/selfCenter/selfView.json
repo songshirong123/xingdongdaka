@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "个人主页",
-  "usingComponents": {
-    "usershow": "/components/usershow",
-    "actionlist": "/components/actionlist"
-  }
-}

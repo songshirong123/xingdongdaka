@@ -197,11 +197,8 @@
 				})
 			},
 			clidtags(e) {
-				// if (this.guanzhu == "已关注") {
-				// 	return
-				// }
 				if(this.guanzhu =='已关注'){
-					console.log('SELFVIEW')
+					// console.log('SELFVIEW')
 					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
 						userId: uni.getStorageSync('id'),
 						attentionUserId: e.id,	
