@@ -706,6 +706,7 @@
 				return dataList;
 			},
 			tags(){
+				console.log('cardDetails')
 				if(this.guanzhu =='已关注'){
 					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
 						userId:uni.getStorageSync('id'),

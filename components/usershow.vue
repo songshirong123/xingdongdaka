@@ -25,7 +25,10 @@
 			</view>
 			<view>
 				<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0"  @tap="clickGroup(userId)" >互助小圈</view> -->
-				<view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="clidtags(newList)">{{guanzhu}}</view>
+				<!-- <view class="cu-tag line-orange radius" v-if="guanzhu.length > 0" @tap="clidtags(newList)">{{guanzhu}}</view> -->
+				<view class="cu-tag  radius" :class="guanzhu=='关注'?'line-orange':'line-gray'" v-if="guanzhu.length > 0" @tap="clidtags(newList)">
+					{{guanzhu}}
+				</view>
 				<!-- <view class="personOpt" v-if="guanzhu.length== ''">
 						<button @click="clickMe" class="pay" v-if="env!='release'">支付</button>
 					</view> -->

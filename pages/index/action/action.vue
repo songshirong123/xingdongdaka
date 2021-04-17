@@ -892,6 +892,7 @@
 				this.getLookerList();
 			},
 			tags(){
+				console.log('pageACTION')
 				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
 						url: '../../login/login' 

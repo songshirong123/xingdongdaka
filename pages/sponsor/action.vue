@@ -690,8 +690,31 @@
 					});
 					return false
 				}
-				if (this.guanzhu == '已关注') {
-					return
+				// if (this.guanzhu == '已关注') {
+				// 	return
+				// }
+				console.log('sponsor')
+				if(this.guanzhu =='已关注'){
+					// alert(1)
+					this.xd_request_post(this.xdServerUrls.xd_cancelAttention,{
+						userId: uni.getStorageSync('id'),
+						attentionUserId: this.pushList.userId,	
+						
+					},true).then(res=>{
+						if(res.resultCode == 0){
+							 this.guanzhu="关注"
+							 uni.showToast({
+							 	icon:'none',
+							   title: '取消关注',
+							 })
+						}else{
+							uni.showToast({
+								icon:'none',
+							  title: res.msg,
+							})
+						}
+					})
+					return false;
 				}
 				this.xd_request_post(this.xdServerUrls.xd_saveAttention, {
 					userId: uni.getStorageSync('id'),

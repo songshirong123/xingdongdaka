@@ -1,7 +1,0 @@
-{
-  "navigationBarTitleText": "行动详情",
-  "usingComponents": {
-    "looker-count-info": "/components/lookerCountInfo",
-    "back-top": "/components/backTop"
-  }
-}
