@@ -200,7 +200,6 @@ var indexList = function indexList() {__webpack_require__.e(/*! require.ensure |
       userId: '', userInfo: '', token: uni.getStorageSync('token') };}, onShow: function onShow() {if (this.userInfo == '' || this.userInfo == undefined || this.userInfo == null) {try {this.userInfo = uni.getStorageSync('userInfo');} catch (e) {console.log(Error);};}}, onLoad: function onLoad(options) {this.userId = options.userId;try {this.userInfo = uni.getStorageSync('userInfo');} catch (e) {console.log(Error);};this.getShowFollow();},
   methods: {
     tags: function tags(e) {var _this = this;
-      console.log('pageA');
       if (this.guanzhu == '已关注') {
         this.xd_request_post(this.xdServerUrls.xd_cancelAttention, {
           userId: e.userId,

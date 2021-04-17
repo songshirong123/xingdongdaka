@@ -338,12 +338,7 @@ var _vuex = __webpack_require__(/*! vuex */ 13);function ownKeys(object, enumera
       });
     },
     clidtags: function clidtags(e) {var _this2 = this;
-      // if (this.guanzhu == "已关注") {
-      // 	return
-      // }
-      console.log('selfCenter');
       if (this.guanzhu == '已关注') {
-        // alert(0)
         this.xd_request_post(this.xdServerUrls.xd_cancelAttention, {
           userId: uni.getStorageSync('id'),
           attentionUserId: e.id },
