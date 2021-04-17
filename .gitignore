@@ -1,3 +1,5 @@
 .unpackage/
 unpackage
+unpackage/*
 /unpackage/
+*/unpackage/
