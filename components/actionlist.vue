@@ -121,7 +121,7 @@
 					})
 				}else{
 					uni.navigateTo({
-						url:'/pages/selfCenter/clockIn?pushId='+item.id
+						url:'/pages/pageA/user/clockIn?pushId='+item.id
 					});
 				}
 			},
