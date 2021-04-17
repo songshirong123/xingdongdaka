@@ -403,7 +403,11 @@
 						if (res.msg != "成功") {
 							msg = "活动创建成失败！";
 						}
-					
+					try {
+						uni.setStorageSync('activityData', '');
+					} catch (e) {
+						// error
+					}
 						uni.showModal({
 							title: '温馨提示',
 							content: msg,
@@ -429,7 +433,11 @@
 						if (res.msg != "成功") {
 							msg = "编辑失败！";
 						}
-					
+					try {
+						uni.setStorageSync('activityData', '');
+					} catch (e) {
+						// error
+					}
 						uni.showModal({
 							title: '温馨提示',
 							content: msg,

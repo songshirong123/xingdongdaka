@@ -39,7 +39,7 @@
 							<view  class="text-content margin-top-sm padding-bottom-sm" style="border-bottom: 1upx solid #ddd;">
 								<view class="flex flex-wrap justify-between">
 									<text class="text-orange">{{activity.statusName}}</text>
-									<view class="ali_right moreandroidwhite" @click="toggleMask(activity,index)" v-if="tab===4&&activity.status==0" >
+									<view class="ali_right moreandroidwhite" @click="toggleMask(activity,index)" v-if="tab===4" >
 										<text class="cuIcon-moreandroid" ></text>
 									</view>
 								</view>
@@ -105,7 +105,7 @@
 		<view class="mask" :class="maskState===0 ? 'none' : maskState===1 ? 'show' : ''" @click="toggleMask">
 			<view class="mask-content">
 				<view class="mask_top" v-if="tab===4">
-					<view class="mask_top_text" @tap="creatAC(1)">
+					<view class="mask_top_text" @tap="creatAC(1)" v-if="status===0">
 						<text class="mask_text">编辑</text>
 					</view>
 					<view class="mask_top_text" @tap="creatAC(0)">
@@ -171,6 +171,8 @@
 				showlogin: true,
 				videoAd: '',
 				actvityDate:'',
+				status:0,
+				delNum:1,
 			};
 		},
 		onPageScroll(e) {
@@ -413,43 +415,68 @@
 						})
 
 					} else if (that.cardList[i].pushCardStatus == 1) {
-						uni.showModal({
-							title: '删除行动',
-							content: '进行中行动项3天内删除将退回保证金',
-							success: function(res) {
-								if (res.confirm) {
-									that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId, {
-										pushId: id
-									}, true).then(res => {
-
-										if (res.resultCode == 0) {
-											uni.showToast({
-												title: '删除成功',
-												icon: 'none',
-												duration: 1500
-											});
-											that.cardList.splice(i, 1);
-										} else {
-											uni.showModal({
-												title: '该行动项发布已超过3天，不能删除，请继续',
-												icon: 'none',
-
-											});
-										}
-
-									})
-								} else if (res.cancel) {
-									that.maskState = 0;
+						
+						if(that.bd.get('delNum',false)){
+							that.bd.put('delNum',that.delNum,43200)
+						}
+						if(that.bd.get('delNum')>=4){
+							uni.showModal({
+								content: '近期删除次数过多，请不要轻易放弃行动目标，如需继续删除，将扣除10%的保证金。',
+								success: function(res) {
+									if (res.confirm) {
+										that.delePush(id,i)
+									} else if (res.cancel) {
+										that.maskState = 0;
+										return false
+									}
 								}
-							}
-						});
+							});
+						}else{
+							that.delePush(id,i)
+						}
+						
 					}
 				}
+			},
+			delePush(id,i){
+				var that=this
+				uni.showModal({
+					title: '删除行动',
+					content: '进行中行动项3天内删除将退回保证金',
+					success: function(res) {
+						if (res.confirm) {
+							that.xd_request_post(that.xdServerUrls.xd_delPushDataByPushId, {
+								pushId: id
+							}, true).then(res => {
+				
+								if (res.resultCode == 0) {
+									that.delNum=that.delNum++
+									uni.showToast({
+										title: '删除成功',
+										icon: 'none',
+										duration: 1500
+									});
+									that.cardList.splice(i, 1);
+								} else {
+									uni.showModal({
+										title: '该行动项发布已超过3天，不能删除，请继续',
+										icon: 'none',
+				
+									});
+								}
+				
+							})
+						} else if (res.cancel) {
+							that.maskState = 0;
+						}
+					}
+				});
 			},
 			toggleMask(type, index) {
 				let state = index>=0 ? 1 : 0;
 				if(this.tab===4){
 					this.actvityDate=type;
+					this.status=type.status;
 				}else{
 					this.pushId = type;
 					this.index = index

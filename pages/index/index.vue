@@ -784,20 +784,25 @@
 
 			//获取通知
 			getnotic() {
-				this.xd_request_get(this.xdServerUrls.xd_getVal, {
-					key: 'inform_list_config'
-				}, true).then(res => {
-					if (res.resultCode == 0) {
-						var data = JSON.parse(res.obj);
-
-						data.forEach(item => {
-							this.listnotice.push(item.title)
-						})
-						this.listnoticedata = data;
-
-
-					}
-				})
+				if(!this.bd.get('notice',false)){
+					this.xd_request_get(this.xdServerUrls.xd_getVal, {
+						key: 'inform_list_config'
+					}, true).then(res => {
+						if (res.resultCode == 0) {
+							var data = JSON.parse(res.obj);
+					
+							data.forEach(item => {
+								this.listnotice.push(item.title)
+							})
+							this.listnoticedata = data;
+							this.bd.put('notice',data,1800)
+					
+						}
+					})
+				}else{
+					this.listnoticedata = this.bd.get('notice');
+				}
+				
 			},
 
 			//通知跳转
@@ -860,8 +865,9 @@
 			},
 			//分享记录
 			setSaveShareInfo(res) {
+				
 				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo, {
-					pushId: this.listsTab[this.indexDatas].id,
+					pushId: this.isMerchant?this.merchantList[this.indexDatas].id:this.listsTab[this.indexDatas].id,
 					shareUserId: uni.getStorageSync('id'),
 				}, true).then(res => {
 
@@ -902,20 +908,32 @@
 			},
 			//首页信息
 			indexData: function() {
-				this.xd_request_post(this.xdServerUrls.xd_bannerList, {}, true).then((res) => {
-
-					this.bannerList = res.obj;
-					this.adid.push(...res.obj);
-				}).catch(err => {});
-				this.getimg();
-				this.xd_request_post(this.xdServerUrls.xd_label, {}, false).then((res) => {
-					var da = [{
-						id: -1,
-						labelName: "全部"
-					}, ...res.obj];
-					this.tabs = da;
-				}).catch(err => {});
-
+				if(!this.bd.get('banner',false)){
+					this.xd_request_post(this.xdServerUrls.xd_bannerList, {}, true).then((res) => {
+						this.bannerList = res.obj;
+						this.adid.push(...res.obj);
+						this.bd.put('banner',res.obj,3600)
+					}).catch(err => {});
+				}else{
+					var data=this.bd.get('banner')
+					this.bannerList = data;
+					this.adid.push(...data);
+				}
+				
+				// this.getimg();
+				if(!this.bd.get('tabs',false)){
+					this.xd_request_post(this.xdServerUrls.xd_label, {}, false).then((res) => {
+						var da = [{
+							id: -1,
+							labelName: "全部"
+						}, ...res.obj];
+						this.tabs = da;
+						this.bd.put('tabs',da,28800)
+					}).catch(err => {});
+				}else{
+					this.tabs = this.bd.get('tabs')
+				}
+			
 				if (this.isGroupLable) { //加载互助小组
 					this.isRankingLable = false;
 					this.pageNum = 1;
