@@ -416,9 +416,9 @@
 
 					} else if (that.cardList[i].pushCardStatus == 1) {
 						
-						if(that.bd.get('delNum',false)){
-							that.bd.put('delNum',that.delNum,43200)
-						}
+						// if(!that.bd.get('delNum',false)){
+						// 	that.bd.put('delNum',that.delNum,43200)
+						// }
 						if(that.bd.get('delNum')>=4){
 							uni.showModal({
 								content: '近期删除次数过多，请不要轻易放弃行动目标，如需继续删除，将扣除10%的保证金。',
@@ -450,7 +450,9 @@
 							}, true).then(res => {
 				
 								if (res.resultCode == 0) {
-									that.delNum=that.delNum++
+									let num=that.bd.get('delNum')?that.bd.get('delNum'):1
+									that.bd.put('delNum',num+1,43200)
+									
 									uni.showToast({
 										title: '删除成功',
 										icon: 'none',

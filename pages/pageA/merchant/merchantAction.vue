@@ -57,7 +57,7 @@
 
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
 					<view class="flex flex-wrap">
-						<input @input="onInputAmout" type="number" min="0" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;" />
+						<input @input="onInputAmout" type="number" min="0" :value="inputAmout" style="text-align: right;padding-right: 5px;height: 20px;"  :disabled='types==1?true:false'/>
 						<text class="lg text-gray cuIcon-triangledownfill" style="margin-top: 6px;"></text>
 					</view>
 				</view>
@@ -70,7 +70,7 @@
 				<view class="title margin-left-xs">计划天数</view>
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
 					<view class="flex flex-wrap  bg-gray radius align-center card-time-left ">
-						<picker class="data-time-left-whint" @change="PickerChange" :range="picker">
+						<picker class="data-time-left-whint" @change="PickerChange" :range="picker" :disabled='types==1?true:false'>
 							<view class="picker">
 								{{picker[indextime]}}
 							</view>
@@ -79,7 +79,7 @@
 					</view>
 					<view v-if="indextime==5">
 						<input type="number" class="timeinput" placeholder="输入天数" :focus="targetDayf" @input="targetDayinput" maxlength="50"
-						 step="1" min="1"></input>
+						 step="1" min="1" :disabled='types==1?true:false'></input>
 					</view>
 				</view>
 
@@ -88,7 +88,7 @@
 				<view class="margin-left-lg ">可休假天数</view>
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
 					<view class="flex flex-wrap  bg-gray radius align-center data-time-left">
-						<picker class="data-time-left-whint" @change="PickerChangeholiday" :value="holidayDay" :range="pickerdate">
+						<picker class="data-time-left-whint" @change="PickerChangeholiday" :value="holidayDay" :range="pickerdate" :disabled='types==1?true:false'>
 							<view class="picker">
 								{{pickerdate[indexholiday]}}
 							</view>
@@ -97,7 +97,7 @@
 					</view>
 					<view class="" v-if="indexholiday==8">
 						<input class="timeinput" placeholder="输入天数" :value="holidayDay" :focus="holidayf" @input="holidayDayinput"
-						 maxlength="50" step="1" min="0"></input>
+						 maxlength="50" step="1" min="0" :disabled='types==1?true:false'></input>
 					</view>
 				</view>
 			</view>
@@ -108,7 +108,7 @@
 				<view class="title margin-left-xs">截止日期</view>
 				<view class="xd-flex-end label-left  radius " style="flex: 1;">
 					<view class="flex flex-wrap  bg-gray radius align-center data-time-left">
-						<picker mode="date" :value="pikerdate" :start="pikerdate" :end="2050-01-01" @change="bindDateChange">
+						<picker mode="date" :value="pikerdate" :start="pikerdate" :end="2050-01-01" @change="bindDateChange" :disabled='types==1?true:false'>
 							<view class="uni-input">{{pikerdate}}</view>
 						</picker>
 					</view>
