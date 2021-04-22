@@ -214,6 +214,7 @@
 		computed: {
 			...mapState(['hasLogin'])
 		},
+		// 发送给好友
 		onShareAppMessage(res) {
 
 			let that = this;
@@ -228,7 +229,7 @@
 		}, 
 		methods: {
 			
-			//分享
+			//分享到朋友圈
 			share(index){
 				let that = this;
 				that.shareImg=''
