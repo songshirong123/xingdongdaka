@@ -303,20 +303,6 @@
 			// }
 			
 		},
-		watch:{
-			hasLogin() {
-				setTimeout(() => {
-					// this.id=uni.getStorageSync('id');
-					this.userId=uni.getStorageSync('id');
-					this.getpushList();
-					let pages = getCurrentPages(); // 当前页面
-					let beforePage = pages[pages.length - 2]; // 前一个页面
-					beforePage.onLoad(); // 执行前一个页面的onLoad方法
-					// that.getshare()
-					
-				}, 100);
-			},
-		},
 		computed: {
 		           ...mapState(['hasLogin'])  
 		       },  
@@ -393,12 +379,8 @@
 		//#endif
 		methods:{
 			//分享
-			
 			shareBt(){
 				let that = this;
-				// if(!that.hasLogin){
-				// 	return that.xdUniUtils.xd_login(that.hasLogin);
-				// }
 				// if(that.pusCardList[0].pictures[0].length>0){
 				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
 				// }else{
