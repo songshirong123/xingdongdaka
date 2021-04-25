@@ -147,7 +147,7 @@
 	// import imtAudio from 'components/imt-audio/imt-audio'
 	const recorderManager = uni.getRecorderManager();
 	const innerAudioContext = uni.createInnerAudioContext();
-	var QQMapWX = require('../../utils/qqmap-wx-jssdk.js');
+	var QQMapWX = require('../../../utils/qqmap-wx-jssdk.js');
 	var qqmapsdk = null;
 	export default {
 		components: {
@@ -163,7 +163,7 @@
 				param: {
 					'pictures': [],
 				},
-				audioPlaySrc: '../static/images/icon/img/title.png',
+				audioPlaySrc: '../../static/images/icon/img/title.png',
 				loading: '',
 				pushId: '',
 				videodata: '',
@@ -307,7 +307,7 @@
 				this.videodata = '';
 			},
 			error: function() {
-				this.audioPlaySrc = this.xdUniUtils.xd_randomImg();
+				this.audioPlaySrc = this.xdUniUtils.xd_randomImg(1);
 			},
 			getpushList() {
 				if (!this.hasLogin) {
@@ -343,7 +343,7 @@
 						title: '打卡不能为空',
 						mask: true,
 						duration: 1000,
-						image: '/static/images/icon/clock.png'
+						image: '../../static/images/icon/clock.png'
 					});
 					return false
 				};
@@ -368,7 +368,7 @@
 
 								success() {
 									uni.reLaunch({
-										url: '../index/cardDetails/cardDetails?pushId=' + that.pushId + '&cardId=' + res.obj + '&show=0'
+										url: '../../index/cardDetails/cardDetails?pushId=' + that.pushId + '&cardId=' + res.obj + '&show=0'
 									})
 								}
 							});

@@ -11,7 +11,7 @@
 </template>
 
 <script>
-	var QQMapWX = require('../../utils/qqmap-wx-jssdk.js');
+	var QQMapWX = require('../../../utils/qqmap-wx-jssdk.js');
 	export default {
 		data() {
 			return {

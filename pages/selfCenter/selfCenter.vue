@@ -335,7 +335,7 @@ export default {
     // 跳转消息提醒页面
     gomessage() {
       uni.navigateTo({
-        url: './message',
+        url: '../pageA/user/message',
       });
     },
 
