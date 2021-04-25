@@ -358,84 +358,46 @@
 				this.clickSaveShareInfo();
 			}
 		},
-		
+		// 三点
 		onShareAppMessage(res) {
 			let that = this;
 			that.$refs.share.hideModal();
-			const img=that.shareImg?that.shareImg:that.xdUniUtils.xd_randomImg(1)
+			let img;
+			if(that.pusCardList.length>0){
+				img=that.pusCardList[0].pictures[0]
+			} else {
+				img=that.shareImg?that.shareImg:that.xdUniUtils.xd_randomImg(1)
+			}
 			return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,img)
 			that.setSaveShareInfo()
 },
 		//#ifdef MP-WEIXIN
 		onShareTimeline(){
 			let that = this;
+			that.setSaveShareInfo()
 				return {
 					title: that.shareTitle,
 					query: that.scen,
 					imageUrl:that.shareImg?that.shareImg:that.xdUniUtils.xd_randomImg(1),
 				}
-				that.setSaveShareInfo()
+				
 		},
 		//#endif
 		methods:{
-			//分享
+			// 按钮分享
 			shareBt(){
 				let that = this;
-				// if(that.pusCardList[0].pictures[0].length>0){
-				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-				// }else{
-				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,"");
+				// if(!that.hasLogin){
+				// 	return that.xdUniUtils.xd_login(that.hasLogin);
 				// }
-				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
-				that.sharePath= '/pages/index/action/action'
-				
-				if(that.pushList.challengeRmb>0){
-					if(that.pusCardList.length>0){
-						that.shareImg=that.pusCardList[0].pictures[0]
-						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
-						if(that.shareImg){
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-						}else{
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
-						}
-					}else{
-						
-						that.shareImg=that.pushList.pictures[0]
-						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
-						if(that.shareImg){
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-						}else{
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
-						}
-					}
-				
+				this.getshare()
+				if(that.shareImg){
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
 				}else{
-					if(that.pusCardList.length>0){
-						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
-						that.shareImg=that.pusCardList[0].pictures[0]
-						if(that.shareImg){
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-						}else{
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
-						}
-					}else{
-						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call:'+that.pushList.content
-						that.shareImg=that.pushList.pictures[0]
-						if(that.shareImg){
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-						}else{
-							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
-						}
-					}
-					
+					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
 				}
-			},
-			getshare(){
-				let that = this;
-				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
-				that.sharePath= '/pages/index/action/action'
-				// that.shareImg= that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1)
-
+				// that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
+				// that.sharePath= '/pages/index/action/action'
 				// if(that.pushList.challengeRmb>0){
 				// 	if(that.pusCardList.length>0){
 				// 		that.shareImg=that.pusCardList[0].pictures[0]
@@ -476,11 +438,28 @@
 				// 	}
 					
 				// }
-				// if(that.pusCardLists.challengeRmb>0){
-				// 	that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
-				// }else{
-				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
-				// }
+			},
+			getshare(){
+				let that = this;
+				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
+				that.sharePath= '/pages/index/action/action'
+				if(that.pushList.challengeRmb>0){
+					if(that.pusCardList.length>0){
+						that.shareImg=that.pusCardList[0].pictures[0]
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
+					}else{
+						that.shareImg=that.pushList.pictures[0]
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
+					}
+				}else{
+					if(that.pusCardList.length>0){
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
+						that.shareImg=that.pusCardList[0].pictures[0]
+					}else{
+						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call:'+that.pushList.content
+						that.shareImg=that.pushList.pictures[0]
+					}
+				}
 			},
 			//互助小组点击事件
 			clickGroup(userid){
@@ -854,11 +833,10 @@
 			  	},true).then(res=>{	
 					if(res.resultCode==0){
 						var data=res.obj;
-						
 						data.createTime=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,true)
 						data.endTime=this.xdUniUtils.xd_timestampToTime(res.obj.endTime,true)
 						data.challengeRmb=res.obj.challengeRmb/100;
-						if(data.pictures){
+						if(data.pictures.length){
 							data.pictures=res.obj.pictures.split(',')
 						}else{
 							data.pictures=[]
@@ -889,9 +867,9 @@
 						// 	icon:'none',
 						// })
 					}
-					
+					this.getshare()
 			  	})
-				// this.getshare()
+				
 			  },
 			goStep(){
 				uni.navigateTo({
