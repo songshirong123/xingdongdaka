@@ -303,6 +303,20 @@
 			// }
 			
 		},
+		watch:{
+			hasLogin() {
+				setTimeout(() => {
+					// this.id=uni.getStorageSync('id');
+					this.userId=uni.getStorageSync('id');
+					this.getpushList();
+					let pages = getCurrentPages(); // 当前页面
+					let beforePage = pages[pages.length - 2]; // 前一个页面
+					beforePage.onLoad(); // 执行前一个页面的onLoad方法
+					// that.getshare()
+					
+				}, 100);
+			},
+		},
 		computed: {
 		           ...mapState(['hasLogin'])  
 		       },  
@@ -356,12 +370,7 @@
 				this.getpushList();
 				this.getPushCardList();
 				this.clickSaveShareInfo();
-				
 			}
-		
-		
-			
-			
 		},
 		
 		onShareAppMessage(res) {
@@ -387,16 +396,20 @@
 			
 			shareBt(){
 				let that = this;
-	
+				// if(!that.hasLogin){
+				// 	return that.xdUniUtils.xd_login(that.hasLogin);
+				// }
+				// if(that.pusCardList[0].pictures[0].length>0){
+				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				// }else{
+				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,"");
+				// }
 				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
 				that.sharePath= '/pages/index/action/action'
 				
 				if(that.pushList.challengeRmb>0){
-	
-			
 					if(that.pusCardList.length>0){
 						that.shareImg=that.pusCardList[0].pictures[0]
-						
 						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
 						if(that.shareImg){
 							that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
@@ -415,7 +428,6 @@
 					}
 				
 				}else{
-					
 					if(that.pusCardList.length>0){
 						that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
 						that.shareImg=that.pusCardList[0].pictures[0]
@@ -435,7 +447,58 @@
 					}
 					
 				}
+			},
+			getshare(){
+				let that = this;
+				that.scen='pushId='+ that.pushList.id+'&share='+uni.getStorageSync('id')+'&isopen='+that.pushList.isopen
+				that.sharePath= '/pages/index/action/action'
+				// that.shareImg= that.showCardCommentlist.pushCard.pictures[0]?that.showCardCommentlist.pushCard.pictures[0]:that.xdUniUtils.xd_randomImg(1)
+
+				// if(that.pushList.challengeRmb>0){
+				// 	if(that.pusCardList.length>0){
+				// 		that.shareImg=that.pusCardList[0].pictures[0]
+				// 		that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
+				// 		if(that.shareImg){
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				// 		}else{
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+				// 		}
+				// 	}else{
+						
+				// 		that.shareImg=that.pushList.pictures[0]
+				// 		that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pushList.content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pushList.content
+				// 		if(that.shareImg){
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				// 		}else{
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+				// 		}
+				// 	}
 				
+				// }else{
+				// 	if(that.pusCardList.length>0){
+				// 		that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pusCardList[0].content:'我为@'+that.pushList.userName+'打Call:'+that.pusCardList[0].content
+				// 		that.shareImg=that.pusCardList[0].pictures[0]
+				// 		if(that.shareImg){
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				// 		}else{
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+				// 		}
+				// 	}else{
+				// 		that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观的你们:'+that.pushList.content:'我为@'+that.pushList.userName+'打Call:'+that.pushList.content
+				// 		that.shareImg=that.pushList.pictures[0]
+				// 		if(that.shareImg){
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				// 		}else{
+				// 			that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
+				// 		}
+				// 	}
+					
+				// }
+				// if(that.pusCardLists.challengeRmb>0){
+				// 	that.shareTitle=that.pushList.userId==that.userId? '我没动力时,就想想围观分钱的你们:'+that.pusCardList[0].content:'@'+that.pushList.userName+'你不加油,我们就围观分钱:'+that.pusCardList[0].content
+				// }else{
+				// 	that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
+				// }
 			},
 			//互助小组点击事件
 			clickGroup(userid){
@@ -846,6 +909,7 @@
 					}
 					
 			  	})
+				// this.getshare()
 			  },
 			goStep(){
 				uni.navigateTo({

@@ -189,7 +189,6 @@
 				setTimeout(() => {
 					this.inDada(this.tab);
 					this.userId = uni.getStorageSync('id');
-
 				}, 100);
 
 			}
@@ -216,21 +215,37 @@
 		},
 		// 发送给好友
 		onShareAppMessage(res) {
-
+			// console.log('res', res)
+			// let that = this;
+			// // menu三点分享，else 为按钮分享
+			// if (res.from == "menu") {
+			// 	return that.xdUniUtils.xd_onShare(
+			// 		'我不加油，你们就围观分钱', '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'), ''
+			// 	);
+			// } else {
+			// 	that.$refs.share.hideModal();
+			// 	return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
+			// }
 			let that = this;
-			if (res.from == "menu") {
-				return that.xdUniUtils.xd_onShare(
-					'我不加油，你们就围观分钱', '/pages/selfCenter/selfView?userId=' + uni.getStorageSync('id'), ''
-				);
-			} else {
-				that.$refs.share.hideModal();
-				return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
-			}
+			that.$refs.share.hideModal();
+			
+			 return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
+			 that.setSaveShareInfo();
 		}, 
+		onShareTimeline(){
+			let that = this;
+			that.setSaveShareInfo();
+				return {
+					title:that.shareTitle,
+					query: 'pushId='+ that.pusCardLists.id+'&cardId='+that.cardId,
+					imageUrl:that.shareImg,
+				}
+			
+		},
 		methods: {
 			
 			//分享到朋友圈
-			share(index){
+			share(item, index){
 				let that = this;
 				that.shareImg=''
 				that.scen=''

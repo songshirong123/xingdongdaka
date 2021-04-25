@@ -303,8 +303,6 @@
 			this.getshowCardComment();
 			this.getpushList();
 			this.getLookerList();
-			
-			
 		},
 		methods: {
 
