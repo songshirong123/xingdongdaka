@@ -399,7 +399,7 @@
 					return that.xdUniUtils.xd_login(that.hasLogin);
 				}
 				this.getshare()
-				if(that.shareImg){
+				if(that.shareImg.length){
 					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
 				}else{
 					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,'');
