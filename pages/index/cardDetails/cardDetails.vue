@@ -271,7 +271,6 @@
 		onShareAppMessage(res) {
 			let that = this;
 			that.$refs.share.hideModal();
-			
 			 return	that.xdUniUtils.xd_onShare(that.shareTitle,that.sharePath+'?'+that.scen,that.shareImg);
 			 that.setSaveShareInfo();
 			
@@ -303,8 +302,6 @@
 			this.getshowCardComment();
 			this.getpushList();
 			this.getLookerList();
-			
-			
 		},
 		methods: {
 

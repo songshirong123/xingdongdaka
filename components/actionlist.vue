@@ -67,8 +67,8 @@
 			</view>
 			<view class="flex padding justify-between" >
 				<view v-if="!isRanking">
-					<button class="cu-btn bg-light-blue sm round" v-if="item.userId==userId "  :id="index" @click="share(index)">分享邀请</button>
-					<button class="cu-btn bg-orange sm round  " v-else-if="item.onlooker" :id="index" @click="share(index)">为TA打Call</button>
+					<button class="cu-btn bg-light-blue sm round" v-if="item.userId==userId "  :id="index" @click="share(item, index)">分享邀请</button>
+					<button class="cu-btn bg-orange sm round  " v-else-if="item.onlooker" :id="index" @click="share(item, index)">为TA打Call</button>
 					<button class="cu-btn bg-green sm round  " v-else-if="item.userId!=userId && !item.onlooker&&item.challengeRmb<=0" :id="index"  @tap="lookerClick(item,index)">围观</button>
 					<button class="cu-btn bg-green sm round  " v-else  @tap="lookerClick(item,index)">围观分钱</button>
 					<text class="text-gray text-df ">{{item.onlookerCount}}</text>
@@ -99,8 +99,9 @@
 			error: function() {
 				this.audioPlaySrc=this.xdUniUtils.xd_randomImg(1);	
 			            } ,
-			share(index){
-				this.$emit('share',index);
+			share(item, index){
+				console.log('item', item, 'index', index)
+				this.$emit('share',item, index);
 			},
 			goPage(item){
 				if(item.pushCardStatus==2||item.pushCardStatus==3){
