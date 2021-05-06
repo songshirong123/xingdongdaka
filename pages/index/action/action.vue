@@ -287,7 +287,6 @@
 				isShare:0,
 				guanzhu:'关注',
 				scrollTop:0,
-				
 				scrollTopinfo:true,
 				
 			};
@@ -302,6 +301,19 @@
 			// 	},3000)
 			// }
 			
+		},
+		watch:{
+			hasLogin() {
+				setTimeout(() => {
+					// this.id=uni.getStorageSync('id');
+					this.userId=uni.getStorageSync('id');
+					this.getpushList();
+					let pages = getCurrentPages(); // 当前页面
+					let beforePage = pages[pages.length - 2]; // 前一个页面
+					beforePage.onLoad(); // 执行前一个页面的onLoad方法
+					that.getshare()
+				}, 100);
+			},
 		},
 		computed: {
 		           ...mapState(['hasLogin'])  
@@ -336,11 +348,6 @@
 				   if(isopens[0]=='isopen'){
 				   		this.isShare=isopens[1]?isopens[1]:0
 				   }
-				   this.getpushList();
-				   this.getPushCardList();
-				   this.clickSaveShareInfo();
-				 
-				
 			}else if(option.pushList==undefined){
 				
 				this.pushId=option.pushId;
@@ -353,10 +360,11 @@
 					};
 				}
 				this.getLookerList()
-				this.getpushList();
-				this.getPushCardList();
-				this.clickSaveShareInfo();
 			}
+			// 均为同步，重复代码提到条件外
+			this.getpushList();
+			this.getPushCardList();
+			this.clickSaveShareInfo();
 		},
 		// 三点
 		onShareAppMessage(res) {
@@ -387,9 +395,9 @@
 			// 按钮分享
 			shareBt(){
 				let that = this;
-				// if(!that.hasLogin){
-				// 	return that.xdUniUtils.xd_login(that.hasLogin);
-				// }
+				if(!that.hasLogin){
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
 				this.getshare()
 				if(that.shareImg){
 					that.$refs.share.toggleMask(that.shareTitle,that.sharePath,that.scen,that.shareImg);
@@ -590,10 +598,11 @@
 			},
 			goPage(url){
 				if(!this.hasLogin){
-					uni.switchTab({
-						url:'../index'
-					})
-					return false
+					// uni.switchTab({
+					// 	url:'../index'
+					// })
+					// return false
+					return this.xdUniUtils.xd_login(this.hasLogin);
 				}
 				uni.navigateTo({
 					url
@@ -670,6 +679,9 @@
 					});
 									return false
 				}
+				if(!this.hasLogin){
+					return this.xdUniUtils.xd_login(this.hasLogin);
+				}
 				uni.navigateTo({
 					url:'../../selfCenter/selfView?userId='+e
 				})
@@ -677,6 +689,9 @@
 			//围观
 			lookerClick:function(list,index){
 				var that=this ;
+				if(!that.hasLogin){
+					return that.xdUniUtils.xd_login(that.hasLogin);
+				}
 				if(!uni.getStorageSync('token')){
 					uni.navigateTo({
 						url: '../../login/login' 
