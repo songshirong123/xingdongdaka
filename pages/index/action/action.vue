@@ -652,9 +652,12 @@
 				}
 			},
 			setSaveShareInfo(){
+				alert(uni.getStorageSync('id'))
+				// uni.getStorageSync('id')
 				this.xd_request_post(this.xdServerUrls.xd_saveShareInfo,{
 					pushId:this.pushId,
-					shareUserId:this.userId,
+					// shareUserId:this.userId,
+					shareUserId:uni.getStorageSync('id'),
 				},true
 				   ).then(res => {
 					  
