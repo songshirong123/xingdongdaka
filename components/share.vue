@@ -1,4 +1,5 @@
 <template>
+	
 	<view class="cu-modal" :class="show?'show':''">
 		<view class="cu-dialog shareImg">
 			<view class="bg-img" :style="[{backgroundImage: 'url('+url+')',height:config.height+80+'px'}]" style="background-size: contain;">
