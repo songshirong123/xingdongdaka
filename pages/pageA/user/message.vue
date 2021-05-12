@@ -148,12 +148,12 @@
 				if(e.cardId){
 					console.log('111')
 					uni.navigateTo({
-					url: '../index/cardDetails/cardDetails?pushId='+e.pushId+'&cardId='+e.cardId
+					url: '/pages/index/cardDetails/cardDetails?pushId='+e.pushId+'&cardId='+e.cardId
 				});
 				} else {
 					console.log('222')
 					uni.navigateTo({
-						url: '../index/action/action?pushId='+e.pushId+'&tabId='+that.tabId
+						url: '/pages/index/action/action?pushId='+e.pushId+'&tabId='+that.tabId
 					})
 				}
 				console.log(e)
