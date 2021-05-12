@@ -28,7 +28,7 @@
 					
 				</view>	
 				<view class="padding-lr" v-if="showCardCommentlist.pushCard.videos!=''&&showCardCommentlist.pushCard.videos!=undefined&&showCardCommentlist.pushCard.videos!=null">
-					<video class="videoheit" 
+					<video muted="true" class="videoheit" 
 					:src="showCardCommentlist.pushCard.videos" 
 					controls
 					autoplay="true"

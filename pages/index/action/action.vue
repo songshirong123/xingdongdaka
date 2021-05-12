@@ -169,7 +169,7 @@
 						</view>
 						<view class="margin-top-sm margin-bottom-sm margin-left-lg textcon" @tap="gocardComentList(item,0)">{{item.content}}</view>
 						<view class="videheit" v-if="item.videos!=''&&item.videos!=undefined &&item.videos!=null ">
-							<video class="videos" :src="item.videos" controls></video>
+							<video muted="true" class="videos" :src="item.videos" controls></video>
 						</view>
 						<view v-else class="grid flex-sub padding-lr">
 							<image class="bg-img imgheit" :src="item.pictures[0]" mode="aspectFill" @tap="goPageImg(item.pictures)" v-if="item.pictures.length!=''">

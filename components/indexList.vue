@@ -46,7 +46,7 @@
 					<text class="contentext" style="padding-left: 5px;">{{list.content}}</text>
 				</view>	 -->
 				<view class="grid flex-sub padding-lr " :class="list.pushCardList[0].videos!=''?'col-3 grid-square':'col-1'" v-if="list.pushCardList[0].videos!=undefined && list.pushCardList[0].videos!=null && list.pushCardList[0].videos!=''">
-					<video  id="videowhind" class="videowhind" :src="list.pushCardList[0].videos" controls></video>
+					<video muted="true" id="videowhind" class="videowhind" :src="list.pushCardList[0].videos" controls></video>
 				</view>
 				<view class="grid flex-sub padding-lr" :class="list.pushCardList[0].pictures.length>1?'col-3 grid-square':'col-1'" v-else-if="list.pushCardCount>0">
 					<view class="bg-img" :class="list.pushCardList[0].pictures.length>1?'':'only-img'" :style="{backgroundImage:'url('+item+')'}"

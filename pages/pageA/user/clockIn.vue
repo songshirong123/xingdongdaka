@@ -70,7 +70,7 @@
 					</view>
 					<view class="" v-if="videodata">
 						<view class="flex flex-wrap ">
-							<video :src="videodata" controls></video>
+							<video muted="true" :src="videodata" controls></video>
 							<view class="cu-tag bg-gray" @tap="Viewvideo">
 								<text class='cuIcon-close'></text>
 							</view>
