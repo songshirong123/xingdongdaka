@@ -44,7 +44,7 @@
 						<text class="lg text-black cuIcon-phone" style="margin-top: 3px;color: #007AFF;"></text>
 						<text style="margin-left: 3px;">：{{activity.phone}}</text>
 					</view>
-					<view style="flex: 1;font-weight: 700;font-size: 16px;" class="xd-rows">
+					<view style="flex: 1;font-weight: 700;font-size: 16px;" class="xd-rows" @click="copeWx(activity.wx)">
 						<text class="lg text-black cuIcon-weixin" style="margin-top: 3px;color: #39B54A;"></text>
 						<text style="margin-left: 3px;">：{{activity.wx}}</text>
 					</view>
@@ -90,7 +90,7 @@
 							</view>
 						</view>
 					</view>
-					<view class="text-content cu-item margin-top-sm">
+					<view class="text-content cu-item margin-top-sm" @tap="goMerchant(userlist.pushId)">
 						<text class="text-orange">{{userlist.statusName}}</text>
 						<view class="xd-rows">
 							<text class="cu-tag light bg-red radius">保证金：￥{{activity.baoZhengJin}}</text>
@@ -156,15 +156,32 @@
 			ref="share" 
 			:contentHeight="950"
 		></share>
-
+		<u-loadmore
+		     bg-color="#f8f8f8"
+		     :status="loadStatus"
+		     @loadmore="addData"
+		   ></u-loadmore>
+		<!-- </view> -->
+		
+		 <u-mask :show="mask"  @tap.stop>
+		   <view class="mask">
+		     <u-loading mode="flower" size="80"></u-loading>
+		   </view>
+		 </u-mask>
 	</view>
 </template>
 
 <script>
 	import share from "@/components/share.vue"
+	import uMask from "@/components/u-mask/u-mask.vue"
+	import uLoading from "@/components/u-loading/u-loading.vue"
+	import uLoadmore from "@/components/u-loadmore/u-loadmore.vue"
 	export default {
 		components: {
-			share
+			share,
+			uMask,
+			uLoading,
+			uLoadmore
 		
 		},
 		data() {
@@ -179,6 +196,8 @@
 				sharePath:'',
 				scen:'',
 				shareTitle:'',
+				loadStatus: "loadmore",
+				mask: false,
 			}
 		},
 		//#ifdef MP-WEIXIN
@@ -202,6 +221,43 @@
 		
 		},
 		methods: {
+			copeWx(e){
+				uni.showModal({
+				    content: '复制微信号', //模板中提示的内容
+				    confirmText: '复制',
+				    success: () => { //点击复制内容的后调函数
+				        //uni.setClipboardData方法就是讲内容复制到粘贴板
+				        // API `setClipboardData` is not yet implemented
+				        //意思是H5端没有这个接口！！！
+				        uni.setClipboardData({
+				            data: e, //要被复制的内容
+				            success: function() {
+				                    
+				                    //在success中加入uni.hideToast()可以解决
+				                    uni.hideToast({
+				                        title: '复制成功',
+				                        duration: 2000,
+				                        icon: 'none'
+				                    });
+				                    //以下就可自定义操作了~
+				                },
+				                fail: function(err) {
+				                    uni.showToast({
+				                        title: '复制失败',
+				                        duration: 2000,
+				                        icon: 'none'
+				                    });
+				                }
+				        });
+				    }
+				});
+			},
+			//用户行动跳转
+			goMerchant(e){
+				uni.navigateTo({
+					url:'/pages/index/action/action?pushId='+e
+				})
+			},
 			//分享
 			shareBt(){
 				let that = this;
@@ -447,7 +503,9 @@
 			tabs(e) {
 				this.tab = e;
 				this.pageNum = 1;
+				this.mask=true
 				this.getData();
+				
 			},
 
 			//获取数据（参与活动和参与者）
@@ -462,7 +520,9 @@
 			//参与活动
 			getActivityByUserId() {
 				if (this.pageNum == 0) {
-					return this.xdUniUtils.showToast(false, "没有更多数据了！", "");
+					this.loadStatus = "nomore";
+						this.mask=false
+					  return false
 				}
 				let info = {
 					activityId: this.activityId,
@@ -471,13 +531,10 @@
 					pageSize: 10,
 					type: 4
 				}
-				uni.showLoading({
-					title: '加载中..',
-				})
+				
 				let _this = this;
 				console.log("参与活动参数", info);
 				this.xd_request_get(this.xdServerUrls.xd_checkList, info, true).then((res) => {
-					uni.hideLoading();
 					console.log("参与的活动", res);
 					let list = res.obj.list;
 					for (let i in list) {
@@ -485,7 +542,11 @@
 					}
 					_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
 					_this.pageNum = res.obj.nextPage;
-				}).catch(err => {});
+					_this.mask=false
+					if (res.obj.nextPage == 0) {
+						_this.loadStatus = "nomore";
+					}
+				}).catch(err => {this.mask=false});
 			},
 			getStateName(id) {
 				if (id == 1) {
@@ -500,28 +561,29 @@
 
 			//参与者列表
 			getActivityUserList() {
-				if (this.pageNum == 0) {
-					return this.xdUniUtils.showToast(false, "没有更多数据了！", "");
+				if(this.pageNum==0){
+					 this.loadStatus = "nomore"; 
+					this.mask=false
+					   return false
 				}
-
 				let info = {
 					activityId: this.activityId,
 					pageNum: this.pageNum,
 					pageSize: 10,
 					token: uni.getStorageSync('token')
 				}
-				uni.showLoading({
-					title: '加载中..',
-				})
 				let _this = this;
 				console.log("参与者参数", info);
 				this.xd_request_get(this.xdServerUrls.xd_joinActivityUserList, info, true).then((res) => {
-					uni.hideLoading();
 					console.log("参与者结果", res);
 					let list = res.obj.list;
 					_this.activityUserList = _this.pageNum == 1 ? list : _this.activityUserList.concat(list);
 					_this.pageNum = res.obj.nextPage;
-				}).catch(err => {});
+					_this.mask=false
+					if (res.obj.nextPage == 0) {
+						_this.loadStatus = "nomore";
+					}
+				}).catch(err => {this.mask=false});
 			},
 			goPageImgHD(e, index) {
 				this.xdUniUtils.xd_showImg(e, index)
@@ -555,6 +617,14 @@
 			this.selectByActivityId();
 			this.getData();
 			this.getBalance()
+		},
+		async onReachBottom() {
+		  this.loadStatus = "loading";
+		  if(this.tab==0){
+			   await this.getActivityByUserId()
+		  }else{
+			 await this.getActivityUserList();
+		  }
 		},
 
 	}
@@ -642,5 +712,12 @@
 				}
 			}
 		}
+	}
+	.mask{
+	  width: 100%;
+	  height: 100%;
+	  display: flex;
+	  justify-content: center;
+	  align-items: center;
 	}
 </style>

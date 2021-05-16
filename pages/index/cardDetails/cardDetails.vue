@@ -363,14 +363,19 @@
 					pageSize:10,
 				},true)
 				.then(res=>{
-					this.lookerList=res.obj.list;
-					this.looktotal=res.obj.total;
-					this.lookNextPageTwo=res.obj.nextPage;
-					this.lookerList.forEach(item =>{
-						if(item.lookUserId == uni.getStorageSync('id')){
-							this.guanzhu ='已关注'
-						}
-					})
+					if(res.resultCode==0){
+						this.lookerList=res.obj.list;
+						this.looktotal=res.obj.total;
+						this.lookNextPageTwo=res.obj.nextPage;
+						this.lookerList.forEach(item =>{
+							if(item.lookUserId == uni.getStorageSync('id')){
+								this.guanzhu ='已关注'
+							}
+						})
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
+					
 					
 				})
 			},
@@ -427,14 +432,18 @@
 						lookUserId:that.userId,
 					},true
 					   ).then(res => {
-			
-						   that.pusCardLists.onlooker=false
-						   that.pusCardLists.onlookerCount--;
-						   uni.showToast({
-								title:'已取消围观',
-								 duration: 1000,
-								 icon:'none',
-						   }) 
+							if(res.resultCode==0){
+								that.pusCardLists.onlooker=false
+								that.pusCardLists.onlookerCount--;
+								uni.showToast({
+										title:'已取消围观',
+										 duration: 1000,
+										 icon:'none',
+								}) 
+							    }else{
+							      that.xdUniUtils.xd_showToast(res.obj,5000,"none")
+							 }
+						  
 						   })
 				}else{
 					that.xd_request_post(that.xdServerUrls.xd_saveLooker,{
@@ -530,17 +539,20 @@
 				this.xd_request_post(this.xdServerUrls.xd_showCardComment,{
 					cardId:this.cardId,
 				},true).then(res=>{	
-					var data=res.obj;
-					var imgs=[];
-					if(data.pushCard.pictures!=''){
-						imgs=data.pushCard.pictures.split(",");
-						data.pushCard.pictures=imgs;
-					}else{
-						data.pushCard.pictures=[];
-					}
-					
-					this.showCardCommentlist=data
-					
+					if(res.resultCode==0){
+						var data=res.obj;
+						var imgs=[];
+						if(data.pushCard.pictures!=''){
+							imgs=data.pushCard.pictures.split(",");
+							data.pushCard.pictures=imgs;
+						}else{
+							data.pushCard.pictures=[];
+						}
+						
+						this.showCardCommentlist=data
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }					
 				})
 			},
 			userRepaly(e,indexs){
@@ -584,13 +596,17 @@
 								userId:this.id,
 								content:e.detail.value.conten,
 							},true).then(res=>{
-							
-								this.showInput=false;
-								this.value=false;
-								if (res.resultCode == 0) {
-									var data=res.obj;
-									this.showCardCommentlist=data
-								}
+								if(res.resultCode==0){
+									this.showInput=false;
+									this.value=false;
+									if (res.resultCode == 0) {
+										var data=res.obj;
+										this.showCardCommentlist=data
+									}
+								    }else{
+								      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+								 }			
+								
 							})
 								
 						}else if(this.inputType==2){
@@ -599,16 +615,20 @@
 									userId:this.id,
 									content:e.detail.value.conten,
 								},true).then(res=>{
+									if(res.resultCode==0){
+										this.showInput=false;
+										this.value=false;
+										/* uni.redirectTo({
+											url:'../cardDetails/cardDetails?pushId='+this.pushId+'&cardId='+this.cardId+'&show=0'
+										}) */
+										 if (res.resultCode == 0) {
+											var data=res.obj;
+											this.showCardCommentlist=data
+										} 
+									    }else{
+									      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+									 }		
 									
-									this.showInput=false;
-									this.value=false;
-									/* uni.redirectTo({
-										url:'../cardDetails/cardDetails?pushId='+this.pushId+'&cardId='+this.cardId+'&show=0'
-									}) */
-									 if (res.resultCode == 0) {
-										var data=res.obj;
-										this.showCardCommentlist=data
-									} 
 									
 						    })
 						}
@@ -640,56 +660,62 @@
 					pushId:this.pushId,
 					token:uni.getStorageSync('token')
 				},true).then(res=>{	
-					var data =res.obj;
-					data.pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(data.pushCardList[0].address)?"":data.pushCardList[0].address;
-					// console.log("getpushList");
-					// console.log(data);
-					data.challengeRmb=res.obj.challengeRmb/100;
-					var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
-					data.createTime=time;
-					data.pictures=res.obj.pictures.split(',')
-					// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
-					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
-					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
-					// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
-					// ];
-					this.pusCardLists=data;
-					
-					data.pushCardList.reverse().forEach((item,index)=>{
-						if(item.id==this.cardId){
-							this.pushCardCreateTime=this.xdUniUtils.xd_timestampToTime(item.createTime,false,true,false)
-							this.dakacishu = index+1
-							
-						}
-					})
-					if(data.userId == uni.getStorageSync('id')){
-						this.guanzhu =''
-					}else{
-						this.xd_request_post(this.xdServerUrls.xd_iSAttention,{
-							userId:uni.getStorageSync('id'),
-							attentionUserId:data.userId,
-						},true)
-						.then(res=>{
-							if(res.obj){
-								this.guanzhu ='已关注'
-							}else{
-								this.guanzhu ='关注'
+					if(res.resultCode==0){
+						var data =res.obj;
+						data.pushCardList[0].address = this.xdUniUtils.IsNullOrEmpty(data.pushCardList[0].address)?"":data.pushCardList[0].address;
+						// console.log("getpushList");
+						// console.log(data);
+						data.challengeRmb=res.obj.challengeRmb/100;
+						var time=this.xdUniUtils.xd_timestampToTime(res.obj.createTime,false,false,true);
+						data.createTime=time;
+						data.pictures=res.obj.pictures.split(',')
+						// data.pictures=["https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187819589.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187851035.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187868290.png",
+						// "https://chucun2019.oss-cn-beijing.aliyuncs.com/dynamic/1605187888025.png",
+						// ];
+						this.pusCardLists=data;
+						
+						data.pushCardList.reverse().forEach((item,index)=>{
+							if(item.id==this.cardId){
+								this.pushCardCreateTime=this.xdUniUtils.xd_timestampToTime(item.createTime,false,true,false)
+								this.dakacishu = index+1
+								
 							}
-							
 						})
-					}
-					// if(typeof data.pushCardList !== undefined){
-					// 	data.pushCardList.forEach(item =>{
-					// 		if(this.cardId == item.id){
-					// 			this.dakacishu = item.cardIndex
-					// 		}
-					// 	});
-					// 	if(this.dakacishu == 0){
-					// 		//兼容之前的数据
-					// 		this.dakacishu = this.pusCardLists.pushCardCishuCount
-					// 	}
-					// }
-					this.getshare()
+						if(data.userId == uni.getStorageSync('id')){
+							this.guanzhu =''
+						}else{
+							this.xd_request_post(this.xdServerUrls.xd_iSAttention,{
+								userId:uni.getStorageSync('id'),
+								attentionUserId:data.userId,
+							},true)
+							.then(res=>{
+								if(res.obj){
+									this.guanzhu ='已关注'
+								}else{
+									this.guanzhu ='关注'
+								}
+								
+							})
+						}
+						// if(typeof data.pushCardList !== undefined){
+						// 	data.pushCardList.forEach(item =>{
+						// 		if(this.cardId == item.id){
+						// 			this.dakacishu = item.cardIndex
+						// 		}
+						// 	});
+						// 	if(this.dakacishu == 0){
+						// 		//兼容之前的数据
+						// 		this.dakacishu = this.pusCardLists.pushCardCishuCount
+						// 	}
+						// }
+						this.getshare()
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }		
+					
+				
 				})
 			},
 			strToArr(res){
@@ -719,7 +745,7 @@
 						}else{
 							uni.showToast({
 								icon:'none',
-							  title: res.msg,
+							  title: res.obj,
 							})
 						}
 					})
@@ -739,7 +765,7 @@
 					}else{
 						uni.showToast({
 							icon:'none',
-						  title: res.msg,
+						  title: res.obj,
 						})
 					}
 				})

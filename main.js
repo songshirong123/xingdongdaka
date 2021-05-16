@@ -11,6 +11,8 @@ import sponsor from './pages/sponsor/index';
 Vue.component('sponsor',sponsor);
 
 
+
+
 const prePage = () => {
 	let pages = getCurrentPages();
 	let prePage = pages[pages.length - 2];

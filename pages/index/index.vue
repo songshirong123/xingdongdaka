@@ -470,10 +470,13 @@
 			},
 			bindload() {
 				var that = this;
-				let info = uni.createSelectorQuery().select("#ads");
-				info.boundingClientRect(function(data) { //data - 各种参数
-					that.adHeight = data.height;
-				}).exec()
+				if(that.active == 1 || that.active ==3){
+					let info = uni.createSelectorQuery().select("#ads");
+					info.boundingClientRect(function(data) { //data - 各种参数
+						that.adHeight = data.height;
+					}).exec()
+				}
+				
 			},
 
 			goRanking(e) {
@@ -734,15 +737,20 @@
 				let _this = this;
 				console.log("群列表信息参数", info);
 				this.xd_request_post(this.xdServerUrls.xd_selectList, info, true).then((res) => {
-					uni.hideLoading();
-					console.log("群列表信息", res);
-					let list = res.obj.list;
-					for (let i in list) {
-						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
-					}
-					_this.groupList = _this.pageNum == 1 ? list : _this.groupList.concat(list);
-					console.log('xdUniUtils', _this.groupList)
-					_this.pageNum = res.obj.nextPage;
+					if(res.resultCode==0){
+						uni.hideLoading();
+						console.log("群列表信息", res);
+						let list = res.obj.list;
+						for (let i in list) {
+							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+						}
+						_this.groupList = _this.pageNum == 1 ? list : _this.groupList.concat(list);
+						console.log('xdUniUtils', _this.groupList)
+						_this.pageNum = res.obj.nextPage;
+					    }else{
+							uni.hideLoading()
+					     _this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
 				}).catch(err => {});
 			},
 
@@ -763,45 +771,50 @@
 				let _this = this;
 				console.log("商家活动信息参数", info);
 				this.xd_request_get(this.xdServerUrls.xd_selectSHList, info, true).then((res) => {
-					uni.hideLoading();
-					console.log("商家活动信息结果", res);
-					let list = res.obj.list;
-					for (let i in list) {
-						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
-						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.xdUniUtils.xd_randomImg() : list[i].imgs;
-						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
-						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
-						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
-						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
-						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
-						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
-						list[i].imgsUrl = list[i].imgs.split(",");
-					}
-					_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
-					_this.pageNum = res.obj.nextPage;
+					if(res.resultCode==0){
+						uni.hideLoading();
+						console.log("商家活动信息结果", res);
+						let list = res.obj.list;
+						for (let i in list) {
+							list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
+							list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
+							list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ? _this.xdUniUtils.xd_randomImg() : list[i].imgs;
+							list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
+							list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
+							list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
+							list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
+							list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
+							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+							list[i].imgsUrl = list[i].imgs.split(",");
+						}
+						_this.merchantList = _this.pageNum == 1 ? list : _this.merchantList.concat(list);
+						_this.pageNum = res.obj.nextPage;
+					    }else{
+							
+					     _this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
+					
 				}).catch(err => {});
 			},
 
 			//获取通知
 			getnotic() {
-				if(!this.bd.get('notice',false)){
+				if(this.bd.get('notice',1)==1){
 					this.xd_request_get(this.xdServerUrls.xd_getVal, {
 						key: 'inform_list_config'
 					}, true).then(res => {
 						if (res.resultCode == 0) {
 							var data = JSON.parse(res.obj);
-					
-							data.forEach(item => {
-								this.listnotice.push(item.title)
-							})
-							this.listnoticedata = data;
+							for(let i of data ){
+								this.listnotice.push(i.title)
+							}
 							this.bd.put('notice',data,1800)
-					
 						}
 					})
 				}else{
-					this.listnoticedata = this.bd.get('notice');
+					for(let i of this.bd.get('notice') ){
+						this.listnotice.push(i.title)
+					}
 				}
 				
 			},
@@ -909,7 +922,7 @@
 			},
 			//首页信息
 			indexData: function() {
-				if(!this.bd.get('banner',false)){
+				if(this.bd.get('banner',1)==1){
 					this.xd_request_post(this.xdServerUrls.xd_bannerList, {}, true).then((res) => {
 						this.bannerList = res.obj;
 						this.adid.push(...res.obj);
@@ -922,7 +935,7 @@
 				}
 				
 				// this.getimg();
-				if(!this.bd.get('tabs',false)){
+				if(this.bd.get('tabs',1)==1){
 					this.xd_request_post(this.xdServerUrls.xd_label, {}, false).then((res) => {
 						var da = [{
 							id: -1,
@@ -1072,12 +1085,12 @@
 				}).catch(err => {});
 
 			},
-			getimg() {
-				this.xd_request_get(this.xdServerUrls.xd_tacitlyPushPng, ).then((res) => {
-					this.inimg = res.obj;
-				}).catch(err => {});
+			// getimg() {
+			// 	this.xd_request_get(this.xdServerUrls.xd_tacitlyPushPng, ).then((res) => {
+			// 		this.inimg = res.obj;
+			// 	}).catch(err => {});
 
-			},
+			// },
 			timeStamp(res) {
 				let dataList = res;
 				for (var i = 0; i < res.length; i++) {
@@ -1121,8 +1134,12 @@
 					},
 					true
 				).then((res) => {
-					this.attentionList = res.obj.list;
-					this.pageNum = res.obj.nextPage;
+					if(res.resultCode==0){
+						this.attentionList = res.obj.list;
+						this.pageNum = res.obj.nextPage;
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
 				}).catch(err => {});
 
 
@@ -1137,8 +1154,13 @@
 					},
 					true
 				).then((res) => {
-					this.listsTab = this.timeStamp(res.obj.list);
-					this.pageNum = res.obj.nextPage == undefined ? 1 : res.obj.nextPage;
+					if(res.resultCode==0){
+						this.listsTab = this.timeStamp(res.obj.list);
+						this.pageNum = res.obj.nextPage == undefined ? 1 : res.obj.nextPage;
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
+					
 				}).catch(err => {});
 
 			},
@@ -1242,13 +1264,17 @@
 							},
 							true
 						).then(res => {
-							that.pageNum = res.obj.nextPage;
-
-							data = that.timeStamp(res.obj.list);
-							that.listsTab = that.listsTab.concat(data);
-							setTimeout(function() {
-								uni.hideLoading()
-							}, 1000);
+							if(res.resultCode==0){
+								that.pageNum = res.obj.nextPage;
+								data = that.timeStamp(res.obj.list);
+								that.listsTab = that.listsTab.concat(data);
+								setTimeout(function() {
+									uni.hideLoading()
+								}, 1000);
+							    }else{
+									uni.hideLoading()
+							      that.xdUniUtils.xd_showToast(res.obj,5000,"none")
+				             }
 						})
 						break;
 					case 2:
@@ -1275,17 +1301,21 @@
 						that.xd_request_post(that.xdServerUrls.xd_pushByLabel, {
 								pageNum: that.pageNum,
 								pageSize: that.pageSize,
-								labelId: this.labelId,
+								labelId: that.labelId,
 							},
 							true
 						).then(res => {
-							that.pageNum = res.obj.nextPage;
-
-							data = that.timeStamp(res.obj.list);
-							that.listsTab = that.listsTab.concat(data);
-							setTimeout(function() {
-								uni.hideLoading()
-							}, 1000);
+							if(res.resultCode==0){
+								that.pageNum = res.obj.nextPage;
+								data = that.timeStamp(res.obj.list);
+								that.listsTab = that.listsTab.concat(data);
+								setTimeout(function() {
+									uni.hideLoading()
+								}, 1000);
+							    }else{
+									uni.hideLoading()
+							      that.xdUniUtils.xd_showToast(res.obj,5000,"none")
+							 }
 						})
 						break;
 				}
@@ -1342,9 +1372,12 @@
 				this.xd_request_post(this.xdServerUrls.xd_inquireBalance, {
 					token: uni.getStorageSync('token'),
 				}, true).then((res) => {
-					console.log("xd_inquireBalance");
-					console.log(res);
-					this.userBean = res.obj.userBean;
+					if(res.resultCode==0){
+						this.userBean = res.obj.userBean;
+					    }else{
+							
+					     this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
 				})
 			},
 			burieInit() {
@@ -1354,7 +1387,10 @@
 						let wg_num = res.obj.wgCount;
 						let num = gz_num + wg_num;
 						this.xdUniUtils.updateNumber(num);
-					}
+					}else{
+							
+					     this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }
 				})
 
 			},

@@ -612,22 +612,27 @@
 					token: uni.getStorageSync('token'),
 					userId: uni.getStorageSync('id')
 				}, true).then((res) => {
-					console.log("xd_selectSHInfo")
-					console.log(res);
-					let list = res.obj;
-					for (let i in list) {
-						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
-						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg(1) : list[i].imgs;
-						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
-						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
-						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
-						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
-						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
-						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
-					    list[i].imgsUrl = list[i].imgs.split(",");
-					}
-					_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
+					if(res.resultCode==0){
+						console.log("xd_selectSHInfo")
+						console.log(res);
+						let list = res.obj;
+						for (let i in list) {
+							list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
+							list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
+							list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg(1) : list[i].imgs;
+							list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
+							list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
+							list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
+							list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
+							list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
+							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+						    list[i].imgsUrl = list[i].imgs.split(",");
+						}
+						_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
+					    }else{
+					     _this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }	
+					
 				})
 			},
 			//参与活动
@@ -647,23 +652,29 @@
 				let _this = this;
 				console.log("参与者参数", info);
 				this.xd_request_get(this.xdServerUrls.xd_getActivityByUserId, info, true).then((res) => {
-					// uni.hideLoading();
-					console.log("参与的活动", res);
-					let list = res.obj.list;
-					for (let i in list) {
-						list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
-						list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
-						list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg(1) : list[i].imgs;
-						list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
-						list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
-						list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
-						list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
-						list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
-						list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
-					    list[i].imgsUrl = list[i].imgs.split(",");
-					}
-					_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
-					_this.pageNum = res.obj.nextPage;
+					
+					if(res.resultCode==0){
+						// uni.hideLoading();
+						console.log("参与的活动", res);
+						let list = res.obj.list;
+						for (let i in list) {
+							list[i].statusName = list[i].status == 0 ? "进行中…" : "已结束";
+							list[i].activityEndTime = _this.xdUniUtils.xd_timestampToTime(list[i].activityEndTime, false, false, false);
+							list[i].imgs = _this.xdUniUtils.IsNullOrEmpty(list[i].imgs) ?  _this.xdUniUtils.xd_randomImg(1) : list[i].imgs;
+							list[i].labels = _this.xdUniUtils.IsNullOrEmpty(list[i].labels) ? "暂未添加" : list[i].labels;
+							list[i].planDay = _this.xdUniUtils.IsNullOrEmpty(list[i].planDay) ? "0" : list[i].planDay;
+							list[i].activityContent = _this.xdUniUtils.IsNullOrEmpty(list[i].activityContent) ? "暂未添加" : list[i].activityContent;
+							list[i].baoZhengJin = _this.xdUniUtils.IsNullOrEmpty(list[i].baoZhengJin) ? "0" : list[i].baoZhengJin;
+							list[i].holidayDay = _this.xdUniUtils.IsNullOrEmpty(list[i].holidayDay) ? "0" : list[i].holidayDay;
+							list[i].createTime = _this.xdUniUtils.xd_timestampToTime(list[i].createTime, false, true, false);
+						    list[i].imgsUrl = list[i].imgs.split(",");
+						}
+						_this.activityByUserId = _this.pageNum == 1 ? list : _this.activityByUserId.concat(list);
+						_this.pageNum = res.obj.nextPage;
+					    }else{
+					     _this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }	
+					
 				}).catch(err => {});
 			},
 
@@ -691,13 +702,17 @@
 						},
 						false
 					).then(res => {
-						that.nextPage = res.obj.nextPage;
-						var data = that.dataPaly(res);
-						that.cardList = that.cardList.concat(data);
-						setTimeout(function() {
-							uni.hideLoading()
-						}, 1000);
-						// uni.hideNavigationBarLoading();//关闭加载动画
+						if(res.resultCode==0){
+							that.nextPage = res.obj.nextPage;
+							var data = that.dataPaly(res);
+							that.cardList = that.cardList.concat(data);
+							setTimeout(function() {
+								uni.hideLoading()
+							}, 1000);
+							// uni.hideNavigationBarLoading();//关闭加载动画
+						    }else{
+						      that.xdUniUtils.xd_showToast(res.obj,5000,"none")
+						 }	
 
 					})
 				} else if (that.tab == 2) {
@@ -721,26 +736,31 @@
 							pageSize: 10,
 						},
 						true).then(res => {
-						var data = res.obj.list;
-						that.nextPageTwo = res.obj.nextPage;
-						data.forEach(function(item) {
-							if (typeof item.challengeRmb != 'undefined' && item.challengeRmb != '' && item.challengeRmb != '0') {
-								item.challengeRmb = Math.floor(item.challengeRmb / 100);
-							}
-							if (typeof item.pictures === 'undefined' || item.pictures == '') {
-								var img=[]
-								img.push(that.xdUniUtils.xd_randomImg(1));
-								item.pictures =img 
-							} else {
-								
-									item.pictures = item.pictures.split(",")
-								
-							}
-						})
-						that.lookerList = that.lookerList.concat(data);
-						setTimeout(function() {
-							uni.hideLoading()
-						}, 1000);
+							if(res.resultCode==0){
+							var data = res.obj.list;
+							that.nextPageTwo = res.obj.nextPage;
+							data.forEach(function(item) {
+								if (typeof item.challengeRmb != 'undefined' && item.challengeRmb != '' && item.challengeRmb != '0') {
+									item.challengeRmb = Math.floor(item.challengeRmb / 100);
+								}
+								if (typeof item.pictures === 'undefined' || item.pictures == '') {
+									var img=[]
+									img.push(that.xdUniUtils.xd_randomImg(1));
+									item.pictures =img 
+								} else {
+									
+										item.pictures = item.pictures.split(",")
+									
+								}
+							})
+							that.lookerList = that.lookerList.concat(data);
+							setTimeout(function() {
+								uni.hideLoading()
+							}, 1000);
+							    }else{
+							      that.xdUniUtils.xd_showToast(res.obj,5000,"none")
+							 }	
+						
 					}).catch(Error => {
 						console.log(Error)
 					})

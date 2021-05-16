@@ -578,7 +578,7 @@
 					this.sponsorShare = obj.pushTarget
 				} else {
 					uni.showToast({
-						title: msg,
+						title: obj,
 						icon: 'none',
 						duration: 3000,
 						success:function() {
@@ -659,7 +659,12 @@
 						clickUserId:this.userId,
 					},true
 					   ).then(res => {
-						  this.getpushList();
+						   if(res.resultCode==0){
+						    this.getpushList();
+						       }else{
+						         this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+						    }		
+						 
 						   })
 				}
 			},
@@ -862,10 +867,10 @@
 						}
 						
 					}else{
-						// uni.showToast({
-						// 	title:res.msg,
-						// 	icon:'none',
-						// })
+						uni.showToast({
+							title:res.obj,
+							icon:'none',
+						})
 					}
 					this.getshare()
 			  	})
@@ -881,14 +886,20 @@
 					pushId:this.pushId,
 						token:uni.getStorageSync('token')
 				},false).then(res=>{
-					
+					if(res.resultCode==0){
 					this.pushComentList=this.timeStamp(res);
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }	
+					
+					
 				})
 			},
 		async	getPushCardList(){
 				this.xd_request_post(this.xdServerUrls.xd_pushCardListByPushId,{
 					pushId:this.pushId,		
 				},true).then(res=>{
+					if(res.resultCode==0){
 					var data=res.obj.list;
 					for(let i=0;i<res.obj.list.length;i++){
 						data[i].createTime=this.xdUniUtils.xd_timestampToTime(data[i].createTime,false,false,false,true);
@@ -899,7 +910,10 @@
 						}
 					}
 					this.pusCardList=data;
-					
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }	
+			
 				})
 			},
 			// 打卡
@@ -938,7 +952,7 @@
 						}else{
 							uni.showToast({
 								icon:'none',
-							  title: res.msg,
+							  title: res.obj,
 							})
 						}
 					})
@@ -970,6 +984,7 @@
 					pageSize:10,
 				},true)
 				.then(res=>{
+					if(res.resultCode==0){
 					this.lookerList=res.obj.list;
 					this.looktotal=res.obj.total;
 					this.lookNextPageTwo=res.obj.nextPage;
@@ -978,7 +993,9 @@
 							this.guanzhu ='已关注'
 						}
 					})
-					
+					    }else{
+					      this.xdUniUtils.xd_showToast(res.obj,5000,"none")
+					 }	
 				})
 			}
 		}
