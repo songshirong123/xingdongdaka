@@ -116,7 +116,7 @@
 				
 			},
 			getShowFollow() {
-				var that = this;
+				
 				this.xd_request_post(this.xdServerUrls.xd_getFansList, {
 						userId: that.userId?that.userId:uni.getStorageSync('id'),
 						pageNum: 1,
@@ -154,7 +154,7 @@
 					title: '加载中..',
 				})
 				
-				if(this.userId=''){
+				if(this.userId){
 					that.xd_request_post(that.xdServerUrls.xd_getInviteList,
 					{
 						token:uni.getStorageSync('token'),
@@ -189,7 +189,7 @@
 		},
 		// 下拉刷新
 		onPullDownRefresh() {
-			if(this.userId=''){
+			if(this.userId){
 				this.getInviteList();
 			}else{
 				this.getShowFollow();

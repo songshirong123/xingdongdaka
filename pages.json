@@ -128,13 +128,15 @@
 			{
 				"path": "user/myattention",
 				"style": {
-					"navigationBarTitleText": "关注"
+					"navigationBarTitleText": "关注",
+					"enablePullDownRefresh": true
 				}
 			},
 			{
 				"path": "user/myfans",
 				"style": {
-					"navigationBarTitleText": "粉丝"
+					"navigationBarTitleText": "粉丝",
+					"enablePullDownRefresh": true
 				}
 			},
 			{

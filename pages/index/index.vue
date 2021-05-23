@@ -325,7 +325,7 @@
 				}, {
 					ID: 2,
 					Name: "挑战赛",
-					IsOpen: true,
+					IsOpen: false,
 					Checked: false
 				}]
 			};

@@ -142,7 +142,7 @@
 			this.lookerCountData();
 		},
 		methods: {
-			share(index){
+			share(item,index){
 				let that = this;
 				that.shareImg=''
 				that.scen=''
